@@ -14,9 +14,14 @@
     "url": "https://tailadmin.com"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "apexcharts": "^3.41.0",
+    "axios": "^1.6.7",
     "flatpickr": "^4.6.13",
     "headlessui": "^0.0.0",
+    "http-proxy-middleware": "^2.0.6",
     "jsvectormap": "^1.5.3",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",

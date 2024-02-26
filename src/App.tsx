@@ -16,7 +16,6 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import Landing from './pages/landing/landing';
-import SignUpForm from './pages/Authentication/SignUpForm';
 import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
@@ -145,17 +144,8 @@ function App() {
               <SignUp />
             </>
           }
-        />
-        <Route
-          path="/auth/signup2"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignUpForm />
-            </>
-          }
         /> <Route
-          path="/auth/signup3"
+          path="/auth/signup2"
           element={
             <>
               <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />

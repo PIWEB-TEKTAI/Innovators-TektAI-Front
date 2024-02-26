@@ -44,7 +44,7 @@ const AccountType: React.FC = () => {
                             <input type="radio" id="hosting-small" name="hosting" value="hosting-small" className="hidden peer" required />
                             <label htmlFor="hosting-small" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:text-primary-600 peer-checked:text-primary peer-checked:bg-gray-2 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
                                 <div className="flex items-center">
-                                    <img src="/src/images/auth/user.png" alt="user" className='w-[45px]'/>
+                                    <img src="/src/images/auth/user.png" alt="user" className='w-[31px]'/>
                                     <div className="w-full text-lg  font-semibold ml-5 ">Challenger</div>
                                 </div>
                             </label>
@@ -53,7 +53,7 @@ const AccountType: React.FC = () => {
                             <input type="radio" id="hosting-big" name="hosting" value="hosting-big" className="hidden peer"/>
                             <label htmlFor="hosting-big" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:text-primary-600 peer-checked:text-primary peer-checked:bg-gray-2 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                                 <div className="flex items-center">
-                                    <img src="/src/images/auth/company.png" alt="company" className='w-[45px]'/>
+                                    <img src="/src/images/auth/company.png" alt="company" className='w-[35px]'/>
                                     <div className="w-full text-lg font-semibold ml-5">Company</div>
                                 </div>
                             </label>
