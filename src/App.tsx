@@ -10,7 +10,7 @@ import Chart from './pages/Chart';
 import ECommerce from './pages/Dashboard/ECommerce';
 import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
-import Profile from './pages/Profile';
+import Profile from './pages/Profile/Profile';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
@@ -20,6 +20,8 @@ import SignUpForm from './pages/Authentication/SignUpForm';
 import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
+import ProfileSettings from './pages/Profile/ProfileSettings';
+
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -96,8 +98,8 @@ function App() {
           path="/settings"
           element={
             <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Settings />
+              <PageTitle title="Profile Settings" />
+              <ProfileSettings />
             </>
           }
         />

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import SidebarLinkGroup from './SidebarLinkGroup';
+import { User } from '../../types/User';
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
+  connectedUser:User | null;
 }
 
-const SidebarClient = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
 
@@ -53,6 +54,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
+  console.log(connectedUser)
 
   return (
     <aside
@@ -73,10 +75,20 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     <div className="flex flex-col items-center pb-10">
 
         <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src="/src/images/user/user-06.png" alt="Bonnie image"/>
-        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">Rouaida ben Rabeh </h5>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Rouaidabenrabeg@gmail.com</span>
+        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{connectedUser?.userName} </h5>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{connectedUser?.email} </span>
         <div className="flex mt-4 md:mt-6">
-            <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Switch to company</a>
+            <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+             {
+              connectedUser?.role=='challenger'?(  <>
+                Switch to company
+              </>):(
+                 <>
+                 Switch to challenger
+               </>
+              )
+             }
+              </a>
         </div>
     </div>
 </div>

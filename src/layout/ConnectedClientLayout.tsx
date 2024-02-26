@@ -1,12 +1,30 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
+import { checkAuthentication } from '../services/auth.service';
+import { User } from '../types/User';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setconnectedUser] = useState<User | null>(null);
+  useEffect(() => {
+    
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const connectedUser = await checkAuthentication();
+        setconnectedUser(connectedUser);
+        setAuthenticated(true);
+      } catch (error) {
+        console.error('Authentication failed:', error);
+        setAuthenticated(false);
+      }
+    };
 
+    fetchAuthenticationStatus();
+  }, []);
   // Check if the current path contains "profile"
   const isProfilePage = location.pathname.includes('profile');
   return (
@@ -55,11 +73,11 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
             </span>
           </button>
         {/* <!-- ===== Sidebar Start ===== --> */}
-        {isProfilePage && <SidebarClient sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
+        {<SidebarClient sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} connectedUser={connectedUser} />}
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <div className=" flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
          
           {/* <!-- ===== Header End ===== --> */}

@@ -1,14 +1,51 @@
-import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import CoverOne from '../images/cover/cover-01.png';
-import userSix from '../images/user/user-06.png';
+import CoverOne from '../../images/cover/cover-01.png';
+import userSix from '../../images/user/user-06.png';
 import { Link } from 'react-router-dom';
-import ConnectedClientLayout from '../layout/ConnectedClientLayout'
+import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
+import { useEffect, useState } from 'react';
+import { checkAuthentication } from '../../services/auth.service';
+import { getProfile } from '../../services/user.service';
+import { User } from '../../types/User';
+
 const Profile = () => {
+
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setconnectedUser] = useState(null);
+
+  const [profileData, setProfileData] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const connectedUser = await checkAuthentication();
+        setAuthenticated(true);
+      } catch (error) {
+        console.error('Authentication failed:', error);
+        setAuthenticated(false);
+      }
+    };
+
+    fetchAuthenticationStatus();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfileData(data);
+        console.log(data)
+      } catch (error) {
+        // Handle error (e.g., show an error message)
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);  
   return (
     <ConnectedClientLayout>
-
-      <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="relative z-20 h-35 md:h-65">
+     <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="z-20 h-35 md:h-65">
           <img
             src={CoverOne}
             alt="profile cover"
@@ -86,28 +123,32 @@ const Profile = () => {
             </div>
           </div>
           <div className="mt-4">
+
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              Danish Heilium
+              {profileData?.FirstName }               {profileData?.LastName }
             </h3>
-            <p className="font-medium">Ui/Ux Designer</p>
+             
+            <p className="font-medium"> {profileData?.occupation} </p>
+            <span className="text-sm">{profileData?.address.toLocaleUpperCase()}</span>
+
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
                   259
                 </span>
-                <span className="text-sm">Posts</span>
+                <span className="text-sm">Submition</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
                   129K
                 </span>
-                <span className="text-sm">Followers</span>
+                <span className="text-sm">DataSet</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
                   2K
                 </span>
-                <span className="text-sm">Following</span>
+                <span className="text-sm">Rank</span>
               </div>
             </div>
 
@@ -115,15 +156,19 @@ const Profile = () => {
               <h4 className="font-semibold text-black dark:text-white">
                 About Me
               </h4>
-              <p className="mt-4.5">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque posuere fermentum urna, eu condimentum mauris
-                tempus ut. Donec fermentum blandit aliquet. Etiam dictum dapibus
-                ultricies. Sed vel aliquet libero. Nunc a augue fermentum,
-                pharetra ligula sed, aliquam lacus.
+              <p className="mt-4.5 mb-5.5">
+                {profileData?.Description}
               </p>
             </div>
-
+            <div className="mx-auto max-w-180 ">
+            <h4 className="font-semibold text-black dark:text-white">My Skills</h4>
+            <div className="flex flex-wrap gap-4 justify-center mt-4.5">
+            {profileData?.skills.map((skill) => (
+              <div className="bg-gray p-2 rounded-full  border border-gray-100 text-xs">{skill}</div>
+              ))}
+            
+            </div>
+            </div>
             <div className="mt-6.5">
               <h4 className="mb-3.5 font-medium text-black dark:text-white">
                 Follow me on
@@ -276,6 +321,7 @@ const Profile = () => {
                 </Link>
               </div>
             </div>
+
           </div>
         </div>
       </div>
