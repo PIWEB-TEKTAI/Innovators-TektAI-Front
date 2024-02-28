@@ -1,51 +1,48 @@
 import CoverTwo from '../../images/cover/cover2.jpg';
-import userSix from '../../images/user/user_icon.png';
 import { Link } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
 import { useEffect, useState } from 'react';
-import { checkAuthentication } from '../../services/auth.service';
 import { getProfile, uploadImage } from '../../services/user.service';
 import { User } from '../../types/User';
+import Modal from '../../components/modal';
 
 const Profile = () => {
 
   const [authenticated, setAuthenticated] = useState(false);
-  const [connectedUser, setconnectedUser] = useState(null);
-
   const [profileData, setProfileData] = useState<User | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [showModal, setShowModal] = useState(false);
+  const [uploadMessage,setUploadMessage] = useState('');
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
+    setShowModal(true);
     setFile(selectedFile || null);
   };
 
   const handleUpload = async () => {
     if (file) {
-      await uploadImage(file, setImageUrl);
+      const imageUp = await uploadImage(file, setImageUrl);
+      setUploadMessage(imageUp.message);
     }
   };
-  useEffect(() => {
-    const fetchAuthenticationStatus = async () => {
-      try {
-        const connectedUser = await checkAuthentication();
-        setAuthenticated(true);
-      } catch (error) {
-        console.error('Authentication failed:', error);
-        setAuthenticated(false);
-      }
-    };
 
-    fetchAuthenticationStatus();
-  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
         setProfileData(data);
-        console.log(data)
+        setAuthenticated(true);
       } catch (error) {
         // Handle error (e.g., show an error message)
         console.error('Error fetching profile:', error);
@@ -69,7 +66,7 @@ const Profile = () => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
-              <img src={userSix}  alt="profile" />
+              <img src={imageUrl || profileData?.imageUrl} alt="profile" />
               <label
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -98,14 +95,23 @@ const Profile = () => {
                 <input
                   type="file"
                   onChange={handleFileChange}
-                  onClick={handleUpload}
-                  name="profile"
+                  name="image"
+                  accept="image/*"
                   id="profile"
                   className="sr-only"
                 />
-              </label>
+              </label>            
             </div>
           </div>
+          <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title="Edit Image"
+        content="Are you sure you want to edit this image?"
+        onClose={closeModal}
+        onSave={handleUpload}
+        postSaveMessage={uploadMessage}
+      />
           <div className="mt-4">
 
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">

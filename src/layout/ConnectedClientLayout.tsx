@@ -4,6 +4,7 @@ import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
 import { checkAuthentication } from '../services/auth.service';
 import { User } from '../types/User';
+import { getProfile } from '../services/user.service';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +19,7 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
     console.log("rou")
     const fetchAuthenticationStatus = async () => {
       try {
-        const connectedUser = await checkAuthentication();
+        const connectedUser = await getProfile();
         setconnectedUser(connectedUser);
         setAuthenticated(true);
       } catch (error) {

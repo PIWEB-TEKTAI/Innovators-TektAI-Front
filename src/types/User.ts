@@ -10,6 +10,7 @@ export type User = {
     skills:Array<String>;
     userName:String;
     role:String;
+    imageUrl:string;
 
   };/*   email:string;
   password:string;

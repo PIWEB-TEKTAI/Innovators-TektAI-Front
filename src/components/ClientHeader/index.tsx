@@ -18,7 +18,7 @@ const ClientHeader =(props: {
 
   return (
       
-    <header className='sticky top-0 z-999'>
+    <header className='sticky top-0 z-999999'>
     <nav className="sticky bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
     
@@ -30,7 +30,7 @@ const ClientHeader =(props: {
             {props.authenticated ? (
             <>
             
-              <DropdownUser userName={props.connectedUser?.userName} occupation={props.connectedUser?.occupation}/>
+              <DropdownUser userName={props.connectedUser?.userName} occupation={props.connectedUser?.occupation} imageUrl={props.connectedUser?.imageUrl}/>
             </>
           ) :    (<>
           <Link to="/auth/signin"><a className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">

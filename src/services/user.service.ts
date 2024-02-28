@@ -24,12 +24,13 @@ interface UserProfileProps {
 export const uploadImage = async (file: File, setImageUrlCallback: UserProfileProps['setImageUrlCallback']) => {
   try {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('image', file);
 
-    const response = await axios.patch<{ imageUrl: string }>(`${API_URL}imageUpload`, formData, {
+    const response = await axios.post<{ imageUrl: string }>(`${API_URL}imageUpload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      withCredentials: true,
     });
 
     // Assuming the server responds with the updated user object
@@ -39,7 +40,11 @@ export const uploadImage = async (file: File, setImageUrlCallback: UserProfilePr
     setImageUrlCallback(imageUrl);
 
     console.log('Image uploaded successfully!');
+    return { success: true, imageUrl, message: 'Image uploaded successfully!' };
+
   } catch (error) {
     console.error('Error uploading image:', error);
+    return { success: false, message: 'Error uploading image. Please try again.' };
+
   }
 };

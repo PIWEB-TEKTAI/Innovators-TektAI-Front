@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import userSix from '../../images/user/user_icon.png';
-
-import UserOne from '../../images/user/user-01.png';
 import { signOut } from '../../services/auth.service';
 
 const DropdownUser =(props: {
   userName: String  | undefined;
   occupation: String  | undefined;
+  imageUrl:string | undefined;
 
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -68,7 +67,7 @@ const DropdownUser =(props: {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={userSix} alt="User" />
+          <img src={props.imageUrl} alt="User" />
         </span>
 
         <svg
