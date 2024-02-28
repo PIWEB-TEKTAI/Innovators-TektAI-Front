@@ -923,7 +923,7 @@ const Stepper = () => {
                         register(formData) 
                         setTimeout(()=>{
                           navigate('/auth/signin')
-                        },2000)
+                        },5000)
                       }}
                       disabled={!isForm2Valid()}
                     >
@@ -942,7 +942,7 @@ const Stepper = () => {
                           register(formData) , 
                           setTimeout(()=>{
                             navigate('/auth/signin')
-                          },2000)
+                          },5000)
                           ):(null)  ;
                       }}
                       disabled={!isForm1Valid()}
@@ -951,26 +951,6 @@ const Stepper = () => {
                   </button>
                   
                 )}
-
-
-
-
-                  
-                  {/*!complete ? (
-                  <button
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        currentStep === steps.length
-                          ? setComplete(true) 
-                          : setCurrentStep((prev) => prev + 1);
-                      }}
-                    >
-                      {currentStep === steps.length ? "Finish" : "Next"}
-                  </button>
-                  
-                  ):
-                    (<button  onClick={()=> handleClick} className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90">Finish</button>)*/}
                 </div>
 
                 <div className="mt-6 text-center">
