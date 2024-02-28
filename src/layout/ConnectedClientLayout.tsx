@@ -10,28 +10,31 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
   const location = useLocation();
   const [authenticated, setAuthenticated] = useState(false);
   const [connectedUser, setconnectedUser] = useState<User | null>(null);
+  const { pathname } = location;
+    // Check if the current path contains "auth"
+  const isAuthPath = pathname.includes('/auth');
+
   useEffect(() => {
-    
+    console.log("rou")
     const fetchAuthenticationStatus = async () => {
       try {
         const connectedUser = await checkAuthentication();
         setconnectedUser(connectedUser);
         setAuthenticated(true);
       } catch (error) {
-        console.error('Authentication failed:', error);
         setAuthenticated(false);
       }
     };
 
     fetchAuthenticationStatus();
   }, []);
-  // Check if the current path contains "profile"
-  const isProfilePage = location.pathname.includes('profile');
+
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      <ClientHeader  />
-      <div className="flex h-screen overflow-hidden">
+
+      <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
+      <div className="flex">
             <button
             aria-controls="sidebar"
             onClick={(e) => {
@@ -77,7 +80,9 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}
-        <div className=" flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <div className={`flex flex-1 flex-col  overflow-x-hidden ${
+                    isAuthPath?'overflow-y-hidden':'overflow-y-auto'
+                  }`}>
           {/* <!-- ===== Header Start ===== --> */}
          
           {/* <!-- ===== Header End ===== --> */}

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import userSix from '../../images/user/user_icon.png';
 
 import UserOne from '../../images/user/user-01.png';
+import { signOut } from '../../services/auth.service';
 
 const DropdownUser =(props: {
   userName: String  | undefined;
@@ -12,6 +14,7 @@ const DropdownUser =(props: {
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+  const navigate = useNavigate();
 
   // close on click outside
   useEffect(() => {
@@ -38,7 +41,17 @@ const DropdownUser =(props: {
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
   });
+  const handleSignOut = async () => {
+    const signOutSuccess = await signOut();
 
+    if (signOutSuccess) {
+      navigate("/landing");
+
+    } else {
+      // Handle sign-out failure, if needed
+    }
+  }
+  
   return (
     <div className="relative">
       <Link
@@ -55,7 +68,7 @@ const DropdownUser =(props: {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img src={userSix} alt="User" />
         </span>
 
         <svg
@@ -80,7 +93,7 @@ const DropdownUser =(props: {
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
+        className={`fixed right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
           dropdownOpen === true ? 'block' : 'hidden'
         }`}
       >
@@ -157,7 +170,8 @@ const DropdownUser =(props: {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button  onClick={handleSignOut}
+        className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
           <svg
             className="fill-current"
             width="22"

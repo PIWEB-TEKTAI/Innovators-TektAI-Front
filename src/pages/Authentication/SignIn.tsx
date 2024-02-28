@@ -15,6 +15,27 @@ const [isFormValid, setIsFormValid] = useState(false);
 const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
   const navigate = useNavigate();
+  const checkEmail = (value:any) =>{
+    setEmail(value)
+    if (!value.trim()) {
+      setEmailError("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+    {
+    setEmailError("Please enter a valid email");
+    }else {
+      setEmailError("");
+    }
+   }
+const checkPassword = (value:any) =>{
+setPassword(value)
+if (!value.trim()) {
+  setPasswordError("Password is required");
+} else {
+  setPasswordError("");
+}
+}
+   
+  
   const handleSignIn = async () => {
     try {
       setEmailError('');
@@ -51,6 +72,7 @@ const [alert, setAlert] = useState<{ type: string; message: string } | null>(nul
       }, 5000);
     }
   };
+
   return (
     <ClientLayout>
     
@@ -78,7 +100,7 @@ const [alert, setAlert] = useState<{ type: string; message: string } | null>(nul
               Sign In to TektAI
             </h2>
 
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
         
 
               <div className="mb-4">
@@ -87,7 +109,7 @@ const [alert, setAlert] = useState<{ type: string; message: string } | null>(nul
                 </label>
                 <div className="relative">
                   <input
-                    value={email} onChange={(e) => setEmail(e.target.value)} 
+                    value={email} onChange={(e) =>checkEmail(e.target.value)} 
                     type="email"
                     placeholder="Enter your email"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -121,7 +143,7 @@ const [alert, setAlert] = useState<{ type: string; message: string } | null>(nul
                 <div className="relative">
                   <input
                     type="password"
-                    value={password} onChange={(e) => setPassword(e.target.value)}
+                    value={password} onChange={(e) => checkPassword(e.target.value)}
                     placeholder="Enter your password"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
@@ -181,8 +203,14 @@ const [alert, setAlert] = useState<{ type: string; message: string } | null>(nul
 
               <div className="mb-5">
                   <input
+                   onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleSignIn();
+                    }
+                  }}
                   onClick={handleSignIn}
-
+                  type="submit"
                     value="Sign In"
                     className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />

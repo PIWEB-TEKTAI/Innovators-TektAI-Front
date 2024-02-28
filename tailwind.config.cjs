@@ -36,6 +36,7 @@ module.exports = {
         'gray-700':'#374151',
         'gray-50':'#f9fafb',
         'gray-100':'#f3f4f6',
+        'gray-500':'#64748b',
         whiten: '#F1F5F9',
         whiter: '#F5F7FD',
         boxdark: '#24303F',
