@@ -4,6 +4,7 @@ import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
 import Stepper from './stepperForm';
+import StepperForm from './stepperForm2';
 
 const SignUp: React.FC = () => {
   return (
@@ -30,7 +31,7 @@ const SignUp: React.FC = () => {
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">           
-              <Stepper/>
+              <StepperForm/>
 
             </div>
           </div>

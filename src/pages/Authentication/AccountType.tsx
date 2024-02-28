@@ -77,8 +77,6 @@ const AccountType: React.FC = () => {
                     </Link>
                   </p>
                 </div>
-
-
               </form>
             </div>
           </div>

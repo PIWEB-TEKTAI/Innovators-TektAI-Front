@@ -9,7 +9,7 @@ import { verifyEmail } from "../../services/userServices";
 
 const VerificationEmail: React.FC = () => {
   const { id, token } = useParams();
-   
+
   useEffect(()=>{
       verifyEmail(id,token);
   })

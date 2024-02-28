@@ -20,6 +20,7 @@ import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import VerificationEmail from './pages/Authentication/VerificationEmail';
+import ResendEmailVerification from './pages/Authentication/ResendEmailVerification';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -182,6 +183,18 @@ function App() {
             </>
           }
         />
+
+        <Route
+          path="/auth/ResendVerifEmail"
+          element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ResendEmailVerification />
+            </>
+          }
+        />
+
+
 
            <Route
           path="/landing"

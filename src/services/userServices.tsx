@@ -33,3 +33,17 @@ export const verifyEmail = async (id:any , token:any) => {
         throw error; 
     }
 };
+
+
+export const resendVerifcationEmail = async (formData:any) => {
+
+    try {
+        const response = await axios.post(`${url}/resendEmail` ,formData );
+        console.log('Response:', response.data);
+        return response.data
+
+    } catch (error) {
+        console.error('Error submitting data:', error);
+        throw error; 
+    }
+};
