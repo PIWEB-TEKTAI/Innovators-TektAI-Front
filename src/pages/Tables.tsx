@@ -1,7 +1,5 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import TableOne from '../components/Tables/TableOne';
-import TableThree from '../components/Tables/TableThree';
-import TableTwo from '../components/Tables/TableTwo';
+import TablesAdmin from '../pages/Admin/TablesAdmin'; // Importez TablesAdmin
 import DefaultLayout from '../layout/DefaultLayout';
 
 const Tables = () => {
@@ -10,9 +8,10 @@ const Tables = () => {
       <Breadcrumb pageName="Tables" />
 
       <div className="flex flex-col gap-10">
-        <TableOne />
-        <TableTwo />
-        <TableThree />
+        {/* Remplacez l'un des composants de table par TablesAdmin */}
+        <TablesAdmin />
+        {/* <TableTwo /> */}
+        {/* <TableThree /> */}
       </div>
     </DefaultLayout>
   );

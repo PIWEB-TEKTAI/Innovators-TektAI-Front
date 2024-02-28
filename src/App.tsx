@@ -21,6 +21,8 @@ import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 
+
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -83,15 +85,16 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/tables"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Tables />
-            </>
-          }
-        />
+       <Route
+  path="/tables"
+  element={
+    <>
+      <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+      <Tables />
+    </>
+  }
+/>
+
         <Route
           path="/settings"
           element={
