@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import 'animate.css';
+import Layout from '../../layout/DefaultLayout';
 
 // Définissez le type des données attendues
 interface User {
-  email: {
-    type: string;
-    required: boolean;
-    unique: boolean;
-  };
+  email:string;
   FirstName: string;
   LastName: string;
   password: string;
@@ -31,16 +29,35 @@ export default function FetchData()
 {
   const [data, setData] = useState<User[]>([]);
 
-
   useEffect(() => {
-     axios.get<User[]>('http://localhost:3000/Admin').then(response=>setData(response.data))
-     .catch(err=>console.log(err));
-    }, []);
-
+    axios.get<User[]>('http://localhost:3000/Admin')
+      .then(response => {
+        setData(prevData => response.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
+  
+ var bloquer = (email: string) => {
+      const updatedData = data.map(user =>
+        user.email === email ? { ...user, state: 'blocked' as const } : user
+      );
+    
+     // console.log('Updated Data:', updatedData);
+    
+      console.log(`http://localhost:3000/Admin/${email}/updateState`)
+      axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
+        .then(response => {
+          console.log('User blocked successfully:', response.data);
+          setData(updatedData);
+        })
+        .catch(err => console.log('Error blocking user:', err));
+    };
+  
   return (
+    <Layout>
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-    <div className="max-w-full overflow-x-auto">
-      <table className="w-full table-auto">
+    <div className="max-w-full overflow-x-auto ">
+      <table className="w-full table-auto ">
         <thead>
           <tr className="bg-gray-2 text-left dark:bg-meta-4">
             <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
@@ -57,6 +74,9 @@ export default function FetchData()
             </th>
             <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
               State
+            </th>
+            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+              email
             </th>
             <th className="py-4 px-4 font-medium text-black dark:text-white">
               Actions
@@ -99,6 +119,11 @@ export default function FetchData()
                 }`}
               >
                 {users.state}
+              </p>
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+              <p className="text-black dark:text-white">
+                {users.email}
               </p>
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -149,7 +174,7 @@ export default function FetchData()
                     />
                   </svg>
                 </button>
-                <button className="hover:text-primary">
+                <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
                   <svg
                     className="fill-current"
                     width="18"
@@ -159,7 +184,13 @@ export default function FetchData()
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
+                     d="M22.987,9.474C22.982,7.63,20.195,7.637,20.2,9.482l0.004,2.93
+                     c-0.095-0.035-0.186-0.073-0.284-0.104l-0.009-5.896c-0.005-1.844-2.792-1.836-2.787,0.008l0.008,5.457
+                     c-0.096-0.001-0.191,0.001-0.287,0.002l-0.009-6.214c-0.005-1.849-2.792-1.833-2.787,0.008l0.01,6.635
+                     c-0.1,0.032-0.193,0.072-0.29,0.107l-0.007-4.942C13.758,5.659,11,5.602,11.005,7.482c0.009,6.491,0.008,4.954,0.008,8.349
+                     l-1.009-1.003c-1.551-1.542-4.058-1.535-5.6,0.016l-0.028,0.028c0.246,0.245,6.641,6.487,6.769,6.81
+                     c0.699,2.516,4.739,3.011,7.337,2.648c0.01-0.068,0.01-0.068,0,0c1.864-0.261,4.265-1.143,4.517-2.962
+                     C22.999,20.983,22.987,9.859,22.987,9.474z"
                       fill=""
                     />
                     <path
@@ -178,6 +209,7 @@ export default function FetchData()
       </table>
     </div>
   </div>
+  </Layout>
   );
 }
 

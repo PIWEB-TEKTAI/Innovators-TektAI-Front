@@ -20,6 +20,8 @@ import SignUpForm from './pages/Authentication/SignUpForm';
 import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
+import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
+import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -70,25 +72,17 @@ function App() {
           element={
             <>
               <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <FormElements />
+              <AddChallengerByAdmin />
             </>
           }
         />
-        <Route
-          path="/forms/form-layout"
-          element={
-            <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <FormLayout />
-            </>
-          }
-        />
+        
         <Route
           path="/tables"
           element={
             <>
               <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Tables />
+              <ListesChallengers />
             </>
           }
         />
