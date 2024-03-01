@@ -8,11 +8,15 @@ import ClientLayout from '../../layout/clientLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'; 
 import { resendVerifcationEmail } from "../../services/userServices";
+import { ErrorToast, successfullToast } from '../../components/Toast';
+import { AxiosError } from 'axios';
 
 const ResendEmailVerification: React.FC = () => {
 
   const [EmailValue, setEmailValue] = useState('');
   const [EmailError, setEmailError] = useState('');
+
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
 
   const navigate = useNavigate();
@@ -38,15 +42,39 @@ const ResendEmailVerification: React.FC = () => {
      email : EmailValue
    }
 
-
    function handleSubmit(e:any){
-        e.preventDefault();
-        resendVerifcationEmail(formData)
-        setTimeout(()=>{
-            navigate('/auth/signin')
-        },3000)
-   }
+    e.preventDefault();
+    resendVerifcationEmail(formData)
+        .then((response) => {
+            console.log("Resend Verification email successfully sent :", response.msg);
+            setAlert({
+              type: 'success',
+              message:
+              ''+  response.msg,
+            });
+            setTimeout(() => {
+                navigate('/auth/signin');
+            }, 3000);
+        })
+        .catch((error: AxiosError<any>) => {
+          if (error.response && error.response.data && error.response.data.msg) {
+              const errorMessage = error.response.data.msg;
+              console.error("Registration Error :", errorMessage);
+              setAlert({
+                  type: 'error',
+                  message: errorMessage,
+              });
+          } else {
+              console.error("Registration Error :", error.message);
+              setAlert({
+                  type: 'error',
+                  message: error.message,
+              });
+          }
+          
+      });
 
+}
 
 
 
@@ -139,9 +167,15 @@ const ResendEmailVerification: React.FC = () => {
                     </Link>
                   </p>
                 </div>
-                </div>
+              </div>
 
-            
+              {alert?.type == 'success' && (
+                  successfullToast(alert.message )
+              )}
+
+              {alert?.type == 'error' && (
+                    ErrorToast(alert.message)
+              )}
                 
             </form>
           </div>

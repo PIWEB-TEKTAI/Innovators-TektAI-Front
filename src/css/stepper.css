@@ -38,8 +38,16 @@
     background-image: none;
   }
   
-
-
   .error-msg{
     color: red;
   }
+
+  .error-submit .step{
+     @apply bg-red-600
+  }
+
+  .error-submit p{
+    @apply text-red-600;
+    @apply font-semibold;
+ }
+
