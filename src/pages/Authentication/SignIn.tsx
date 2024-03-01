@@ -79,8 +79,8 @@ if (!value.trim()) {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
         <div className="hidden w-full xl:block xl:w-1/2">
-          <div className="py-17.5 px-26 text-center">
-            <Link className="mb-5.5 inline-block" to="/">
+          <div className="py-1 px-26 text-center">
+            <Link className="mb-2 pt-2 inline-block" to="/">
               <img className="hidden dark:block" src={Logo} alt="Logo" />
               <img className="dark:hidden" src={LogoDark} alt="Logo" />
             </Link>
@@ -95,7 +95,7 @@ if (!value.trim()) {
         </div>
 
         <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-          <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+          <div className="w-full px-4 sm:p-12.5 xl:p-17.5 xl:pt-0 mt-2">
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign In to TektAI
             </h2>

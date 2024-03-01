@@ -48,3 +48,43 @@ export const uploadImage = async (file: File, setImageUrlCallback: UserProfilePr
 
   }
 };
+
+export const updateUser = async (updatedUserData: any): Promise<any> => {
+  try {
+    const response = await axios.put(`${API_URL}/updateProfile`, updatedUserData, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error('update error', error);
+    throw error; // Re-throw the error to handle it in the calling code if needed
+  }
+};
+export const updateCompany = async (updatedCompanyData: any): Promise<any> => {
+  try {
+    const response = await axios.put(`${API_URL}updateCompany`, updatedCompanyData, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error('Update company error', error);
+    throw error; // Re-throw the error to handle it in the calling code if needed
+  }
+};
+
+
+export const checkEmailUnique = async (email: string): Promise<boolean> => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/checkEmailUnique`,
+      { email },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true, // Include credentials in cross-origin requests
+      }
+    );
+
+    return response.data.isUnique;
+  } catch (error) {
+    console.error('Error checking email uniqueness:', error);
+    throw new Error('Error checking email uniqueness');
+  }
+};

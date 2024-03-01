@@ -10,6 +10,7 @@ const ClientHeader =(props: {
 
 })=> {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const userName = `${props.connectedUser?.FirstName} ${props.connectedUser?.LastName}`;
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -30,7 +31,7 @@ const ClientHeader =(props: {
             {props.authenticated ? (
             <>
             
-              <DropdownUser userName={props.connectedUser?.userName} occupation={props.connectedUser?.occupation} imageUrl={props.connectedUser?.imageUrl}/>
+              <DropdownUser userName={userName} occupation={props.connectedUser?.occupation} imageUrl={props.connectedUser?.imageUrl}/>
             </>
           ) :    (<>
           <Link to="/auth/signin"><a className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">

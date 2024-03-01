@@ -60,7 +60,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
   return (
     <aside
       ref={sidebar}
-      className={`bg-gray absolute left-0  z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
+      className={`bg-gray absolute left-0 pt-3 z-9999 flex  w-72.5 flex-col overflow-y-hidden duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
@@ -68,7 +68,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
       
       {/* <!-- SIDEBAR HEADER --> */}
 
-      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear px-5 py-14">
+      <div className="no-scrollbar flex flex-col overflow-y-hidden duration-300 ease-linear pr-5 pl-10 py-2">
         
 
 <div className="w-full max-w-sm bg-white  rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-9">
@@ -76,8 +76,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
     <div className="flex flex-col items-center pb-10">
 
         <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src={connectedUser?.imageUrl} alt="Bonnie image"/>
-        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{connectedUser?.userName} </h5>
-        <span className="text-sm text-gray-500 dark:text-gray-400">{connectedUser?.email} </span>
+        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
+        <span className="text-sm text-black-500 dark:text-gray-400"> {connectedUser?.occupation}</span>
         <div className="flex mt-4 md:mt-6">
             <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
              {
@@ -90,12 +90,15 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
               )
              }
               </a>
+              
         </div>
+     
     </div>
+
 </div>
 
         {/* <!-- Sidebar Menu --> */}
-        <nav className="rounded-lg shadow bg-white mt-57 py-4 px-4 lg:px-6">
+        <nav className="rounded-lg shadow bg-white  py-4 px-4 lg:px-6">
           {/* <!-- Menu Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-black">
@@ -231,6 +234,20 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
           {/* <!-- Others Group --> */}
         
         </nav>
+  <div className="pt-10">
+  <div className="rounded-lg bg-white  py-4 px-4 lg:px-6">
+            <div className="flex flex-col space-x-2">
+                <span className="text-gray-700 uppercase font-bold  mb-2">Skills</span>
+                <ul>
+
+                {connectedUser?.skills.map((skill) => (
+              <li className="bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">{skill}</li>
+              ))}
+              </ul>
+                 
+              </div>
+        </div>
+  </div>
         {/* <!-- Sidebar Menu --> */}
       </div>
     </aside>

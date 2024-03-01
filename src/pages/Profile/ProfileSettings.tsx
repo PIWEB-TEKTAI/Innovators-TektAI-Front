@@ -1,9 +1,355 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
-import userThree from '../../images/user/user-03.png';
+import { checkEmailUnique, getProfile, updateCompany, updateUser } from '../../services/user.service'; 
+import { useEffect, useState } from 'react';
+import { User } from '../../types/User';
+import CustomAlert from '../UiElements/CostumAlert';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileSettings = () => {
+  const professionalFields = 
+  ["Healthcare",
+  "Technology",
+  "Finance",
+  "Education",
+  "Manufacturing",
+  "Retail",
+  "Hospitality",
+  "Consulting",
+  "Real Estate",
+  "Legal",
+  "Transportation",
+  "Energy",
+  "Media & Entertainment",
+  "Non-profit",
+  "Government",
+  "Agriculture",
+  "Construction",
+  "Telecommunications",
+  "Marketing & Advertising",
+  "Research & Development"];
+  const [FirstName, setFirstName] = useState<string | undefined>("");
+  const [FirstNameError, setFirstNameError] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [LastName, setLastName] = useState('');
+  const [LastNameError, setLastNameError] = useState('');
+
+  const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+
+  const [contry, setContry] = useState('');
+  const [contryError, setContryError] = useState('');
+
+  const [address, setAddress] = useState('');
+  const [addressError, setAddressError] = useState('');
+
+  const [Description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+
+  const [profileData, setProfileData] = useState<User | null>(null);
+  const [skillsInput, setSkillsInput] = useState<string>(''); // State for the single skill input
+  const [skills, setSkills] = useState<string[]>([]); // State for the skills array
+
+  const [CompanyNameValue, setCompanyNameValue] = useState('');
+  const [CompanyNameError, setCompanyNameError] = useState('');
+ 
+  const [companyAddessValue, setCompanyAddressValue] = useState('');
+  const [companyAddessError, setCompanyAddressError] = useState('');
+
+
+  const [companyEmailValue, setCompanyEmailValue] = useState('');
+  const [companyEmailError, setCompanyEmailError] = useState('');
+
+
+  const [companyPhoneValue, setCompanyPhoneValue] = useState('');
+  const [companyPhoneError, setCompanyPhoneError] = useState('');
+
+  
+  const [companyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose company professional fields');
+  const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
+
+  // ... (other state variables)
+  const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
+  const navigate = useNavigate();
+
+  const handleAddSkill = () => {
+    if (skillsInput.trim() !== '' && !skills.includes(skillsInput)) {
+      setSkills((prevSkills) => [...prevSkills, skillsInput]);
+      setSkillsInput(''); // Clear the input after adding a skill
+    }
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
+  };
+
+  const validateEmail = async(value:any) =>{
+    setEmail(value)
+    
+    if (!value.trim()) {
+      setEmailError("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+
+    {
+    setEmailError("Please enter a valid email");
+    }else {
+      if(value!=profileData?.email){
+        try {
+          const isUnique = await checkEmailUnique(value);
+          if (!isUnique) {
+            setEmailError("Email is not unique");
+          } else {
+            setEmailError("");
+          }
+        } catch (error) {
+          console.error('Error checking email uniqueness:', error);
+        }
+      }
+  
+  }
+   }
+   const validateFirstName = (value:any) =>{
+    setFirstName(value)
+    if (!value.trim()) {
+      setFirstNameError("FirstName is required");
+    } 
+    else {
+      setFirstNameError("");
+    }
+   }
+   const validateLastName = (value:any) =>{
+    setLastName(value)
+    if (!value.trim()) {
+      setLastNameError("Last Name is required");
+    } 
+    else {
+      setLastNameError("");
+    }
+   }
+   const validatePhone = (value:any) =>{
+    setPhone(value)
+    if (!value.trim()) {
+      setPhoneError("phone is required");
+    } 
+    else {
+      setPhoneError("");
+    }
+   }
+   const validateCountry = (value:any) =>{
+    setContry(value)
+    if (!value.trim()) {
+      setContryError("Contry is required");
+    } 
+    else {
+      setContryError("");
+    }
+   }
+   const validateAddress = (value:any) =>{
+    setAddress(value)
+    if (!value.trim()) {
+      setAddressError("Address is required");
+    } 
+    else {
+      setAddressError("");
+    }
+   }
+   const validateDescription = (value:any) =>{
+    setDescription(value)
+    if (!value.trim()) {
+      setDescriptionError("Description is required");
+    } 
+    else {
+      setDescriptionError("");
+    }
+   }
+ const checkCompanyName = (value:any) =>{
+    setCompanyNameValue(value)
+    if (!value.trim()) {
+      setCompanyNameError("Please enter the company name");
+    } else {
+      setCompanyNameError("");
+    }
+  }
+
+   
+  const checkCompanyEmail = (value:any) =>{
+    setCompanyEmailValue(value)
+    if (!value.trim()) {
+      setCompanyEmailError("Please enter the company email");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setCompanyEmailError("Please enter a valid email");
+    }else{
+      setCompanyEmailError("");
+    }
+   }
+  
+
+  const checkCompanyAddress = (value:any) =>{
+    setCompanyAddressValue(value)
+    if (!value.trim()) {
+      setCompanyAddressError("Please enter the company address");
+    } else {
+      setCompanyAddressError("");
+    }
+  }
+
+  const checkCompanyPhone = (value:any) =>{
+    setCompanyPhoneValue(value)
+    if (!value.trim()) {
+      setCompanyPhoneError("Please enter the company phone number");
+
+    }else if(! /^\d+$/.test(value)){
+        setCompanyPhoneError("Please enter a valid phone number")
+    } else {
+      setCompanyPhoneError("");
+    }
+  }
+
+
+
+  
+  const checkProfesionnalFieldsValue = (value:any) =>{
+    setCompanyProfessionnalFieldsValue(value)
+    if (value == "Choose company professional fields") {
+      setCompanyProfessionnalFieldsError("Please enter the company professionnal fileds");
+    } else {
+      setCompanyProfessionnalFieldsError("");
+    }
+  }
+
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const updatedUser = await updateUser({
+        FirstName: FirstName,
+        LastName:LastName,
+        phone: phone,
+        email: email,
+        Description: Description,
+        contry:contry,
+        address:address,
+        skills:skills,
+
+  
+      });
+      if(updatedUser){
+        setAlert({
+          type: 'success',
+          message:
+          'user updated succesfully'
+        });
+        setTimeout(() => {
+          setAlert(null);
+          navigate('/profile')
+        }, 3000);
+      }
+    } catch (error) {
+      setAlert({
+        type: 'error',
+        message:
+        'Error updating user:' + error
+      });
+      setTimeout(() => {
+        setAlert(null);
+        
+      }, 3000);
+      console.error('Error updating user:', error);
+    }
+  };
+  
+  const handleForm2Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+     const updatedCompany =  await updateCompany({
+        name: CompanyNameValue,
+        phone: companyPhoneValue,
+        email: companyEmailValue,
+        address:companyAddessValue,
+        professionnalFields:companyProfessionnalFieldsValue,
+      });
+
+      if(updatedCompany){
+        setAlert({
+          type: 'success',
+          message:
+          'company updated succesfully'
+        });
+        setTimeout(() => {
+          setAlert(null);
+          navigate('/profile')
+
+        }, 3000);
+
+      }
+    } catch (error) {
+      setAlert({
+        type: 'error',
+        message:
+        'Error updating company:' + error
+      });
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
+      console.error('Error updating user:', error);
+    }
+  };
+  const isFormValid = () => {
+    return (
+      FirstName!== ''&&
+      LastName!==''&&
+      contry!==''&&
+      phone!=''&&
+      address!=''&&
+      Description!=''&&
+      FirstNameError === '' &&
+      emailError === '' &&
+      LastNameError === '' &&
+      phoneError === '' &&
+      contryError === '' &&
+      addressError === '' &&
+      descriptionError === ''
+    );
+  };
+  const isForm2Valid = () => {
+    return  CompanyNameValue !== '' && companyAddessValue !== '' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
+   };
+  
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfileData(data);
+        setProfileData(data);
+        setFirstName(data?.FirstName || ''); 
+        setEmail(data?.email || ''); 
+        setLastName(data?.LastName || ''); 
+        setPhone(data?.phone || ''); 
+        setContry(data?.contry || ''); 
+        setAddress(data?.address || ''); 
+        setDescription(data?.Description || '')
+        setSkills(data?.skills || []);     
+      setCompanyNameValue(data?.company.name || '')
+      setCompanyEmailValue(data?.company.email || '')
+      setCompanyAddressValue(data?.company.address)
+      setCompanyPhoneValue(data?.company.phone);
+      setCompanyProfessionnalFieldsValue(data?.company.professionnalFields)
+       } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+    
+  }, []);  
+  
   return (
     <ConnectedClientLayout>
+      {alert&&<CustomAlert type={alert.type} message={alert?.message} />}
+        
+
       <div className="mx-auto max-w-270">
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
@@ -14,14 +360,14 @@ const ProfileSettings = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form onSubmit={handleFormSubmit}>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="fullName"
+                        htmlFor="First Name"
                       >
-                        Full Name
+                        First Name
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -52,36 +398,89 @@ const ProfileSettings = () => {
                         <input
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="fullName"
-                          id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          name="First Name"
+                          onChange={(e) =>validateFirstName(e.target.value)} 
+                          id="First Name"
+                          placeholder="First Name"
+                          value={FirstName}
                         />
+                            {FirstNameError && <p className="text-red-500 text-sm mt-1">{FirstNameError}</p>}
+
                       </div>
                     </div>
-
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="phoneNumber"
+                        htmlFor="LastName"
+                      >
+                        LastName
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4.5 top-4">
+                          <svg
+                            className="fill-current"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g opacity="0.8">
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M3.72039 12.887C4.50179 12.1056 5.5616 11.6666 6.66667 11.6666H13.3333C14.4384 11.6666 15.4982 12.1056 16.2796 12.887C17.061 13.6684 17.5 14.7282 17.5 15.8333V17.5C17.5 17.9602 17.1269 18.3333 16.6667 18.3333C16.2064 18.3333 15.8333 17.9602 15.8333 17.5V15.8333C15.8333 15.1703 15.5699 14.5344 15.1011 14.0655C14.6323 13.5967 13.9964 13.3333 13.3333 13.3333H6.66667C6.00363 13.3333 5.36774 13.5967 4.8989 14.0655C4.43006 14.5344 4.16667 15.1703 4.16667 15.8333V17.5C4.16667 17.9602 3.79357 18.3333 3.33333 18.3333C2.8731 18.3333 2.5 17.9602 2.5 17.5V15.8333C2.5 14.7282 2.93899 13.6684 3.72039 12.887Z"
+                                fill=""
+                              />
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M9.99967 3.33329C8.61896 3.33329 7.49967 4.45258 7.49967 5.83329C7.49967 7.214 8.61896 8.33329 9.99967 8.33329C11.3804 8.33329 12.4997 7.214 12.4997 5.83329C12.4997 4.45258 11.3804 3.33329 9.99967 3.33329ZM5.83301 5.83329C5.83301 3.53211 7.69849 1.66663 9.99967 1.66663C12.3009 1.66663 14.1663 3.53211 14.1663 5.83329C14.1663 8.13448 12.3009 9.99996 9.99967 9.99996C7.69849 9.99996 5.83301 8.13448 5.83301 5.83329Z"
+                                fill=""
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        <input
+                          className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                          type="text"
+                          name="LastName"
+                          id="LastName"
+                          placeholder="Last Name"
+                          value={LastName}
+                          onChange={(e) =>validateLastName(e.target.value)} 
+
+                        />
+                            {LastNameError && <p className="text-red-500 text-sm mt-1">{LastNameError}</p>}
+
+                      </div>
+                    </div>
+                
+                  </div>
+                  <div className="mb-5.5">
+                      <label
+                        className="mb-3 block text-sm font-medium text-black dark:text-white"
+                        htmlFor="phone"
                       >
                         Phone Number
                       </label>
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
+                        name="phone"
+                        id="phone"
                         placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
-                      />
-                    </div>
-                  </div>
+                        value={phone}
+                        onChange={(e) =>validatePhone(e.target.value)} 
 
+                      />
+                          {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
+
+                    </div>
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="emailAddress"
+                      htmlFor="email"
                     >
                       Email Address
                     </label>
@@ -114,35 +513,121 @@ const ProfileSettings = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="email"
-                        name="emailAddress"
-                        id="emailAddress"
-                        placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
+                        name="email"
+                        id="email"
+                        placeholder="flenBenfoulen@gmail.com"
+                        value={email}
+                        onChange={(e) =>validateEmail(e.target.value)} 
+
                       />
+                          {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+
                     </div>
                   </div>
+                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
 
-                  <div className="mb-5.5">
+                  <div className="w-full sm:w-1/2">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
+                      htmlFor="contry"
                     >
-                      Username
+                      Country
                     </label>
                     <input
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="text"
-                      name="Username"
-                      id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
+                      name="conttry"
+                      id="contry"
+                      placeholder="tunis"
+                      value={contry}
+                      onChange={(e) =>validateCountry(e.target.value)} 
+
                     />
+                        {contryError && <p className="text-red-500 text-sm mt-1">{contryError}</p>}
+
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="address"
+                    >
+                      Address
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary "
+                      type="text"
+                      name="addres"
+                      id="address"
+                      placeholder="rue de palastine n45"
+                      value={address}
+                      onChange={(e) =>validateAddress(e.target.value)} 
+
+                    />
+                        {addressError && <p className="text-red-500 text-sm mt-1">{addressError}</p>}
+
                   </div>
 
+                  </div>
+                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        {/* ... (other input fields) */}
+
+        {/* Input for single skill */}
+        <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block text-sm font-medium text-black dark:text-white"
+            htmlFor="skills"
+          >
+            Skills
+          </label>
+          <div className="relative">
+            {/* Input for a single skill */}
+            <input
+              className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="skills"
+              value={skillsInput}
+              onChange={(e) => setSkillsInput(e.target.value)}
+              placeholder="Enter a skill"
+            />
+            <button
+              type="button"
+              className="absolute right-4.5 top-4 text-primary hover:underline"
+              onClick={handleAddSkill}
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        {/* Display the list of skills */}
+        <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block text-sm font-medium text-black dark:text-white"
+            htmlFor="skillsList"
+          >
+            Skills List
+          </label>
+          <div>
+            {skills.map((skill, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <p className="mr-2">{skill}</p>
+                <button
+                  type="button"
+                  className="text-red-500 hover:underline"
+                  onClick={() => handleRemoveSkill(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* ... (other JSX) */}
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
+                      htmlFor="description"
                     >
                       BIO
                     </label>
@@ -180,12 +665,16 @@ const ProfileSettings = () => {
 
                       <textarea
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        name="bio"
-                        id="bio"
+                        name="description"
+                        id="description"
                         rows={6}
                         placeholder="Write your bio here"
-                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
+                        value={Description}
+                        onChange={(e) =>validateDescription(e.target.value)} 
+
                       ></textarea>
+                          {descriptionError && <p className="text-red-500 text-sm mt-1">{descriptionError}</p>}
+
                     </div>
                   </div>
 
@@ -197,91 +686,175 @@ const ProfileSettings = () => {
                       Cancel
                     </button>
                     <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
+                      disabled={!isFormValid()}
                     >
                       Save
                     </button>
                   </div>
                 </form>
+                        
+           
               </div>
             </div>
           </div>
-          <div className="col-span-5 xl:col-span-2">
+          {profileData?.role == "company"?(<> <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Your Photo
+                  Company Information
                 </h3>
+                
               </div>
-              <div className="p-7">
-                <form action="#">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-14 w-14 rounded-full">
-                      <img src={userThree} alt="User" />
-                    </div>
-                    <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Edit your photo
-                      </span>
-                      <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Update
-                        </button>
-                      </span>
-                    </div>
-                  </div>
+              <form onSubmit={handleForm2Submit}>
+               <div className="p-7">
+               <div className="mb-4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Company name
+                    </label>
+                    <div className="relative">
+                      <input
+                        value={CompanyNameValue}
+                        onChange={(e)=> checkCompanyName(e.target.value)}
+                        type="text"
+                        placeholder="Enter the company name "
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      />
 
-                  <div
-                    id="FileUpload"
-                    className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                    />
-                    <div className="flex flex-col items-center justify-center space-y-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
+                      { CompanyNameError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ CompanyNameError }</p>
+                        </div> 
+                      }
+
+                      <span className="absolute left-4.5 top-4">
                         <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M1.99967 9.33337C2.36786 9.33337 2.66634 9.63185 2.66634 10V12.6667C2.66634 12.8435 2.73658 13.0131 2.8616 13.1381C2.98663 13.2631 3.1562 13.3334 3.33301 13.3334H12.6663C12.8431 13.3334 13.0127 13.2631 13.1377 13.1381C13.2628 13.0131 13.333 12.8435 13.333 12.6667V10C13.333 9.63185 13.6315 9.33337 13.9997 9.33337C14.3679 9.33337 14.6663 9.63185 14.6663 10V12.6667C14.6663 13.1971 14.4556 13.7058 14.0806 14.0809C13.7055 14.456 13.1968 14.6667 12.6663 14.6667H3.33301C2.80257 14.6667 2.29387 14.456 1.91879 14.0809C1.54372 13.7058 1.33301 13.1971 1.33301 12.6667V10C1.33301 9.63185 1.63148 9.33337 1.99967 9.33337Z"
-                            fill="#3C50E0"
-                          />
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7.5286 1.52864C7.78894 1.26829 8.21106 1.26829 8.4714 1.52864L11.8047 4.86197C12.0651 5.12232 12.0651 5.54443 11.8047 5.80478C11.5444 6.06513 11.1223 6.06513 10.8619 5.80478L8 2.94285L5.13807 5.80478C4.87772 6.06513 4.45561 6.06513 4.19526 5.80478C3.93491 5.54443 3.93491 5.12232 4.19526 4.86197L7.5286 1.52864Z"
-                            fill="#3C50E0"
-                          />
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7.99967 1.33337C8.36786 1.33337 8.66634 1.63185 8.66634 2.00004V10C8.66634 10.3682 8.36786 10.6667 7.99967 10.6667C7.63148 10.6667 7.33301 10.3682 7.33301 10V2.00004C7.33301 1.63185 7.63148 1.33337 7.99967 1.33337Z"
-                            fill="#3C50E0"
-                          />
+                          <g opacity="0.5">
+                            <path
+                              d="M11.0008 9.52185C13.5445 9.52185 15.607 7.5281 15.607 5.0531C15.607 2.5781 13.5445 0.584351 11.0008 0.584351C8.45703 0.584351 6.39453 2.5781 6.39453 5.0531C6.39453 7.5281 8.45703 9.52185 11.0008 9.52185ZM11.0008 2.1656C12.6852 2.1656 14.0602 3.47185 14.0602 5.08748C14.0602 6.7031 12.6852 8.00935 11.0008 8.00935C9.31641 8.00935 7.94141 6.7031 7.94141 5.08748C7.94141 3.47185 9.31641 2.1656 11.0008 2.1656Z"
+                              fill=""
+                            />
+                            <path
+                              d="M13.2352 11.0687H8.76641C5.08828 11.0687 2.09766 14.0937 2.09766 17.7719V20.625C2.09766 21.0375 2.44141 21.4156 2.88828 21.4156C3.33516 21.4156 3.67891 21.0719 3.67891 20.625V17.7719C3.67891 14.9531 5.98203 12.6156 8.83516 12.6156H13.2695C16.0883 12.6156 18.4258 14.9187 18.4258 17.7719V20.625C18.4258 21.0375 18.7695 21.4156 19.2164 21.4156C19.6633 21.4156 20.007 21.0719 20.007 20.625V17.7719C19.9039 14.0937 16.9133 11.0687 13.2352 11.0687Z"
+                              fill=""
+                            />
+                          </g>
                         </svg>
                       </span>
-                      <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
-                      </p>
-                      <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
-                      <p>(max, 800 X 800px)</p>
+                      
+                    </div>
+                  </div> 
+                  <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Company email
+                      </label>
+                      <div className="relative">
+                        <input
+                          value={companyEmailValue}
+                          onChange={(e)=> checkCompanyEmail(e.target.value)}
+                          type="text"
+                          placeholder="Enter the company address email"
+                          className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        />
+                        { companyEmailError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ companyEmailError }</p>
+                        </div> 
+                        }
+                        <span className="absolute left-4.5 top-4">
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      </div>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Professional fields
+                    </label>
+                    <select id="professionnalFields"  value={companyProfessionnalFieldsValue}   onChange={(e)=> checkProfesionnalFieldsValue(e.target.value)} className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary">
+                        <option value="Choose company professional fields">Choose company professional fields</option>
+                        {
+                          professionalFields.map((item,index)=>(
+                            <option key={index} value={item}>{item}</option>
+                          ))
+                        }
+                    </select>
+
+                    { companyProfessionnalFieldsError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ companyProfessionnalFieldsError }</p>
+                        </div> 
+                        }
+                  </div>
+                  <div className="mb-4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Company address
+                    </label>
+                    <div className="relative">
+                      <input
+                      
+                      value={companyAddessValue}
+                      onChange={(e)=> checkCompanyAddress(e.target.value)}
+                        type="text"
+                        placeholder="Enter the company address "
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      />
+
+                      { companyAddessError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ companyAddessError }</p>
+                        </div> 
+                      }
+                        <span className="absolute left-4.5 top-4">
+                          <img src="/src/images/icon/adresse.png" alt="adresse" width="45%"/>
+                        </span>  
                     </div>
                   </div>
+                  <div className="mb-4">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Company phone number
+                    </label>
+                    <div className="relative">
+                      <input
+                        value={companyPhoneValue}
+                        onChange={(e)=> checkCompanyPhone(e.target.value)}
+                        type="text"
+                        placeholder="Enter the company phone number"
+                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      />
 
+                    { companyPhoneError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ companyPhoneError }</p>
+                        </div> 
+                      }
+                      <span className="absolute left-4.5 top-4">
+                          <img src="/src/images/icon/tel.png" alt="tel" width="45%"/>
+                      </span>  
+                    </div>
+                  </div>
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -290,20 +863,26 @@ const ProfileSettings = () => {
                       Cancel
                     </button>
                     <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
+                      disabled={!isForm2Valid()}
                     >
                       Save
                     </button>
                   </div>
-                </form>
-              </div>
+               </div>
+              </form>
+                        
+
+           
             </div>
-          </div>
+          </div></>):(<><div></div></>)}
+         
         </div>
       </div>
     </ConnectedClientLayout>
   );
 };
+
 
 export default ProfileSettings;
