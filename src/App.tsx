@@ -20,6 +20,7 @@ import SignUpForm from './pages/Authentication/SignUpForm';
 import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
+import ModifierAdmin from '../src/pages/Admin/ModifierAdmin';
 
 
 
@@ -91,6 +92,7 @@ function App() {
     <>
       <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
       <Tables />
+
     </>
   }
 />
@@ -190,6 +192,18 @@ function App() {
             <>
               <PageTitle title="Landing | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Landing />
+            </>
+          }
+        />
+      </Routes>
+      <Routes>
+        {/* Vos autres routes */}
+        <Route
+          path="/modifier-admin/:userId"
+          element={
+            <>
+              <PageTitle title="Modifier Admin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ModifierAdmin />
             </>
           }
         />

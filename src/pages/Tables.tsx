@@ -10,10 +10,13 @@ const Tables = () => {
       <div className="flex flex-col gap-10">
         {/* Remplacez l'un des composants de table par TablesAdmin */}
         <TablesAdmin />
+        
         {/* <TableTwo /> */}
         {/* <TableThree /> */}
       </div>
     </DefaultLayout>
+
+    
   );
 };
 
