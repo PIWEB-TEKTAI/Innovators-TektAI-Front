@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 interface User {
   _id: string;
@@ -22,7 +24,7 @@ interface User {
 }
 
 function ModifierAdmin() {
-  const { userId } = useParams(); // Récupérer l'ID de l'utilisateur depuis les paramètres d'URL
+  const { userId } = useParams();
   const [userData, setUserData] = useState<User>({
     _id: '',
     email: '',
@@ -43,7 +45,6 @@ function ModifierAdmin() {
   });
 
   useEffect(() => {
-    // Récupérer les données de l'utilisateur à partir de l'API
     axios.get<User>(`http://localhost:3000/users/${userId}`)
       .then(response => {
         const userDataFromApi = response.data;
@@ -56,27 +57,29 @@ function ModifierAdmin() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setUserData(prevData => ({
-      ...prevData,
+    setUserData(prevState => ({
+      ...prevState,
       [name]: value
+    }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setUserData(prevState => ({
+      ...prevState,
+      phone: value
     }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Envoyer les données modifiées à l'API pour mettre à jour l'utilisateur
     axios.put(`http://localhost:3000/users/update/${userId}`, userData)
       .then(response => {
         console.log('User updated successfully:', response.data);
-        // Rediriger l'utilisateur vers une autre page après la modification réussie
-        // Vous pouvez utiliser une bibliothèque de routage comme React Router pour cela
-        window.location.href = '/tables'; // Modifier '/liste' avec la route de votre liste d'utilisateurs
-
+        window.location.href = '/tables';
       })
       .catch(error => {
         console.error('Error updating user:', error);
       });
-      
   };
 
   return (
@@ -99,6 +102,15 @@ function ModifierAdmin() {
           <div className="mb-4.5">
             <label className="mb-2.5 block text-black dark:text-white">Email <span className="text-meta-1">*</span></label>
             <input type="email" name="email" value={userData.email} onChange={handleChange} placeholder="Enter your email address" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+          </div>
+          <div className="mb-4.5">
+            <label className="mb-2.5 block text-black dark:text-white">Phone <span className="text-meta-1">*</span></label>
+            <PhoneInput
+              name="phone"
+              placeholder="Enter your phone number"
+              value={userData.phone}
+              onChange={handlePhoneChange}
+            />
           </div>
           <div className="mb-4.5">
             <label className="mb-2.5 block text-black dark:text-white">Occupation</label>
