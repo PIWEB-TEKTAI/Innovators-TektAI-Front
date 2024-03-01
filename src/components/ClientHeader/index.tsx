@@ -1,5 +1,4 @@
 import  { useEffect, useState } from 'react';
-import { checkAuthentication } from '../../services/auth.service';
 import DropdownUser from './DropdownUser';
 import { User } from '../../types/User';
 import { Link } from 'react-router-dom';

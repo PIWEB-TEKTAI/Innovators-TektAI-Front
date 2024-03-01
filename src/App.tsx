@@ -16,12 +16,11 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import Landing from './pages/landing/landing';
-import SignUpForm from './pages/Authentication/SignUpForm';
-import AccountType from './pages/Authentication/AccountType';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import ProfileSettings from './pages/Profile/ProfileSettings';
-
+import VerificationEmail from './pages/Authentication/VerificationEmail';
+import ResendEmailVerification from './pages/Authentication/ResendEmailVerification';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -147,23 +146,6 @@ function App() {
               <SignUp />
             </>
           }
-        />
-        <Route
-          path="/auth/signup2"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignUpForm />
-            </>
-          }
-        /> <Route
-          path="/auth/signup3"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <AccountType/>
-            </>
-          }
         /> 
          <Route
           path="/auth/forgotPassword"
@@ -183,6 +165,28 @@ function App() {
             </>
           }
         />
+
+        <Route
+          path="/auth/verifyEmail/:token/:id"
+          element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <VerificationEmail />
+            </>
+          }
+        />
+
+        <Route
+          path="/auth/ResendVerifEmail"
+          element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ResendEmailVerification />
+            </>
+          }
+        />
+
+
            <Route
           path="/landing"
           element={
