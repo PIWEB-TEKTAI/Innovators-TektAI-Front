@@ -172,6 +172,7 @@ function App() {
             </>
           }
         />
+         
    <Route
   path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
   element={

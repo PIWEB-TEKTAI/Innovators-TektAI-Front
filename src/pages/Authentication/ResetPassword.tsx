@@ -11,6 +11,7 @@ function ResetPassword() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>(''); // New state for success message
   const navigate = useNavigate();
   const { id, token } = useParams();
 
@@ -23,18 +24,19 @@ function ResetPassword() {
     axios.post(`http://localhost:3000/api/resetPassword/${id}/${token}`, { password })
       .then(res => {
         if (res.data.Status === "Success") {
-          navigate('/auth/signin');
+          setSuccessMessage("Password reset successfully! "); // Set success message if reset is successful
         }
       })
       .catch(err => {
-        if (err.response && err.response.data && err.response.data.Status === "Cannot reuse previous password") {
-          setErrorMessage("Cannot reuse previous password");
+        console.log(err.response.data); // Log the error response data to the console
+        if (err.response && err.response.data && err.response.data.Status === "Cannot reuse previous password, Please try another one") {
+          setErrorMessage("Cannot reuse previous password, Please try another one");
         } else {
           console.log(err);
-          setErrorMessage("An error occurred. Please try again.");
+          setErrorMessage("An error occurred, please try again.");
         }
       });
-  };
+};
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -43,6 +45,29 @@ function ResetPassword() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+
+  const checkPassword = (value:any) =>{
+    setPassword(value)
+    if (!value.trim()) {
+      setErrorMessage("Please enter your password");
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value)) {
+      setErrorMessage("The password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number and one special character");
+    }else{
+      setErrorMessage("");
+    }
+   }
+   
+   const checkConfirmPassword = (value:any) =>{
+    setConfirmPassword(value)
+    if (!value.trim()) {
+      setErrorMessage("Please enter your confirm password");
+    } else if (value !==  password) {
+      setErrorMessage("The passwords do not match");
+    }else{
+      setErrorMessage("");
+    }
+   }
+
 
   return (
     <ClientLayout>
@@ -65,6 +90,23 @@ function ResetPassword() {
               <h2 className="mb-10 ">
                 <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Reset Password</span>
               </h2>
+              {successMessage ? (
+                <div>
+                  <p className="text-green-500  font-medium">{successMessage}</p>
+                  <img src="/src/images/auth/resetsuccess.jpg" alt="check" className='w-40 sm:w-50 md:w-60 lg:w-70 xl:w-80' />
+
+                  <div className="mb-5">
+  <Link to="/auth/signin">
+    <input
+      type="button"
+      value="Sign In"
+      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+    />
+  </Link>
+</div>
+     
+                         </div>
+              ) : (
               <form onSubmit={handleSubmit}>
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -77,7 +119,7 @@ function ResetPassword() {
                       autoComplete="off"
                       name="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => checkPassword(e.target.value)}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                                        <span className="absolute right-4 top-4">
@@ -121,7 +163,7 @@ function ResetPassword() {
                       autoComplete="off"
                       name="confirmPassword"
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onChange={(e) => checkConfirmPassword(e.target.value)}
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                                   <span className="absolute right-4 top-4">
@@ -165,6 +207,7 @@ function ResetPassword() {
                   />
                 </div>
               </form>
+              )}
             </div>
           </div>
         </div>

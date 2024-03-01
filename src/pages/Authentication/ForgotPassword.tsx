@@ -4,6 +4,9 @@ import Logo from '../../images/logo/logo.svg';
 import axios from 'axios';
 import ClientLayout from '../../layout/clientLayout';
 import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'; 
+
 
 function ForgotPassword() {
   const [email, setEmail] = useState<string>('');
@@ -16,11 +19,10 @@ function ForgotPassword() {
     axios.post('http://localhost:3000/api/forgotPassword', { email })
       .then(res => {
         if (res.data.Status === "Success") {
-          setSuccessMessage('Password reset link sent successfully.');
+          setSuccessMessage('Password reset link sent successfully.If you did not receive it, please check your spam folder. If it is not there, you can resend the email.');
           setErrorMessage('');
-          navigate('/auth/signin');
         } else {
-          setErrorMessage('User not found or invalid email.');
+          setErrorMessage('User not found .');
           setSuccessMessage('');
         }
       })
@@ -29,6 +31,17 @@ function ForgotPassword() {
         setSuccessMessage('');
       });
   };
+  const checkEmail = (value:any) =>{
+    setEmail(value)
+    if (!value.trim()) {
+      setErrorMessage("Please enter your email");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setErrorMessage("Please enter a valid email");
+    }else{
+      setErrorMessage("");
+    }
+   }
+
 
   return (
     <ClientLayout>
@@ -54,6 +67,7 @@ function ForgotPassword() {
               </h2>
               {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
               {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
+              
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Email</label>
@@ -64,8 +78,9 @@ function ForgotPassword() {
                       autoComplete="off"
                       name="email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => checkEmail(e.target.value) }
                     />
+                  
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -101,12 +116,13 @@ function ForgotPassword() {
                   Sign Up
                 </Link>
               </p>
+          
             </div>
           </div>
         </div>
       </div>
     </ClientLayout>
   );
-};
+}
 
 export default ForgotPassword;
