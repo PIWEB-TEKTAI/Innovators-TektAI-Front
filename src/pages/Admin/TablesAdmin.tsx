@@ -23,10 +23,21 @@ interface User {
 
 const FetchData: React.FC = () => {
   const [data, setData] = useState<User[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get<any>('http://localhost:3000/users')
+    fetchData();
+  }, [currentPage]); // Fetch data when currentPage changes
+
+  const fetchData = () => {
+    axios.get<any>('http://localhost:3000/users', {
+      params: {
+        page: currentPage,
+        limit: 3 // Display at most 3 users per page
+      }
+    })
       .then(response => {
         if (Array.isArray(response.data)) {
           setData(response.data);
@@ -37,9 +48,14 @@ const FetchData: React.FC = () => {
             console.error('Invalid response format: ', response.data);
           }
         }
+        // Get total users count from response headers
+        const totalUsers = parseInt(response.headers['x-total-count'], 10);
+        // Calculate total pages based on total number of users and limit per page
+        const totalPagesCount = Math.ceil(totalUsers / 3); // Limiting to 3 users per page
+        setTotalPages(totalPagesCount);
       })
       .catch(err => console.log(err));
-  }, []);
+  };
 
   const handleValidate = (userId: string) => {
     axios.get(`http://localhost:3000/users/validate/${userId}`)
@@ -60,13 +76,16 @@ const FetchData: React.FC = () => {
   };
 
   const handleEdit = (userId: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Empêcher le comportement par défaut du bouton
+    // Prevent default button behavior
     e.preventDefault();
-    // Rediriger vers le formulaire de modification avec l'ID de l'utilisateur
+    // Redirect to edit form with user ID
     navigate(`/modifier-admin/${userId}`);
-
   };
-  
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
@@ -110,6 +129,11 @@ const FetchData: React.FC = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center mt-4">
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+        <span>{currentPage} / {totalPages}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
       </div>
     </div> 
   );

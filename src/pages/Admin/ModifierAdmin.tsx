@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
 interface User {
@@ -43,6 +43,7 @@ function ModifierAdmin() {
     state: 'not validated',
     role: 'admin'
   });
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true); // État pour suivre la validité du numéro de téléphone
 
   useEffect(() => {
     axios.get<User>(`http://localhost:3000/users/${userId}`)
@@ -63,15 +64,23 @@ function ModifierAdmin() {
     }));
   };
 
-  const handlePhoneChange = (value: string) => {
-    setUserData(prevState => ({
-      ...prevState,
-      phone: value
-    }));
+  const handlePhoneChange = (value: string | undefined) => {
+    if (typeof value === 'string') {
+      setUserData(prevState => ({
+        ...prevState,
+        phone: value
+      }));
+      setIsPhoneValid(isValidPhoneNumber(value)); // Vérifiez la validité du numéro de téléphone
+    }
   };
+  
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isPhoneValid) {
+      alert('Veuillez saisir un numéro de téléphone valide.');
+      return;
+    }
     axios.put(`http://localhost:3000/users/update/${userId}`, userData)
       .then(response => {
         console.log('User updated successfully:', response.data);
@@ -106,11 +115,14 @@ function ModifierAdmin() {
           <div className="mb-4.5">
             <label className="mb-2.5 block text-black dark:text-white">Phone <span className="text-meta-1">*</span></label>
             <PhoneInput
-              name="phone"
-              placeholder="Enter your phone number"
-              value={userData.phone}
-              onChange={handlePhoneChange}
-            />
+  name="phone"
+  placeholder="Enter your phone number"
+  value={userData.phone}
+  onChange={handlePhoneChange}
+  country="FR" // Remplacez "FR" par le code ISO du pays que vous souhaitez
+/>
+
+            {!isPhoneValid && <p className="text-red-500 text-sm mt-1">Please enter a valid phone number.</p>}
           </div>
           <div className="mb-4.5">
             <label className="mb-2.5 block text-black dark:text-white">Occupation</label>
