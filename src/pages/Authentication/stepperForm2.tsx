@@ -64,7 +64,7 @@ const StepperForm = () => {
   const [DateBirthError, setDateBirthError] = useState('');
 
 
-  const [personnalAddressValue, setPersonnalAddressValue] = useState('');
+  const [personnalAddressValue, setPersonnalAddressValue] = useState('Choose your country');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
 
   
@@ -82,7 +82,7 @@ const StepperForm = () => {
   const [CompanyNameValue, setCompanyNameValue] = useState('');
   const [CompanyNameError, setCompanyNameError] = useState('');
  
-  const [companyAddessValue, setCompanyAddressValue] = useState('');
+  const [companyAddessValue, setCompanyAddressValue] = useState('Choose your country');
   const [companyAddessError, setCompanyAddressError] = useState('');
 
 
@@ -278,12 +278,12 @@ const StepperForm = () => {
 
 
    const isForm1Valid = () => {
-    return DateBirthValue !== '' && personnalAddressValue == 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation";
+    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation";
    };
 
 
    const isForm2Valid = () => {
-    return  CompanyNameValue !== '' && companyAddessValue == 'Choose your country' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
+    return  CompanyNameValue !== '' && companyAddessValue !== 'Choose your country' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
    };
 
    const isForm3Valid = () => {

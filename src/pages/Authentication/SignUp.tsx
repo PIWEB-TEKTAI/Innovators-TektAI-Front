@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
-import Stepper from './stepperForm';
 import StepperForm from './stepperForm2';
 
 const SignUp: React.FC = () => {
