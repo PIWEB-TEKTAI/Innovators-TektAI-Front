@@ -1,13 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
+import axios from 'axios';
+import ClientLayout from '../../layout/clientLayout';
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'; 
 
-import ClientLayout from '../../layout/clientLayout'
-const ForgotPassword: React.FC = () => {
+
+function ForgotPassword() {
+  const [email, setEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    axios.post('http://localhost:3000/api/forgotPassword', { email })
+      .then(res => {
+        if (res.data.Status === "Success") {
+          setSuccessMessage('Password reset link sent successfully.If you did not receive it, please check your spam folder. If it is not there, you can resend the email.');
+          setErrorMessage('');
+        } else {
+          setErrorMessage('User not found .');
+          setSuccessMessage('');
+        }
+      })
+      .catch(err => {
+        setErrorMessage('An error occurred. Please try again later.');
+        setSuccessMessage('');
+      });
+  };
+  const checkEmail = (value:any) =>{
+    setEmail(value)
+    if (!value.trim()) {
+      setErrorMessage("Please enter your email");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setErrorMessage("Please enter a valid email");
+    }else{
+      setErrorMessage("");
+    }
+   }
+
+
   return (
     <ClientLayout>
-
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -16,39 +53,34 @@ const ForgotPassword: React.FC = () => {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
-
-              <p className="2xl:px-20">
-                Empowering Collaboration, Solving Challenges
-              </p>
-
+              <p className="2xl:px-20">Empowering Collaboration, Solving Challenges</p>
               <span className="mt-15 inline-block">
-                  <img src="/src/images/auth/Forgot password-amico.png" alt="forgotPasword" />
+                <img src="/src/images/auth/Forgot password-amico.png" alt="forgotPassword" />
               </span>
             </div>
           </div>
-
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-
-              <h2 className="mb-10 ">
-                <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Forgot Password</span>
-                <span className="mt-2 block font-medium">Enter your email and we'll send you a link to rest your password</span>
+              <h2 className="mb-10">
+                <span className="text-2xl font-bold text-black dark:text-white sm:text-title-xl2">Forgot Password</span>
+                <span className="mt-2 block font-medium">Enter your email and we'll send you a link to reset your password</span>
               </h2>
-
-
-
-              <form>
+              {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+              {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
+              
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Email
-                  </label>
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                   <div className="relative">
                     <input
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Enter Email"
+                      autoComplete="off"
+                      name="email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      onChange={(e) => checkEmail(e.target.value) }
                     />
-
+                  
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -68,7 +100,6 @@ const ForgotPassword: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
                 <div className="mb-5">
                   <input
                     type="submit"
@@ -76,22 +107,22 @@ const ForgotPassword: React.FC = () => {
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>
-
-                <div className="mt-6 text-center">
-                  <p>
-                    Don’t have any account?{' '}
-                    <Link to="/auth/signin" className="text-primary">
-                      Sign Up
-                    </Link>
-                  </p>
-                </div>
               </form>
+            </div>
+            <div className="mt-6 text-center">
+              <p>
+                Don’t have an account?{' '}
+                <Link to="/auth/signin" className="text-primary">
+                  Sign Up
+                </Link>
+              </p>
+          
             </div>
           </div>
         </div>
       </div>
     </ClientLayout>
   );
-};
+}
 
 export default ForgotPassword;

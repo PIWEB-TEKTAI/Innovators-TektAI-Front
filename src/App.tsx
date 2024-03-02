@@ -156,15 +156,7 @@ function App() {
             </>
           }
         />
-         <Route
-          path="/auth/resetPassword"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <ResetPassword />
-            </>
-          }
-        />
+   
 
         <Route
           path="/auth/verifyEmail/:token/:id"
@@ -185,7 +177,15 @@ function App() {
             </>
           }
         />
-
+  <Route
+    path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
+    element={
+      <>
+        <PageTitle title="Reset Password | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+        <ResetPassword />
+      </>
+    }
+  />
 
            <Route
           path="/landing"
