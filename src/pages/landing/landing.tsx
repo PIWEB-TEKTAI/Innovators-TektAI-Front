@@ -230,6 +230,7 @@ data science developers.</p>
           </div>
         </div>
 </section>
+<RevealOnScroll>
       <section className="bg-white dark:bg-gray-900">
         <div className="items-center max-w-screen-xl px-4 py-8 mx-auto lg:grid lg:grid-cols-4 lg:gap-16 xl:gap-24 lg:py-24 lg:px-6">
             <div className="col-span-2 mb-8">
@@ -272,10 +273,10 @@ Discover a spectrum of enticing prizes, offering diverse rewards for your except
             </div>
         </div>
       </section>
-    
+ </RevealOnScroll>
 
  
-    
+ <RevealOnScroll>
     <section className="bg-gray-50 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
             <div className="max-w-screen-sm mx-auto text-center">
@@ -297,6 +298,7 @@ Discover a spectrum of enticing prizes, offering diverse rewards for your except
             </div>
         </div>
     </section>
+  </RevealOnScroll>
     <footer className="bg-white dark:bg-gray-800">
         <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">
