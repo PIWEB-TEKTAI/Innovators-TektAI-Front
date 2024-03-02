@@ -1,12 +1,131 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+interface CardProps {
+    title: string;
+    imageSrc: string;
+    description: string;
+  }
+  
+  interface RevealOnScrollProps {
+    children: React.ReactNode;
+  }
+  
+  const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children }) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+  
+    useEffect(() => {
+      const scrollObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          scrollObserver.unobserve(entry.target);
+        }
+      });
+  
+      if (ref.current) {
+        scrollObserver.observe(ref.current);
+      }
+  
+      return () => {
+        if (ref.current) {
+          scrollObserver.unobserve(ref.current);
+        }
+      };
+    }, []);
+  
+    const classes = `transition-opacity duration-1000 
+          ${isVisible ? "opacity-100" : "opacity-0"
+    }`;
+  
+    return (
+      <div ref={ref} className={classes}>
+        {children}
+      </div>
+    );
+  };
+  const Card2: React.FC<CardProps> = ({ title, imageSrc, description }) => {
+    return (
+        <div
+          className="max-w-[18rem] group p-6 bg-white hover:bg-[#00004b] hover:bg-opacity-60  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.15]"
+        >
+          <img className="h-35 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15]" src={imageSrc} alt="ai" />
+          <a href="#" className="text-[#00004b] group-hover:text-white">
+            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">{title}</h5>
+          </a>
+          <p className="mb-3 font-normal text-gray-500 group-hover:text-white dark:text-gray-400 hover:scale-105">{description}</p>
+        </div>
+      );
+    
+};
+const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
+    return (
+        <motion.div 
+          whileHover={{ scale: 1.3, transition: { duration: 0.3 } }}
+          className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-105"
+        >              
+          <div className="flex">
 
+          <img className="flex-none h-14 w-14 mr-2 rounded mb-2" src={imageSrc} alt="ai" />
+          <a href="#" className="text-primary hover:text-primary-dark flex-auto">
+            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{title}</h5>
+          </a>
+          </div>
+          <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">{description}</p>
+        </motion.div>
+      );
+    
+};
+const forwardCards = [
+    {
+      imageSrc: '/src/images/task/task-01.jpg',
+      title: 'Need a help in Claim?',
+      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+    },
+    {
+      imageSrc: '/src/images/landing/prog.jpg',
+      title: 'Need a help in Claim?',
+      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+    },
+    {
+      imageSrc: '/src/images/product/product-01.png',
+      title: 'Need a help in Claim?',
+      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+    },
+    {
+      imageSrc: '/src/images/landing/dataset.jpg',
+      title: 'Need a help in Claim?',
+      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+    },
+  ];
+  const backwardCards = [
+    {
+      imageSrc: "/src/images/landing/fruits.jpg",
+      title: "Need a help in Claim?",
+      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+    },
+    {
+      imageSrc: "/src/images/landing/voitures.jpg",
+      title: "Need a help in Claim?",
+      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+    },
+    {
+      imageSrc: "/src/images/landing/medicaments.jpg",
+      title: "Need a help in Claim?",
+      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+    },
+    {
+      imageSrc: "/src/images/landing/livres.jpg",
+      title: "Need a help in Claim?",
+      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+    },
+  ];
 
 import ClientLayout from '../../layout/clientLayout'
 const Landing: React.FC = () => {
   return (
     <ClientLayout>
 
-      <section className="bg-white dark:bg-gray-900">
+    <section className="bg-white dark:bg-gray-900">
     <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 " >
         <div className="mr-auto lg:ml-8 place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">Transforming Challenges 
@@ -18,11 +137,11 @@ by connecting with a global community of
 data science developers.</p>
         <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
 
-            <a href="#" className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+            <a href="#" className="peer-hover:bg-white inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Join Now
             </a> 
             
-            <a href="#" className="inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+            <a href="#" className="peer inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg hover:bg-primary hover:text-white hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Explore
             </a> 
             </div>
@@ -31,7 +150,7 @@ data science developers.</p>
             <img src="/src/images/landing/ai3.jpg" alt="mockup"/>
         </div>                
     </div>
-</section>
+    </section>
 {/*<section className="bg-white dark:bg-gray-900">
         <div className="max-w-screen-xl px-4 pb-8 mx-auto lg:pb-16">
             <div className="grid grid-cols-2 gap-8 text-gray-500 sm:gap-12 sm:grid-cols-3 lg:grid-cols-6 dark:text-gray-400">
@@ -97,81 +216,17 @@ data science developers.</p>
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
         <h2 className="text-4xl font-extrabold dark:text-white pb-4">Competitions</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
-          <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <div className="flex">
-                <img className="flex-none h-14 w-14 mr-2 rounded mb-2" src="/src/images/task/task-01.jpg" alt="ai" />
-                <a href="#" className='flex-auto'>
-                    <h5 className="mb-2 lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                </div>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <div className="flex">
-                <img className="flex-none h-14 w-14 mr-2 rounded mb-2" src="/src/images/landing/prog.jpg" alt="ai" />
-                <a href="#" className='flex-auto'>
-                    <h5 className="mb-2 lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                </div>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <div className="flex">
-                <img className="flex-none h-14 w-14 mr-2 rounded mb-2" src="/src/images/product/product-01.png" alt="ai" />
-                <a href="#" className='flex-auto'>
-                    <h5 className="mb-2 lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                </div>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <div className="flex">
-                <img className="flex-none h-14 w-14 mr-2 rounded mb-2" src="/src/images/landing/dataset.jpg" alt="ai" />
-                <a href="#" className='flex-auto'>
-                    <h5 className="mb-2 lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                </div>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-
-            </div>
+          {forwardCards.map((card, index) => (
+        <Card key={index} {...card} />
+      ))}
           </div>
           <h2 className="text-4xl font-extrabold dark:text-white py-4">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
-          <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <img className="h-35 w-full rounded mb-2" src="/src/images/landing/fruits.jpg" alt="ai" />
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-   
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray  rounded-lg shadow dark:bg-gray-800 ">
-                <img className="h-35 w-full rounded mb-2" src="/src/images/landing/voitures.jpg" alt="ai" />
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-            
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <img className="h-35 w-full rounded mb-2" src="/src/images/landing/medicaments.jpg" alt="ai" />
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
           
-            </div>
-            <div className="max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 ">
-                <img className="h-35 w-full rounded mb-2" src="/src/images/landing/livres.jpg" alt="ai" />
-                <a href="#">
-                    <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Need a help in Claim?</h5>
-                </a>
-                <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">Go to this step by step guideline process on how to certify for your weekly benefits:</p>
-   
-            </div>
+          {backwardCards.map((card, index) => (
+        <Card2 key={index} {...card} />
+      ))}
+           
           </div>
         </div>
 </section>
