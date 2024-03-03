@@ -86,13 +86,90 @@ const FetchData: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleRoleFilter = (role: string) => {
+    // Fetch data based on selected role
+    axios.get<any>(`http://localhost:3000/users/role/${role}`, {
+      params: {
+        page: 1, // Reset to the first page when applying filters
+        limit: 3, // Display at most 3 users per page
+        role: role // Filter by role
+      }
+    })
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setData(response.data);
+        } else {
+          if (Array.isArray(response.data.users)) {
+            setData(response.data.users);
+          } else {
+            console.error('Invalid response format: ', response.data);
+          }
+        }
+        // Get total users count from response headers
+        const totalUsers = parseInt(response.headers['x-total-count'], 10);
+        // Calculate total pages based on total number of users and limit per page
+        const totalPagesCount = Math.ceil(totalUsers / 3); // Limiting to 3 users per page
+        setTotalPages(totalPagesCount);
+        // Reset currentPage to 1 when applying filters
+        setCurrentPage(1);
+      })
+      .catch(err => console.log(err));
+  };
+
+  const fetchAllUsers = () => {
+    axios.get<any>('http://localhost:3000/users', {
+      params: {
+        page: 1,
+        limit: 3 // Display at most 3 users per page
+      }
+    })
+      .then(response => {
+        if (Array.isArray(response.data)) {
+          setData(response.data);
+        } else {
+          if (Array.isArray(response.data.users)) {
+            setData(response.data.users);
+          } else {
+            console.error('Invalid response format: ', response.data);
+          }
+        }
+        // Get total users count from response headers
+        const totalUsers = parseInt(response.headers['x-total-count'], 10);
+        // Calculate total pages based on total number of users and limit per page
+        const totalPagesCount = Math.ceil(totalUsers / 3); // Limiting to 3 users per page
+        setTotalPages(totalPagesCount);
+        setCurrentPage(1); // Reset currentPage to 1
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="flex justify-between mb-4">
+        <button className="inline-flex items-center justify-center rounded-full bg-black py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => handleRoleFilter('super admin')}>
+          Super Admin
+        </button>
+        <button className="inline-flex items-center justify-center rounded-full bg-black py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => handleRoleFilter('admin')}>
+          Admin
+        </button>
+        <button className="inline-flex items-center justify-center rounded-full bg-black py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => handleRoleFilter('challenger')}>
+          Challenger
+        </button>
+        <button className="inline-flex items-center justify-center rounded-full bg-black py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={() => handleRoleFilter('company')}>
+          Company
+        </button>
+        <button className="inline-flex items-center justify-center rounded-full bg-black py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10" onClick={fetchAllUsers}>
+          All
+        </button>
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <tbody>
             {data.map((user, index) => (
               <tr key={index}>
+                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                  <img src={user.imageUrl} alt="User Image" className="h-10 w-10 object-cover rounded-full" />
+                </td>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">{user.FirstName}</h5>
                 </td>
