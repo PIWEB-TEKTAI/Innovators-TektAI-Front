@@ -19,6 +19,14 @@ interface User {
   isEmailVerified: boolean;
   state: 'validated' | 'not validated' | 'blocked';
   role: 'super admin' | 'admin' | 'challenger' | 'company';
+  company: {
+    name: string;
+    address: string;
+    email: string;
+    description: string;
+    phone: string;
+    professionnalFields: string[];
+  };
 }
 
 const FetchData: React.FC = () => {
@@ -170,6 +178,7 @@ const FetchData: React.FC = () => {
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <img src={user.imageUrl} alt="User Image" className="h-10 w-10 object-cover rounded-full" />
                 </td>
+                
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">{user.FirstName}</h5>
                 </td>
