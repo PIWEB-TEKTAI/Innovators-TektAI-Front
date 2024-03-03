@@ -348,11 +348,11 @@ const Profile = () => {
                   <div className="mt-2">
                     <div className="flex">
                     <p className='font-semibold px-4'>Name:</p>
-                    <span>{profileData?.company.name}</span>
+                    <span>{profileData?.company?.name}</span>
                     </div>
                       <div className="flex">
                     <p className='font-semibold px-4'>Phone Number:</p>
-                    <span>{profileData?.company.phone}</span>
+                    <span>{profileData?.company?.phone}</span>
                     </div>
                    
                   </div>
@@ -363,11 +363,11 @@ const Profile = () => {
                 <div className="col-span-5 xl:col-span-2">
                 <div className="flex">
                     <p className='font-semibold px-4'>Email:</p>
-                    <span>{profileData?.company.email}</span>
+                    <span>{profileData?.company?.email}</span>
                     </div>
                 <div className="flex">
                     <p className='font-semibold px-4'>Professional Fields:</p>
-                    <span>{profileData?.company.professionnalFields}</span>
+                    <span>{profileData?.company?.professionnalFields}</span>
                     </div>
                    
                 </div>

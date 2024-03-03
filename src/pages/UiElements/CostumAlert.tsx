@@ -64,20 +64,37 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ type, message }) => {
         return null;
     }
   };
-  return (
-    <div className={`flex z-9999 fixed w-full border-l-6  bg-opacity-[35%] border-[${alertStyles.borderLeftColor}] bg-[${alertStyles.backgroundColor}] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
-      <div className={`mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[${alertStyles.backgroundColor}]`}>
-      {getAlertIcon()}
+  if (type === 'warning') {
+    return(
+      <div className={` z-9999 fixed flex lg:w-1/2 lg:right-0 w-full border-l-6 border-warning bg-[#f9e154] bg-opacity-[95%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
+        <div className={`mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30`}>
+          {getAlertIcon()}
+        </div>
+        <div className="w-full">
+          <h5 className={`mb-3 text-lg font-semibold text-[#9D5425]`}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </h5>
+          <p className="leading-relaxed text-black">{message}</p>
+        </div>
+      </div>
+    );
+  }else{
+    return (
+      <div className={`flex z-9999 fixed lg:w-1/2 lg:right-0 w-full border-l-6  bg-opacity-[50%] border-[${alertStyles.borderLeftColor}] bg-[${alertStyles.backgroundColor}] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
+        <div className={`mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[${alertStyles.backgroundColor}]`}>
+        {getAlertIcon()}
+  
+        </div>
+        <div className="w-full">
+          <h5 className={`mb-3 text-lg font-semibold ${alertStyles.textColor}`}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </h5>
+          <p className="leading-relaxed">{message}</p>
+        </div>
+      </div>
+    );
+  }
 
-      </div>
-      <div className="w-full">
-        <h5 className={`mb-3 text-lg font-semibold ${alertStyles.textColor}`}>
-          {type.charAt(0).toUpperCase() + type.slice(1)}
-        </h5>
-        <p className="leading-relaxed">{message}</p>
-      </div>
-    </div>
-  );
 };
 
 export default CustomAlert;

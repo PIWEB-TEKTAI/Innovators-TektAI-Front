@@ -1,8 +1,12 @@
+import { CodeResponse, TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 
 const API_URL = "http://localhost:3000/auth/";
 const cookies = new Cookies();
+
+
 /*export const login = (email: string, password: string) => {
 
   return axios.post('http://localhost:3000/login', { email: email, password: password}, { withCredentials: true })
@@ -29,7 +33,16 @@ console.log(token)
 
   return null;
 };
+export const signInWithGoogle = async (user:any) => {
+  try {
+  const response = await axios.post(`${API_URL}/setToken`, {user }, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error('Login failed:', error);
+    throw error; // Re-throw the error to handle it in the calling code if needed
+  }
 
+};
 export const getUsers = () => {
   return axios
     .get(API_URL + "users", {

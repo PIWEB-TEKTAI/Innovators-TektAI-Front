@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import { useNavigate } from 'react-router-dom';
-import {signIn} from '../../services/auth.service'
-
+import {signIn, signInWithGoogle} from '../../services/auth.service'
+import { CodeResponse, TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import ClientLayout from '../../layout/clientLayout'
+import axios from 'axios';
+import CustomAlert from '../UiElements/CostumAlert';
+import { Link } from 'react-router-dom';
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,68 @@ const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
 const [isFormValid, setIsFormValid] = useState(false);
 const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
+const [user, setUser] = useState<TokenResponse | null>(null);
+const [alert2, setAlert2] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
+const [profile, setProfile] = useState<UserProfile | null>(null);
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
 
+  } 
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse: TokenResponse) => {
+        setUser(codeResponse);
+
+      console.log('Google Login Successful:', codeResponse);
+    },
+    onError: (errorResponse: Pick<CodeResponse, "error" | "error_description" | "error_uri">) => {
+      // Handle error, for example, display an error message
+      console.error('Google Login Failed:', errorResponse);
+    }
+  });
+
+  const handleGoogleLogin = () => {
+    login();
+  };
+useEffect(
+    () => {
+      console.log("userrrrrrrr"+user)
+        if (user) {
+            axios
+                .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.access_token}`,
+                        Accept: 'application/json',
+                    }
+
+                })
+                .then((res) => {
+                  signInWithGoogle(res).then(
+                    () => {
+                    setProfile(res.data);
+                    if(res.status == 201 || res.status == 200){
+                      console.log(res.data);
+                      navigate("/profile");
+                    }
+                  }).catch((error) =>
+                   {console.log(error.response.data.message)
+                    setAlert2({
+                      type: 'warning',
+                      message: error.response.data.message
+                    });
+                    setTimeout(() => {
+                      setAlert2(null);            
+                    }, 15000);                   
+                  });
+                
+                })
+                .catch((err) => console.log(err));
+        }
+    },
+    [ user ]
+
+  );
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
     setEmail(value)
@@ -34,7 +97,6 @@ if (!value.trim()) {
   setPasswordError("");
 }
 }
-   
   
   const handleSignIn = async () => {
     try {
@@ -75,7 +137,8 @@ if (!value.trim()) {
 
   return (
     <ClientLayout>
-    
+                        {alert2&&<CustomAlert type={alert2.type} message={alert2.message} />}
+
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
         <div className="hidden w-full xl:block xl:w-1/2">
@@ -216,7 +279,7 @@ if (!value.trim()) {
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                <button onClick={handleGoogleLogin} className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"

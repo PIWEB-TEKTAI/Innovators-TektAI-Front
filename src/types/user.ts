@@ -11,14 +11,15 @@ export interface User {
   occupation: string;
   Description?: string;
   Education?: string;
-  Skills?: string;
-  company?: {
-    name?: string;
-    address?: string;
-    email?: string;
-    description?: string;
-    phone?: string;
-    professionnalFields?: string[];
+  skills?: Array<string>;
+  contry:string;
+  company: {
+    name: string;
+    address: string;
+    email: string;
+    description: string;
+    phone: string;
+    professionnalFields: string
   };
   isEmailVerified?: boolean;
   state: 'validated' | 'not validated';

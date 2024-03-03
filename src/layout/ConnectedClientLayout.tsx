@@ -2,7 +2,6 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
-import { checkAuthentication } from '../services/auth.service';
 import { User } from '../types/User';
 import { getProfile } from '../services/user.service';
 
