@@ -183,7 +183,7 @@ data science developers.</p>
 </RevealOnScroll>
 <RevealOnScroll additionalProp={false} delay="delay-300">
 <section>
-<div className="sm:flex items-center max-w-screen-xl bg-white">
+<div id="aboutUs" className="sm:flex items-center max-w-screen-xl bg-white">
     <div className="sm:w-1/2 p-10">
         <RevealOnScroll additionalProp={true} delay="delay-400">
         <div className="image object-center text-center">
@@ -205,8 +205,8 @@ data science developers.</p>
 </section>
 </RevealOnScroll>
  
- <RevealOnScroll additionalProp={false} delay="delay-300">
-    <section className="bg-primary bg-opacity-85 dark:bg-gray-800">
+ <RevealOnScroll additionalProp={false} delay="delay-400">
+    <section id="contactUs" className="bg-primary bg-opacity-85 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
             <div className="max-w-screen-sm mx-auto bg-white p-7 rounded-lg text-center hover:translate-y-12 hover:translate-x-12">
                 <h2 className="mb-4 text-3xl font-extrabold leading-tight text-black tracking-tight text-gray-900 dark:text-white">Contact Us</h2>
@@ -259,7 +259,7 @@ data science developers.</p>
                          <a href="#" className="hover:underline">Facebook</a>
                         </li>
                         <li className="mb-4">
-                            <a href="#" className="hover:underline">Contact Us</a>
+                            <a href="#contactUs" className="hover:underline">Contact Us</a>
                         </li>
                     </ul>
                 </div>
@@ -281,7 +281,7 @@ data science developers.</p>
                     <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Company</h3>
                     <ul className="text-gray-500 dark:text-gray-400">
                         <li className="mb-4">
-                            <a href="#" className=" hover:underline">About</a>
+                            <a href="#aboutUs" className=" hover:underline">About</a>
                         </li>
                         <li className="mb-4">
                             <a href="#" className="hover:underline">Careers</a>
