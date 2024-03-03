@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import "../../css/style1.css";
@@ -101,8 +101,16 @@ const ResendEmailVerification: React.FC = () => {
           </div>
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-          
           <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+          <div className="mb-4">
+            {alert?.type == 'success' && (
+                    successfullToast(alert.message)
+              )}
+
+              {alert?.type == 'error' && (
+                      ErrorToast(alert.message)
+              )} 
+          </div>
             <h2 className="mb-10 ">
                 <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Send Email Verification</span>
                 <span className="mt-2 block font-medium">Enter your email and we'll send you a link to verify your email address</span>
@@ -168,16 +176,7 @@ const ResendEmailVerification: React.FC = () => {
                     </Link>
                   </p>
                 </div>
-              </div>
-              {alert?.type == 'success' && (
-                  successfullToast(alert.message )
-              )}
-
-              {alert?.type == 'error' && (
-                    ErrorToast(alert.message)
-              )}
-      
-                
+              </div>                
             </form>
           </div>
         </div>
