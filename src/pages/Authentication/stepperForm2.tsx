@@ -173,6 +173,7 @@ const StepperForm = () => {
 
    const checkDateBirth = (value:any) =>{
     setDateBirthValue(value)
+    console.log(value)
     if (!value.trim()) {
       setDateBirthError("Please enter your birth day");
     } else {
@@ -368,7 +369,19 @@ const toggleConfirmPasswordVisibility = () => {
   return (
     <>
 
+    <div className="mb-4">
+      {alert?.type == 'success' && (
+              successfullToast(alert.message)
+        )}
+
+        {alert?.type == 'error' && (
+                ErrorToast(alert.message)
+        )} 
+    </div>
+ 
+
     {btnClicked == true ? (
+              
 
 
       <div className="flex justify-between mb-[4rem]">
@@ -389,16 +402,19 @@ const toggleConfirmPasswordVisibility = () => {
             <p className="text-gray-700">{step}</p>
           </div>
         ))}
-
+          
 
       </div>
+        
     ):(
         null
       )}
 
-        <div>
+
+
+        <div className="mb-[8rem]">
           { btnClicked == false ? (
-              <div className="mb-90">
+              <div className="mb-[25rem]">
                 <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
                   Choose your account type
                 </h2>
@@ -613,7 +629,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                           </svg>
                         ) : (
                           <svg
@@ -624,7 +640,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>                          </svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>                          </svg>
                         )}
                       </button>
                     </span>
@@ -661,7 +677,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                           </svg>
                         ) : (
                           <svg
@@ -672,7 +688,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>                          
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>                          
                           </svg>
                         )}
 
@@ -738,14 +754,20 @@ const toggleConfirmPasswordVisibility = () => {
                   </span>
                   Sign up with Google
                 </button>
-
-                
+                <div className="mt-6 text-center">
+                  <p>
+                    Already have an account?{' '}
+                    <Link to="/auth/signin" className="text-primary">
+                      Sign in
+                    </Link>
+                  </p>
+                </div>
              </div>
 
             )} 
                
             { currentStep == 2 && (
-                <div>
+                <div className="mb-[23rem]">
                     <div className="mb-4">
                         <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Date of Birth
@@ -753,8 +775,9 @@ const toggleConfirmPasswordVisibility = () => {
                         <div className="relative">
                         <input
                             type="date"
+                            value={DateBirthValue}
                             style={{ color: '#00000079'}}
-                            onBlur={(e) => checkDateBirth(e.target.value)}
+                            onChange={(e) => checkDateBirth(e.target.value)}
                             className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary no-calendar-icon"
                         />
                             <span className="absolute right-0 top-4">
@@ -778,11 +801,10 @@ const toggleConfirmPasswordVisibility = () => {
                             <option value="Choose your country">Choose your country</option>
                             {
                                 countries.map((item,index)=>(
-                                <option key={index} value={item}>{item}</option>
+                                  <option key={index} value={item}>{item}</option>
                                 ))
                             }
                         </select>
-
 
                         { personnalAddressError &&
                                 <div className="flex">
@@ -808,7 +830,7 @@ const toggleConfirmPasswordVisibility = () => {
                                   type="button"
                                 >
                                   <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/></svg>
                                 </button>
 
                                 {isOpen && (
@@ -872,36 +894,42 @@ const toggleConfirmPasswordVisibility = () => {
                                 </div> 
                                 }
                         </div>
-                        <button
-                            className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                !isChallenger ? setCurrentStep((prev) => prev + 1):null
-                                isChallenger ? (
-                                setcompleteChallenger(true),
-                                handleSubmit(e)
-                                ):(null)  ;
-                            }}
-                            disabled={!isForm1Valid()}
-                        > NEXT
-                        </button>
+                        <div className="flex justify-between">
+                          <button
+                              className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-4 text-white transition hover:bg-opacity-90"
+                              onClick={(e) => {
+                                  e.preventDefault()
+                                  setCurrentStep((prev) => prev - 1 ),
+                                  setComplete(false)
+                                  setcompleteChallenger(false)
+                              }}
+                          > BACK
+                          </button>
+                          <button
+                              className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                              onClick={(e) => {
+                                  e.preventDefault()
+                                  !isChallenger ? setCurrentStep((prev) => prev + 1):null
+                                  isChallenger ? (
+                                  setcompleteChallenger(true),
+                                  handleSubmit(e)
+                                  ):(null)  ;
+                              }}
+                              disabled={!isForm1Valid()}
+                          > NEXT
+                          </button>
+                         
+                        
 
-                        {alert?.type == 'success' && (
-                           successfullToast(alert.message )
-                        )}
-
-                        {alert?.type == 'error' && (
-                                ErrorToast(alert.message)
-                        )}
-
-
-
+                        </div>
+                          
+                      
                     </div> )}
 
               
               { currentStep == 3  && (
 
-               <div>
+               <div className="mb-[18rem]">
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Company name
@@ -984,7 +1012,7 @@ const toggleConfirmPasswordVisibility = () => {
                                   type="button"
                                 >
                                   <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/></svg>
                                 </button>
 
                                 {isOpen && (
@@ -1084,37 +1112,38 @@ const toggleConfirmPasswordVisibility = () => {
                             </div> 
                             }
                     </div>
-                    <button
-                        className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            currentStep === steps.length
-                            ? setComplete(true) 
-                            : null
-                            handleSubmit(e)
-                        }}
-                        disabled={!isForm2Valid()}
-                        >
-                        FINISH
-                    </button>
-                    {alert?.type == 'success' && (
-                           successfullToast(alert.message)
-                    )}
-
-                    {alert?.type == 'error' && (
-                                ErrorToast(alert.message)
-                    )}    
+                    <div className="flex justify-between">
+                      <button
+                          className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-4 text-white transition hover:bg-opacity-90"
+                          onClick={(e) => {
+                              e.preventDefault()
+                              setCurrentStep((prev) => prev - 1 ),
+                              setComplete(false)
+                          }}
+                          >
+                          BACK
+                      </button>
+                      <button
+                          className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                          onClick={(e) => {
+                              e.preventDefault()
+                              currentStep === steps.length
+                              ? setComplete(true) 
+                              : null
+                              handleSubmit(e)
+                          }}
+                          disabled={!isForm2Valid()}
+                          >
+                          FINISH
+                       </button>
+                      
+                    </div>
+                   
+                    
                     
              </div>
               )}
-                <div className="mt-6 text-center">
-                  <p>
-                    Already have an account?{' '}
-                    <Link to="/auth/signin" className="text-primary">
-                      Sign in
-                    </Link>
-                  </p>
-                </div>
+                
               </form> 
               )}
         </div>
