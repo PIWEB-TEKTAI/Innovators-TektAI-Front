@@ -4,8 +4,6 @@ import Logo from '../../images/logo/logo.svg';
 import axios from 'axios';
 import ClientLayout from '../../layout/clientLayout';
 import { Link, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'; 
 
 
 function ForgotPassword() {

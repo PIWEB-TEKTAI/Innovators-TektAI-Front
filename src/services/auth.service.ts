@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 
 const API_URL = "http://localhost:3000/auth/";
 const cookies = new Cookies();
