@@ -150,7 +150,7 @@ data science developers.</p>
                 Join Now
             </a> 
             
-            <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg hover:bg-primary hover:text-white hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+            <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg hover:text-white hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Explore
             </a> 
             </div>
@@ -192,8 +192,8 @@ data science developers.</p>
         </RevealOnScroll>
     </div>
     <div className="sm:w-1/2 p-5">
-        <div className="text group">
-            <span className="text-gray-500 border-b-2 border-indigo-600 uppercase">About us</span>
+        <div className="text group cursor-pointer">
+            <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
             <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">About <span className="text-indigo-600">TektAI</span>
             </h2>
             <p className="text-gray-700  group-hover:scale-[0.85]">
