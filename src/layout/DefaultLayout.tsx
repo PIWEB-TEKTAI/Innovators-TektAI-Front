@@ -6,7 +6,11 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="dark:bg-boxdark-2 dark:text-bodydark">
+    <div className="dark:bg-boxdark-2 dark:text-bodydark"
+    style={{ 
+          
+      backgroundColor: '#E6E2E2' // Remplacez #VOTRE_COULEUR_BG par votre couleur souhaitée
+    }}>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}
@@ -33,5 +37,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     </div>
   );
 };
+
+
 
 export default DefaultLayout;

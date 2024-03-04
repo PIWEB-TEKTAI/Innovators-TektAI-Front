@@ -14,13 +14,17 @@ module.exports = {
       '3xl': '2000px',
       ...defaultTheme.screens,
     },
+    
     extend: {
+      backgroundImage: {
+        'custom-image': "url('../images/logo/')",
+      },
       colors: {
         current: 'currentColor',
         transparent: 'transparent',
         white: '#FFFFFF',
         black: '#1C2434',
-        'black-2': '#010101',
+        'black-2': '#17197A',
         body: '#64748B',
         bodydark: '#AEB7C0',
         bodydark1: '#DEE4EE',
@@ -213,9 +217,15 @@ module.exports = {
       opacity: {
         65: '.65',
       },
+       
       backgroundImage: {
         video: "url('../images/video/video.png')",
       },
+     
+      backgroundImage1: {
+        image: "url('../images/logo/7.svg')",
+      },
+     
       content: {
         'icon-copy': 'url("../images/icon/icon-copy-alt.svg")',
       },
