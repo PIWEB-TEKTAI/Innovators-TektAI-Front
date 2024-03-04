@@ -9,7 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { successfullToast } from "../../components/Toast";
 import { ErrorToast } from "../../components/Toast";
 import { AxiosError } from "axios";
-import { countries } from "./CountryList";
+import { countries , countryFlagsPhone } from "./CountryList";
+import ReCAPTCHA from "react-google-recaptcha";
+import { ModalTermsConditions } from "./ModalTermsCondition";
 
 const StepperForm = () => {
   const steps = ["Basic Info","Personnal Info", "Professionnal Info"];
@@ -64,7 +66,7 @@ const StepperForm = () => {
   const [DateBirthError, setDateBirthError] = useState('');
 
 
-  const [personnalAddressValue, setPersonnalAddressValue] = useState('');
+  const [personnalAddressValue, setPersonnalAddressValue] = useState('Choose your country');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
 
   
@@ -82,7 +84,7 @@ const StepperForm = () => {
   const [CompanyNameValue, setCompanyNameValue] = useState('');
   const [CompanyNameError, setCompanyNameError] = useState('');
  
-  const [companyAddessValue, setCompanyAddressValue] = useState('');
+  const [companyAddessValue, setCompanyAddressValue] = useState('Choose your country');
   const [companyAddessError, setCompanyAddressError] = useState('');
 
 
@@ -96,11 +98,25 @@ const StepperForm = () => {
   
   const [companyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose company professional fields');
   const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
+    
+  const [isChecked, setIsChecked] = useState(false);
    
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
      
   const [isOpen, setIsOpen] = useState(false);
+
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
@@ -111,7 +127,6 @@ const StepperForm = () => {
 
 
   const navigate = useNavigate();
-
 
 
   const checkFirstName = (value:any) =>{
@@ -268,8 +283,20 @@ const StepperForm = () => {
     }
   }
 
+  const handleCheckboxChange = (event:any) => {
+    setIsChecked(event.target.checked);
+  };
 
+  interface Country {
+    name:any;
+    flagPath:any;
+    code:any;
+  }
 
+  const handleCountrySelect = (country:Country) => {
+    setSelectedCountry(country);
+    setIsOpen(false); 
+  };
 
 
    const isFormValid = () => {
@@ -278,16 +305,16 @@ const StepperForm = () => {
 
 
    const isForm1Valid = () => {
-    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation";
+    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation"  && (isChallenger ? captchaToken !== '': true);
    };
 
 
    const isForm2Valid = () => {
-    return  CompanyNameValue !== '' && companyAddessValue !== 'Choose your country' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
+    return  CompanyNameValue !== '' && companyAddessValue !== 'Choose your country' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields' && captchaToken !== '';
    };
 
    const isForm3Valid = () => {
-    return radioValue !== '' ;
+    return radioValue !== '' && isChecked == true ;
    };
 
 
@@ -318,10 +345,18 @@ const StepperForm = () => {
      companyProfessionnalFields:companyProfessionnalFieldsValue
   }
 
+  
+  const [captchaToken, setCaptchaToken] = useState('');
+
+  const handleCaptchaChange = (token:any) => {
+        console.log('Captcha token:', token);
+        setCaptchaToken(token);
+  };
+ 
 
   function handleSubmit(e:any){
     e.preventDefault();
-    register(formData)
+    register(formData,captchaToken)
         .then((response) => {
             console.log("Inscription réussie :", response.msg);
             setAlert({
@@ -368,7 +403,19 @@ const toggleConfirmPasswordVisibility = () => {
   return (
     <>
 
+    <div className="mb-4">
+      {alert?.type == 'success' && (
+              successfullToast(alert.message)
+        )}
+
+        {alert?.type == 'error' && (
+                ErrorToast(alert.message)
+        )} 
+    </div>
+ 
+
     {btnClicked == true ? (
+              
 
 
       <div className="flex justify-between mb-[4rem]">
@@ -389,16 +436,19 @@ const toggleConfirmPasswordVisibility = () => {
             <p className="text-gray-700">{step}</p>
           </div>
         ))}
-
+          
 
       </div>
+        
     ):(
         null
       )}
 
-        <div>
+
+
+        <div className="mb-[8rem]">
           { btnClicked == false ? (
-              <div className="mb-90">
+              <div className="mb-[25rem]">
                 <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
                   Choose your account type
                 </h2>
@@ -431,7 +481,43 @@ const toggleConfirmPasswordVisibility = () => {
                               </label>
                           </li>
                       </ul>
-                  </div>  
+                      <div className="flex justify-center mt-6">
+                            <label htmlFor="formCheckbox" className="flex cursor-pointer">
+                            <div className="relative pt-0.5">
+                            <input
+                              type="checkbox"
+                              id="formCheckbox"
+                              className="taskCheckbox sr-only"
+                              checked={isChecked}
+                              onChange={handleCheckboxChange}
+                              
+                            />
+                            <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark">
+                              <span className="text-white opacity-0">
+                                <svg
+                                  className="fill-current"
+                                  width="10"
+                                  height="7"
+                                  viewBox="0 0 10 7"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
+                                    d="M9.70685 0.292804C9.89455 0.480344 10 0.734667 10 0.999847C10 1.26503 9.89455 1.51935 9.70685 1.70689L4.70059 6.7072C4.51283 6.89468 4.2582 7 3.9927 7C3.72721 7 3.47258 6.89468 3.28482 6.7072L0.281063 3.70701C0.0986771 3.5184 -0.00224342 3.26578 3.785e-05 3.00357C0.00231912 2.74136 0.10762 2.49053 0.29326 2.30511C0.4789 2.11969 0.730026 2.01451 0.992551 2.01224C1.25508 2.00996 1.50799 2.11076 1.69683 2.29293L3.9927 4.58607L8.29108 0.292804C8.47884 0.105322 8.73347 0 8.99896 0C9.26446 0 9.51908 0.105322 9.70685 0.292804Z"
+                                    fill=""
+                                  />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                          <p>I accept the <Link to="#" className="text-primary font-semibold" onClick={openModal}>Terms and conditions</Link> </p>
+                          <ModalTermsConditions isOpen={isModalOpen} onClose={closeModal} />
+                        </label>
+                      </div>
+                      
+                    </div>  
   
                   <div className="mb-5">
                     <input
@@ -613,7 +699,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                           </svg>
                         ) : (
                           <svg
@@ -624,7 +710,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>                          </svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>                          </svg>
                         )}
                       </button>
                     </span>
@@ -661,7 +747,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                           </svg>
                         ) : (
                           <svg
@@ -672,7 +758,7 @@ const toggleConfirmPasswordVisibility = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>                          
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>                          
                           </svg>
                         )}
 
@@ -738,14 +824,20 @@ const toggleConfirmPasswordVisibility = () => {
                   </span>
                   Sign up with Google
                 </button>
-
-                
+                <div className="mt-6 text-center">
+                  <p>
+                    Already have an account?{' '}
+                    <Link to="/auth/signin" className="text-primary">
+                      Sign in
+                    </Link>
+                  </p>
+                </div>
              </div>
 
             )} 
                
             { currentStep == 2 && (
-                <div>
+                <div className="mb-[23rem]">
                     <div className="mb-4">
                         <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Date of Birth
@@ -753,8 +845,9 @@ const toggleConfirmPasswordVisibility = () => {
                         <div className="relative">
                         <input
                             type="date"
+                            value={DateBirthValue}
                             style={{ color: '#00000079'}}
-                            onBlur={(e) => checkDateBirth(e.target.value)}
+                            onChange={(e) => checkDateBirth(e.target.value)}
                             className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary no-calendar-icon"
                         />
                             <span className="absolute right-0 top-4">
@@ -778,11 +871,10 @@ const toggleConfirmPasswordVisibility = () => {
                             <option value="Choose your country">Choose your country</option>
                             {
                                 countries.map((item,index)=>(
-                                <option key={index} value={item}>{item}</option>
+                                  <option key={index} value={item}>{item}</option>
                                 ))
                             }
                         </select>
-
 
                         { personnalAddressError &&
                                 <div className="flex">
@@ -801,34 +893,76 @@ const toggleConfirmPasswordVisibility = () => {
                           <div className="relative">
                           
                           <div className="flex items-center">
+                              
                                 <button
                                   id="dropdown-phone-button"
                                   className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
                                   onClick={toggleDropdown}
-                                  type="button"
-                                >
-                                  <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                                  type="button">
+                                  {selectedCountry && (
+                                      <>
+                                        {selectedCountry.flagPath}
+                                        {selectedCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
                                 </button>
 
                                 {isOpen && (
                                   <div
                                     id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700"
-                                  >
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      <li>
-                                        <button
-                                          type="button"
-                                          className="inline-flex w-full  px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                          role="menuitem"
-                                        >
-                                          <div className="inline-flex items-center">
-                                            <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                            Tunisia (+216)
-                                          </div>
-                                        </button>
-                                      </li>
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
                                     </ul>
                                   </div>
                                 )}
@@ -872,36 +1006,53 @@ const toggleConfirmPasswordVisibility = () => {
                                 </div> 
                                 }
                         </div>
-                        <button
-                            className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                            onClick={(e) => {
-                                e.preventDefault()
-                                !isChallenger ? setCurrentStep((prev) => prev + 1):null
-                                isChallenger ? (
-                                setcompleteChallenger(true),
-                                handleSubmit(e)
-                                ):(null)  ;
-                            }}
-                            disabled={!isForm1Valid()}
-                        > NEXT
-                        </button>
+                        {
+                          isChallenger ? (
+                            <div className="flex justify-center mt-5 mb-5">
+                              <ReCAPTCHA 
+                                      sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                                      onChange={handleCaptchaChange}
+                                      />
+                            </div>
 
-                        {alert?.type == 'success' && (
-                           successfullToast(alert.message )
-                        )}
+                          ):(null)
+                        }
+                        <div className="flex justify-between">
+                          <button
+                              className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-3 text-white transition hover:bg-opacity-90"
+                              onClick={(e) => {
+                                  e.preventDefault()
+                                  setCurrentStep((prev) => prev - 1 ),
+                                  setComplete(false)
+                                  setcompleteChallenger(false)
+                              }}
+                          > BACK
+                          </button>
+                         
+                          <button
+                              className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
+                              onClick={(e) => {
+                                  e.preventDefault()
+                                  !isChallenger ? setCurrentStep((prev) => prev + 1):null
+                                  isChallenger ? (
+                                  setcompleteChallenger(true),
+                                  handleSubmit(e)
+                                  ):(null)  ;
+                              }}
+                              disabled={!isForm1Valid()}
+                          > NEXT
+                          </button>
+                         
+                        
 
-                        {alert?.type == 'error' && (
-                                ErrorToast(alert.message)
-                        )}
-
-
-
+                        </div>
+                    
                     </div> )}
 
               
               { currentStep == 3  && (
 
-               <div>
+               <div className="mb-[18rem]">
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Company name
@@ -966,7 +1117,7 @@ const toggleConfirmPasswordVisibility = () => {
                             <FontAwesomeIcon  icon={faCircleExclamation} style={{color: "#f20202"}} className="mt-1 ml-1" />
                             </div> 
                             }
-                         
+                          
                         </div>
                     </div>
                     <div className="mb-4">
@@ -975,34 +1126,75 @@ const toggleConfirmPasswordVisibility = () => {
                         </label>
                         <div className="relative">
                           <div className="flex items-center">
-                            <button
+                          <button
                                   id="dropdown-phone-button"
                                   className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
                                   onClick={toggleDropdown}
-                                  type="button"
-                                >
-                                  <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                                  type="button">
+                                  {selectedCountry && (
+                                      <>
+                                        {selectedCountry.flagPath}
+                                        {selectedCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
                                 </button>
 
                                 {isOpen && (
                                   <div
                                     id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700"
-                                  >
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      <li>
-                                        <button
-                                          type="button"
-                                          className="inline-flex w-full  px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                          role="menuitem"
-                                        >
-                                          <div className="inline-flex items-center">
-                                            <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                            Tunisia (+216)
-                                          </div>
-                                        </button>
-                                      </li>
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
                                     </ul>
                                   </div>
                                 )}
@@ -1024,7 +1216,9 @@ const toggleConfirmPasswordVisibility = () => {
                                 <img src="/src/images/icon/tel.png" alt="tel" width="45%"/>
                             </span>  
                     </div>
-                    <div className="mb-4">
+
+
+                    <div className="mb-4 mt-3">
                         <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Company email
                         </label>
@@ -1082,37 +1276,45 @@ const toggleConfirmPasswordVisibility = () => {
                             </div> 
                             }
                     </div>
-                    <button
-                        className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            currentStep === steps.length
-                            ? setComplete(true) 
-                            : null
-                            handleSubmit(e)
-                        }}
-                        disabled={!isForm2Valid()}
-                        >
-                        FINISH
-                    </button>
-                    {alert?.type == 'success' && (
-                           successfullToast(alert.message)
-                    )}
-
-                    {alert?.type == 'error' && (
-                                ErrorToast(alert.message)
-                    )}    
+                    <div className="flex justify-center mt-5 mb-5">
+                          <ReCAPTCHA 
+                                  sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                                  onChange={handleCaptchaChange}
+                                  />
+                        </div>
+                    <div className="flex justify-between">
+                      <button
+                          className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-3 text-white transition hover:bg-opacity-90"
+                          onClick={(e) => {
+                              e.preventDefault()
+                              setCurrentStep((prev) => prev - 1 ),
+                              setComplete(false)
+                          }}
+                          >
+                          BACK
+                      </button>
+                  
+                      <button
+                          className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
+                          onClick={(e) => {
+                              e.preventDefault()
+                              currentStep === steps.length
+                              ? setComplete(true) 
+                              : null
+                              handleSubmit(e)
+                          }}
+                          disabled={!isForm2Valid()}
+                          >
+                          FINISH
+                       </button>
+                      
+                    </div>
+                   
+                    
                     
              </div>
               )}
-                <div className="mt-6 text-center">
-                  <p>
-                    Already have an account?{' '}
-                    <Link to="/auth/signin" className="text-primary">
-                      Sign in
-                    </Link>
-                  </p>
-                </div>
+                
               </form> 
               )}
         </div>
