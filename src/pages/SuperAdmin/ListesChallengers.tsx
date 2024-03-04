@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
+import AddChallengerByAdmin from './AddChallengerByAdmin';
+import { Link, useNavigate } from 'react-router-dom';
+import { faAdd, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Définissez le type des données attendues
 interface User {
-  email:string;
+  _id:string;
+  email: string;
   FirstName: string;
   LastName: string;
   password: string;
@@ -25,9 +30,9 @@ interface User {
 
 // ... (previous imports)
 
-export default function FetchData()
-{
+export default function FetchData() {
   const [data, setData] = useState<User[]>([]);
+  const [showAddSection, setShowAddSection] = useState(false);
 
   useEffect(() => {
     axios.get<User[]>('http://localhost:3000/Admin')
@@ -36,180 +41,224 @@ export default function FetchData()
       })
       .catch(err => console.log(err));
   }, []);
-  
- var bloquer = (email: string) => {
-      const updatedData = data.map(user =>
-        user.email === email ? { ...user, state: 'blocked' as const } : user
-      );
-    
-     // console.log('Updated Data:', updatedData);
-    
-      console.log(`http://localhost:3000/Admin/${email}/updateState`)
-      axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
-        .then(response => {
-          console.log('User blocked successfully:', response.data);
-          setData(updatedData);
-        })
-        .catch(err => console.log('Error blocking user:', err));
-    };
-  
-  return (
-    <Layout>
-    <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-    <div className="max-w-full overflow-x-auto ">
-      <table className="w-full table-auto ">
-        <thead>
-          <tr className="bg-gray-2 text-left dark:bg-meta-4">
-            <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-              FirstName
-            </th>
-            <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-              LastName
-            </th>
-            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-              Phone
-            </th>
-            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-              Description
-            </th>
-            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-              State
-            </th>
-            <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-              email
-            </th>
-            <th className="py-4 px-4 font-medium text-black dark:text-white">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-        {data.map((users, index) => {
 
-           return(<tr key={index}>
-            <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-              <h5 className="font-medium text-black dark:text-white">
-                {users.FirstName}
-              </h5>
+  var bloquer = (email: string) => {
+    const updatedData = data.map(user =>
+      user.email === email ? { ...user, state: 'blocked' as const } : user
+    );
+
+    // console.log('Updated Data:', updatedData);
+
+    console.log(`http://localhost:3000/Admin/${email}/updateState`)
+    axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
+      .then(response => {
+        console.log('User blocked successfully:', response.data);
+        setData(updatedData);
+      })
+      .catch(err => console.log('Error blocking user:', err));
+  };
+
+
+  var debloquer = (email: string) => {
+    const updatedData = data.map(user =>
+      user.email === email ? { ...user, state: 'validated' as const } : user
+    );
+
+    // console.log('Updated Data:', updatedData);
+
+    console.log(`http://localhost:3000/Admin/${email}/updateState`)
+    axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'validated' })
+      .then(response => {
+        console.log('User validated successfully:', response.data);
+        setData(updatedData);
+      })
+      .catch(err => console.log('Error validated user:', err));
+  };
+
+
+
+  const navigate = useNavigate();
+
+  const handleEdit = (userId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent default button behavior
+    e.preventDefault();
+    // Redirect to edit form with user ID
+    navigate(`/modifier-admin/${userId}`);
+  };
+
+
+
+
+
+
+
+
+
+
+
+  var changeToCompany = (users: User) => {
+    console.log(users)
+  }
+
+  return (
+    <Layout >
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold">Challengers List</h2>
+
+          <Link to="/ajouterChallenger" className="bg-[#46216A] text-white py-2 px-4 ">
+            +
+          </Link>
+        </div> <div className="max-w-full overflow-x-auto ">
+          <table className="w-full table-auto ">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                 
+                </th>
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  FirstName
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                  LastName
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                  Phone
+                </th>
               
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <p className="text-black dark:text-white">
-                {users.LastName}
-              </p>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <p className="text-black dark:text-white">
-                {users.phone}
-              </p>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <p className="text-black dark:text-white">
-                {users.Description}
-              </p>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <p
-                className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                  users.state === 'validated'
-                    ? 'bg-success text-success'
-                    : users.state === 'blocked'
-                    ? 'bg-danger text-danger'
-                    : 'bg-warning text-warning'
-                }`}
-              >
-                {users.state}
-              </p>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <p className="text-black dark:text-white">
-                {users.email}
-              </p>
-            </td>
-            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-              <div className="flex items-center space-x-3.5" >
-                <button className="hover:text-primary">
-                  <svg
-                    className="fill-current"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M8.99981 14.8219C3.43106 14.8219 0.674805 9.50624 0.562305 9.28124C0.47793 9.11249 0.47793 8.88749 0.562305 8.71874C0.674805 8.49374 3.43106 3.20624 8.99981 3.20624C14.5686 3.20624 17.3248 8.49374 17.4373 8.71874C17.5217 8.88749 17.5217 9.11249 17.4373 9.28124C17.3248 9.50624 14.5686 14.8219 8.99981 14.8219ZM1.85605 8.99999C2.4748 10.0406 4.89356 13.5562 8.99981 13.5562C13.1061 13.5562 15.5248 10.0406 16.1436 8.99999C15.5248 7.95936 13.1061 4.44374 8.99981 4.44374C4.89356 4.44374 2.4748 7.95936 1.85605 8.99999Z"
-                      fill=""
-                    />
-                    <path
-                      d="M9 11.3906C7.67812 11.3906 6.60938 10.3219 6.60938 9C6.60938 7.67813 7.67812 6.60938 9 6.60938C10.3219 6.60938 11.3906 7.67813 11.3906 9C11.3906 10.3219 10.3219 11.3906 9 11.3906ZM9 7.875C8.38125 7.875 7.875 8.38125 7.875 9C7.875 9.61875 8.38125 10.125 9 10.125C9.61875 10.125 10.125 9.61875 10.125 9C10.125 8.38125 9.61875 7.875 9 7.875Z"
-                      fill=""
-                    />
-                  </svg>
-                </button>
-                <button className="hover:text-primary">
-                  <svg
-                    className="fill-current"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.1594L4.07852 15.4688C4.13477 16.6219 5.09102 17.5219 6.24414 17.5219H11.7004C12.8535 17.5219 13.8098 16.6219 13.866 15.4688L14.3441 6.13127C14.8785 5.90627 15.2441 5.3719 15.2441 4.78127V3.93752C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.0973C10.2379 1.74377 10.3504 1.85627 10.3504 1.9969V2.47502H7.70664V1.9969H7.67852ZM4.02227 3.96565C4.02227 3.85315 4.10664 3.74065 4.24727 3.74065H13.7535C13.866 3.74065 13.9785 3.82502 13.9785 3.96565V4.8094C13.9785 4.9219 13.8941 5.0344 13.7535 5.0344H4.24727C4.13477 5.0344 4.02227 4.95002 4.02227 4.8094V3.96565ZM11.7285 16.2563H6.27227C5.79414 16.2563 5.40039 15.8906 5.37227 15.3844L4.95039 6.2719H13.0785L12.6566 15.3844C12.6004 15.8625 12.2066 16.2563 11.7285 16.2563Z"
-                      fill=""
-                    />
-                    <path
-                      d="M9.00039 9.11255C8.66289 9.11255 8.35352 9.3938 8.35352 9.75942V13.3313C8.35352 13.6688 8.63477 13.9782 9.00039 13.9782C9.33789 13.9782 9.64727 13.6969 9.64727 13.3313V9.75942C9.64727 9.3938 9.33789 9.11255 9.00039 9.11255Z"
-                      fill=""
-                    />
-                    <path
-                      d="M11.2502 9.67504C10.8846 9.64692 10.6033 9.90004 10.5752 10.2657L10.4064 12.7407C10.3783 13.0782 10.6314 13.3875 10.9971 13.4157C11.0252 13.4157 11.0252 13.4157 11.0533 13.4157C11.3908 13.4157 11.6721 13.1625 11.6721 12.825L11.8408 10.35C11.8408 9.98442 11.5877 9.70317 11.2502 9.67504Z"
-                      fill=""
-                    />
-                    <path
-                      d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.3412 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z"
-                      fill=""
-                    />
-                  </svg>
-                </button>
-                <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
-                  <svg
-                    className="fill-current"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                     d="M22.987,9.474C22.982,7.63,20.195,7.637,20.2,9.482l0.004,2.93
-                     c-0.095-0.035-0.186-0.073-0.284-0.104l-0.009-5.896c-0.005-1.844-2.792-1.836-2.787,0.008l0.008,5.457
-                     c-0.096-0.001-0.191,0.001-0.287,0.002l-0.009-6.214c-0.005-1.849-2.792-1.833-2.787,0.008l0.01,6.635
-                     c-0.1,0.032-0.193,0.072-0.29,0.107l-0.007-4.942C13.758,5.659,11,5.602,11.005,7.482c0.009,6.491,0.008,4.954,0.008,8.349
-                     l-1.009-1.003c-1.551-1.542-4.058-1.535-5.6,0.016l-0.028,0.028c0.246,0.245,6.641,6.487,6.769,6.81
-                     c0.699,2.516,4.739,3.011,7.337,2.648c0.01-0.068,0.01-0.068,0,0c1.864-0.261,4.265-1.143,4.517-2.962
-                     C22.999,20.983,22.987,9.859,22.987,9.474z"
-                      fill=""
-                    />
-                    <path
-                      d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
-                      fill=""
-                    />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>)
-        }
-            
-          )}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  </Layout>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                  State
+                </th>
+
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((users, index) => {
+
+                return (<tr key={index}>
+                  
+                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                    <h5 className="font-medium text-black dark:text-white">
+                     /////
+                    </h5>
+
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                    <h5 className="font-medium text-black dark:text-white">
+                      {users.FirstName}
+                    </h5>
+
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {users.LastName}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {users.phone}
+                    </p>
+                  </td>
+               
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark" >
+                    <p
+                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${users.state === 'validated'
+                          ? 'bg-success text-success'
+                          : users.state === 'blocked'
+                            ? 'bg-danger text-danger'
+                            : 'bg-warning text-warning'
+                        }`}
+
+                    >
+                      {users.state}
+                    </p>
+                  </td>
+
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <div className="flex items-center space-x-3.5" >
+                      <button className="hover:text-primary" onClick={(e) => handleEdit(users._id, e)}>
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M8.99981 14.8219C3.43106 14.8219 0.674805 9.50624 0.562305 9.28124C0.47793 9.11249 0.47793 8.88749 0.562305 8.71874C0.674805 8.49374 3.43106 3.20624 8.99981 3.20624C14.5686 3.20624 17.3248 8.49374 17.4373 8.71874C17.5217 8.88749 17.5217 9.11249 17.4373 9.28124C17.3248 9.50624 14.5686 14.8219 8.99981 14.8219ZM1.85605 8.99999C2.4748 10.0406 4.89356 13.5562 8.99981 13.5562C13.1061 13.5562 15.5248 10.0406 16.1436 8.99999C15.5248 7.95936 13.1061 4.44374 8.99981 4.44374C4.89356 4.44374 2.4748 7.95936 1.85605 8.99999Z"
+                            fill=""
+                          />
+                          <path
+                            d="M9 11.3906C7.67812 11.3906 6.60938 10.3219 6.60938 9C6.60938 7.67813 7.67812 6.60938 9 6.60938C10.3219 6.60938 11.3906 7.67813 11.3906 9C11.3906 10.3219 10.3219 11.3906 9 11.3906ZM9 7.875C8.38125 7.875 7.875 8.38125 7.875 9C7.875 9.61875 8.38125 10.125 9 10.125C9.61875 10.125 10.125 9.61875 10.125 9C10.125 8.38125 9.61875 7.875 9 7.875Z"
+                            fill=""
+                          />
+                        </svg>
+                      </button>
+                      <Link to={`/switchToCompany/${users.email}`} className="hover:text-primary" >
+
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M11.0008 9.52185C13.5445 9.52185 15.607 7.5281 15.607 5.0531C15.607 2.5781 13.5445 0.584351 11.0008 0.584351C8.45703 0.584351 6.39453 2.5781 6.39453 5.0531C6.39453 7.5281 8.45703 9.52185 11.0008 9.52185ZM11.0008 2.1656C12.6852 2.1656 14.0602 3.47185 14.0602 5.08748C14.0602 6.7031 12.6852 8.00935 11.0008 8.00935C9.31641 8.00935 7.94141 6.7031 7.94141 5.08748C7.94141 3.47185 9.31641 2.1656 11.0008 2.1656Z"
+                              fill=""
+                            />
+                            <path
+                              d="M13.2352 11.0687H8.76641C5.08828 11.0687 2.09766 14.0937 2.09766 17.7719V20.625C2.09766 21.0375 2.44141 21.4156 2.88828 21.4156C3.33516 21.4156 3.67891 21.0719 3.67891 20.625V17.7719C3.67891 14.9531 5.98203 12.6156 8.83516 12.6156H13.2695C16.0883 12.6156 18.4258 14.9187 18.4258 17.7719V20.625C18.4258 21.0375 18.7695 21.4156 19.2164 21.4156C19.6633 21.4156 20.007 21.0719 20.007 20.625V17.7719C19.9039 14.0937 16.9133 11.0687 13.2352 11.0687Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+
+                      </Link>
+                      <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
+
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M11 0C4.92487 0 0 4.92487 0 11s4.92487 11 11 11 11-4.92487 11-11S17.0751 0 11 0ZM11 20.25C5.5335 20.25 1.75 16.4665 1.75 11S5.5335 1.75 11 1.75 20.25 5.5335 20.25 11 16.4665 20.25 11 20.25Z"
+                              fill=""
+                            />
+                            <path
+                              d="M16.75 11.8981H5.25C4.73859 11.8981 4.32349 11.483 4.32349 10.9716C4.32349 10.4602 4.73859 10.0451 5.25 10.0451H16.75C17.2614 10.0451 17.6765 10.4602 17.6765 10.9716C17.6765 11.483 17.2614 11.8981 16.75 11.8981Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </button>
+                      <button className="hover:text-primary" onClick={() => debloquer(users.email)}>
+
+                      <FontAwesomeIcon icon={faAdd} style={{ color: "#28A471" }} className="mt-1 ml-1" />
+</button>
+                    </div>
+                  </td>
+                </tr>)
+              }
+
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Layout>
   );
 }
 

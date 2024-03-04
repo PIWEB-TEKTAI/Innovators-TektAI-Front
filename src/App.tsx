@@ -22,6 +22,12 @@ import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
 import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
+import ListCompany from './pages/SuperAdmin/ListesCompany'
+import AddCompany from './pages/SuperAdmin/AddCompany'
+import Modifier1 from './pages/SuperAdmin/ModiferAll'
+import A from './pages/SuperAdmin/UpdateChallengerToCompany'
+import ModifierAdmin from './pages/SuperAdmin/ModiferAll';
+
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -59,6 +65,16 @@ function App() {
           }
         />
         <Route
+          path="/modifier-admin" 
+          Component={ModifierAdmin}
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Modifier1/>
+            </>
+          }
+        />
+         <Route
           path="/profile"
           element={
             <>
@@ -68,7 +84,7 @@ function App() {
           }
         />
         <Route
-          path="/forms/form-elements"
+          path="/ajouterChallenger"
           element={
             <>
               <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
@@ -86,11 +102,38 @@ function App() {
             </>
           }
         />
-        <Route
+         <Route
+          path="/companylist"
+          element={
+            <>
+              <PageTitle title="TEktai" />
+              <ListCompany />
+            </>
+          }
+        />
+         <Route
+          path="/switchToCompany/:email" Component={A}
+          element={
+            <>
+              <PageTitle title="TEktai" />
+              <A />
+            </>
+          }
+        />
+
+<Route
+          path="/companyAdd"
+          element={
+            <>
+              <PageTitle title="TEktai" />
+              <AddCompany />
+            </>
+          }
+        />        <Route
           path="/settings"
           element={
             <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="TEktai" />
               <Settings />
             </>
           }
