@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { successfullToast } from "../../components/Toast";
 import { ErrorToast } from "../../components/Toast";
 import { AxiosError } from "axios";
-import { countries } from "./CountryList";
+import { countries , countryFlagsPhone } from "./CountryList";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ModalTermsConditions } from "./ModalTermsCondition";
 
@@ -106,6 +106,7 @@ const StepperForm = () => {
      
   const [isOpen, setIsOpen] = useState(false);
 
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -286,7 +287,16 @@ const StepperForm = () => {
     setIsChecked(event.target.checked);
   };
 
+  interface Country {
+    name:any;
+    flagPath:any;
+    code:any;
+  }
 
+  const handleCountrySelect = (country:Country) => {
+    setSelectedCountry(country);
+    setIsOpen(false); 
+  };
 
 
    const isFormValid = () => {
@@ -295,7 +305,7 @@ const StepperForm = () => {
 
 
    const isForm1Valid = () => {
-    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation" && captchaToken !== '';
+    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation"  && (isChallenger ? captchaToken !== '': true);
    };
 
 
@@ -883,34 +893,76 @@ const toggleConfirmPasswordVisibility = () => {
                           <div className="relative">
                           
                           <div className="flex items-center">
+                              
                                 <button
                                   id="dropdown-phone-button"
                                   className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
                                   onClick={toggleDropdown}
-                                  type="button"
-                                >
-                                  <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/></svg>
+                                  type="button">
+                                  {selectedCountry && (
+                                      <>
+                                        {selectedCountry.flagPath}
+                                        {selectedCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
                                 </button>
 
                                 {isOpen && (
                                   <div
                                     id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700"
-                                  >
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      <li>
-                                        <button
-                                          type="button"
-                                          className="inline-flex w-full  px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                          role="menuitem"
-                                        >
-                                          <div className="inline-flex items-center">
-                                            <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                            Tunisia (+216)
-                                          </div>
-                                        </button>
-                                      </li>
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
                                     </ul>
                                   </div>
                                 )}
@@ -1065,9 +1117,7 @@ const toggleConfirmPasswordVisibility = () => {
                             <FontAwesomeIcon  icon={faCircleExclamation} style={{color: "#f20202"}} className="mt-1 ml-1" />
                             </div> 
                             }
-                            <span className="absolute right-0  top-4">
-                                <img src="/src/images/icon/adresse.png" alt="adresse" width="45%"/>
-                            </span>  
+                          
                         </div>
                     </div>
                     <div className="mb-4">
@@ -1076,34 +1126,75 @@ const toggleConfirmPasswordVisibility = () => {
                         </label>
                         <div className="relative">
                           <div className="flex items-center">
-                            <button
+                          <button
                                   id="dropdown-phone-button"
                                   className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
                                   onClick={toggleDropdown}
-                                  type="button"
-                                >
-                                  <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                  +216 <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/></svg>
+                                  type="button">
+                                  {selectedCountry && (
+                                      <>
+                                        {selectedCountry.flagPath}
+                                        {selectedCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
                                 </button>
 
                                 {isOpen && (
                                   <div
                                     id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700"
-                                  >
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      <li>
-                                        <button
-                                          type="button"
-                                          className="inline-flex w-full  px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                          role="menuitem"
-                                        >
-                                          <div className="inline-flex items-center">
-                                            <img src="/src/images/auth/tunisia.png" alt="flag"/>
-                                            Tunisia (+216)
-                                          </div>
-                                        </button>
-                                      </li>
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
                                     </ul>
                                   </div>
                                 )}
@@ -1125,7 +1216,9 @@ const toggleConfirmPasswordVisibility = () => {
                                 <img src="/src/images/icon/tel.png" alt="tel" width="45%"/>
                             </span>  
                     </div>
-                    <div className="mb-4">
+
+
+                    <div className="mb-4 mt-3">
                         <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Company email
                         </label>
