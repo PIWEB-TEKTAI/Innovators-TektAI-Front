@@ -104,16 +104,16 @@ function ForgotPassword() {
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>
+                <div className="text-center">
+                  <p>
+                    Don’t have an account?{' '}
+                    <Link to="/auth/signup" className="text-primary">
+                      Sign Up
+                    </Link>
+                  </p>
+              
+                </div>
               </form>
-            </div>
-            <div className="mt-6 text-center">
-              <p>
-                Don’t have an account?{' '}
-                <Link to="/auth/signin" className="text-primary">
-                  Sign Up
-                </Link>
-              </p>
-          
             </div>
           </div>
         </div>

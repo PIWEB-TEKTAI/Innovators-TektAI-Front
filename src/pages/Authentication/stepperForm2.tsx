@@ -11,7 +11,7 @@ import { ErrorToast } from "../../components/Toast";
 import { AxiosError } from "axios";
 import { countries , countryFlagsPhone } from "./CountryList";
 import ReCAPTCHA from "react-google-recaptcha";
-import { ModalTermsConditions } from "./ModalTermsCondition";
+import { ModalTermsConditions } from "../../components/ModalTermsCondition";
 
 const StepperForm = () => {
   const steps = ["Basic Info","Personnal Info", "Professionnal Info"];

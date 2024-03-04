@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 
 function ResetPassword() {
@@ -12,7 +12,6 @@ function ResetPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>(''); // New state for success message
-  const navigate = useNavigate();
   const { id, token } = useParams();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
