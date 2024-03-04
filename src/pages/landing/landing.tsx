@@ -73,7 +73,7 @@ const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
         >              
           <div className="flex">
 
-          <img className="flex-none h-14 w-14 mr-2 rounded mb-2 " src={imageSrc} alt="ai" loading='lazy'
+          <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.4] " src={imageSrc} alt="ai" loading='lazy'
  />
           <a href="#" className="text-primary hover:text-primary-dark group-hover:text-white flex-auto">
             <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
@@ -140,7 +140,7 @@ const Landing: React.FC = () => {
             <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
               Transforming Challenges 
 <span className='text-primary'> Into Solutions</span></h1>
-            <p className="max-w-2xl mb-6 group-hover:scale-[0.8]  text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Welcome to our collaborative data science platform, 
+            <p className="max-w-2xl mb-6 group-hover:scale-[1.05]  text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Welcome to our collaborative data science platform, 
 where industry challenges meet innovative solutions. 
 Unlock the potential of real-world problem-solving 
 by connecting with a global community of
@@ -162,15 +162,19 @@ data science developers.</p>
     </div>
     </section>
 </RevealOnScroll>
-<RevealOnScroll delay=''>
 <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
+        <RevealOnScroll delay=''>
+
         <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">Competitions</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
           {forwardCards.map((card, index) => (
         <Card key={index} {...card} />
       ))}
           </div>
+       </RevealOnScroll>
+       <RevealOnScroll delay=''>
+
           <h2 className="text-4xl font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
           
@@ -179,15 +183,16 @@ data science developers.</p>
       ))}
            
           </div>
+        </RevealOnScroll>
+
         </div>
 </section>
-</RevealOnScroll>
 <RevealOnScroll additionalProp={false} delay="">
 <section>
 <div id="aboutUs" className="sm:flex items-center max-w-screen-xl bg-white">
     <div className="sm:w-1/2 p-10">
         <RevealOnScroll additionalProp={true} delay="">
-        <div className="image object-center text-center">
+        <div className="image object-center text-center hover:scale-[1.05]">
             <img src="https://i.imgur.com/WbQnbas.png"/>
         </div>
         </RevealOnScroll>
@@ -197,7 +202,7 @@ data science developers.</p>
             <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
             <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">About <span className="text-indigo-600">TektAI</span>
             </h2>
-            <p className="text-gray-700  group-hover:scale-[0.85]">
+            <p className="text-gray-700  group-hover:scale-[1.05]">
             TektAI is a pioneering platform at the forefront of revolutionizing collaboration between industry challenges and data science developers. With a dynamic space for hosting competitions, fostering team collaboration, and recognizing outstanding contributions, TektAI is the nexus where innovation meets real-world problem-solving. Join us in creating a vibrant community where skills are honed, solutions are crafted, and the boundaries of what's possible in data science are continually pushed
             </p>
         </div>
@@ -229,7 +234,7 @@ data science developers.</p>
         </div>
     </section>
   </RevealOnScroll>
-  <RevealOnScroll delay=''>
+  <RevealOnScroll delay='400'>
   <footer className="bg-white dark:bg-gray-800">
         <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">

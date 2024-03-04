@@ -374,7 +374,7 @@ const Profile = () => {
                 
               </div>
               <p className="mt-4.5">
-                    {profileData?.Description}
+                    {profileData?.company.description}
                   </p>
              </div>
            

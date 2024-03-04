@@ -24,4 +24,5 @@ export interface User {
   isEmailVerified?: boolean;
   state: 'validated' | 'not validated';
   role: 'super admin' | 'admin' | 'challenger' | 'company';
+  isExternalUser:boolean;
 }

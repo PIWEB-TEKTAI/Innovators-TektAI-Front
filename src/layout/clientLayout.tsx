@@ -1,9 +1,30 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
+import { getProfile } from '../services/user.service';
+import { User } from '../types/User';
 
 const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setconnectedUser] = useState<User | null>(null);
+  const { pathname } = location;
+    // Check if the current path contains "auth"
+  const isAuthPath = pathname.includes('/auth');
 
+  useEffect(() => {
+    console.log("rou")
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const connectedUser = await getProfile();
+        setconnectedUser(connectedUser);
+        setAuthenticated(true);
+      } catch (error) {
+        setAuthenticated(false);
+      }
+    };
+
+    fetchAuthenticationStatus();
+  }, []);
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
@@ -13,7 +34,7 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
-          <ClientHeader connectedUser={null} authenticated={false} />
+          <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}
