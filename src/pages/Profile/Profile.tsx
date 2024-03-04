@@ -1,10 +1,11 @@
 import CoverTwo from '../../images/cover/cover2.jpg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
-import { useEffect, useState } from 'react';
+import  React, { useEffect, useState } from 'react';
 import { getProfile, uploadImage } from '../../services/user.service';
 import { User } from '../../types/user';
 import Modal from '../../components/modal';
+
 
 const Profile = () => {
 
@@ -22,6 +23,8 @@ const Profile = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+    
+       
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
@@ -113,6 +116,8 @@ useEffect(() => {
         postSaveMessage={uploadMessage}
       />
           <div className="mt-4">
+
+
 
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
               {profileData?.FirstName }               {profileData?.LastName }

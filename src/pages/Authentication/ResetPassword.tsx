@@ -20,7 +20,7 @@ function ResetPassword() {
       setErrorMessage("Passwords do not match");
       return;
     }
-    axios.post(`http://localhost:3000/api/resetPassword/${id}/${token}`, { password })
+    axios.post(`http://localhost:3000/user/resetPassword/${id}/${token}`, { password })
       .then(res => {
         if (res.data.Status === "Success") {
           setSuccessMessage("Password reset successfully! "); // Set success message if reset is successful

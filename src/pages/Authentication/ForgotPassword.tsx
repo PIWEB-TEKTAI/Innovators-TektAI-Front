@@ -13,7 +13,7 @@ function ForgotPassword() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/api/forgotPassword', { email })
+    axios.post('http://localhost:3000/user/forgotPassword', { email })
       .then(res => {
         if (res.data.Status === "Success") {
           setSuccessMessage('Password reset link sent successfully.If you did not receive it, please check your spam folder. If it is not there, you can resend the email.');

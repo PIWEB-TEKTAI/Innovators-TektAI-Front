@@ -8,11 +8,13 @@ import ClientLayout from '../../layout/clientLayout'
 import axios from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
+
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [password, setPassword] = useState('');
+
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
 const [isFormValid, setIsFormValid] = useState(false);
@@ -24,11 +26,20 @@ interface UserProfile {
   id: string;
   name: string;
   email: string;
+}
 
-  } 
+const [showWelcome, setshowWelcome] = useState(false);
+const [WelcomeMessage, setWelcomeMessage] = useState('');
+
+const handleThankuClick = () => {
+  setshowWelcome(false);
+};
+
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const login = useGoogleLogin({
     onSuccess: (codeResponse: TokenResponse) => {
         setUser(codeResponse);
@@ -44,6 +55,7 @@ interface UserProfile {
   const handleGoogleLogin = () => {
     login();
   };
+  
 useEffect(
     () => {
       console.log("userrrrrrrr"+user)
@@ -103,11 +115,11 @@ if (!value.trim()) {
 }
 }
   
-  const handleSignIn = async () => {
-    try {
-      setEmailError('');
+const handleSignIn = async () => {
+  try {
+    setEmailError('');
     setPasswordError('');
-
+  
     // Validation de l'email
     if (!email) {
       setEmailError('Email is required');
@@ -119,35 +131,71 @@ if (!value.trim()) {
       setPasswordError('Password is required');
       return;
     }
+
+    // Perform form validation
     setIsFormValid(!emailError && !passwordError);
+
     if (isFormValid) {
-
-      const responseData = await signIn(email,password);
+      const responseData = await signIn(email, password);
       console.log('Login successful:', responseData);
-      navigate("/profile");
-    }
-    } catch (error: any) {
-      setAlert({
-        type: 'error',
-        message:
-        'Login failed:'+  error.response?.data?.message || 'An error occurred during login.',
-      });
-      setTimeout(() => {
-        setAlert(null);
-      }, 5000);
+      if (responseData.message !== 'User not reactivated') {
+        if (responseData.wasReactivated) {
+          setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
+          setshowWelcome(true); 
       
-      console.error('Login failed:', error);
-    
+          setTimeout(() => {
+            setshowWelcome(false);
+          }, 10000);
+        } else {
+          setshowWelcome(false);
+        }
+      } else {
+        setshowWelcome(false);
+      }
+      
+      // Navigate to the profile page after 5 seconds
+      setTimeout(() => {
+        navigate('/profile');
+      }, 3000);
     }
-  };
-
-  return (
+  } catch (error: any) {
+    // Handle login errors
+    setAlert({
+      type: 'error',
+      message:
+        'Login failed:' +
+        (error.response?.data?.message || 'An error occurred during login.'),
+    });
+    console.error('Login failed:', error);
+    setTimeout(() => {
+      setAlert(null);
+    }, 5000);
+  }
+};
+    return (
     <ClientLayout>
-                        {alert2&&<CustomAlert type={alert2.type} message={alert2.message} />}
+                {alert2 && (
+                <CustomAlert type={alert2.type} message={alert2.message} />
+                )}
             
-                        {alert && (
-                <CustomAlert type={alert.type} message={alert.message}/>
-      )}
+                {alert && (
+                   <CustomAlert type={alert.type} message={alert.message}/>
+                 )}
+                 
+{showWelcome && (
+      <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+         <div className="bg-gray-200 p-8 rounded-lg text-center">
+          <p className="mb-4">{WelcomeMessage}</p>
+          <button
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+            onClick={handleThankuClick}
+          >
+            Thank You
+          </button>
+    </div>
+  </div>
+)}
+    
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
         <div className="hidden w-full xl:block xl:w-1/2">
@@ -339,6 +387,7 @@ if (!value.trim()) {
                   </span>
                   Sign in with Google
                 </button>
+            
 
                 <div className="mt-6 text-center">
                   <p>

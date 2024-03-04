@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import axios from 'axios';
+
 interface CardProps {
     title: string;
     imageSrc: string;
@@ -10,7 +11,6 @@ interface CardProps {
     children: React.ReactNode;
     additionalProp?: boolean;
     delay:string;
-
   }
   
   const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children,additionalProp,delay }) => {
@@ -131,6 +131,25 @@ const forwardCards = [
 
 import ClientLayout from '../../layout/clientLayout'
 const Landing: React.FC = () => {
+
+
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:3000/user/contact', { email, message }); // Send fromEmail instead of email
+            setSuccessMessage('Message sent successfully!');
+            setEmail(''); // Clear sender's email after sending
+            setMessage('');
+        } catch (error) {
+            setErrorMessage('Failed to send message. Please try again later.');
+        }
+    };
+                
   return (
     <ClientLayout>
 <RevealOnScroll additionalProp={false} delay="">
@@ -151,7 +170,7 @@ data science developers.</p>
                 Join Now
             </a> 
             
-            <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg hover:text-white hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+            <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Explore
             </a> 
             </div>
@@ -216,26 +235,45 @@ data science developers.</p>
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
             <div className="max-w-screen-sm mx-auto bg-white p-7 rounded-lg text-center hover:translate-y-12 hover:translate-x-12">
                 <h2 className="mb-4 text-3xl font-extrabold leading-tight text-black tracking-tight text-gray-900 dark:text-white">Contact Us</h2>
-                <div>
-                <input
-                  type="text"
-                  placeholder="Email"
-                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
-                />
-                 <textarea
-                  rows={4}
-                  placeholder="Message"
-                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
-                ></textarea>
-              </div>
-
-                <a href="#" className="text-white bg-primary hover:bg-black hover:bg-opacity-90 focus:ring-4 hover:scale-[1.1] focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">Send Message</a>
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <input
+                            type="email"
+                            placeholder="Your Email" // Update placeholder text
+                            value={email} // Update value to fromEmail
+                            onChange={(e) => setEmail(e.target.value)} // Update setter function to setFromEmail
+                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <textarea
+                            rows={4}
+                            placeholder="Message"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
+                            required
+                        ></textarea>
+                    </div>
+                    <div>
+                        <button
+                            type="submit"
+                            className="text-white bg-primary hover:bg-opacity-90 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
+                        >
+                            Send Message
+                        </button>
+                    </div>
+                 </form>
             </div>
         </div>
     </section>
   </RevealOnScroll>
+
   <RevealOnScroll delay='400'>
-  <footer className="bg-white dark:bg-gray-800">
+    <footer className="bg-white dark:bg-gray-800">
         <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">
                 <div>

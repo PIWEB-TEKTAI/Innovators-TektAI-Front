@@ -93,4 +93,6 @@ export const checkAuthentication = async () => {
     throw error; // Re-throw the error to handle it in the calling code if needed
   }
 
+
+ 
 };

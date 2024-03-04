@@ -22,6 +22,8 @@ export type User= {
     professionnalFields: string
   };
   isEmailVerified?: boolean;
+  isDeactivated?: boolean;
+
   state: 'validated' | 'not validated';
   role: 'super admin' | 'admin' | 'challenger' | 'company';
   isExternalUser:boolean;

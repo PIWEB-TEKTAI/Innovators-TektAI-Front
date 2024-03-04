@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { User } from '../../types/User';
-import userSix from '../../images/user/user_icon.png';
+import { User } from '../../types/user';
 
 interface SidebarProps {
   sidebarOpen: boolean;
