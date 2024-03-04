@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react';
 import { User } from '../../types/User';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
+import { signOut } from '../../services/auth.service';
+import axios from 'axios';
+
+const TIMEOUT_DURATION = 5000; // 5 seconds 
+
 
 const ProfileSettings = () => {
   const professionalFields = 
@@ -344,11 +349,181 @@ const ProfileSettings = () => {
     fetchProfile();
     
   }, []);  
+
+  const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const [showPrompt, setShowPrompt] = useState(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [logoutMessage, setLogoutMessage] = useState('');
+    const [timer, setTimer] = useState(TIMEOUT_DURATION);
+
+    useEffect(() => {
+      let timeoutId: NodeJS.Timeout;
   
-  return (
+      if (showConfirmation) {
+        timeoutId = setTimeout(() => {
+          handleLogout();
+        }, timer);
+      }
+  
+      return () => {
+        clearTimeout(timeoutId); // Clear the timeout when the component unmounts
+      };
+    }, [showConfirmation, timer]);
+  
+    useEffect(() => {
+      const handleResetTimer = () => {
+        if (showConfirmation) {
+          setTimer(TIMEOUT_DURATION);
+          sessionStorage.setItem('logoutTimer', String(Date.now() + TIMEOUT_DURATION));
+        }
+      };
+  
+      const intervalId = setInterval(() => {
+        const logoutTime = Number(sessionStorage.getItem('logoutTimer'));
+        if (logoutTime) {
+          const timeLeft = logoutTime - Date.now();
+          if (timeLeft > 0) {
+            setTimer(timeLeft);
+          } else {
+            handleLogout();
+          }
+        }
+      }, 1000); // Update the timer every 1 second
+  
+      window.addEventListener('mousemove', handleResetTimer);
+      window.addEventListener('keydown', handleResetTimer);
+  
+      return () => {
+        clearInterval(intervalId);
+        window.removeEventListener('mousemove', handleResetTimer);
+        window.removeEventListener('keydown', handleResetTimer);
+      };
+    }, [showConfirmation]);
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+    };
+  
+    const handleDeactivateAccount = () => {
+      setShowPrompt(true);
+    };
+  
+    const handleConfirmDeactivation = async () => {
+      if (!password) {
+        setError('Please enter your password.');
+        return;
+      }
+  
+      try {
+        const response = await axios.put("http://localhost:3000/auth/deactivate", { password }, { withCredentials: true });
+        setMessage(response.data.message);
+        setLogoutMessage('See you soon, enjoy your break.');
+        setShowPrompt(false); // Close the first popup
+        setShowConfirmation(true);
+        sessionStorage.setItem('logoutTimer', String(Date.now() + TIMEOUT_DURATION));
+      } catch (error : any) {
+        setMessage('');
+        setError(error.response.data.message);
+      }
+    };
+  
+    const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
+  
+    const handleLogout = () => {
+      signOut();
+      sessionStorage.removeItem('logoutTimer'); // Clear logout timer on logout
+      navigate('/auth/signin');
+    };
+      return (
     <ConnectedClientLayout>
       {alert&&<CustomAlert type={alert.type} message={alert?.message} />}
-        
+      <div className="flex justify-end">
+      <button
+        className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+        onClick={handleDeactivateAccount}
+      >
+        Deactivate Account
+      </button>
+    </div>
+    {showPrompt && (
+      <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+        <div className="bg-white p-8 rounded-lg text-center">
+          <p className="mb-4">Are you sure you want to deactivate your account?</p>
+          <p>If yes please write down your password</p>
+          <p> </p>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
+              name="password"
+              value={password}
+              onChange={(e) => handleChange(e)}
+              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+            <span className="absolute right-4 top-4">
+              <button type="button" onClick={togglePasswordVisibility}>
+                        {showPassword ? (
+                          <svg
+                            className="fill-current"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 22 22"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.83 9.17999C14.2706 8.61995 13.5576 8.23846 12.7813 8.08386C12.0049 7.92926 11.2002 8.00851 10.4689 8.31152C9.73758 8.61453 9.11264 9.12769 8.67316 9.78607C8.23367 10.4444 7.99938 11.2184 8 12.01C7.99916 13.0663 8.41619 14.08 9.16004 14.83" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 16.01C13.0609 16.01 14.0783 15.5886 14.8284 14.8384C15.5786 14.0883 16 13.0709 16 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M17.61 6.39004L6.38 17.62C4.6208 15.9966 3.14099 14.0944 2 11.99C6.71 3.76002 12.44 1.89004 17.61 6.39004Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M20.9994 3L17.6094 6.39" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6.38 17.62L3 21" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M19.5695 8.42999C20.4801 9.55186 21.2931 10.7496 21.9995 12.01C17.9995 19.01 13.2695 21.4 8.76953 19.23" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+                          </svg>
+                        ) : (
+                          <svg
+                            className="fill-current"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 22 22"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>                          </svg>
+                        )}
+                      </button>
+                    </span>
+                  </div>            {error && <p className="text-red-500 mb-2">{error}</p>}
+                  <button
+            className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 focus:outline-none"
+            onClick={handleConfirmDeactivation}
+          >
+            Yes, deactivate
+          </button>
+          <button
+            className="text-gray-800 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+            onClick={() => {
+              setShowPrompt(false);
+              setError('');
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
+    {message && <p>{message}</p>}
+    {showConfirmation && (
+      <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+        <div className="bg-white p-8 rounded-lg text-center">
+          <p className="mb-4">{logoutMessage}</p>
+          <button
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+            onClick={handleLogout}
+          >
+            Goodbye
+          </button>
+    </div>
+  </div>
+)}
 
       <div className="mx-auto max-w-270">
         <div className="grid grid-cols-5 gap-8">

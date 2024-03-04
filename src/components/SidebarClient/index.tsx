@@ -235,18 +235,21 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
         
         </nav>
   <div className="pt-10">
-  <div className="rounded-lg bg-white  py-4 px-4 lg:px-6">
-            <div className="flex flex-col space-x-2">
-                <span className="text-gray-700 uppercase font-bold  mb-2">Skills</span>
-                <ul>
+  <div className="rounded-lg bg-white py-4 px-4 lg:px-6">
+    <div className="flex flex-col space-x-2">
+        <span className="text-gray-700 uppercase font-bold mb-2">Skills</span>
+        <ul>
+            {connectedUser && connectedUser.Skills && typeof connectedUser.Skills === 'string' ? (
+                <li className="bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">{connectedUser.Skills}</li>
+            ) : (
+                connectedUser && connectedUser.Skills && Array.isArray(connectedUser.Skills) && connectedUser.Skills.map((skill: string, index: number) => (
+                    <li key={index} className="bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">{skill}</li>
+                ))
+            )}
+        </ul>
+    </div>
+</div>
 
-                {connectedUser?.skills.map((skill) => (
-              <li className="bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">{skill}</li>
-              ))}
-              </ul>
-                 
-              </div>
-        </div>
   </div>
         {/* <!-- Sidebar Menu --> */}
       </div>

@@ -1,14 +1,55 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import userThree from '../images/user/user-03.png';
 import DefaultLayout from '../layout/DefaultLayout';
+import React, { useState } from 'react';
+import { signOut } from '../services/auth.service';
+
+
 
 const Settings = () => {
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [openModal, setOpenModal] = useState(false); // Add this line
+
+  
+  const handleDeactivateAccount = async () => {
+    try {
+      // Send a request to your backend API to deactivate the account
+      const response = await fetch('/api/deactivate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        // Account deactivated successfully, redirect to logout page
+        signOut()
+            } else {
+        // Handle error response from the backend
+        const data = await response.json();
+        setErrorMessage(data.message);
+      }
+    } catch (error) {
+      console.error('Error deactivating account:', error);
+      setErrorMessage('An error occurred while deactivating your account.');
+    }
+  };
+
+
+
+
+
+
+
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-270">
         <Breadcrumb pageName="Settings" />
 
         <div className="grid grid-cols-5 gap-8">
+   
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">

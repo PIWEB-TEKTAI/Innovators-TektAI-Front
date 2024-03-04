@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 
 import ClientLayout from '../../layout/clientLayout'
 const Landing: React.FC = () => {
+
+
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:3000/api/contact', { email, message }); // Send fromEmail instead of email
+            setSuccessMessage('Message sent successfully!');
+            setEmail(''); // Clear sender's email after sending
+            setMessage('');
+        } catch (error) {
+            setErrorMessage('Failed to send message. Please try again later.');
+        }
+    };
+                
   return (
     <ClientLayout>
 
@@ -220,28 +240,46 @@ Discover a spectrum of enticing prizes, offering diverse rewards for your except
     
 
  
-    
-    <section className="bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
-            <div className="max-w-screen-sm mx-auto text-center">
-                <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">Contact Us</h2>
-                <div>
-                <input
-                  type="text"
-                  placeholder="Email"
-                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
-                />
-                 <textarea
-                  rows={4}
-                  placeholder="Message"
-                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
-                ></textarea>
-              </div>
-
-                <a href="#" className="text-white bg-primary hover:bg-opacity-90 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">Send Message</a>
-            </div>
+      <section className="bg-gray-50 dark:bg-gray-800">
+      <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+        <div className="max-w-screen-sm mx-auto text-center">
+          <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">Contact Us</h2>
+          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          <form onSubmit={handleSubmit}>
+    <div>
+        <input
+            type="email"
+            placeholder="Your Email" // Update placeholder text
+            value={email} // Update value to fromEmail
+            onChange={(e) => setEmail(e.target.value)} // Update setter function to setFromEmail
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
+            required
+        />
+    </div>
+    <div>
+        <textarea
+            rows={4}
+            placeholder="Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
+            required
+        ></textarea>
+    </div>
+    <div>
+        <button
+            type="submit"
+            className="text-white bg-primary hover:bg-opacity-90 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
+        >
+            Send Message
+        </button>
+    </div>
+</form>
         </div>
+      </div>
     </section>
+
     <footer className="bg-white dark:bg-gray-800">
         <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">
