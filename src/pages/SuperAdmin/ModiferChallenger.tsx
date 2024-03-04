@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import PhoneInput, { isValidPhoneNumber} from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-
+import Layout from '../../layout/DefaultLayout';
 interface User {
   _id: string;
   email: string;
@@ -149,7 +149,7 @@ function ModifierAdmin() {
     axios.put(`http://localhost:3000/Admin/update/${userId}`, userData)
       .then(response => {
         console.log('User updated successfully:', response.data);
-        //window.location.href = '/tables';
+        window.location.href = '/tables';
       })
       .catch(error => {
         console.error('Error updating user:', error);
@@ -163,6 +163,7 @@ function ModifierAdmin() {
   };
 
   return (
+    <Layout>
     <div className="flex flex-col gap-9">
       <form onSubmit={handleSubmit} className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -172,7 +173,8 @@ function ModifierAdmin() {
           <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <label className="mb-2.5 block text-black dark:text-white">First name</label>
-              <input type="text" name="FirstName" value={userData.FirstName} onChange={handleChange} placeholder="Enter your first name" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+              <input type="text" name="FirstName" value={userData.FirstName} onChange={handleChange} placeholder="Enter your first name"
+                 className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"/>
               {firstNameError && <p className="text-red-500 text-sm mt-1">{firstNameError}</p>}
             </div>
             <div className="w-full xl:w-1/2">
@@ -230,61 +232,66 @@ function ModifierAdmin() {
               className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
             />
           </div>
-          {/* Company Fields */}
-          <div className="mb-4.5">
-            <label className="mb-2.5 block text-black dark:text-white">Company Name</label>
-            <input
-              type="text"
-              name="company.name"
-              value={userData.company.name}
-              onChange={handleChange}
-              placeholder="Enter company name"
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
-          </div>
-          <div className="mb-4.5">
-            <label className="mb-2.5 block text-black dark:text-white">Company Address</label>
-            <input
-              type="text"
-              name="company.address"
-              value={userData.company.address}
-              onChange={handleChange}
-              placeholder="Enter company address"
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
-          </div>
-          <div className="mb-4.5">
-            <label className="mb-2.5 block text-black dark:text-white">Company Email</label>
-            <input
-              type="email"
-              name="company.email"
-              value={userData.company.email}
-              onChange={handleChange}
-              placeholder="Enter company email"
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
-          </div>
-          <div className="mb-4.5">
-            <label className="mb-2.5 block text-black dark:text-white">Company Description</label>
-            <textarea
-              rows={6}
-              name="company.description"
-              value={userData.company.description}
-              onChange={handleChange}
-              placeholder="Enter company description"
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
-          </div>
-          <div className="mb-4.5">
-            <label className="mb-2.5 block text-black dark:text-white">Company Phone</label>
-            <PhoneInput
-              name="company.phone"
-              placeholder="Enter company phone number"
-              value={userData.company.phone || ''}
-              onChange={(value:  | undefined) => handlePhoneChange(value)}
-              country="FR"
-            />
-          </div>
+         {/* Company Fields */}
+{userData.role === 'company' && (
+  <>
+    <div className="mb-4.5">
+      <label className="mb-2.5 block text-black dark:text-white">Company Name</label>
+      <input
+        type="text"
+        name="company.name"
+        value={userData.company.name}
+        onChange={handleChange}
+        placeholder="Enter company name"
+        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+      />
+    </div>
+    <div className="mb-4.5">
+      <label className="mb-2.5 block text-black dark:text-white">Company Address</label>
+      <input
+        type="text"
+        name="company.address"
+        value={userData.company.address}
+        onChange={handleChange}
+        placeholder="Enter company address"
+        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+      />
+    </div>
+    <div className="mb-4.5">
+      <label className="mb-2.5 block text-black dark:text-white">Company Email</label>
+      <input
+        type="email"
+        name="company.email"
+        value={userData.company.email}
+        onChange={handleChange}
+        placeholder="Enter company email"
+        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+      />
+    </div>
+    <div className="mb-4.5">
+      <label className="mb-2.5 block text-black dark:text-white">Company Description</label>
+      <textarea
+        rows={6}
+        name="company.description"
+        value={userData.company.description}
+        onChange={handleChange}
+        placeholder="Enter company description"
+        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+      />
+    </div>
+    <div className="mb-4.5">
+      <label className="mb-2.5 block text-black dark:text-white">Company Phone</label>
+      <PhoneInput
+        name="company.phone"
+        placeholder="Enter company phone number"
+        value={userData.company.phone || ''}
+        onChange={(value: string | undefined) => handlePhoneChange(value)}
+        country="FR"
+      />
+    </div>
+  </>
+)}
+
           
 
           <button type="submit" className={`flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 ${!formIsValid ? 'cursor-not-allowed opacity-50' : ''}`} >Save Changes</button>
@@ -292,6 +299,7 @@ function ModifierAdmin() {
         </div>
       </form>
     </div>
+    </Layout>
   );
 }
 

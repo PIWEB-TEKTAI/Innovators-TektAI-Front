@@ -24,9 +24,9 @@ import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
 import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
 import ListCompany from './pages/SuperAdmin/ListesCompany'
 import AddCompany from './pages/SuperAdmin/AddCompany'
-import Modifier1 from './pages/SuperAdmin/ModiferAll'
+import Modifier1 from './pages/SuperAdmin/ModiferChallenger'
 import A from './pages/SuperAdmin/UpdateChallengerToCompany'
-import ModifierAdmin from './pages/SuperAdmin/ModiferAll';
+import ModifierAdmin from './pages/SuperAdmin/ModiferChallenger';
 
 
 function App() {
@@ -65,7 +65,7 @@ function App() {
           }
         />
         <Route
-          path="/modifier-admin" 
+          path="/modifierAdmin/:userId" 
           Component={ModifierAdmin}
           element={
             <>
