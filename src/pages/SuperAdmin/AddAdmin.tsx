@@ -5,7 +5,7 @@ import axios from 'axios';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
-
+import Select from 'react-select';
 
 const FormElements = () => {
 
@@ -25,7 +25,19 @@ const FormElements = () => {
       " Collaboration",
       "  Continuous Learning",
       "Project Management"]
+const permission = [
+    'AddChallengers',
+     'AddCompanies',
+     'EditChallengers',
+     'EditCompanies',
+     'BlockChallengers',
+     'ValidedCompanies',
+     'SwitchChallengersToCompany',
+     'AddNewAdmin',
+     'viewChallengers',
+      'viewCompanies'
 
+]
 
   const Education = [
     " Computer Science/Computer Engineering",
@@ -62,6 +74,11 @@ const FormElements = () => {
   const [personnalAddressValue, setPersonnalAddressValue] = useState('');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
 
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
+
+  const handlePermissionChange = (selectedOptions) => {
+    setSelectedPermissions(selectedOptions);
+  };
 
   const [personnalPhoneValue, setPersonnalPhoneValue] = useState('');
   const [personnalPhoneError, setPersonnalPhoneError] = useState('');
@@ -82,6 +99,8 @@ const FormElements = () => {
   const [occupationValue, setOccupationValue] = useState('occupation');
   const [occupationError, setOccupationError] = useState('');
 
+  const [permissionValue, setpermissionValueValue] = useState('');
+  const [permissionValueError, setpermissionValueError] = useState('');
 
 
 const newImageValue= imageUrlValue.slice(3,1)
@@ -153,6 +172,14 @@ const newImageValue= imageUrlValue.slice(3,1)
       setPersonnalAddressError("Please enter your address");
     } else {
       setPersonnalAddressError("");
+    }
+  }
+  const checkPermision = (value: any) => {
+    setpermissionValueValue(value)
+    if (value == "Choose Admin Permision") {
+     setpermissionValueError("Please enter your Choose Admin Permision");
+    } else {
+        setpermissionValueError("");
     }
   }
 
@@ -253,7 +280,7 @@ const newImageValue= imageUrlValue.slice(3,1)
     occupation: occupationValue,
     Education: EducationValue,
     Skills: SkillsValue,
-
+    permissions: permissionValue, 
   };
 
 
@@ -656,6 +683,26 @@ const newImageValue= imageUrlValue.slice(3,1)
           }
         </div>
 
+        <div className="mb-6">
+          <label className="mb-2.5 block font-medium text-black dark:text-white">
+            permissions
+          </label>
+          <select id="professionnalFields" value={permissionValue} onChange={(e) => checkPermision(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+            <option value="Choose personnal Education">Choose Admin permission</option>
+            {
+              permission.map((item1, index1) => (
+                <option key={index1} value={item1}>{item1}</option>
+              ))
+            }
+          </select>
+
+          {EducationValueError &&
+            <div className="flex">
+              <p className="error-msg">{EducationValueError}</p>
+              <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
+            </div>
+          }
+        </div>
 
         <button type='submit' className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" >
           Sign Up
