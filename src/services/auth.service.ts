@@ -1,6 +1,4 @@
-import { CodeResponse, TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import Cookies from 'universal-cookie';
 
 const API_URL = "http://localhost:3000/auth/";

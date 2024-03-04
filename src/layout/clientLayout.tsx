@@ -1,7 +1,7 @@
 import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import { getProfile } from '../services/user.service';
-import { User } from '../types/User';
+import { User } from '../types/user';
 
 const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

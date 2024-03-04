@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
 import { useEffect, useState } from 'react';
 import { getProfile, uploadImage } from '../../services/user.service';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import Modal from '../../components/modal';
 
 const Profile = () => {
@@ -37,7 +37,7 @@ const Profile = () => {
   };
 
 
-  useEffect(() => {
+useEffect(() => {
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
