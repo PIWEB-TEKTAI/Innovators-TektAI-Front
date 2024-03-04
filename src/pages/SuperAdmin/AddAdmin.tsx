@@ -6,28 +6,8 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 
+
 const FormElements = () => {
-  const professionalFields =
-  ["Healthcare",
-    "Technology",
-    "Finance",
-    "Education",
-    "Manufacturing",
-    "Retail",
-    "Hospitality",
-    "Consulting",
-    "Real Estate",
-    "Legal",
-    "Transportation",
-    "Energy",
-    "Media & Entertainment",
-    "Non-profit",
-    "Government",
-    "Agriculture",
-    "Construction",
-    "Telecommunications",
-    "Marketing & Advertising",
-    "Research & Development"]
 
   const professionalSkills =
     ["Programming Languages: Python, R",
@@ -78,20 +58,6 @@ const FormElements = () => {
   const [DateBirthValue, setDateBirthValue] = useState('');
   const [DateBirthError, setDateBirthError] = useState('');
 
-  const [CompanyNameValue, setCompanyNameValue] = useState('');
-  const [CompanyNameError, setCompanyNameError] = useState('');
-
-  const [companyAddessValue, setCompanyAddressValue] = useState('');
-  const [companyAddessError, setCompanyAddressError] = useState('');
-
-
-  const [companyEmailValue, setCompanyEmailValue] = useState('');
-  const [companyEmailError, setCompanyEmailError] = useState('');
-
-
-  const [companyPhoneValue, setCompanyPhoneValue] = useState('');
-  const [companyPhoneError, setCompanyPhoneError] = useState('');
-
 
   const [personnalAddressValue, setPersonnalAddressValue] = useState('');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
@@ -115,87 +81,10 @@ const FormElements = () => {
 
   const [occupationValue, setOccupationValue] = useState('occupation');
   const [occupationError, setOccupationError] = useState('');
-  
-  const [ CompanyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose personal professional skills');
-  const [ CompanyProfessionnalFieldsValueError, setCompanyProfessionnalFieldsValueError] = useState('');
-
-  const formData = {
-    FirstName: FirstNameValue,
-    LastName: LastNameValue,
-    email: EmailValue,
-    password: PasswordValue,
-    imageUrl:imageUrlValue,
-    birthDate: DateBirthValue,
-    address: personnalAddressValue,
-    phone: personnalPhoneValue,
-    description:descriptionValue,
-    occupation: occupationValue,
-    Education:EducationValue,
-    Skills:SkillsValue,
-    companyName: CompanyNameValue,
-    companyAddress: companyAddessValue,
-    companyPhone: companyPhoneValue,
-    companyEmail: companyEmailValue,
-    companyProfessionnalFields: CompanyProfessionnalFieldsValue
-  };
-
-
-  const checkCompanyName = (value: any) => {
-  setCompanyNameValue(value)
-  if (!value.trim()) {
-    setCompanyNameError("Please enter the company name");
-  } else {
-    setCompanyNameError("");
-  }
-}
-
-
-const checkCompanyEmail = (value: any) => {
-  setCompanyEmailValue(value)
-  if (!value.trim()) {
-    setCompanyEmailError("Please enter the company email");
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-    setCompanyEmailError("Please enter a valid email");
-  } else {
-    setCompanyEmailError("");
-  }
-}
-
-
-const checkCompanyAddress = (value: any) => {
-  setCompanyAddressValue(value)
-  if (!value.trim()) {
-    setCompanyAddressError("Please enter the company address");
-  } else {
-    setCompanyAddressError("");
-  }
-}
-
-const checkCompanyPhone = (value: any) => {
-  setCompanyPhoneValue(value)
-  if (!value.trim()) {
-    setCompanyPhoneError("Please enter the company phone number");
-
-  } else if (! /^\d+$/.test(value)) {
-    setCompanyPhoneError("Please enter a valid phone number")
-  } else {
-    setCompanyPhoneError("");
-  }
-}
 
 
 
-
-const checkCompanyProfessionnalFieldsValue= (value: any) => {
-  setCompanyProfessionnalFieldsValue(value)
-  if (value == "Choose company professional fields") {
-    setCompanyProfessionnalFieldsValueError("Please enter the company professionnal fileds");
-  } else {
-    setCompanyProfessionnalFieldsValueError("");
-  }
-}
-
-
+const newImageValue= imageUrlValue.slice(3,1)
 
 
   const checkFirstName = (value: any) => {
@@ -351,53 +240,54 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
   }
 
 
- 
+  const formData = {
+    FirstName: FirstNameValue,
+    LastName: LastNameValue,
+    email: EmailValue,
+    password: PasswordValue,
+    imageUrl: imageUrlValue,
+    birthDate: DateBirthValue,
+    address: personnalAddressValue,
+    phone: personnalPhoneValue,
+    Description: descriptionValue,
+    occupation: occupationValue,
+    Education: EducationValue,
+    Skills: SkillsValue,
+
+  };
+
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
   
+
     try {
-      const response = await axios.post('http://localhost:3000/Admin/AddCompanyByAdmin', formData, {
+      const response = await axios.post('http://localhost:3000/Admin/AddAdminBySA', formData, {
         headers: {
           'Content-Type': 'application/json',
+         
         },
       });
-  
-      console.log('Réponse du serveur:', response);
-  
+
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
-        window.location.href = '/companylist';
+        window.location.href = '/tables';
       } else {
-        console.error('Échec de l\'envoi des données au serveur. Statut:', response.status);
+        console.error('Échec de l\'envoi des données au serveur.');
       }
-    } catch (error: any) { // Utilisation du type 'any' pour la variable 'error'
-      console.error('Erreur lors de la requête:', error);
-  
-      if (axios.isAxiosError(error)) {
-        // Vérifier si c'est une erreur spécifique à Axios
-        if (error.response) {
-          // La requête a été faite, mais le serveur a répondu avec un code d'état différent de 2xx
-          console.error('Réponse du serveur avec un code d\'erreur:', error.response.data);
-        } else if (error.request) {
-          // La requête a été faite, mais aucune réponse n'a été reçue
-          console.error('Aucune réponse reçue du serveur');
-        }
-      } else {
-        // Une erreur s'est produite lors de la configuration de la requête
-        console.error('Erreur lors de la configuration de la requête:', error.message);
-      }
+    } catch (error) {
+      console.error('Erreur:', error);
     }
+
   };
-  
-  
 
 
   return (
     <Layout>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <Breadcrumb pageName="Add Company" />
+      <Breadcrumb pageName="Add Admin" />
       <form onSubmit={handleSubmit}>
      
 
@@ -635,7 +525,7 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
               </div>
             }
             <span className="absolute right-0 top-4">
-              <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
+              <img src="../../images/logo/logo-tekt-gray2-nobg.png" alt="tel" width="45%" />
             </span>
           </div>
         </div>
@@ -659,7 +549,7 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
               </div>
             }
             <span className="absolute right-0 top-4">
-              <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
+              <img src="../../images/logo/logo-tekt-gray2-nobg.png" alt="tel" width="45%" />
             </span>
           </div>
 
@@ -765,159 +655,7 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
             </div>
           }
         </div>
-        <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Company name
-                </label>
-                <div className="relative">
-                  <input
-                    value={CompanyNameValue}
-                    onChange={(e) => checkCompanyName(e.target.value)}
-                    type="text"
-                    placeholder="Enter the company name "
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
 
-                  {CompanyNameError &&
-                    <div className="flex">
-                      <p className="error-msg">{CompanyNameError}</p>
-                      <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-                    </div>
-                  }
-
-                  <span className="absolute right-7 top-4">
-                    <svg
-                      className="fill-current"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g opacity="0.5">
-                        <path
-                          d="M11.0008 9.52185C13.5445 9.52185 15.607 7.5281 15.607 5.0531C15.607 2.5781 13.5445 0.584351 11.0008 0.584351C8.45703 0.584351 6.39453 2.5781 6.39453 5.0531C6.39453 7.5281 8.45703 9.52185 11.0008 9.52185ZM11.0008 2.1656C12.6852 2.1656 14.0602 3.47185 14.0602 5.08748C14.0602 6.7031 12.6852 8.00935 11.0008 8.00935C9.31641 8.00935 7.94141 6.7031 7.94141 5.08748C7.94141 3.47185 9.31641 2.1656 11.0008 2.1656Z"
-                          fill=""
-                        />
-                        <path
-                          d="M13.2352 11.0687H8.76641C5.08828 11.0687 2.09766 14.0937 2.09766 17.7719V20.625C2.09766 21.0375 2.44141 21.4156 2.88828 21.4156C3.33516 21.4156 3.67891 21.0719 3.67891 20.625V17.7719C3.67891 14.9531 5.98203 12.6156 8.83516 12.6156H13.2695C16.0883 12.6156 18.4258 14.9187 18.4258 17.7719V20.625C18.4258 21.0375 18.7695 21.4156 19.2164 21.4156C19.6633 21.4156 20.007 21.0719 20.007 20.625V17.7719C19.9039 14.0937 16.9133 11.0687 13.2352 11.0687Z"
-                          fill=""
-                        />
-                      </g>
-                    </svg>
-                  </span>
-
-                </div>
-              </div>
-              
-        <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Company address
-                </label>
-                <div className="relative">
-                  <input
-
-                    value={companyAddessValue}
-                    onChange={(e) => checkCompanyAddress(e.target.value)}
-                    type="text"
-                    placeholder="Enter the company address "
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-
-                  {companyAddessError &&
-                    <div className="flex">
-                      <p className="error-msg">{companyAddessError}</p>
-                      <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-                    </div>
-                  }
-                  <span className="absolute right-0  top-4">
-                    <img src="/src/images/icon/adresse.png" alt="adresse" width="45%" />
-                  </span>
-                </div>
-              </div>
-              
-              <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Company phone number
-                </label>
-                <div className="relative">
-                  <input
-                    value={companyPhoneValue}
-                    onChange={(e) => checkCompanyPhone(e.target.value)}
-                    type="text"
-                    placeholder="Enter the company phone number"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-
-                  {companyPhoneError &&
-                    <div className="flex">
-                      <p className="error-msg">{companyPhoneError}</p>
-                      <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-                    </div>
-                  }
-                  <span className="absolute right-0 top-4">
-                    <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
-                  </span>
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Company email
-                </label>
-                <div className="relative">
-                  <input
-                    value={companyEmailValue}
-                    onChange={(e) => checkCompanyEmail(e.target.value)}
-                    type="text"
-                    placeholder="Enter the company address email"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                  {companyEmailError &&
-                    <div className="flex">
-                      <p className="error-msg">{companyEmailError}</p>
-                      <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-                    </div>
-                  }
-                  <span className="absolute right-7 top-4">
-                    <svg
-                      className="fill-current"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g opacity="0.5">
-                        <path
-                          d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
-                          fill=""
-                        />
-                      </g>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Professional fields
-                </label>
-                <select id="professionnalFields" value={CompanyProfessionnalFieldsValue} onChange={(e) => checkCompanyProfessionnalFieldsValue(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
-                  <option value="Choose company professional fields">Choose company professional fields</option>
-                  {
-                    professionalFields.map((item, index) => (
-                      <option key={index} value={item}>{item}</option>
-                    ))
-                  }
-                </select>
-
-                {CompanyProfessionnalFieldsValueError &&
-                  <div className="flex">
-                    <p className="error-msg">{CompanyProfessionnalFieldsValueError}</p>
-                    <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-                  </div>
-                }
-              </div>
 
         <button type='submit' className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" >
           Sign Up

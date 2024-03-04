@@ -27,6 +27,8 @@ import AddCompany from './pages/SuperAdmin/AddCompany'
 import Modifier1 from './pages/SuperAdmin/ModiferChallenger'
 import A from './pages/SuperAdmin/UpdateChallengerToCompany'
 import ModifierAdmin from './pages/SuperAdmin/ModiferChallenger';
+import ListesAdmin from './pages/SuperAdmin/ListesAdmin';
+import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 
 
 function App() {
@@ -65,7 +67,7 @@ function App() {
           }
         />
         <Route
-          path="/modifierAdmin/:userId" 
+          path="/modifierAdmin/:email" 
           Component={ModifierAdmin}
           element={
             <>
@@ -75,11 +77,20 @@ function App() {
           }
         />
          <Route
-          path="/profile"
+          path="/AdminList"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Profile />
+              <ListesAdmin/>
+            </>
+          }
+        />
+         <Route
+          path="/AddAdmin"
+          element={
+            <>
+              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <AddAdmin1/>
             </>
           }
         />

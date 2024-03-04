@@ -79,11 +79,11 @@ export default function FetchData() {
 
   const navigate = useNavigate();
 
-  const handleEdit = (userId: string, e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleEdit = (email: string, e: React.MouseEvent<HTMLButtonElement>) => {
     // Prevent default button behavior
     e.preventDefault();
     // Redirect to edit form with user ID
-    navigate(`/modifierAdmin/${userId}`);
+    navigate(`/modifierAdmin/${email}`);
   };
 
   var changeToCompany = (users: User) => {
@@ -170,7 +170,7 @@ export default function FetchData() {
 
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5" >
-                      <button className="hover:text-primary" onClick={(e) => handleEdit(users._id, e)}>
+                      <button className="hover:text-primary" onClick={(e) => handleEdit(users.email, e)}>
                       <FontAwesomeIcon icon={faPencil} style={{ color: "#28A471" }} className="mt-1 ml-1" />
                       </button>
                       <Link to={`/switchToCompany/${users.email}`} className="hover:text-primary" >

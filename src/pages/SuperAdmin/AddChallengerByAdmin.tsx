@@ -273,6 +273,7 @@ const newImageValue= imageUrlValue.slice(3,1)
 
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
+        window.location.href = '/tables';
       } else {
         console.error('Échec de l\'envoi des données au serveur.');
       }
