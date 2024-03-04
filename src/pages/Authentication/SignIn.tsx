@@ -3,16 +3,26 @@ import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import { useNavigate } from 'react-router-dom';
-import {signIn} from '../../services/auth.service'
+import {signIn } from '../../services/auth.service'
+
 
 import ClientLayout from '../../layout/clientLayout'
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
 const [isFormValid, setIsFormValid] = useState(false);
 const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
+const [showWelcome, setshowWelcome] = useState(false);
+const [WelcomeMessage, setWelcomeMessage] = useState('');
+
+const handleThankuClick = () => {
+  setshowWelcome(false);
+};
+
+
 
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
@@ -36,11 +46,11 @@ if (!value.trim()) {
 }
    
   
-  const handleSignIn = async () => {
-    try {
-      setEmailError('');
+const handleSignIn = async () => {
+  try {
+    setEmailError('');
     setPasswordError('');
-
+  
     // Validation de l'email
     if (!email) {
       setEmailError('Email is required');
@@ -52,29 +62,66 @@ if (!value.trim()) {
       setPasswordError('Password is required');
       return;
     }
+
+    // Perform form validation
     setIsFormValid(!emailError && !passwordError);
+
     if (isFormValid) {
-
-      const responseData = await signIn(email,password);
+      const responseData = await signIn(email, password);
       console.log('Login successful:', responseData);
-      navigate("/profile");
-      window.location.reload();
-    }
-    } catch (error: any) {
-      setAlert({
-        type: 'error',
-        message:
-        'Login failed:'+  error.response?.data?.message || 'An error occurred during login.',
-      });
-      console.error('Login failed:', error);
+      if (responseData.message !== 'User not reactivated') {
+        if (responseData.wasReactivated) {
+          // Show the welcome modal
+          setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
+          setshowWelcome(true); // Ensure the welcome modal is shown
+      
+          // Hide the modal after 10 seconds
+          setTimeout(() => {
+            setshowWelcome(false);
+          }, 10000);
+        } else {
+          // Hide the welcome modal if the account was not reactivated
+          setshowWelcome(false);
+        }
+      } else {
+        // Hide the welcome modal if the account was not reactivated
+        setshowWelcome(false);
+      }
+      
+      // Navigate to the profile page after 5 seconds
       setTimeout(() => {
-        setAlert(null);
-      }, 5000);
+        navigate('/profile');
+      }, 3000);
     }
-  };
-
-  return (
+  } catch (error: any) {
+    // Handle login errors
+    setAlert({
+      type: 'error',
+      message:
+        'Login failed:' +
+        (error.response?.data?.message || 'An error occurred during login.'),
+    });
+    console.error('Login failed:', error);
+    setTimeout(() => {
+      setAlert(null);
+    }, 5000);
+  }
+};
+    return (
     <ClientLayout>
+{showWelcome && (
+      <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+         <div className="bg-gray-200 p-8 rounded-lg text-center">
+          <p className="mb-4">{WelcomeMessage}</p>
+          <button
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
+            onClick={handleThankuClick}
+          >
+            Thank You
+          </button>
+    </div>
+  </div>
+)}
     
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
@@ -252,6 +299,7 @@ if (!value.trim()) {
                   </span>
                   Sign in with Google
                 </button>
+            
 
                 <div className="mt-6 text-center">
                   <p>
