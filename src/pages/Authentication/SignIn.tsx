@@ -8,12 +8,16 @@ import ClientLayout from '../../layout/clientLayout'
 import axios from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
+import CryptoJS from 'crypto-js'; // Import CryptoJS library for encryption/decryption
+
+
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
 
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
@@ -58,6 +62,7 @@ const handleThankuClick = () => {
   
 useEffect(
     () => {
+      
       console.log("userrrrrrrr"+user)
         if (user) {
             axios
@@ -93,6 +98,19 @@ useEffect(
     [ user ]
 
   );
+
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const encryptedRememberedPassword = localStorage.getItem('rememberedPassword'); // Retrieve encrypted password
+    if (rememberedEmail && encryptedRememberedPassword) {
+      setEmail(rememberedEmail);
+      // Decrypt the remembered password before setting it
+      const bytes = CryptoJS.AES.decrypt(encryptedRememberedPassword, 'your-secret-key');
+      const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      setPassword(decryptedPassword);
+      setRememberMe(true);
+    }
+  }, []);
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
     setEmail(value)
@@ -113,6 +131,9 @@ if (!value.trim()) {
   setPasswordError("");
 }
 }
+const handleRememberMeChange = () => {
+  setRememberMe(!rememberMe);
+};
   
 const handleSignIn = async () => {
   try {
@@ -136,6 +157,18 @@ const handleSignIn = async () => {
 
     if (isFormValid) {
       const responseData = await signIn(email, password);
+
+      if (rememberMe) {
+        // Encrypt the password before storing it in local storage
+        const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
+        // Set the authentication token in a cookie
+        document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+        // Store email and encrypted password in local storage
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', encryptedPassword);
+      }
+
+
       console.log('Login successful:', responseData);
       if (responseData.message !== 'User not reactivated') {
         if (responseData.wasReactivated) {
@@ -301,11 +334,14 @@ const handleSignIn = async () => {
               <div className="mt-5 mb-5.5 flex items-center justify-between">
                   <label htmlFor="formCheckbox" className="flex cursor-pointer">
                     <div className="relative pt-0.5">
-                      <input
+                       <input
                         type="checkbox"
                         id="formCheckbox"
                         className="taskCheckbox sr-only"
+                        checked={rememberMe}
+                        onChange={handleRememberMeChange}
                       />
+
                       <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark">
                         <span className="text-white opacity-0">
                           <svg

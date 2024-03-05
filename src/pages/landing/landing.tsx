@@ -86,46 +86,46 @@ const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
 };
 const forwardCards = [
     {
-      imageSrc: '/src/images/task/task-01.jpg',
-      title: 'Need a help in Claim?',
+      imageSrc: '/src/images/landing/flight.jpeg',
+      title: 'Flight Delay Prediction Challenge',
       description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
     },
     {
-      imageSrc: '/src/images/landing/livres.webp',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/finance.jpg',
+      title: 'Financial Inclusion in Africa',
+      description: 'Can you predict who in Africa is most likely to have a bank account?',
     },
     {
-      imageSrc: '/src/images/product/product-01.png',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/turtle.webp',
+      title: 'Turtle Rescue Forecast Challenge',
+      description: 'Can you forecast the number of turtles rescued per site per week in Kenya?',
     },
     {
-      imageSrc: '/src/images/landing/dataset.jpg',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/animal.webp',
+      title: 'Animal Classification Challenge',
+      description: 'Can you create a binary classification algorithm to distinguish animals?',
     },
   ];
   const backwardCards = [
     {
-      imageSrc: "/src/images/landing/fruits.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/imdb.jpeg",
+      title: "IMDB Dataset 2023",
+      description: "Dataset containing information about movies which appears on IMDB website.",
     },
     {
-      imageSrc: "/src/images/landing/fruits.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/car.jpg",
+      title: "Car Specification ",
+      description: "Technical information and appearance information of nearly 30,000 cars from 124 car companies.",
     },
     {
-      imageSrc: "/src/images/landing/livres.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/bitcon.jpeg",
+      title: "Bitcoin Price",
+      description: "This dataset provides weekly updates on Bitcoin prices along with related information ",
     },
     {
-      imageSrc: "/src/images/landing/livres.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/git.png",
+      title: "Github Social Network",
+      description: "A large social network of GitHub developers was collected from the public API in June 2019.",
     },
   ];
 
@@ -197,7 +197,7 @@ data science developers.</p>
           <h2 className="text-4xl font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
           
-          {forwardCards.map((card, index) => (
+          {backwardCards.map((card, index) => (
         <Card2 key={index} {...card} />
       ))}
            
