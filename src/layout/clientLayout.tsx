@@ -12,7 +12,6 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isAuthPath = pathname.includes('/auth');
 
   useEffect(() => {
-    console.log("rou")
     const fetchAuthenticationStatus = async () => {
       try {
         const connectedUser = await getProfile();

@@ -28,11 +28,19 @@ import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
 import SwitchToCompany from './pages/Profile/SwitchToCompany';
 import ListAccountSwitchRequest from './pages/SuperAdmin/ListAccountSwitchRequest';
+import { User } from './types/user';
+import { getProfile } from './services/user.service';
+import { useNavigate } from 'react-router-dom';
 
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setconnectedUser] = useState<User | null>(null);
+
   const { pathname } = useLocation();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,6 +48,23 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
+  }, []);
+
+  useEffect(() => {
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const connectedUser = await getProfile();
+        setconnectedUser(connectedUser);
+        setAuthenticated(true);
+
+      } catch (error) {
+        setAuthenticated(false);
+      } 
+    };
+
+    fetchAuthenticationStatus();
+    console.log(authenticated)
+
   }, []);
 
   return loading ? (
@@ -163,15 +188,17 @@ function App() {
           }
         />
         
+
         <Route
-          path="/settings"
-          element={
-            <>
-              <PageTitle title="Profile Settings" />
-              <ProfileSettings />
-            </>
+            path="/settings"
+            element={
+              <>
+                <PageTitle title="Profile Settings" />
+                <ProfileSettings />
+              </>
           }
         />
+        
           <Route
           path="/accountSwitchRequests"
           element={

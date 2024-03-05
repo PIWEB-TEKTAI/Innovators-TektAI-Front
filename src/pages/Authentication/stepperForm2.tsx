@@ -475,7 +475,7 @@ const toggleConfirmPasswordVisibility = () => {
 
         <div>
           { btnClicked == false ? (
-              <div className="mb-[21rem]">
+              <div className="mb-[30rem]">
                 <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
                   Choose your account type
                 </h2>

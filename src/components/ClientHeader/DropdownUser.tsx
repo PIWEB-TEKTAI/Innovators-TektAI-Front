@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import userSix from '../../images/user/user_icon.png';
 import { signOut } from '../../services/auth.service';
 
 const DropdownUser =(props: {

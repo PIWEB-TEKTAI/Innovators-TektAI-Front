@@ -9,12 +9,16 @@ import axios from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import CryptoJS from 'crypto-js'; 
+
+
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+
 
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
@@ -78,6 +82,7 @@ const handleThankuClick = () => {
   
 useEffect(
     () => {
+      
       console.log("userrrrrrrr"+user)
         if (user) {
             axios
@@ -116,6 +121,19 @@ useEffect(
     [ user ]
 
   );
+
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    const encryptedRememberedPassword = localStorage.getItem('rememberedPassword'); // Retrieve encrypted password
+    if (rememberedEmail && encryptedRememberedPassword) {
+      setEmail(rememberedEmail);
+      // Decrypt the remembered password before setting it
+      const bytes = CryptoJS.AES.decrypt(encryptedRememberedPassword, 'your-secret-key');
+      const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      setPassword(decryptedPassword);
+      setRememberMe(true);
+    }
+  }, []);
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
     setEmail(value)
@@ -136,8 +154,9 @@ if (!value.trim()) {
   setPasswordError("");
 }
 }
-
-
+const handleRememberMeChange = () => {
+  setRememberMe(!rememberMe);
+};
   
 const handleSignIn = async () => {
   try {
@@ -161,6 +180,14 @@ const handleSignIn = async () => {
 
     if (isFormValid) {
       const responseData = await signIn(email, password ,captchaToken);
+      if (rememberMe) {
+        const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
+        document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', encryptedPassword);
+      }
+
+
       console.log('Login successful:', responseData);
       if (responseData.message !== 'User not reactivated') {
         if (responseData.wasReactivated) {
@@ -247,7 +274,7 @@ const handleSignIn = async () => {
         </div>
 
         <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-          <div className="w-full px-4 sm:p-12.5 xl:p-17.5 xl:pt-0 mt-2">
+          <div className="w-full px-4 sm:p-12.5 xl:p-17.5 xl:pt-0 mt-[5rem]">
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign In to TektAI
             </h2>
@@ -335,11 +362,14 @@ const handleSignIn = async () => {
               <div className="mt-5 mb-5.5 flex items-center justify-between">
                   <label htmlFor="formCheckbox" className="flex cursor-pointer">
                     <div className="relative pt-0.5">
-                      <input
+                       <input
                         type="checkbox"
                         id="formCheckbox"
                         className="taskCheckbox sr-only"
+                        checked={rememberMe}
+                        onChange={handleRememberMeChange}
                       />
+
                       <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark">
                         <span className="text-white opacity-0">
                           <svg

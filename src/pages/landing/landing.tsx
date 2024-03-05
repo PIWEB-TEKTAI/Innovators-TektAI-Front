@@ -12,7 +12,6 @@ interface CardProps {
     additionalProp?: boolean;
     delay:string;
   }
-  
   const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children,additionalProp,delay }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [isStyleTemporaryActive, setIsTemporaryStyleActive] = useState(false);
@@ -86,51 +85,66 @@ const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
 };
 const forwardCards = [
     {
-      imageSrc: '/src/images/task/task-01.jpg',
-      title: 'Need a help in Claim?',
+      imageSrc: '/src/images/landing/flight.jpeg',
+      title: 'Flight Delay Prediction Challenge',
       description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
     },
     {
-      imageSrc: '/src/images/landing/livres.webp',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/finance.jpg',
+      title: 'Financial Inclusion in Africa',
+      description: 'Can you predict who in Africa is most likely to have a bank account?',
     },
     {
-      imageSrc: '/src/images/product/product-01.png',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/turtle.webp',
+      title: 'Turtle Rescue Forecast Challenge',
+      description: 'Can you forecast the number of turtles rescued per site per week in Kenya?',
     },
     {
-      imageSrc: '/src/images/landing/dataset.jpg',
-      title: 'Need a help in Claim?',
-      description: 'Go to this step by step guideline process on how to certify for your weekly benefits.',
+      imageSrc: '/src/images/landing/animal.webp',
+      title: 'Animal Classification Challenge',
+      description: 'Can you create a binary classification algorithm to distinguish animals?',
     },
   ];
   const backwardCards = [
     {
-      imageSrc: "/src/images/landing/fruits.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/imdb.jpeg",
+      title: "IMDB Dataset 2023",
+      description: "Dataset containing information about movies which appears on IMDB website.",
     },
     {
-      imageSrc: "/src/images/landing/fruits.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/car.jpg",
+      title: "Car Specification ",
+      description: "Technical information and appearance information of nearly 30,000 cars from 124 car companies.",
     },
     {
-      imageSrc: "/src/images/landing/livres.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/bitcon.jpeg",
+      title: "Bitcoin Price",
+      description: "This dataset provides weekly updates on Bitcoin prices along with related information ",
     },
     {
-      imageSrc: "/src/images/landing/livres.webp",
-      title: "Need a help in Claim?",
-      description: "Go to this step by step guideline process on how to certify for your weekly benefits:",
+      imageSrc: "/src/images/landing/git.png",
+      title: "Github Social Network",
+      description: "A large social network of GitHub developers was collected from the public API in June 2019.",
     },
   ];
 
 import ClientLayout from '../../layout/clientLayout'
 const Landing: React.FC = () => {
+
+  const [emailError, setEmailError] = useState('');
+
+  const checkEmail = (value:any) =>{
+    setEmail(value)
+    if (!value.trim()) {
+      setEmailError("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+    {
+    setEmailError("Please enter a valid email");
+    }else {
+      setEmailError("");
+    }
+   }
+
 
 
     const [email, setEmail] = useState('');
@@ -197,7 +211,7 @@ data science developers.</p>
           <h2 className="text-4xl font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
           
-          {forwardCards.map((card, index) => (
+          {backwardCards.map((card, index) => (
         <Card2 key={index} {...card} />
       ))}
            
@@ -208,7 +222,7 @@ data science developers.</p>
 </section>
 <RevealOnScroll additionalProp={false} delay="">
 <section>
-<div id="aboutUs" className="sm:flex items-center max-w-screen-xl bg-white">
+<div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
     <div className="sm:w-1/2 p-10">
         <RevealOnScroll additionalProp={true} delay="">
         <div className="image object-center text-center hover:scale-[1.05]">
@@ -238,16 +252,33 @@ data science developers.</p>
                 {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
-                    <div>
-                        <input
-                            type="email"
-                            placeholder="Your Email" // Update placeholder text
-                            value={email} // Update value to fromEmail
-                            onChange={(e) => setEmail(e.target.value)} // Update setter function to setFromEmail
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
-                            required
+                <div className="relative">
+                  <input
+                    value={email} onChange={(e) =>checkEmail(e.target.value)} 
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary m-3"
+                    />
+    {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+
+                  <span className="absolute right-4 top-6">
+                    <svg
+                      className="fill-current"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g opacity="0.5">
+                        <path
+                          d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
+                          fill=""
                         />
-                    </div>
+                      </g>
+                    </svg>
+                  </span>
+                </div>
                     <div>
                         <textarea
                             rows={4}
