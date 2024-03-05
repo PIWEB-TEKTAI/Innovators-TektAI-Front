@@ -147,7 +147,7 @@ const ProfileSettings = () => {
    const validateCountry = (value:any) =>{
     setContry(value)
     if (!value.trim()) {
-      setContryError("Contry is required");
+      setContryError("Country is required");
     } 
     else {
       setContryError("");

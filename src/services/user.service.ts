@@ -1,11 +1,13 @@
 import axios from "axios";
 import {User} from '../types/user';
-const API_URL = "http://localhost:3000/user/";
+const User_URL = "http://localhost:3000/user/";
+const API_URL = "http://localhost:3000/";
+
 
 
 export const getProfile = (): Promise<User>=> {
   return axios
-    .get(API_URL + "profile", {
+    .get(User_URL + "profile", {
       withCredentials: true,
     })
     .then((response) => {
@@ -26,7 +28,7 @@ export const uploadImage = async (file: File, setImageUrlCallback: UserProfilePr
     const formData = new FormData();
     formData.append('image', file);
 
-    const response = await axios.post<{ imageUrl: string }>(`${API_URL}imageUpload`, formData, {
+    const response = await axios.post<{ imageUrl: string }>(`${User_URL}imageUpload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -51,7 +53,7 @@ export const uploadImage = async (file: File, setImageUrlCallback: UserProfilePr
 
 export const updateUser = async (updatedUserData: any): Promise<any> => {
   try {
-    const response = await axios.put(`${API_URL}/updateProfile`, updatedUserData, { withCredentials: true });
+    const response = await axios.put(`${User_URL}/updateProfile`, updatedUserData, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error('update error', error);
@@ -60,7 +62,7 @@ export const updateUser = async (updatedUserData: any): Promise<any> => {
 };
 export const updateCompany = async (updatedCompanyData: any): Promise<any> => {
   try {
-    const response = await axios.put(`${API_URL}updateCompany`, updatedCompanyData, { withCredentials: true });
+    const response = await axios.put(`${User_URL}updateCompany`, updatedCompanyData, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error('Update company error', error);
@@ -68,11 +70,19 @@ export const updateCompany = async (updatedCompanyData: any): Promise<any> => {
   }
 };
 
-
+export const switchAccount = async (companyInfo: any): Promise<any> => {
+  try {
+    const response = await axios.put(`${User_URL}switchAccount`, companyInfo, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error('Switch company error', error);
+    throw error; // Re-throw the error to handle it in the calling code if needed
+  }
+};
 export const checkEmailUnique = async (email: string): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${API_URL}/checkEmailUnique`,
+      `${User_URL}/checkEmailUnique`,
       { email },
       {
         headers: {
@@ -86,5 +96,19 @@ export const checkEmailUnique = async (email: string): Promise<boolean> => {
   } catch (error) {
     console.error('Error checking email uniqueness:', error);
     throw new Error('Error checking email uniqueness');
+  }
+};
+export const directlySwitchAccount = async (): Promise<boolean> => {
+  try {
+    const response = await axios.put(
+      `${User_URL}/directlySwitchAccount`,
+      null, // No data payload in the request body
+      { withCredentials: true } // Include withCredentials in the configuration object
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error switching account', error);
+    throw new Error('Error switching account');
   }
 };

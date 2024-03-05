@@ -27,4 +27,6 @@ export type User= {
   state: 'validated' | 'not validated';
   role: 'super admin' | 'admin' | 'challenger' | 'company';
   isExternalUser:boolean;
+  AlreadyCompany:boolean,
+  isDemandingToSwitchAccount:boolean
 }

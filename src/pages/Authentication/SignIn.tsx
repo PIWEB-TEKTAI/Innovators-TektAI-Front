@@ -70,10 +70,13 @@ useEffect(
                 })
                 .then((res) => {
                   signInWithGoogle(res).then(
-                    () => {
+                    (data) => {
                     setProfile(res.data);
-                      console.log(res.data);
+                    if(data.role == "challenger" || data.role=="company"){
                       navigate("/profile");
+                    }
+                    if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/companylist");
+                    }
                     
                   }).catch((error) =>
                    {console.log(error.response.data.message)
@@ -136,7 +139,6 @@ const handleSignIn = async () => {
 
     if (isFormValid) {
       const responseData = await signIn(email, password);
-      console.log('Login successful:', responseData);
       if (responseData.message !== 'User not reactivated') {
         if (responseData.wasReactivated) {
           setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
@@ -154,7 +156,14 @@ const handleSignIn = async () => {
       
       // Navigate to the profile page after 5 seconds
       setTimeout(() => {
-        navigate('/profile');
+        if(responseData.role == "challenger" || responseData.role=="company"){
+          console.log("role"+responseData.role);
+          navigate("/profile");
+        }
+        if(responseData.role == "admin" || responseData.role=="superAdmin"){
+          console.log("role"+responseData.role);
+          navigate("/companylist");
+        }
       }, 3000);
     }
   } catch (error: any) {
