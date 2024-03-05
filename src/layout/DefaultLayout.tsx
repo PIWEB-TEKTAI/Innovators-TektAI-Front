@@ -1,10 +1,31 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
+import { getProfile } from '../services/user.service';
+import { User } from '../types/user';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setconnectedUser] = useState<User | null>(null);
+  const { pathname } = location;
+    // Check if the current path contains "auth"
+  const isAuthPath = pathname.includes('/auth');
 
+  useEffect(() => {
+    console.log("rou")
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const connectedUser = await getProfile();
+        setconnectedUser(connectedUser);
+        setAuthenticated(true);
+      } catch (error) {
+        setAuthenticated(false);
+      }
+    };
+
+    fetchAuthenticationStatus();
+  }, []);
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark"
     style={{ 
@@ -20,7 +41,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  />
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}

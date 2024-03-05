@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { User } from '../../types/user';
+import { Link } from 'react-router-dom';
+import { directlySwitchAccount } from '../../services/user.service';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -19,6 +21,31 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSwitchAccount = async () => {
+    try {
+      setIsLoading(true);
+
+      // Call the API function to switch the account
+      await directlySwitchAccount();
+
+      // Display a success message or handle it as needed
+      alert('Account switched successfully');
+
+      // Delay before reloading the page (in this case, 2000 milliseconds or 2 seconds)
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error('Error switching account', error);
+
+      // Handle the error, show an error message, etc.
+      alert('Error switching account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // close on click outside
   useEffect(() => {
@@ -78,17 +105,32 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
         <span className="text-sm text-black-500 dark:text-gray-400"> {connectedUser?.occupation}</span>
         <div className="flex mt-4 md:mt-6">
-            <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-             {
-              connectedUser?.role=='challenger'?(  <>
-                Switch to company
-              </>):(
-                 <>
-                 Switch to challenger
-               </>
-              )
-             }
-              </a>
+          {connectedUser?.AlreadyCompany?(<>
+           <a onClick={handleSwitchAccount } className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+           {
+            connectedUser?.role=='challenger'?(  <>
+              Switch to company
+            </>):(
+               <>
+               Switch to challenger
+             </>
+            )
+           }
+            </a></>):(
+                <Link to="/SwitchToCompany"> <a className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                {
+                 connectedUser?.role=='challenger'?(  <>
+                   Switch to company
+                 </>):(
+                    <>
+                    Switch to challenger
+                  </>
+                 )
+                }
+                 </a></Link>
+            )}
+         
+
               
         </div>
      

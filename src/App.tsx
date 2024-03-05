@@ -26,6 +26,8 @@ import ModifierAdmin from './pages/SuperAdmin/ModiferChallenger';
 import ListesAdmin from './pages/SuperAdmin/ListesAdmin';
 import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
+import SwitchToCompany from './pages/Profile/SwitchToCompany';
+import ListAccountSwitchRequest from './pages/SuperAdmin/ListAccountSwitchRequest';
 
 
 function App() {
@@ -150,6 +152,16 @@ function App() {
           }
         />
         
+
+        <Route
+          path="/switchToCompany"
+          element={
+            <>
+              <PageTitle title="SwitchToCompany | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <SwitchToCompany />
+            </>
+          }
+        />
         
         <Route
           path="/settings"
@@ -157,6 +169,15 @@ function App() {
             <>
               <PageTitle title="Profile Settings" />
               <ProfileSettings />
+            </>
+          }
+        />
+          <Route
+          path="/accountSwitchRequests"
+          element={
+            <>
+              <PageTitle title="Account Switch Requests" />
+              <ListAccountSwitchRequest />
             </>
           }
         />
