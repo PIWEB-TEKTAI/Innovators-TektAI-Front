@@ -6,6 +6,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 
 const FormElements = () => {
 
@@ -87,6 +88,7 @@ const FormElements = () => {
 const newImageValue= imageUrlValue.slice(3,1)
 
 
+
   const checkFirstName = (value: any) => {
     setFirstNameValue(value)
     if (!value.trim()) {
@@ -97,7 +99,9 @@ const newImageValue= imageUrlValue.slice(3,1)
   }
 
   const checkImageUrl = (value: any) => {
+
     setimageUrlValue(value)
+    console.log(imageUrlValue)
     if (!value.trim()) {
       setimageUrlValueError("Please enter your first name");
     } else {
@@ -146,6 +150,7 @@ const newImageValue= imageUrlValue.slice(3,1)
     }
   }
 
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
   const checkPersonnalAddress = (value: any) => {
     setPersonnalAddressValue(value)
@@ -156,22 +161,33 @@ const newImageValue= imageUrlValue.slice(3,1)
     }
   }
 
-  const checkPersonnalPhone = (value: any, country: CountryCode) => {
-    setPersonnalPhoneValue(value);
+  const [personnalPhoneCountry, setPersonnalPhoneCountry] = useState<CountryCode>('FR'); // Remplacez 'tn' par le code de pays par défaut souhaité
+
+  const handlePhoneChange = (value: string ) => {
+    if (typeof value === 'string') {
+      const isValid = isValidPhoneNumber(value);
+      setIsPhoneValid(isValid);
+    }
+
+    // Vérifier si le formulaire est valide
+    // validateForm();
+  };
+  const checkPersonnalPhone = (value : string) => {
+    handlePhoneChange(value);
+    setPersonnalPhoneCountry(personnalPhoneCountry);
+    const phoneNumber = parsePhoneNumberFromString(value, personnalPhoneCountry);
   
     if (!value.trim()) {
-      setPersonnalPhoneError("Please enter your phone number");
+      setPersonnalPhoneError('Veuillez entrer votre numéro de téléphone');
+    } else if (!phoneNumber || !phoneNumber.isValid()) {
+      setPersonnalPhoneError(
+        'Veuillez entrer un numéro de téléphone valide pour le pays sélectionné'
+      );
     } else {
-      // Parse the phone number based on the provided country
-      const phoneNumber = parsePhoneNumberFromString(value, country);
-  
-      if (!phoneNumber || !phoneNumber.isValid()) {
-        setPersonnalPhoneError("Please enter a valid phone number for the selected country");
-      } else {
-        setPersonnalPhoneError("");
-      }
+      setPersonnalPhoneError('');
+      setPersonnalPhoneValue(value);
     }
-  }
+  };
 
 
   const checkOccupationValue = (value: any) => {
@@ -510,13 +526,16 @@ const newImageValue= imageUrlValue.slice(3,1)
             Phone number
           </label>
           <div className="relative">
-            <input
-              type="text"
-              value={personnalPhoneValue}
-              onChange={(e) => checkPersonnalPhone(e.target.value,'+216' as CountryCode)}
-              placeholder="Enter your phone number (+216)"
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
+          <PhoneInput
+            country={personnalPhoneCountry}
+            value={personnalPhoneValue}
+            onChange={checkPersonnalPhone}
+            placeholder="Enter your phone number"
+            inputProps={{
+              name: 'phone',
+              required: true,
+            }}
+          />
 
             {personnalPhoneError &&
               <div className="flex">
@@ -657,9 +676,14 @@ const newImageValue= imageUrlValue.slice(3,1)
         </div>
 
 
-        <button type='submit' className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" >
-          Sign Up
-        </button>
+        <div className="flex justify-end">
+  <button
+    type='submit'
+    className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
+  >
+    Add Challenger
+  </button>
+</div>
       </form>
       </div>
       </Layout>

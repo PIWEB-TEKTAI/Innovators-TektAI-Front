@@ -6,6 +6,8 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 
+
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 const FormElements = () => {
   const professionalFields =
   ["Healthcare",
@@ -171,17 +173,33 @@ const checkCompanyAddress = (value: any) => {
   }
 }
 
-const checkCompanyPhone = (value: any) => {
-  setCompanyPhoneValue(value)
-  if (!value.trim()) {
-    setCompanyPhoneError("Please enter the company phone number");
+const [personnalPhoneCountry, setPersonnalPhoneCountry] = useState<CountryCode>('FR'); // Remplacez 'tn' par le code de pays par défaut souhaité
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
-  } else if (! /^\d+$/.test(value)) {
-    setCompanyPhoneError("Please enter a valid phone number")
-  } else {
-    setCompanyPhoneError("");
-  }
-}
+  const handlePhoneChange = (value: string ) => {
+    if (typeof value === 'string') {
+      const isValid = isValidPhoneNumber(value);
+      setIsPhoneValid(isValid);
+    }
+
+    // Vérifier si le formulaire est valide
+    // validateForm();
+  };
+  const checkPersonnalPhone = (value : string) => {
+    handlePhoneChange(value);
+    const phoneNumber = parsePhoneNumberFromString(value, personnalPhoneCountry);
+  
+    if (!value.trim()) {
+      setPersonnalPhoneError('Veuillez entrer votre numéro de téléphone');
+    } else if (!phoneNumber || !phoneNumber.isValid()) {
+      setPersonnalPhoneError(
+        'Veuillez entrer un numéro de téléphone valide pour le pays sélectionné'
+      );
+    } else {
+      setPersonnalPhoneError('');
+      setPersonnalPhoneValue(value);
+    }
+  };
 
 
 
@@ -267,23 +285,21 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
     }
   }
 
-  const checkPersonnalPhone = (value: any, country: CountryCode) => {
-    setPersonnalPhoneValue(value);
+  const checkCompanyPhone = (value : string) => {
+    handlePhoneChange(value);
+    const phoneNumber = parsePhoneNumberFromString(value, personnalPhoneCountry);
   
     if (!value.trim()) {
-      setPersonnalPhoneError("Please enter your phone number");
+      setPersonnalPhoneError('Please enter your phon number');
+    } else if (!phoneNumber || !phoneNumber.isValid()) {
+      setPersonnalPhoneError(
+        'Please enter your phon number'
+      );
     } else {
-      // Parse the phone number based on the provided country
-      const phoneNumber = parsePhoneNumberFromString(value, country);
-  
-      if (!phoneNumber || !phoneNumber.isValid()) {
-        setPersonnalPhoneError("Please enter a valid phone number for the selected country");
-      } else {
-        setPersonnalPhoneError("");
-      }
+      setPersonnalPhoneError('');
+      setCompanyPhoneValue(value);
     }
-  }
-
+  };
 
   const checkOccupationValue = (value: any) => {
     setOccupationValue(value)
@@ -620,13 +636,16 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
             Phone number
           </label>
           <div className="relative">
-            <input
-              type="text"
-              value={personnalPhoneValue}
-              onChange={(e) => checkPersonnalPhone(e.target.value,'+216' as CountryCode)}
-              placeholder="Enter your phone number (+216)"
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
+          <PhoneInput
+            country={personnalPhoneCountry}
+            value={personnalPhoneValue}
+            onChange={checkPersonnalPhone}
+            placeholder="Enter your phone number"
+            inputProps={{
+              name: 'phone',
+              required: true,
+            }}
+          />
 
             {personnalPhoneError &&
               <div className="flex">
@@ -841,13 +860,16 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
                   Company phone number
                 </label>
                 <div className="relative">
-                  <input
-                    value={companyPhoneValue}
-                    onChange={(e) => checkCompanyPhone(e.target.value)}
-                    type="text"
-                    placeholder="Enter the company phone number"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
+                <PhoneInput
+            country={personnalPhoneCountry}
+            value={companyPhoneValue}
+            onChange={checkCompanyPhone}
+            placeholder="Enter your phone number"
+            inputProps={{
+              name: 'phone',
+              required: true,
+            }}
+          />
 
                   {companyPhoneError &&
                     <div className="flex">
@@ -918,10 +940,14 @@ const checkCompanyProfessionnalFieldsValue= (value: any) => {
                   </div>
                 }
               </div>
-
-        <button type='submit' className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" >
-          Sign Up
-        </button>
+              <div className="flex justify-end">
+  <button
+    type='submit'
+    className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
+  >
+    Add Comapny
+  </button>
+</div>
       </form>
       </div>
       </Layout>

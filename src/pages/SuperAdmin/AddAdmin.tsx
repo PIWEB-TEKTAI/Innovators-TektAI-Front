@@ -2,13 +2,18 @@ import React, { useState, ChangeEvent, FormEvent,useEffect } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Layout from '../../layout/DefaultLayout';
 import axios from 'axios';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
 import Select from 'react-select';
-
+import MultiSelect from '../../components/Forms/MultiSelect';
 const FormElements = () => {
 
+
+
+  
   const professionalSkills =
     ["Programming Languages: Python, R",
       "Statistical Analysis and Mathematics",
@@ -70,15 +75,13 @@ const permission = [
   const [DateBirthValue, setDateBirthValue] = useState('');
   const [DateBirthError, setDateBirthError] = useState('');
 
-
+  const [showAlert, setShowAlert] = useState(false);
   const [personnalAddressValue, setPersonnalAddressValue] = useState('');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
 
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
+const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
-  const handlePermissionChange = (selectedOptions) => {
-    setSelectedPermissions(selectedOptions);
-  };
+
 
   const [personnalPhoneValue, setPersonnalPhoneValue] = useState('');
   const [personnalPhoneError, setPersonnalPhoneError] = useState('');
@@ -182,25 +185,36 @@ const newImageValue= imageUrlValue.slice(3,1)
         setpermissionValueError("");
     }
   }
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
-  const checkPersonnalPhone = (value: any, country: CountryCode) => {
-    setPersonnalPhoneValue(value);
+
+const [personnalPhoneCountry, setPersonnalPhoneCountry] = useState<CountryCode>('FR'); // Remplacez 'tn' par le code de pays par défaut souhaité
+
+  const handlePhoneChange = (value: string ) => {
+    if (typeof value === 'string') {
+      const isValid = isValidPhoneNumber(value);
+      setIsPhoneValid(isValid);
+    }
+
+    // Vérifier si le formulaire est valide
+    // validateForm();
+  };
+  const checkPersonnalPhone = (value : string) => {
+    handlePhoneChange(value);
+    const phoneNumber = parsePhoneNumberFromString(value, personnalPhoneCountry);
   
     if (!value.trim()) {
-      setPersonnalPhoneError("Please enter your phone number");
+      setPersonnalPhoneError('Veuillez entrer votre numéro de téléphone');
+    } else if (!phoneNumber || !phoneNumber.isValid()) {
+      setPersonnalPhoneError(
+        'Veuillez entrer un numéro de téléphone valide pour le pays sélectionné'
+      );
     } else {
-      // Parse the phone number based on the provided country
-      const phoneNumber = parsePhoneNumberFromString(value, country);
-  
-      if (!phoneNumber || !phoneNumber.isValid()) {
-        setPersonnalPhoneError("Please enter a valid phone number for the selected country");
-      } else {
-        setPersonnalPhoneError("");
-      }
+      setPersonnalPhoneError('');
+      setPersonnalPhoneValue(value);
     }
-  }
-
-
+  };
+  
   const checkOccupationValue = (value: any) => {
     setOccupationValue(value)
     if (value == "occupation") {
@@ -231,6 +245,7 @@ const newImageValue= imageUrlValue.slice(3,1)
       setEducationValueError("");
     }
   }
+ 
 
 
 
@@ -243,9 +258,7 @@ const newImageValue= imageUrlValue.slice(3,1)
     return DateBirthValue !== '' && personnalAddressValue !== '' && personnalPhoneValue !== '' && occupationValue !== "occupation";
   };
 
-
-
-
+  
 
   const checkLastName = (value: any) => {
     setLastNameValue(value)
@@ -267,6 +280,9 @@ const newImageValue= imageUrlValue.slice(3,1)
   }
 
 
+  const handleMultiChange = (selectedOptions:any) => {
+    setSelectedPermissions(selectedOptions);
+  };
   const formData = {
     FirstName: FirstNameValue,
     LastName: LastNameValue,
@@ -300,7 +316,11 @@ const newImageValue= imageUrlValue.slice(3,1)
 
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
-        window.location.href = '/tables';
+        setShowAlert(true);
+
+        // Réinitialiser l'alerte après quelques secondes (facultatif)
+     
+        window.location.href = '/AdminList';
       } else {
         console.error('Échec de l\'envoi des données au serveur.');
       }
@@ -537,13 +557,17 @@ const newImageValue= imageUrlValue.slice(3,1)
             Phone number
           </label>
           <div className="relative">
-            <input
-              type="text"
-              value={personnalPhoneValue}
-              onChange={(e) => checkPersonnalPhone(e.target.value,'+216' as CountryCode)}
-              placeholder="Enter your phone number (+216)"
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
+          <PhoneInput
+            country={personnalPhoneCountry}
+            value={personnalPhoneValue}
+            onChange={checkPersonnalPhone}
+            placeholder="Enter your phone number"
+            inputProps={{
+              name: 'phone',
+              required: true,
+            }}
+          />
+      {personnalPhoneError && <p>{personnalPhoneError}</p>}
 
             {personnalPhoneError &&
               <div className="flex">
@@ -684,29 +708,61 @@ const newImageValue= imageUrlValue.slice(3,1)
         </div>
 
         <div className="mb-6">
-          <label className="mb-2.5 block font-medium text-black dark:text-white">
-            permissions
-          </label>
-          <select id="professionnalFields" value={permissionValue} onChange={(e) => checkPermision(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
-            <option value="Choose personnal Education">Choose Admin permission</option>
-            {
-              permission.map((item1, index1) => (
-                <option key={index1} value={item1}>{item1}</option>
-              ))
-            }
-          </select>
-
-          {EducationValueError &&
-            <div className="flex">
-              <p className="error-msg">{EducationValueError}</p>
-              <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
-            </div>
-          }
+      <label className="mb-2.5 block font-medium text-black dark:text-white">
+        Permissions
+      </label>
+      <MultiSelect
+  id="permissionDropdown"
+  onChange={checkPermision}
+  onMultiChange={handleMultiChange} 
+  options={permission.map(value => ({ value, text: value, selected: false }))}
+  value={ selectedPermissions}
+/>
+      {/* Utilisez permissionValue comme valeur sélectionnée */}
+      {permissionValueError && (
+        <div className="flex">
+          <p className="error-msg">{permissionValueError}</p>
+          {/* Votre icône d'erreur ici */}
         </div>
-
-        <button type='submit' className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" >
-          Sign Up
+      )}
+    </div>
+        <div>
+      <div className="flex justify-end">
+        <button
+          type='submit'
+          className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
+         
+        >
+          Add Admin
         </button>
+      </div>
+
+      {showAlert && (
+        <div className="flex w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+          <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
+            <svg
+              width="16"
+              height="12"
+              viewBox="0 0 16 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.2984 0.826822L15.2868 0.811827L15.2741 0.797751C14.9173 0.401867 14.3238 0.400754 13.9657 0.794406L5.91888 9.45376L2.05667 5.2868C1.69856 4.89287 1.10487 4.89389 0.747996 5.28987C0.417335 5.65675 0.417335 6.22337 0.747996 6.59026L0.747959 6.59029L0.752701 6.59541L4.86742 11.0348C5.14445 11.3405 5.52858 11.5 5.89581 11.5C6.29242 11.5 6.65178 11.3355 6.92401 11.035L15.2162 2.11161C15.5833 1.74452 15.576 1.18615 15.2984 0.826822Z"
+                fill="white"
+                stroke="white"
+              ></path>
+            </svg>
+          </div>
+          <div className="w-full">
+            <h5 className="mb-3 text-lg font-semibold text-black dark:text-[#34D399]">
+              Admin added Successfully
+            </h5>
+            
+          </div>
+        </div>
+      )}
+    </div>
       </form>
       </div>
       </Layout>

@@ -309,9 +309,14 @@ const FormElements1 = () => {
           </div>
 
         </div>
-          <button type="submit" className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-            Sign Up
-          </button>
+        <div className="flex justify-end">
+  <button
+    type='submit'
+    className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
+  >
+    Update to company
+  </button>
+</div>
         </form>
       </div>
     </Layout>
