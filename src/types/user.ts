@@ -12,7 +12,7 @@ export type User= {
   Description?: string;
   Education?: string;
   skills?: Array<string>;
-  contry:string;
+  country:string;
   company: {
     name: string;
     address: string;

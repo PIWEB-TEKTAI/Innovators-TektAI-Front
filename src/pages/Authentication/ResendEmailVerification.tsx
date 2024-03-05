@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
@@ -10,6 +10,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { resendVerifcationEmail } from "../../services/userServices";
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import { AxiosError } from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const ResendEmailVerification: React.FC = () => {
 
@@ -18,6 +19,22 @@ const ResendEmailVerification: React.FC = () => {
 
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
+  const [captchaToken, setCaptchaToken] = useState('');
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Fonction pour décocher le reCAPTCHA
+  const resetRecaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+  };
+
+  const handleCaptchaChange = (token:any) => {
+        console.log('Captcha token:', token);
+        setCaptchaToken(token);
+  };
+ 
 
   const navigate = useNavigate();
 
@@ -35,7 +52,7 @@ const ResendEmailVerification: React.FC = () => {
    
 
    const isFormValid = () => {
-    return EmailValue !== '' ;
+    return EmailValue !== '' && captchaToken !== '' ;
    };
 
    const formData = {
@@ -44,7 +61,7 @@ const ResendEmailVerification: React.FC = () => {
 
    function handleSubmit(e:any){
     e.preventDefault();
-    resendVerifcationEmail(formData)
+    resendVerifcationEmail(formData , captchaToken)
         .then((response) => {
             console.log("Resend Verification email successfully sent :", response.msg);
             setAlert({
@@ -57,6 +74,7 @@ const ResendEmailVerification: React.FC = () => {
             }, 3000);
         })
         .catch((error: AxiosError<any>) => {
+          resetRecaptcha();
           if (error.response && error.response.data && error.response.data.msg) {
               const errorMessage = error.response.data.msg;
               console.error("Registration Error :", errorMessage);
@@ -166,8 +184,14 @@ const ResendEmailVerification: React.FC = () => {
                     value="Send"
                     onClick={(e)=>handleSubmit(e)}
                     disabled={!isFormValid()}
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                   />
+                   <div className="flex justify-center mt-5 mb-5">
+                          <ReCAPTCHA
+                            sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                            onChange={handleCaptchaChange}
+                            ref={recaptchaRef}/>
+                   </div>
                   <div className=" mt-6 text-center">
                   <p>
                     Don’t have any account?{' '}
@@ -176,6 +200,7 @@ const ResendEmailVerification: React.FC = () => {
                     </Link>
                   </p>
                 </div>
+               
               </div>                
             </form>
           </div>

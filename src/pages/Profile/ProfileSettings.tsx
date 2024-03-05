@@ -252,7 +252,7 @@ const ProfileSettings = () => {
         phone: phone,
         email: email,
         Description: Description,
-        contry:contry,
+        country:contry,
         address:address,
         skills:skills,
 
@@ -352,7 +352,7 @@ const ProfileSettings = () => {
         setEmail(data?.email || ''); 
         setLastName(data?.LastName || ''); 
         setPhone(data?.phone || ''); 
-        setContry(data?.contry || ''); 
+        setContry(data?.country || ''); 
         setAddress(data?.address || ''); 
         setDescription(data?.Description || '')
         setSkills(data?.skills || []);     

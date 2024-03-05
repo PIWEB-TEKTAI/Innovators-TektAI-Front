@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import ClientLayout from '../../layout/clientLayout'
 import axios from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -55,6 +56,25 @@ const handleThankuClick = () => {
   const handleGoogleLogin = () => {
     login();
   };
+
+
+  const [captchaToken, setCaptchaToken] = useState('');
+
+  const handleCaptchaChange = (token:any) => {
+        console.log('Captcha token:', token);
+        setCaptchaToken(token);
+  };
+
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Fonction pour décocher le reCAPTCHA
+  const resetRecaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+  };
+
   
 useEffect(
     () => {
@@ -113,6 +133,8 @@ if (!value.trim()) {
   setPasswordError("");
 }
 }
+
+
   
 const handleSignIn = async () => {
   try {
@@ -132,10 +154,10 @@ const handleSignIn = async () => {
     }
 
     // Perform form validation
-    setIsFormValid(!emailError && !passwordError);
+    setIsFormValid(!emailError && !passwordError && captchaToken != '');
 
     if (isFormValid) {
-      const responseData = await signIn(email, password);
+      const responseData = await signIn(email, password ,captchaToken);
       console.log('Login successful:', responseData);
       if (responseData.message !== 'User not reactivated') {
         if (responseData.wasReactivated) {
@@ -166,6 +188,7 @@ const handleSignIn = async () => {
         (error.response?.data?.message || 'An error occurred during login.'),
     });
     console.error('Login failed:', error);
+    resetRecaptcha();
     setTimeout(() => {
       setAlert(null);
     }, 5000);
@@ -298,6 +321,7 @@ const handleSignIn = async () => {
 
                 </div>
               </div>
+           
               <div className="mt-5 mb-5.5 flex items-center justify-between">
                   <label htmlFor="formCheckbox" className="flex cursor-pointer">
                     <div className="relative pt-0.5">
@@ -334,6 +358,7 @@ const handleSignIn = async () => {
                   </Link>
               </div>
 
+          
 
               <div className="mb-5">
                   <input
@@ -346,7 +371,7 @@ const handleSignIn = async () => {
                   onClick={handleSignIn}
                   type="submit"
                     value="Sign In"
-                    className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                   />
                 </div>
 
@@ -386,6 +411,14 @@ const handleSignIn = async () => {
                   </span>
                   Sign in with Google
                 </button>
+                <div className="flex justify-center mt-5 mb-5">
+                  <ReCAPTCHA
+                    sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                    onChange={handleCaptchaChange}
+                    ref={recaptchaRef}
+
+                  />
+                </div>
             
 
                 <div className="mt-6 text-center">
@@ -396,6 +429,7 @@ const handleSignIn = async () => {
                     </Link>
                   </p>
                 </div>
+               
             </form>
           </div>
         </div>

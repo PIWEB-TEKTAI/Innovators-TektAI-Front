@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function ResetPassword() {
   const [password, setPassword] = useState<string>('');
@@ -14,11 +15,37 @@ function ResetPassword() {
   const [successMessage, setSuccessMessage] = useState<string>(''); // New state for success message
   const { id, token } = useParams();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+
+  const [captchaToken, setCaptchaToken] = useState('');
+
+  
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Fonction pour décocher le reCAPTCHA
+  const resetRecaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+  };
+
+  const handleCaptchaChange = (token:any) => {
+        console.log('Captcha token:', token);
+        setCaptchaToken(token);
+  };
+ 
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
+    }
+    try{
+      const captchaResponse = await axios.post("http://localhost:3000/verify-captcha" , { token : captchaToken })
+      console.log('CAPTCHA Verification Response:', captchaResponse.data);
+    }catch(error){
+       throw new Error('CAPTCHA verification failed');
     }
     axios.post(`http://localhost:3000/user/resetPassword/${id}/${token}`, { password })
       .then(res => {
@@ -27,6 +54,7 @@ function ResetPassword() {
         }
       })
       .catch(err => {
+        resetRecaptcha();
         console.log(err.response.data); // Log the error response data to the console
         if (err.response && err.response.data && err.response.data.Status === "Cannot reuse previous password, Please try another one") {
           setErrorMessage("Cannot reuse previous password, Please try another one");
@@ -67,6 +95,10 @@ function ResetPassword() {
     }
    }
 
+   const isFormValid = () => {
+    return password !== '' && confirmPassword !== '' && captchaToken !== '' ;
+   };
+
 
   return (
     <ClientLayout>
@@ -85,7 +117,7 @@ function ResetPassword() {
             </div>
           </div>
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-            <div className="w-full mb-[10rem] p-4 sm:p-12.5 xl:p-17.5">
+            <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <h2 className="mb-10 ">
                 <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Reset Password</span>
               </h2>
@@ -202,8 +234,16 @@ function ResetPassword() {
                   <input
                     type="submit"
                     value="Reset Password"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    disabled={!isFormValid()}
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                   />
+                </div>
+                <div className="flex justify-center mt-5 mb-5">
+                    <ReCAPTCHA 
+                      sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                      onChange={handleCaptchaChange}
+                      ref={recaptchaRef}
+                    />
                 </div>
               </form>
               )}

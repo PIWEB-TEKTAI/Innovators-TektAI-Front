@@ -56,8 +56,14 @@ export const getUsers = () => {
     });
 };
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (email: string, password: string , captchaToken:any) => {
   try {
+    const captchaResponse = await axios.post("http://localhost:3000/verify-captcha" , { token : captchaToken });
+    console.log('CAPTCHA Verification Response:', captchaResponse.data);
+
+    /*if (!captchaResponse.data.success) {
+        throw new Error('CAPTCHA verification failed');
+    }*/
     const response = await axios.post(`${API_URL}/signin`, { email, password }, { withCredentials: true });
     return response.data;
   } catch (error) {

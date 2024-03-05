@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../css/stepper.css";
 import { TiTick } from "react-icons/ti";
 import { Link } from "react-router-dom";
@@ -66,8 +66,12 @@ const StepperForm = () => {
   const [DateBirthError, setDateBirthError] = useState('');
 
 
-  const [personnalAddressValue, setPersonnalAddressValue] = useState('Choose your country');
+  const [personnalAddressValue, setPersonnalAddressValue] = useState('');
   const [personnalAddressError, setPersonnalAddressError] = useState('');
+
+
+  const [personnalCountryValue, setPersonnalCountryValue] = useState('Choose your country');
+  const [personnalCountryError, setPersonnalCountryError] = useState('');
 
   
   const [personnalPhoneValue, setPersonnalPhoneValue] = useState('');
@@ -84,7 +88,7 @@ const StepperForm = () => {
   const [CompanyNameValue, setCompanyNameValue] = useState('');
   const [CompanyNameError, setCompanyNameError] = useState('');
  
-  const [companyAddessValue, setCompanyAddressValue] = useState('Choose your country');
+  const [companyAddessValue, setCompanyAddressValue] = useState('');
   const [companyAddessError, setCompanyAddressError] = useState('');
 
 
@@ -196,9 +200,20 @@ const StepperForm = () => {
   }
 
 
+  const checkCountryAddress = (value:any) =>{
+    setPersonnalCountryValue(value)
+    if (value == "Choose your country") {
+      setPersonnalCountryError("Please enter your country");
+    } else {
+      setPersonnalCountryError("");
+    }
+  }
+
+
+  
   const checkPersonnalAddress = (value:any) =>{
     setPersonnalAddressValue(value)
-    if (value == "Choose your country") {
+    if (!value.trim()) {
       setPersonnalAddressError("Please enter your address");
     } else {
       setPersonnalAddressError("");
@@ -252,7 +267,7 @@ const StepperForm = () => {
 
   const checkCompanyAddress = (value:any) =>{
     setCompanyAddressValue(value)
-    if (value == "Choose your country") {
+    if (!value.trim()) {
       setCompanyAddressError("Please enter the company address");
     } else {
       setCompanyAddressError("");
@@ -305,7 +320,7 @@ const StepperForm = () => {
 
 
    const isForm1Valid = () => {
-    return DateBirthValue !== '' && personnalAddressValue !== 'Choose your country' && personnalPhoneValue !== '' && occupationValue !== "occupation"  && (isChallenger ? captchaToken !== '': true);
+    return DateBirthValue !== '' && personnalCountryValue !== 'Choose your country' && personnalAddressValue != '' && personnalPhoneValue !== '' && occupationValue !== "occupation"  && (isChallenger ? captchaToken !== '': true);
    };
 
 
@@ -318,6 +333,7 @@ const StepperForm = () => {
    };
 
 
+   
 
    useEffect(() => {
     if(radioValue === 'challenger'){
@@ -334,6 +350,7 @@ const StepperForm = () => {
      email:EmailValue,
      password:PasswordValue,
      birthDate:DateBirthValue,
+     country:personnalCountryValue,
      address:personnalAddressValue,
      phone:personnalPhoneValue,
      occupation:occupationValue,
@@ -353,6 +370,14 @@ const StepperForm = () => {
         setCaptchaToken(token);
   };
  
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Fonction pour décocher le reCAPTCHA
+  const resetRecaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+  };
 
   function handleSubmit(e:any){
     e.preventDefault();
@@ -369,6 +394,7 @@ const StepperForm = () => {
             }, 3000);
         })
         .catch((error: AxiosError<any>) => {
+          resetRecaptcha();
           if (error.response && error.response.data && error.response.data.msg) {
               const errorMessage = error.response.data.msg;
               console.error("Erreur lors de l'inscription :", errorMessage);
@@ -389,6 +415,7 @@ const StepperForm = () => {
       });
 
 }
+
 
 
 const togglePasswordVisibility = () => {
@@ -528,7 +555,7 @@ const toggleConfirmPasswordVisibility = () => {
                       type="submit"
                       disabled={!isForm3Valid()}
                       value="NEXT"
-                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                     />
                   </div>
   
@@ -784,7 +811,7 @@ const toggleConfirmPasswordVisibility = () => {
                     disabled={!isFormValid()}
                     type="submit"
                     value="NEXT"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                   />
                 </div>
 
@@ -863,26 +890,56 @@ const toggleConfirmPasswordVisibility = () => {
                         }
                     </div>
                     <div className="mb-4">
-                        <label className="mb-2.5 block font-medium text-black dark:text-white">
-                            Address
-                        </label>
+                          <label className="mb-2.5 block font-medium text-black dark:text-white">
+                              Country
+                          </label>
                         <div className="relative">
-                        <select id="country"  value={personnalAddressValue}   onChange={(e)=> checkPersonnalAddress(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
-                            <option value="Choose your country">Choose your country</option>
-                            {
-                                countries.map((item,index)=>(
-                                  <option key={index} value={item}>{item}</option>
-                                ))
-                            }
-                        </select>
+                        
+                            <select id="country"  value={personnalCountryValue}   onChange={(e)=> checkCountryAddress(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+                                <option value="Choose your country">Choose your country</option>
+                                {
+                                    countries.map((item,index)=>(
+                                      <option key={index} value={item}>{item}</option>
+                                    ))
+                                }
+                            </select>
 
-                        { personnalAddressError &&
-                                <div className="flex">
-                                    <p className="error-msg">{ personnalAddressError }</p>
-                                    <FontAwesomeIcon  icon={faCircleExclamation} style={{color: "#f20202"}} className="mt-1 ml-1" />
-                                </div> 
-                                    }
-                            </div>
+                            { personnalCountryError &&
+                                    <div className="flex">
+                                        <p className="error-msg">{ personnalCountryError }</p>
+                                        <FontAwesomeIcon  icon={faCircleExclamation} style={{color: "#f20202"}} className="mt-1 ml-1" />
+                                    </div> 
+                            }
+                        </div>
+                        
+                        </div>
+
+
+                        <div className="mb-4">
+                          <label className="mb-2.5 block font-medium text-black dark:text-white">
+                              Address
+                          </label>
+                        <div className="relative">
+                          <input
+                              type="text"
+                              value={personnalAddressValue}
+                              onChange={(e)=> checkPersonnalAddress(e.target.value)}
+                              placeholder="Enter your Address"
+                              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary no-calendar-icon"
+                          />
+                              <span className="absolute right-0 top-4">
+                                  <img src="/src/images/icon/adresse.png" alt="cal" width="45%"/>
+                              </span>  
+                              
+
+                            { personnalAddressError &&
+                                    <div className="flex">
+                                        <p className="error-msg">{ personnalAddressError }</p>
+                                        <FontAwesomeIcon  icon={faCircleExclamation} style={{color: "#f20202"}} className="mt-1 ml-1" />
+                                    </div> 
+                            }
+                        </div>
+                        
                         </div>
                         
                         <div className="mb-4">
@@ -892,8 +949,7 @@ const toggleConfirmPasswordVisibility = () => {
 
                           <div className="relative">
                           
-                          <div className="flex items-center">
-                              
+                          <div className="flex items-center">    
                                 <button
                                   id="dropdown-phone-button"
                                   className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
@@ -1006,17 +1062,7 @@ const toggleConfirmPasswordVisibility = () => {
                                 </div> 
                                 }
                         </div>
-                        {
-                          isChallenger ? (
-                            <div className="flex justify-center mt-5 mb-5">
-                              <ReCAPTCHA 
-                                      sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
-                                      onChange={handleCaptchaChange}
-                                      />
-                            </div>
-
-                          ):(null)
-                        }
+                     
                         <div className="flex justify-between">
                           <button
                               className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-3 text-white transition hover:bg-opacity-90"
@@ -1030,7 +1076,7 @@ const toggleConfirmPasswordVisibility = () => {
                           </button>
                          
                           <button
-                              className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
+                              className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition  hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                               onClick={(e) => {
                                   e.preventDefault()
                                   !isChallenger ? setCurrentStep((prev) => prev + 1):null
@@ -1040,12 +1086,24 @@ const toggleConfirmPasswordVisibility = () => {
                                   ):(null)  ;
                               }}
                               disabled={!isForm1Valid()}
-                          > NEXT
+                          >   {isChallenger ? 'FINISH' :'NEXT'}
                           </button>
                          
                         
 
                         </div>
+                        {
+                          isChallenger ? (
+                            <div className="flex justify-center mt-5 mb-5">
+                              <ReCAPTCHA 
+                                      sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                                      onChange={handleCaptchaChange}
+                                      ref={recaptchaRef}
+                                      />
+                            </div>
+
+                          ):(null)
+                        }
                     
                     </div> )}
 
@@ -1102,14 +1160,16 @@ const toggleConfirmPasswordVisibility = () => {
                             Company address
                         </label>
                         <div className="relative">
-                          <select id="country"  value={companyAddessValue}   onChange={(e)=> checkCompanyAddress(e.target.value)} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
-                            <option value="Choose your country">Choose your country</option>
-                            {
-                                countries.map((item,index)=>(
-                                <option key={index} value={item}>{item}</option>
-                                ))
-                            }
-                           </select>
+                          <input
+                              type="text"
+                              value={companyAddessValue}
+                              onChange={(e)=> checkCompanyAddress(e.target.value)}
+                              placeholder="Enter your Address"
+                              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary no-calendar-icon"
+                          />
+                              <span className="absolute right-0 top-4">
+                                  <img src="/src/images/icon/adresse.png" alt="cal" width="45%"/>
+                              </span>  
 
                             { companyAddessError &&
                             <div className="flex">
@@ -1276,12 +1336,7 @@ const toggleConfirmPasswordVisibility = () => {
                             </div> 
                             }
                     </div>
-                    <div className="flex justify-center mt-5 mb-5">
-                          <ReCAPTCHA 
-                                  sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
-                                  onChange={handleCaptchaChange}
-                                  />
-                        </div>
+                   
                     <div className="flex justify-between">
                       <button
                           className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-3 text-white transition hover:bg-opacity-90"
@@ -1295,7 +1350,7 @@ const toggleConfirmPasswordVisibility = () => {
                       </button>
                   
                       <button
-                          className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
+                          className="w-30 cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                           onClick={(e) => {
                               e.preventDefault()
                               currentStep === steps.length
@@ -1307,8 +1362,15 @@ const toggleConfirmPasswordVisibility = () => {
                           >
                           FINISH
                        </button>
+                     
                       
                     </div>
+                    <div className="flex justify-center mt-5 mb-5">
+                          <ReCAPTCHA 
+                                  sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                                  onChange={handleCaptchaChange}
+                                  ref={recaptchaRef}/>
+                        </div>
                    
                     
                     
