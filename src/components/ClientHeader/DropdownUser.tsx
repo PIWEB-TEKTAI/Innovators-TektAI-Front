@@ -67,7 +67,7 @@ const DropdownUser =(props: {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={props.imageUrl} alt="User" />
+          <img src={props.imageUrl} alt="User" className='rounded-full h-12 w-32' />
         </span>
 
         <svg

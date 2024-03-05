@@ -446,9 +446,9 @@ const toggleConfirmPasswordVisibility = () => {
 
 
 
-        <div className="mb-[8rem]">
+        <div>
           { btnClicked == false ? (
-              <div className="mb-[25rem]">
+              <div className="mb-[21rem]">
                 <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
                   Choose your account type
                 </h2>
@@ -547,7 +547,7 @@ const toggleConfirmPasswordVisibility = () => {
 
 
               { currentStep == 1 && (
-               <div>
+               <div className="mb-[12rem]">
                 <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                     First name
@@ -837,7 +837,7 @@ const toggleConfirmPasswordVisibility = () => {
             )} 
                
             { currentStep == 2 && (
-                <div className="mb-[23rem]">
+                <div className="mb-[21rem]">
                     <div className="mb-4">
                         <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Date of Birth
@@ -1052,7 +1052,7 @@ const toggleConfirmPasswordVisibility = () => {
               
               { currentStep == 3  && (
 
-               <div className="mb-[18rem]">
+               <div className="mb-[12rem]">
                   <div className="mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
                         Company name

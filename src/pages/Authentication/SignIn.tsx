@@ -72,10 +72,9 @@ useEffect(
                   signInWithGoogle(res).then(
                     () => {
                     setProfile(res.data);
-                    if(res.status == 201 || res.status == 200){
                       console.log(res.data);
                       navigate("/profile");
-                    }
+                    
                   }).catch((error) =>
                    {console.log(error.response.data.message)
                     setAlert2({

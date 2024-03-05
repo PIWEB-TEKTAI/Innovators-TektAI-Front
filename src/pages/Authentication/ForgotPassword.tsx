@@ -57,7 +57,7 @@ function ForgotPassword() {
             </div>
           </div>
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-            <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+            <div className="w-full mb-[10rem] p-4 sm:p-12.5 xl:p-17.5">
               <h2 className="mb-10">
                 <span className="text-2xl font-bold text-black dark:text-white sm:text-title-xl2">Forgot Password</span>
                 <span className="mt-2 block font-medium">Enter your email and we'll send you a link to reset your password</span>
@@ -114,7 +114,7 @@ function ForgotPassword() {
               
                 </div>
               </form>
-            </div>
+           </div>
           </div>
         </div>
       </div>
