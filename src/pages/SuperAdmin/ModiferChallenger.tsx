@@ -33,17 +33,19 @@ emailCompany: string;
 }
 
 function ModifierAdmin() {
+  const [imageUrlValue, setimageUrlValue] = useState('');
+    const [imageUrlValueError, setimageUrlValueError] = useState('');
   const { email } = useParams<{ email: string }>();
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
   const [firstNameError, setFirstNameError] = useState<string>('');
   const [lastNameError, setLastNameError] = useState<string>('');
   const [userData, setUserData] = useState<User>({
-
+    
     email: '',
     FirstName: '',
     LastName: '',
     password: '',
-    imageUrl: '',
+    imageUrl:imageUrlValue,
     phone: '',
     address: '',
     birthDate: null,
@@ -118,6 +120,14 @@ emailCompany: '',
     validateForm();
   };
 
+  const checkImageUrl = (value: any) => {
+    setimageUrlValue(value)
+    if (!value.trim()) {
+      setimageUrlValueError("Please enter your first name");
+    } else {
+      setimageUrlValueError("");
+    }
+  }
 
   const handlePhoneChange = (value: string | undefined) => {
     if (typeof value === 'string') {
@@ -225,17 +235,29 @@ emailCompany: '',
               <label className="mb-2.5 block text-black dark:text-white">Description</label>
               <textarea rows={6} name="Description" value={userData.Description} onChange={handleChange} placeholder="Enter description" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
             </div>
-            <div className="mb-4.5">
-              <label className="mb-2.5 block text-black dark:text-white">Profile Picture URL</label>
-              <input
-                type="text"
-                name="imageUrl"
-                value={userData.imageUrl}
-                onChange={handleChange}
-                placeholder="Enter image URL"
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              />
-            </div>
+           <div className="mb-4">
+          <label className="mb-2.5 block font-medium text-black dark:text-white">
+            image
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              value={imageUrlValue}
+              onChange={(e) => checkImageUrl(e.target.value)}
+              placeholder="Enter your description"
+              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+
+            {imageUrlValueError &&
+              <div className="flex">
+                <p className="error-msg">{imageUrlValueError}</p>
+              </div>
+            }
+            <span className="absolute right-0 top-4">
+              <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
+            </span> 
+          </div>
+          </div>
             {/* Company Fields */}
             {userData.role === 'company' && (
               <>

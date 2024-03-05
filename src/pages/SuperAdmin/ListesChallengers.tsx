@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Définissez le type des données attendues
 interface User {
-  _id:string;
+  _id: string;
   email: string;
   FirstName: string;
   LastName: string;
@@ -27,12 +27,11 @@ interface User {
   role: 'super admin' | 'admin' | 'challenger' | 'company';
 }
 
-
-// ... (previous imports)
-
 export default function FetchData() {
   const [data, setData] = useState<User[]>([]);
   const [showAddSection, setShowAddSection] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState<User[]>([]);
 
   useEffect(() => {
     axios.get<User[]>('http://localhost:3000/Admin')
@@ -42,14 +41,20 @@ export default function FetchData() {
       .catch(err => console.log(err));
   }, []);
 
+  useEffect(() => {
+    setFilteredData(
+      data.filter(user =>
+        user.FirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.LastName.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, data]);
+
   var bloquer = (email: string) => {
     const updatedData = data.map(user =>
       user.email === email ? { ...user, state: 'blocked' as const } : user
     );
 
-    // console.log('Updated Data:', updatedData);
-
-    console.log(`http://localhost:3000/Admin/${email}/updateState`)
     axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
       .then(response => {
         console.log('User blocked successfully:', response.data);
@@ -58,15 +63,11 @@ export default function FetchData() {
       .catch(err => console.log('Error blocking user:', err));
   };
 
-
   var debloquer = (email: string) => {
     const updatedData = data.map(user =>
       user.email === email ? { ...user, state: 'validated' as const } : user
     );
 
-    // console.log('Updated Data:', updatedData);
-
-    console.log(`http://localhost:3000/Admin/${email}/updateState`)
     axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'validated' })
       .then(response => {
         console.log('User validated successfully:', response.data);
@@ -75,37 +76,35 @@ export default function FetchData() {
       .catch(err => console.log('Error validated user:', err));
   };
 
-
-
   const navigate = useNavigate();
 
   const handleEdit = (email: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent default button behavior
     e.preventDefault();
-    // Redirect to edit form with user ID
     navigate(`/modifierAdmin/${email}`);
   };
 
-  var changeToCompany = (users: User) => {
-    console.log(users)
-  }
-
   return (
-    <Layout >
+    <Layout>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">Challengers List</h2>
-
           <Link to="/ajouterChallenger" className="bg-[#46216A] text-white py-2 px-4 ">
             +
           </Link>
-        </div> <div className="max-w-full overflow-x-auto ">
-          <table className="w-full table-auto ">
+        </div>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded-md mb-4"
+        />
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                 
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  {/* Entête pour l'image */}
                 </th>
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   FirstName
@@ -116,65 +115,56 @@ export default function FetchData() {
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Phone
                 </th>
-              
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   State
                 </th>
-
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
-              {data.map((users, index) => {
-
-                return (<tr key={index}>
-                  
+              {/* Affichage des données filtrées */}
+              {filteredData.map((users, index) => (
+                <tr key={index}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                     /////
-                    </h5>
-
+                    {users.imageUrl && (
+                      <img
+                        src={users.imageUrl}
+                        alt={`${users.FirstName} ${users.LastName}`}
+                        style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+                      />
+                    )}
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {users.FirstName}
-                    </h5>
-
+                    <h5 className="font-medium text-black dark:text-white">{users.FirstName}</h5>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {users.LastName}
-                    </p>
+                    <p className="text-black dark:text-white">{users.LastName}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {users.phone}
-                    </p>
+                    <p className="text-black dark:text-white">{users.phone}</p>
                   </td>
-               
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark" >
+                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p
-                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${users.state === 'validated'
+                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                        users.state === 'validated'
                           ? 'bg-success text-success'
                           : users.state === 'blocked'
-                            ? 'bg-danger text-danger'
-                            : 'bg-warning text-warning'
-                        }`}
-
+                          ? 'bg-danger text-danger'
+                          : 'bg-warning text-warning'
+                      }`}
                     >
                       {users.state}
                     </p>
                   </td>
-
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div className="flex items-center space-x-3.5" >
+                    <div className="flex items-center space-x-3.5">
                       <button className="hover:text-primary" onClick={(e) => handleEdit(users.email, e)}>
+                       
                       <FontAwesomeIcon icon={faPencil} style={{ color: "#28A471" }} className="mt-1 ml-1" />
                       </button>
-                      <Link to={`/switchToCompany/${users.email}`} className="hover:text-primary" >
-
+                      <Link to={`/switchToCompany/${users.email}`} className="hover:text-primary">
                         <svg
                           className="fill-current"
                           width="22"
@@ -194,10 +184,8 @@ export default function FetchData() {
                             />
                           </g>
                         </svg>
-
                       </Link>
                       <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
-
                         <svg
                           className="fill-current"
                           width="22"
@@ -219,15 +207,12 @@ export default function FetchData() {
                         </svg>
                       </button>
                       <button className="hover:text-primary" onClick={() => debloquer(users.email)}>
-
-                      <FontAwesomeIcon icon={faAdd} style={{ color: "#28A471" }} className="mt-1 ml-1" />
-</button>
+                        <FontAwesomeIcon icon={faAdd} style={{ color: "#28A471" }} className="mt-1 ml-1" />
+                      </button>
                     </div>
                   </td>
-                </tr>)
-              }
-
-              )}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -235,5 +220,3 @@ export default function FetchData() {
     </Layout>
   );
 }
-
-
