@@ -26,6 +26,8 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
+                <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
+
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex  overflow-hidden">
 
@@ -33,7 +35,6 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
-          <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}

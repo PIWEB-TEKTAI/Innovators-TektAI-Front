@@ -28,9 +28,10 @@ import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
 import SwitchToCompany from './pages/Profile/SwitchToCompany';
 import ListAccountSwitchRequest from './pages/SuperAdmin/ListAccountSwitchRequest';
-import { User } from './types/user';
+import { User } from './types/User';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
+import ListArchivee from "./pages/SuperAdmin/ListArchive"
 
 
 function App() {
@@ -87,6 +88,15 @@ function App() {
             <>
               <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Calendar />
+            </>
+          }
+        />
+          <Route
+          path="/archive"
+          element={
+            <>
+              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              < ListArchivee />
             </>
           }
         />

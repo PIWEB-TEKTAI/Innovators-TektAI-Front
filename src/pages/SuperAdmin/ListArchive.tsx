@@ -32,7 +32,7 @@ export default function FetchData() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get<User[]>('http://localhost:3000/Admin')
+    axios.get<User[]>('http://localhost:3000/Admin/Archive')
       .then(response => {
         setData(prevData => response.data);
       })
@@ -106,7 +106,7 @@ export default function FetchData() {
     <Layout>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Challengers List</h2>
+          <h2 className="text-2xl font-semibold">archive List</h2>
           <Link to="/ajouterChallenger" className="bg-[#1C6F55] text-white py-2 px-4">
             +
           </Link>
@@ -217,7 +217,7 @@ flex items-center space-x-3.5">
     </g>
   </svg>
 </button>
-<Link to={`/archive`} className="hover:text-primary" onClick={() => archive(users.email)}>
+<Link to={`/tables`} className="hover:text-primary" onClick={() => archive(users.email)}>
   <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
 </Link>
 <button className="hover:text-primary" onClick={() => debloquer(users.email)}>

@@ -31,10 +31,12 @@ interface User {
 // ... (previous imports)
 
 export default function FetchData() {
+  
   const [data, setData] = useState<User[]>([]);
   const [showAddSection, setShowAddSection] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   useEffect(() => {
@@ -44,6 +46,19 @@ export default function FetchData() {
       })
       .catch(err => console.log(err));
   }, []);
+
+  
+// Fonction de gestion pour mettre à jour le terme de recherche
+const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setSearchTerm(event.target.value);
+};
+
+// Filtrer les données en fonction du terme de recherche
+const filteredData = data.filter(user =>
+  user.FirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  user.LastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  user.phone.includes(searchTerm)
+);
 
   var bloquer = (email: string) => {
     const updatedData = data.map(user =>
@@ -108,7 +123,16 @@ export default function FetchData() {
           <Link to="/AddAdmin" className="bg-[#1C6F55] text-white py-2 px-4 ">
             +
           </Link>
-        </div> <div className="max-w-full overflow-x-auto ">
+        </div>
+         <div className="max-w-full overflow-x-auto ">
+           {/* Champ de recherche */}
+           <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="mb-4 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
           <table className="w-full table-auto ">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -133,15 +157,12 @@ export default function FetchData() {
               </tr>
             </thead>
             <tbody>
-            {currentUsers.map(users => (
-                <tr className="bg-white dark:bg-boxdark" key={users._id}>
-              
+              {filteredData.map((users, index) => (
+                <tr key={index}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                      {users.FirstName}
-                    </h5>
-
+                    <h5 className="font-medium text-black dark:text-white">{users.FirstName}</h5>
                   </td>
+                  
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <p className="text-black dark:text-white">
                       {users.LastName}

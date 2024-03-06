@@ -104,7 +104,9 @@ const StepperForm = () => {
   const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
     
   const [isChecked, setIsChecked] = useState(false);
-   
+  const [isCheckedError, setIsCheckedError] = useState('');
+
+
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(null);
 
      
@@ -540,6 +542,7 @@ const toggleConfirmPasswordVisibility = () => {
                             </div>
                           </div>
                           <p>I accept the <Link to="#" className="text-primary font-semibold" onClick={openModal}>Terms and conditions</Link> </p>
+                              
                           <ModalTermsConditions isOpen={isModalOpen} onClose={closeModal} />
                         </label>
                       </div>

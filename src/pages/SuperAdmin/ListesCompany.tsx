@@ -42,7 +42,7 @@ interface User {
 
 export default function FetchData() {
     const [data, setData] = useState<User[]>([]);
-    const [showAddSection, setShowAddSection] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         axios.get<User[]>('http://localhost:3000/Admin/Company')
@@ -51,6 +51,17 @@ export default function FetchData() {
             })
             .catch(err => console.log(err));
     }, []);
+
+     // Fonction de gestion pour mettre à jour le terme de recherche
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredData = data.filter(user =>
+    user.company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.company.phone.includes(searchTerm)
+  );
+
     var bloquer = (email: string) => {
         const updatedData = data.map(user =>
             user.email === email ? { ...user, state: 'blocked' as const } : user
@@ -101,7 +112,15 @@ export default function FetchData() {
                     <Link to="/companyAdd" className="bg-[#1C6F55] text-white py-2 px-4 ">
                         +
                     </Link>
-                </div> <div className="max-w-full overflow-x-auto ">
+                </div>
+                 <div className="max-w-full overflow-x-auto ">
+                 <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="mb-4 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+          />
                     <table className="w-full table-auto ">
                         <thead>
                             <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -113,7 +132,7 @@ export default function FetchData() {
                                 </th>
 
                                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                                    Email company
+                                    Email Company
 
                                 </th>
                                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
@@ -130,80 +149,78 @@ export default function FetchData() {
                             </tr>
                         </thead>
                         <tbody>
-                       {Array.isArray(data) && data.map((company) => (
-    <tr key={company._id}>
-        <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-            <h5 className="font-medium text-black dark:text-white">
-                {company.company.name}
-            </h5>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <p className="text-black dark:text-white">
-                {company.company.address}
-            </p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <p className="text-black dark:text-white">
-                {company.company.email}
-            </p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <p className="text-black dark:text-white">
-                {company.company.phone}
-            </p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <p
-                className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${company.state === 'validated'
-                    ? 'bg-success text-success'
-                    : company.state === 'blocked'
-                        ? 'bg-danger text-danger'
-                        : 'bg-warning text-warning'
-                    }`}
-            >
-                {company.state}
-            </p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-            <div className="flex items-center space-x-3.5" >
-                <button className="hover:text-primary" onClick={(e) => handleEdit(company.company.email, e)}>
-                    <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
-                </button>
-                <button className="hover:text-primary" onClick={() => bloquer(company.company.email)}>
-                    <svg
-                        className="fill-current"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g opacity="0.5">
-                            <path
-                                d="M11 0C4.92487 0 0 4.92487 0 11s4.92487 11 11 11 11-4.92487 11-11S17.0751 0 11 0ZM11 20.25C5.5335 20.25 1.75 16.4665 1.75 11S5.5335 1.75 11 1.75 20.25 5.5335 20.25 11 16.4665 20.25 11 20.25Z"
-                                fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                            <path
-                                d="M16.75 11.8981H5.25C4.73859 11.8981 4.32349 11.483 4.32349 10.9716C4.32349 10.4602 4.73859 10.0451 5.25 10.0451H16.75C17.2614 10.0451 17.6765 10.4602 17.6765 10.9716C17.6765 11.483 17.2614 11.8981 16.75 11.8981Z"
-                                fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                        </g>
-                    </svg>
-                </button>
-                <Link to={`/Archiver`} className="hover:text-primary" >
-                    <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
-                </Link>
-                <button className="hover:text-primary" onClick={() => debloquer(company.company.email)}>
-                    <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
-                </button>
-            </div>
-        </td>
-    </tr>
-))}
+    {Array.isArray(filteredData) && filteredData.map((company) => (
+        <tr key={company._id}>
+            <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <h5 className="font-medium text-black dark:text-white">
+                    {company.company.name}
+                </h5>
+                <br />
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <p className="text-black dark:text-white">
+                    {company.company.address}
+                </p>
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <p className="text-black dark:text-white">
+                    {company.company.email}
+                </p>
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <p className="text-black dark:text-white">
+                    {company.company.phone}
+                </p>
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <p
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${company.state === 'validated'
+                        ? 'bg-success text-success'
+                        : company.state === 'blocked'
+                            ? 'bg-danger text-danger'
+                            : 'bg-warning text-warning'
+                        }`}
+                >
+                    {company.state}
+                </p>
+            </td>
+            <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                <div className="flex items-center space-x-3.5" >
+                    <button className="hover:text-primary" onClick={(e) => handleEdit(company.company.email, e)}>
+                        <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
+                    </button>
+                    <button className="hover:text-primary" onClick={() => bloquer(company.company.email)}>
+                        <svg
+                            className="fill-current"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 22 22"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <g opacity="0.5">
+                                <path
+                                    d="M11 0C4.92487 0 0 4.92487 0 11s4.92487 11 11 11 11-4.92487 11-11S17.0751 0 11 0ZM11 20.25C5.5335 20.25 1.75 16.4665 1.75 11S5.5335 1.75 11 1.75 20.25 5.5335 20.25 11 16.4665 20.25 11 20.25Z"
+                                    fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
+                                />
+                                <path
+                                    d="M16.75 11.8981H5.25C4.73859 11.8981 4.32349 11.483 4.32349 10.9716C4.32349 10.4602 4.73859 10.0451 5.25 10.0451H16.75C17.2614 10.0451 17.6765 10.4602 17.6765 10.9716C17.6765 11.483 17.2614 11.8981 16.75 11.8981Z"
+                                    fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
+                                />
+                            </g>
+                        </svg>
+                    </button>
+                    <Link to={`/Archiver`} className="hover:text-primary" >
+                        <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
+                    </Link>
+                    <button className="hover:text-primary" onClick={() => debloquer(company.company.email)}>
+                        <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
+                    </button>
+                </div>
+            </td>
+        </tr>
+    ))}
+</tbody>
 
-
-
-
-                        </tbody>
                     </table>
                 </div>
             </div>
