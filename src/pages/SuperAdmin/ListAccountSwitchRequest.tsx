@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import { acceptSwitchRequest, getUsersWithAccountSwitchRequest } from '../../services/admin.services';
 
 // Définissez le type des données attendues
@@ -101,7 +101,7 @@ export default function FetchData() {
                   
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">
-                    <img className="w-12 h-12 mb-3 rounded-full shadow-lg" src={users?.imageUrl} alt="Bonnie image"/>
+                       <img className="w-12 h-12 mb-3 rounded-full shadow-lg" src={users?.imageUrl} alt="Bonnie image"/>
                     </h5>
 
                   </td>

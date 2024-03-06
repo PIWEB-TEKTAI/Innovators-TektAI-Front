@@ -2,7 +2,7 @@ import  { useEffect, useState } from 'react';
 import DropdownUser from './DropdownUser';
 import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 
 const ClientHeader =(props: {
   connectedUser: User  | null;

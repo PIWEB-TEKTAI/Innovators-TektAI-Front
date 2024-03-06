@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
 import  React, { useEffect, useState } from 'react';
 import { getProfile, uploadImage } from '../../services/user.service';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import Modal from '../../components/modal';
 
 
@@ -69,7 +69,7 @@ useEffect(() => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
-              <img src={imageUrl || profileData?.imageUrl} alt="profile" className="rounded-full  w-36" />
+              <img src={imageUrl || profileData?.imageUrl} alt="profile" className="rounded-full h-36 w-40" />
               <label
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"

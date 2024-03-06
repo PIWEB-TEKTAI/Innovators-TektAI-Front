@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../../layout/DefaultLayout';
@@ -47,6 +47,8 @@ const FormElements1 = () => {
   const [CompanyProfessionalFieldsValue, setCompanyProfessionalFieldsValue] = useState('Choose personal professional skills');
   const [CompanyProfessionalFieldsError, setCompanyProfessionalFieldsError] = useState('');
 
+
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -85,8 +87,9 @@ const FormElements1 = () => {
       });
 
       console.log(response.data);
-
-      
+      setTimeout(() => {
+        navigate('/companylist');
+    }, 2000);
   
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
@@ -309,9 +312,14 @@ const FormElements1 = () => {
           </div>
 
         </div>
-          <button type="submit" className="flex w-full justify-center align-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-            Sign Up
-          </button>
+        <div className="flex justify-end">
+  <button
+    type='submit'
+    className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
+  >
+    Update to company
+  </button>
+</div>
         </form>
       </div>
     </Layout>
