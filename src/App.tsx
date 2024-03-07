@@ -77,7 +77,7 @@ function App() {
           index
           element={
             <>
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="eCommerce Dashboard | TektAi" />
               <ECommerce />
             </>
           }
@@ -86,7 +86,7 @@ function App() {
           path="/calendar"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Calendar | TektAi" />
               <Calendar />
             </>
           }
@@ -95,7 +95,7 @@ function App() {
           path="/archive"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Archive | TektAi" />
               < ListArchivee />
             </>
           }
@@ -105,7 +105,7 @@ function App() {
           Component={ModifierAdmin}
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Edit Admin | TektAi" />
               <Modifier1/>
             </>
           }
@@ -114,7 +114,7 @@ function App() {
           path="/AdminList"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Admin List | TektAi" />
               <ListesAdmin/>
             </>
           }
@@ -123,7 +123,7 @@ function App() {
           path="/AddAdmin"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Add Admin | TektAi" />
               <AddAdmin1/>
             </>
           }
@@ -132,7 +132,7 @@ function App() {
           path="/ajouterChallenger"
           element={
             <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Add Challenger | TektAi" />
               <AddChallengerByAdmin />
             </>
           }
@@ -142,7 +142,7 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Challengers List | TektAi" />
               <ListesChallengers />
             </>
           }
@@ -151,7 +151,7 @@ function App() {
           path="/companylist"
           element={
             <>
-              <PageTitle title="TEktai" />
+              <PageTitle title="Company List| TektAi" />
               <ListCompany />
             </>
           }
@@ -160,7 +160,7 @@ function App() {
           path="/switchToCompany/:email" Component={A}
           element={
             <>
-              <PageTitle title="TEktai" />
+              <PageTitle title="Switch to company | TektAi" />
               <A />
             </>
           }
@@ -170,7 +170,7 @@ function App() {
           path="/companyAdd"
           element={
             <>
-              <PageTitle title="TEktai" />
+              <PageTitle title="Add Company | TektAi" />
               <AddCompany />
             </>
           }
@@ -181,7 +181,7 @@ function App() {
           path="/profile"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile | TektAi" />
               <Profile />
             </>
           }
@@ -192,7 +192,7 @@ function App() {
           path="/switchToCompany"
           element={
             <>
-              <PageTitle title="SwitchToCompany | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="SwitchToCompany | TektAi" />
               <SwitchToCompany />
             </>
           }
@@ -203,7 +203,7 @@ function App() {
             path="/settings"
             element={
               <>
-                <PageTitle title="Profile Settings" />
+                <PageTitle title="Profile Settings | TektAi" />
                 <ProfileSettings />
               </>
           }
@@ -213,7 +213,7 @@ function App() {
           path="/accountSwitchRequests"
           element={
             <>
-              <PageTitle title="Account Switch Requests" />
+              <PageTitle title="Account Switch Requests | TektAi" />
               <ListAccountSwitchRequest />
             </>
           }
@@ -222,7 +222,7 @@ function App() {
           path="/chart"
           element={
             <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Basic Chart | TektAi" />
               <Chart />
             </>
           }
@@ -231,7 +231,7 @@ function App() {
           path="/ui/alerts"
           element={
             <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Alerts | TektAi" />
               <Alerts />
             </>
           }
@@ -240,7 +240,7 @@ function App() {
           path="/ui/buttons"
           element={
             <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Buttons | TektAi" />
               <Buttons />
             </>
           }
@@ -249,7 +249,7 @@ function App() {
           path="/auth/signin"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signin | TektAi" />
               <SignIn />
             </>
           }
@@ -258,7 +258,7 @@ function App() {
           path="/auth/signup"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | TektAi" />
               <SignUp />
             </>
           }
@@ -267,7 +267,7 @@ function App() {
           path="/auth/forgotPassword"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | TektAi" />
               <ForgotPassword />
             </>
           }
@@ -278,7 +278,7 @@ function App() {
           path="/auth/verifyEmail/:token/:id"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | TektAi" />
               <VerificationEmail />
             </>
           }
@@ -288,7 +288,7 @@ function App() {
           path="/auth/ResendVerifEmail"
           element={
             <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signup | TektAi" />
               <ResendEmailVerification />
             </>
           }
@@ -297,7 +297,7 @@ function App() {
     path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
     element={
       <>
-        <PageTitle title="Reset Password | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+        <PageTitle title="Reset Password | TektAi" />
         <ResetPassword />
       </>
     }
@@ -307,7 +307,7 @@ function App() {
           path="/landing"
           element={
             <>
-              <PageTitle title="Landing | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Landing | TektAi" />
               <Landing />
             </>
           }

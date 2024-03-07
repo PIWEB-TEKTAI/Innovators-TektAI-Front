@@ -1,7 +1,7 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { checkEmailUnique, getProfile, switchAccount, } from '../../services/user.service'; 
 import { useEffect, useState } from 'react';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
