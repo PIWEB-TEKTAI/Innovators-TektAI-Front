@@ -1,13 +1,20 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { checkEmailUnique, getProfile, switchAccount, } from '../../services/user.service'; 
 import { useEffect, useState } from 'react';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import axios from 'axios';
+import { countryFlagsPhone } from '../Authentication/CountryList';
+
 
 const TIMEOUT_DURATION = 5000; // 5 seconds 
+interface Country {
+  name:any;
+  flagPath:any;
+  code:any;
+}
 
 
 const SwitchToCompany = () => {
@@ -46,6 +53,7 @@ const SwitchToCompany = () => {
   const [companyEmailValue, setCompanyEmailValue] = useState('');
   const [companyEmailError, setCompanyEmailError] = useState('');
 
+  const [selectedCompanyCountry, setSelectedCompanyCountry] = useState<Country | null>(null);
 
   const [companyPhoneValue, setCompanyPhoneValue] = useState('');
   const [companyPhoneError, setCompanyPhoneError] = useState('');
@@ -57,7 +65,10 @@ const SwitchToCompany = () => {
   // ... (other state variables)
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
   const navigate = useNavigate();
-
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
    const validateCompanyDescription = (value:any) =>{
     setCompanyDescription(value)
@@ -101,6 +112,10 @@ const SwitchToCompany = () => {
       setCompanyAddressError("");
     }
   }
+  const handleCompanyCountrySelect = (country:Country) => {
+    setSelectedCompanyCountry(country);
+    setIsOpen(false); 
+  };
 
   const checkCompanyPhone = (value:any) =>{
     setCompanyPhoneValue(value)
@@ -169,7 +184,8 @@ const SwitchToCompany = () => {
   };
 
   const isForm2Valid = () => {
-    return  CompanyNameValue !== '' && companyAddessValue !== '' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
+    return  CompanyNameValue !== '' && companyAddessValue !== '' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields' 
+    && CompanyNameError==="" &&companyAddessError===""&&companyEmailError===""&&companyPhoneError==="";
    };
   
   useEffect(() => {
@@ -274,7 +290,7 @@ const SwitchToCompany = () => {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Company Information
+                  Switch To Company: Company Information
                 </h3>
                 
               </div>
@@ -404,27 +420,102 @@ const SwitchToCompany = () => {
                     </div>
                   </div>
                   <div className="mb-4">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  <div className="relative">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Company phone number
                     </label>
-                    <div className="relative">
-                      <input
+                    <div className="flex items-center">
+                          <button
+                                  id="dropdown-phone-button"
+                                  className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                                  onClick={toggleDropdown}
+                                  type="button">
+                                  {selectedCompanyCountry && (
+                                      <>
+                                        {selectedCompanyCountry.flagPath}
+                                        {selectedCompanyCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCompanyCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
+                                </button>
+
+                                {isOpen && (
+                                  <div
+                                    id="dropdown-phone"
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
+                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCompanyCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              <div className="relative w-full">
+                             <input
                         value={companyPhoneValue}
                         onChange={(e)=> checkCompanyPhone(e.target.value)}
                         type="text"
                         placeholder="Enter the company phone number"
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       />
-
+                                   
+                              </div>
+                          </div>
+                    <div className="relative">
                     { companyPhoneError &&
                         <div className="flex">
                         <p className="text-red-500 text-sm mt-1">{ companyPhoneError }</p>
                         </div> 
-                      }
-                      <span className="absolute left-4.5 top-4">
-                          <img src="/src/images/icon/tel.png" alt="tel" width="45%"/>
-                      </span>  
+                      } 
                     </div>
+                  </div>
                     <div className="mb-4">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"

@@ -176,7 +176,7 @@ const handleSignIn = async () => {
     }
 
     // Perform form validation
-    setIsFormValid(!emailError && !passwordError && captchaToken != '');
+    setIsFormValid(!emailError && !passwordError);
 
     if (isFormValid) {
       const responseData = await signIn(email, password ,captchaToken);

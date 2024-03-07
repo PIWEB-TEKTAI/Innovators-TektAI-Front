@@ -63,6 +63,7 @@ export const signIn = async (email: string, password: string , captchaToken:any)
 
     if (!captchaResponse.data.success) {
         throw new Error('CAPTCHA verification failed');
+        console.log("captcha");
     }
     const response = await axios.post(`${API_URL}/signin`, { email, password }, { withCredentials: true });
     return response.data;

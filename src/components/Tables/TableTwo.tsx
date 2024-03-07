@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 
 const UserList = () => {
   const [users, setUsers] = useState<User[]>([]); // Specify the type of users as User[]

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import { Link } from 'react-router-dom';
 import { directlySwitchAccount } from '../../services/user.service';
 

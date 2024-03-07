@@ -2,7 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
-import { User } from '../types/user';
+import { User } from '../types/User';
 import { getProfile } from '../services/user.service';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
