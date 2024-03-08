@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../../layout/DefaultLayout';
 interface User {
 
@@ -17,8 +19,8 @@ interface User {
   occupation: string;
   Description: string;
   Education: string;
-  Skills: string;
-  isEmailVerified: boolean;
+  Skills: string[];
+    isEmailVerified: boolean;
   state: 'validated' | 'not validated' | 'blocked';
   role: 'super admin' | 'admin' | 'challenger' | 'company';
   company: {
@@ -33,12 +35,58 @@ emailCompany: string;
 }
 
 function ModifierAdmin() {
+  
   const [imageUrlValue, setimageUrlValue] = useState('');
+  const [professionalSkills, setProfessionalSkills] = useState<string[]>([
+    "Programming Languages: Python, R",
+      "Statistical Analysis and Mathematics",
+      "Machine Learning: TensorFlow, PyTorch",
+      " Data Wrangling: Pandas",
+      "Data Visualization: Matplotlib, Seaborn, Tableau",
+      "Big Data Technologies: Hadoop, Spark",
+      " Database Knowledge: SQL",
+      " Domain Knowledge",
+      " Data Ethics",
+      " Communication Skills",
+      "Problem-Solving Skills",
+      " Version Control: Git",
+      " Collaboration",
+      "  Continuous Learning",
+      "Project Management"
+    ]);
+
+
+  const Education = [
+    " Computer Science/Computer Engineering",
+    "Statistics/Mathematics",
+    "Machine Learning",
+    "Data Engineering",
+    "Data Analytics",
+    "Database Management",
+    "Business/Domain Knowledge",
+    "Data Ethics and Privacy",
+    "Data Visualization",
+    "Big Data Technologies",
+    "Communication and Presentation",
+    "Optimization Techniques",
+    "Data Governance",
+    "Software Development",
+    "Domain-Specific Specializations"
+  ]
+  const [EducationValue, setEducationValueValue] = useState('Choose personnal Education');
+  const [EducationValueError, setEducationValueError] = useState('');
+
+  const [SkillsValue, setSkillsValue] = useState('Choose personal professional skills');
+  const [SkillsValueError, setSkillsValueError] = useState('');
+  const [occupationValue, setOccupationValue] = useState('occupation');
+  const [occupationError, setOccupationError] = useState('');
     const [imageUrlValueError, setimageUrlValueError] = useState('');
   const { email } = useParams<{ email: string }>();
   const [formIsValid, setFormIsValid] = useState<boolean>(false);
   const [firstNameError, setFirstNameError] = useState<string>('');
   const [lastNameError, setLastNameError] = useState<string>('');
+
+
   const [userData, setUserData] = useState<User>({
     
     email: '',
@@ -52,43 +100,39 @@ function ModifierAdmin() {
     occupation: '',
     Description: '',
     Education: '',
-    Skills: '',
+    Skills: [],
     isEmailVerified: false,
     state: 'not validated',
     role: 'admin',
     company: {
       name: '',
       address: '',
-      
-emailCompany: '',
+      emailCompany: '',
       description: '',
       phone: '',
       professionnalFields: [],
     },
   });
   const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>(userData.Skills|| []);
 
   useEffect(() => {
     axios.get<User>(`http://localhost:3000/Admin/${email}`)
       .then(response => {
         const userDataFromApi = response.data;
         setUserData(userDataFromApi);
+        setSelectedSkills(userDataFromApi.Skills || []); // Assurez-vous que la propriété est "skills" et non "Skills"
       })
       .catch(error => {
         console.error('Error fetching user data:', error);
       });
   }, [email]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const fieldNames = name.split('.');
     const topLevelFieldName = fieldNames[0];
-    const nestedFieldName = fieldNames[1];
-  
-    console.log('Top level field:', topLevelFieldName);
-    console.log('Nested field:', nestedFieldName);
-    console.log('Value:', value);
-  
+    
     if (topLevelFieldName === "FirstName" || topLevelFieldName === "LastName") {
       // Handle FirstName and LastName validation
       if (value.trim() !== '' && !/^[A-Z]/.test(value)) {
@@ -115,9 +159,78 @@ emailCompany: '',
         };
       }
     });
-
+  
     // Validate the form
     validateForm();
+  };
+  
+  const handleSkillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const skill = e.target.value;
+  console.log('Selected skill:', skill);
+
+  setSelectedSkills(prevSelectedSkills => {
+    const updatedSkills = prevSelectedSkills.includes(skill)
+      ? prevSelectedSkills.filter(selectedSkill => selectedSkill !== skill)
+      : [...prevSelectedSkills, skill];
+    
+    console.log('Updated skills:', updatedSkills);
+
+    setUserData(prevUserData => {
+      console.log('Previous user data:', prevUserData);
+      const updatedUserData = {
+        ...prevUserData,
+        Skills: updatedSkills // Assurez-vous que la propriété est "Skills" et non "skills"
+      };
+      console.log('Updated user data:', updatedUserData);
+      return updatedUserData;
+    });
+
+    return updatedSkills;
+  });
+};
+
+  
+  
+  
+  const validateForm = () => {
+    const isValid =
+      !firstNameError &&
+      !lastNameError &&
+      isPhoneValid &&
+      (userData.Skills && userData.Skills.length > 0);
+  
+    setFormIsValid(isValid);
+  };
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    if (!isPhoneValid) {
+      alert('Veuillez saisir un numéro de téléphone valide.');
+      return;
+    }
+  
+    // Inclure les compétences sélectionnées dans les données utilisateur avant l'envoi à l'API
+    const userDataToSend = {
+      ...userData,
+      Skills: selectedSkills // Utiliser selectedSkills au lieu de userData.Skills
+    };
+  
+    console.log('Submitting user data:', userDataToSend); // Log user data before making the request
+    axios.put(`http://localhost:3000/Admin/update/${email}`, userDataToSend)
+    .then(response => {
+      console.log('User updated successfully:', response.data);
+      window.location.href = '/companylist';
+    })
+    .catch(error => {
+      console.error('Error updating user:', error);
+    });
+};
+  
+
+  const handleCancel = () => {
+    // Redirection vers la liste sans effectuer de changement
+    window.location.href = '/companylist';
   };
 
   const checkImageUrl = (value: any) => {
@@ -138,43 +251,9 @@ emailCompany: '',
       setIsPhoneValid(isValidPhoneNumber(value));
     }
 
-    // Vérifier si le formulaire est valide
-    //validateForm();
+    validateForm();
   };
 
-  const validateForm = () => {
-    // Vérifier si tous les champs sont valides
-    const isValid = !firstNameError && !lastNameError && isPhoneValid;
-
-    // Mettre à jour l'état de validation du formulaire
-    setFormIsValid(isValid);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!isPhoneValid) {
-      alert('Veuillez saisir un numéro de téléphone valide.');
-      return;
-    }
-
-    console.log('Submitting user data:', userData); // Log user data before making the request
-
-    axios.put(`http://localhost:3000/Admin/update/${email}`, userData)
-      .then(response => {
-        console.log('User updated successfully:', response.data);
-        window.location.href = '/companylist';
-      })
-      .catch(error => {
-        console.error('Error updating user:', error);
-      });
-  };
-
-
-  const handleCancel = () => {
-    // Redirection vers la liste sans effectuer de changement
-    window.location.href = '/companylist';
-  };
 
   return (
     <Layout>
@@ -227,10 +306,66 @@ emailCompany: '',
                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               />
             </div>
-            <div className="mb-4.5">
-              <label className="mb-2.5 block text-black dark:text-white">Occupation</label>
-              <input type="text" name="occupation" value={userData.occupation} onChange={handleChange} placeholder="Enter your occupation" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
-            </div>
+           
+            <div className="mb-6">
+  <label className="mb-2.5 block font-medium text-black dark:text-white">
+    Occupation
+  </label>
+  <select id="occupations" name="occupation" value={userData.occupation} onChange={handleChange} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+    <option value="occupation">Choose your occupation</option>
+    <option value="student">Student</option>
+    <option value="teacher">Teacher</option>
+    <option value="company">Company</option>
+    <option value="freelancer">Freelancer</option>
+    <option value="searcher">Searcher</option>
+  </select>
+
+  {occupationError &&
+    <div className="flex">
+      <p className="error-msg">{occupationError}</p>
+    </div>
+  }
+
+</div>
+
+
+{professionalSkills.map((skill, index) => (
+  <div key={index} className="flex items-center">
+    <input
+      type="checkbox"
+      id={skill}
+      value={skill}
+      checked={selectedSkills.includes(skill)}
+      onChange={handleSkillChange}
+      className="mr-2"
+    />
+    <label htmlFor={skill}>{skill}</label>
+  </div>
+))}
+
+
+
+<div className="mb-6">
+  <label className="mb-2.5 block font-medium text-black dark:text-white">
+    Education
+  </label>
+  <select id="education" name="Education" value={userData.Education} onChange={handleChange} className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary">
+    <option value="">Choose personal Education</option>
+    {
+      Education.map((item1, index1) => (
+        <option key={index1} value={item1}>{item1}</option>
+      ))
+    }
+  </select>
+
+  {EducationValueError &&
+    <div className="flex">
+      <p className="error-msg">{EducationValueError}</p>
+      <FontAwesomeIcon icon={faCircleExclamation} style={{ color: "#f20202" }} className="mt-1 ml-1" />
+    </div>
+  }
+</div>
+
             <div className="mb-4.5">
               <label className="mb-2.5 block text-black dark:text-white">Description</label>
               <textarea rows={6} name="Description" value={userData.Description} onChange={handleChange} placeholder="Enter description" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
@@ -258,6 +393,18 @@ emailCompany: '',
             </span> 
           </div>
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
             {/* Company Fields */}
             {userData.role === 'company' && (
               <>
@@ -315,12 +462,27 @@ emailCompany: '',
                     country="FR"
                   />
                 </div>
+
+
+
+
+
+
+
+
+
+                
               </>
             )}
 
 
 
-            <button type="submit" className={`flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 ${!formIsValid ? 'cursor-not-allowed opacity-50' : ''}`} >Save Changes</button>
+<button
+  type="submit"
+  
+>
+  Save Changes
+</button>
             <button type="button" className="flex w-full justify-center rounded bg-red-500 p-3 font-medium text-white hover:bg-opacity-90 mt-3" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
