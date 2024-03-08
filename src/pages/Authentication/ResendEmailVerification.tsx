@@ -7,7 +7,7 @@ import "../../css/style1.css";
 import ClientLayout from '../../layout/clientLayout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'; 
-import { resendVerifcationEmail } from "../../services/userServices";
+import { resendVerifcationEmailAfterSignIn } from "../../services/userServices";
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import { AxiosError } from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -52,7 +52,7 @@ const ResendEmailVerification: React.FC = () => {
    
 
    const isFormValid = () => {
-    return EmailValue !== '' && captchaToken !== '' ;
+    return EmailValue !== '' ;
    };
 
    const formData = {
@@ -61,7 +61,13 @@ const ResendEmailVerification: React.FC = () => {
 
    function handleSubmit(e:any){
     e.preventDefault();
-    resendVerifcationEmail(formData , captchaToken)
+    if(captchaToken == ''){
+      setAlert({
+        type: 'error',
+        message: "Please make sure to check the captcha checkbox",
+      });
+    }else{  
+    resendVerifcationEmailAfterSignIn(formData)
         .then((response) => {
             console.log("Resend Verification email successfully sent :", response.msg);
             setAlert({
@@ -70,20 +76,20 @@ const ResendEmailVerification: React.FC = () => {
               ''+  response.msg,
             });
             setTimeout(() => {
-                navigate('/auth/signin');
+              navigate(`/auth/verifyEmail/${response.data.id}`);
             }, 3000);
         })
         .catch((error: AxiosError<any>) => {
           resetRecaptcha();
           if (error.response && error.response.data && error.response.data.msg) {
               const errorMessage = error.response.data.msg;
-              console.error("Registration Error :", errorMessage);
+              console.error("Resend Verification email Error :", errorMessage);
               setAlert({
                   type: 'error',
                   message: errorMessage,
               });
           } else {
-              console.error("Registration Error :", error.message);
+              console.error("Resend Verification email Error :", error.message);
               setAlert({
                   type: 'error',
                   message: error.message,
@@ -92,7 +98,7 @@ const ResendEmailVerification: React.FC = () => {
           
       });
 
-}
+}}
 
 
 
@@ -130,8 +136,8 @@ const ResendEmailVerification: React.FC = () => {
               )} 
           </div>
             <h2 className="mb-10 ">
-                <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Send Email Verification</span>
-                <span className="mt-2 block font-medium">Enter your email and we'll send you a link to verify your email address</span>
+                <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Send Code Verification</span>
+                <span className="mt-2 block font-medium">Enter your email and we'll send you a verification code to verify your email address</span>
             </h2>
             
           
@@ -195,8 +201,8 @@ const ResendEmailVerification: React.FC = () => {
                   <div className=" mt-6 text-center">
                   <p>
                     Don’t have any account?{' '}
-                    <Link to="/auth/signup" className="text-primary">
-                      Sign Up
+                    <Link to="/auth/signup" className="text-primary font-semibold">
+                      Sign up
                     </Link>
                   </p>
                 </div>

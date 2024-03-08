@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
-import StepperForm from './stepperForm2';
+import StepperForm from './stepperForm';
 
 const SignUp: React.FC = () => {
   return (
     <ClientLayout>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
+
           <div className="hidden w-full xl:block xl:w-1/2">
-            <div className="pt-[4rem] pb-[25rem] px-26 text-center">
+            <div className="pt-[4rem] pb-[45rem] px-26 text-center">
               <Link className="mb-5.5 inline-block" to="/">
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
@@ -21,7 +22,7 @@ const SignUp: React.FC = () => {
               </p>
 
               <span className="mt-15 inline-block">
-                <img src="/src/images/auth/Forms-amico.png" alt="signup" />
+                <img src="/src/images/auth/Forms-amico.png" alt="signup"/>
               </span>
             </div>
           </div>

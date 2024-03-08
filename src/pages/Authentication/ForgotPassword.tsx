@@ -34,6 +34,9 @@ function ForgotPassword() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if(captchaToken == ''){
+      setErrorMessage('Please make sure to check the captcha checkbox');
+    }else{
     try{
        const captchaResponse = await axios.post("http://localhost:3000/verify-captcha" , { token : captchaToken })
        console.log('CAPTCHA Verification Response:', captchaResponse.data);
@@ -57,7 +60,7 @@ function ForgotPassword() {
         setErrorMessage('An error occurred. Please try again later.');
         setSuccessMessage('');
       });
-  };
+  };}
 
 
   const checkEmail = (value:any) =>{
@@ -73,7 +76,7 @@ function ForgotPassword() {
 
 
    const isFormValid = () => {
-    return email !== '' && captchaToken !== '' ;
+    return email !== '' ;
    };
 
 
@@ -155,8 +158,8 @@ function ForgotPassword() {
                 <div className="text-center">
                   <p>
                     Don’t have an account?{' '}
-                    <Link to="/auth/signup" className="text-primary">
-                      Sign Up
+                    <Link to="/auth/signup" className="text-primary font-semibold">
+                      Sign up
                     </Link>
                   </p>
               

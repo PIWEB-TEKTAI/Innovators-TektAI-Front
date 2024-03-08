@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {signIn, signInWithGoogle} from '../../services/auth.service'
 import { CodeResponse, TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import ClientLayout from '../../layout/clientLayout'
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -100,7 +100,8 @@ useEffect(
                     if(data.role == "challenger" || data.role=="company"){
                       navigate("/profile");
                     }
-                    if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/companylist");
+                    if(data.role == "admin" || data.role=="superAdmin"){    
+                        navigate("/companylist");
                     }
                     
                   }).catch((error) =>
@@ -134,6 +135,8 @@ useEffect(
       setRememberMe(true);
     }
   }, []);
+
+
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
     setEmail(value)
@@ -146,91 +149,108 @@ useEffect(
       setEmailError("");
     }
    }
-const checkPassword = (value:any) =>{
-setPassword(value)
-if (!value.trim()) {
-  setPasswordError("Password is required");
-} else {
-  setPasswordError("");
-}
-}
-const handleRememberMeChange = () => {
-  setRememberMe(!rememberMe);
-};
+    const checkPassword = (value:any) =>{
+    setPassword(value)
+    if (!value.trim()) {
+      setPasswordError("Password is required");
+    } else {
+       setPasswordError("");
+    }}
+
+    const handleRememberMeChange = () => {
+      setRememberMe(!rememberMe);
+    };
+
+
+    const isForm1Valid = () => {
+        return (
+          email !== '' &&
+          password !== '' &&
+          emailError == '' &&
+          passwordError == ''
+        );
+      };
   
-const handleSignIn = async () => {
-  try {
-    setEmailError('');
-    setPasswordError('');
-  
-    // Validation de l'email
-    if (!email) {
-      setEmailError('Email is required');
-      return;
-    }
-
-    // Validation du mot de passe
-    if (!password) {
-      setPasswordError('Password is required');
-      return;
-    }
-
-    // Perform form validation
-    setIsFormValid(!emailError && !passwordError && captchaToken != '');
-
-    if (isFormValid) {
-      const responseData = await signIn(email, password ,captchaToken);
-      if (rememberMe) {
-        const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
-        document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
-        localStorage.setItem('rememberedEmail', email);
-        localStorage.setItem('rememberedPassword', encryptedPassword);
-      }
-
-
-      console.log('Login successful:', responseData);
-      if (responseData.message !== 'User not reactivated') {
-        if (responseData.wasReactivated) {
-          setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
-          setshowWelcome(true); 
-      
-          setTimeout(() => {
-            setshowWelcome(false);
-          }, 10000);
+      const handleSignIn = async () => {
+        if (captchaToken === '') {
+            setAlert({
+                type: 'error',
+                message: "Please make sure to check the captcha checkbox",
+            });
         } else {
-          setshowWelcome(false);
+            try {
+                const captchaResponse = await axios.post("http://localhost:3000/verify-captcha", { token: captchaToken });
+                console.log('CAPTCHA Verification Response:', captchaResponse.data);
+    
+                await signIn(email, password)
+                    .then((responseData) => {
+                        if (rememberMe) {
+                            const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
+                            document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+                            localStorage.setItem('rememberedEmail', email);
+                            localStorage.setItem('rememberedPassword', encryptedPassword);
+                        }
+    
+                        console.log('Login successful:', responseData);
+                        if (responseData.message !== 'User not reactivated') {
+                            if (responseData.wasReactivated) {
+                                setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
+                                setshowWelcome(true);
+    
+                                setTimeout(() => {
+                                    setshowWelcome(false);
+                                }, 10000);
+                            } else {
+                                setshowWelcome(false);
+                            }
+                        } else {
+                            setshowWelcome(false);
+                        }
+    
+                        setAlert({
+                            type: 'success',
+                            message: "Authentication successful",
+                        });
+    
+                        // Naviguer vers la page de profil après 5 secondes
+                        setTimeout(() => {
+                            if (responseData.role === "challenger" || responseData.role === "company") {
+                                console.log("role" + responseData.role);
+                                navigate("/profile");
+                            }
+                            if (responseData.role === "admin" || responseData.role === "superAdmin") {
+                                console.log("role" + responseData.role);
+                                navigate("/companylist");
+                            }
+                        }, 3000);
+                    }).catch((error) => {
+                       resetRecaptcha();
+                        // Gérer les erreurs de connexion
+                        setAlert({
+                            type: 'error',
+                            message: 'Login failed:' + (error.response?.data?.message || 'An error occurred during login.'),
+                        });
+                        console.error('Login failed:', error);
+                        if(error.response?.data?.message == 'Please verify your email'){
+                          setTimeout(() => {
+                            navigate("/auth/ResendVerifEmail");
+                        }, 3000);
+                        }
+                        setTimeout(() => {
+                            setAlert(null);
+                        }, 3000);
+                    });
+            } catch (error) {
+                // Gérer les erreurs de vérification du recaptcha
+                setAlert({
+                    type: 'error',
+                    message: "Captcha Verification failed",
+                });
+                console.error('CAPTCHA verification failed:', error);
+            }
         }
-      } else {
-        setshowWelcome(false);
-      }
-      
-      // Navigate to the profile page after 5 seconds
-      setTimeout(() => {
-        if(responseData.role == "challenger" || responseData.role=="company"){
-          console.log("role"+responseData.role);
-          navigate("/profile");
-        }
-        if(responseData.role == "admin" || responseData.role=="superAdmin"){
-          console.log("role"+responseData.role);
-          navigate("/companylist");
-        }
-      }, 3000);
     }
-  } catch (error: any) {
-    // Handle login errors
-    setAlert({
-      type: 'error',
-      message:
-        'Login failed:' +
-        (error.response?.data?.message || 'An error occurred during login.'),
-    });
-    console.error('Login failed:', error);
-    resetRecaptcha();
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }
-};
+
     return (
     <ClientLayout>
                 {alert2 && (
@@ -411,6 +431,7 @@ const handleSignIn = async () => {
                   onClick={handleSignIn}
                   type="submit"
                     value="Sign In"
+                    disabled={!isForm1Valid()}
                     className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
                   />
                 </div>
@@ -464,8 +485,8 @@ const handleSignIn = async () => {
                 <div className="mt-6 text-center">
                   <p>
                     Don’t have any account?{' '}
-                    <Link to="/auth/signup" className="text-primary">
-                      Sign Up
+                    <Link to="/auth/signup" className="text-primary font-semibold">
+                      Sign up
                     </Link>
                   </p>
                 </div>

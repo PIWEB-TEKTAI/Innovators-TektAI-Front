@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
@@ -14,7 +13,6 @@ import Landing from './pages/landing/landing';
 import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import ProfileSettings from './pages/Profile/ProfileSettings';
-import VerificationEmail from './pages/Authentication/VerificationEmail';
 import ResendEmailVerification from './pages/Authentication/ResendEmailVerification';
 import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
 import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
@@ -32,6 +30,9 @@ import { User } from './types/User';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
+import StepperForm1 from './pages/Authentication/stepperForm';
+import EmailVerification from './pages/Authentication/EmailVerification';
+import SignIn from './pages/Authentication/Signin';
 
 
 function App() {
@@ -263,6 +264,20 @@ function App() {
             </>
           }
         /> 
+
+
+        <Route
+          path="/auth/signup1"
+          element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <StepperForm1 />
+            </>
+          }
+        /> 
+
+
+
          <Route
           path="/auth/forgotPassword"
           element={
@@ -272,17 +287,7 @@ function App() {
             </>
           }
         />
-   
-
-        <Route
-          path="/auth/verifyEmail/:token/:id"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <VerificationEmail />
-            </>
-          }
-        />
+  
 
         <Route
           path="/auth/ResendVerifEmail"
@@ -293,19 +298,29 @@ function App() {
             </>
           }
         />
-  <Route
-    path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
-    element={
-      <>
-        <PageTitle title="Reset Password | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-        <ResetPassword />
-      </>
-    }
-  />
 
-           <Route
-          path="/landing"
+        <Route
+          path="/auth/verifyEmail/:id"
           element={
+            <>
+              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <EmailVerification />
+            </>
+          }
+        />
+
+        <Route
+          path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
+          element={
+            <>
+              <PageTitle title="Reset Password | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <ResetPassword />
+            </>
+          }
+        />
+           <Route
+            path="/landing"
+            element={
             <>
               <PageTitle title="Landing | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <Landing />
