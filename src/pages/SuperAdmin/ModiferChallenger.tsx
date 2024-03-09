@@ -476,13 +476,13 @@ function ModifierAdmin() {
             )}
 
 
-
 <button
   type="submit"
-  
+  className={`flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 ${!formIsValid ? 'cursor-not-allowed opacity-50' : ''}`}
 >
   Save Changes
 </button>
+
             <button type="button" className="flex w-full justify-center rounded bg-red-500 p-3 font-medium text-white hover:bg-opacity-90 mt-3" onClick={handleCancel}>Cancel</button>
           </div>
         </form>
