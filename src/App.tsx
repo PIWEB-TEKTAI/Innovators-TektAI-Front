@@ -32,6 +32,8 @@ import { User } from './types/User';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
+import AboutUs from "./pages/SuperAdmin/AboutUs"
+
 
 
 function App() {
@@ -312,6 +314,16 @@ function App() {
             </>
           }
         />
+                 <Route
+          path="/Editaboutus"
+          element={
+            <>
+              <PageTitle title="About Us | TektAi" />
+              <AboutUs/>
+            </>
+          }
+        />
+
       </Routes>
     </>
   );

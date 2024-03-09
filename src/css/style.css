@@ -213,3 +213,32 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate__fadeInRight {
+  animation: fadeInRight 0.2s ease-in-out; /* Adjust the animation duration here */
+}
+
+.animated-text {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeIn 0.05s ease forwards; /* Adjust the animation speed here */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

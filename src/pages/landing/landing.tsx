@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Footer from '../landing/footer';
-import { motion } from 'framer-motion'; // Import motion from framer-motion
 
 interface CardProps {
     title: string;
@@ -41,6 +40,7 @@ interface CardProps {
           scrollObserver.unobserve(ref.current);
         }
       };
+      
     }, []);
   
     const classes = `transition-opacity duration-1000 ${delay}
@@ -165,38 +165,84 @@ const Landing: React.FC = () => {
             setErrorMessage('Failed to send message. Please try again later.');
         }
     };
-                
+
+
+    useEffect(() => {
+      fetchAboutUsContent();
+    }, []);
+    const [aboutUsContent, setAboutUsContent] = useState('');
+    const fetchAboutUsContent = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/adminlan/aboutus');
+        setAboutUsContent(response.data.content);
+      } catch (error) {
+        console.error('Error fetching About Us content:', error);
+      }
+    };
+              
+  
   return (
     <ClientLayout>
-<RevealOnScroll additionalProp={false} delay="">
-<section className="bg-white dark:bg-gray-900">
-    <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 " >
-        <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
+    <RevealOnScroll additionalProp={false} delay="">
+      <section className="bg-white dark:bg-gray-900">
+        <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+          <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
             <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-              Transforming Challenges 
-<span className='text-primary'> Into Solutions</span></h1>
-            <p className="max-w-2xl mb-6 group-hover:scale-[1.05]  text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Welcome to our collaborative data science platform, 
-where industry challenges meet innovative solutions. 
-Unlock the potential of real-world problem-solving 
-by connecting with a global community of
-data science developers.</p>
-        <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+              <span className="animated-text">T</span>
+              <span className="animated-text" style={{animationDelay: '0.1s'}}>r</span>
+              <span className="animated-text" style={{animationDelay: '0.2s'}}>a</span>
+              <span className="animated-text" style={{animationDelay: '0.3s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '0.4s'}}>s</span>
+              <span className="animated-text" style={{animationDelay: '0.5s'}}>f</span>
+              <span className="animated-text" style={{animationDelay: '0.6s'}}>o</span>
+              <span className="animated-text" style={{animationDelay: '0.7s'}}>r</span>
+              <span className="animated-text" style={{animationDelay: '0.8s'}}>m</span>
+              <span className="animated-text" style={{animationDelay: '0.9s'}}>i</span>
+              <span className="animated-text" style={{animationDelay: '1s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '1.1s'}}>g</span>
+              <br />
+              <span className="animated-text" style={{animationDelay: '1.3s'}}>C</span>
+              <span className="animated-text" style={{animationDelay: '1.4s'}}>h</span>
+              <span className="animated-text" style={{animationDelay: '1.5s'}}>a</span>
+              <span className="animated-text" style={{animationDelay: '1.6s'}}>l</span>
+              <span className="animated-text" style={{animationDelay: '1.7s'}}>l</span>
+              <span className="animated-text" style={{animationDelay: '1.8s'}}>e</span>
+              <span className="animated-text" style={{animationDelay: '1.9s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '2s'}}>g</span>
+              <span className="animated-text" style={{animationDelay: '2.1s'}}>e</span>
+              <span className="animated-text" style={{animationDelay: '2.2s'}}>s</span>
+              <span className="animated-text" style={{animationDelay: '2.3s'}}>&nbsp;</span>
 
-            <a href="#" className=" inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+              <span className="animated-text text-primary" style={{animationDelay: '2.3s'}}> Into </span>
+              <br />
+              <span className="animated-text text-primary" style={{animationDelay: '2.4s'}}> Solutions</span>
+            </h1>
+            <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+              Welcome to our collaborative data science platform, 
+              where industry challenges meet innovative solutions. 
+              Unlock the potential of real-world problem-solving 
+              by connecting with a global community of
+              data science developers.
+            </p>
+            <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+              <a href="#" className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Join Now
-            </a> 
-            
-            <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+              </a> 
+              <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Explore
-            </a> 
+              </a> 
             </div>
-        </div>
-        <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2]">
+          </div>
+          <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2] animate__animated animate__fadeInRight">
             <img src="/src/images/landing/ai3.jpg" alt="mockup"/>
-        </div>                
-    </div>
-    </section>
-</RevealOnScroll>
+          </div>                
+
+        </div>
+      </section>
+    </RevealOnScroll>
+
+
+
 <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
         <RevealOnScroll delay=''>
@@ -224,26 +270,24 @@ data science developers.</p>
 </section>
 <RevealOnScroll additionalProp={false} delay="">
 <section>
-<div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
-    <div className="sm:w-1/2 p-10">
-        <RevealOnScroll additionalProp={true} delay="">
-        <div className="image object-center text-center hover:scale-[1.05]">
-            <img src="https://i.imgur.com/WbQnbas.png"/>
+      <div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
+        <div className="sm:w-1/2 p-10">
+          <div className="image object-center text-center hover:scale-[1.05]">
+            <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
+          </div>
         </div>
-        </RevealOnScroll>
-    </div>
-    <div className="sm:w-1/2 p-5">
-        <div className="text group cursor-pointer">
+        <div className="sm:w-1/2 p-5">
+          <div className="text group cursor-pointer">
             <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
             <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">About <span className="text-indigo-600">TektAI</span>
             </h2>
             <p className="text-gray-700  group-hover:scale-[1.05]">
-            TektAI is a pioneering platform at the forefront of revolutionizing collaboration between industry challenges and data science developers. With a dynamic space for hosting competitions, fostering team collaboration, and recognizing outstanding contributions, TektAI is the nexus where innovation meets real-world problem-solving. Join us in creating a vibrant community where skills are honed, solutions are crafted, and the boundaries of what's possible in data science are continually pushed
+              {aboutUsContent}
             </p>
+          </div>
         </div>
-    </div>
-</div>
-</section>
+      </div>
+    </section>
 </RevealOnScroll>
 
       <section className="bg-gray-200">
