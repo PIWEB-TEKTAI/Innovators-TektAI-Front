@@ -120,6 +120,7 @@ function ModifierAdmin() {
     axios.get<User>(`http://localhost:3000/Admin/${email}`)
       .then(response => {
         const userDataFromApi = response.data;
+        console.log("UserData from API:", userDataFromApi); // Vérifiez les données renvoyées par l'API
         setUserData(userDataFromApi);
         setSelectedSkills(userDataFromApi.Skills || []); // Assurez-vous que la propriété est "skills" et non "Skills"
       })
@@ -128,21 +129,13 @@ function ModifierAdmin() {
       });
   }, [email]);
   
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    const fieldNames = name.split('.');
-    const topLevelFieldName = fieldNames[0];
-    
-    if (topLevelFieldName === "FirstName" || topLevelFieldName === "LastName") {
-      // Handle FirstName and LastName validation
-      if (value.trim() !== '' && !/^[A-Z]/.test(value)) {
-        setFirstNameError('Le prénom doit commencer par une majuscule.');
-      } else {
-        setFirstNameError('');
-      }
-    }
+  
     // Update the userData state immutably
     setUserData(prevState => {
+      // Check if the field belongs to the 'company' object
       if (name.startsWith('company.')) {
         const fieldName = name.split('.')[1]; // Extract the nested field name
         return {
@@ -163,6 +156,7 @@ function ModifierAdmin() {
     // Validate the form
     validateForm();
   };
+  
   
   const handleSkillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const skill = e.target.value;
@@ -194,8 +188,7 @@ function ModifierAdmin() {
   
   const validateForm = () => {
     const isValid =
-      !firstNameError &&
-      !lastNameError &&
+    
       isPhoneValid &&
       (userData.Skills && userData.Skills.length > 0);
   
@@ -210,7 +203,6 @@ function ModifierAdmin() {
       return;
     }
   
-    // Inclure les compétences sélectionnées dans les données utilisateur avant l'envoi à l'API
     const userDataToSend = {
       ...userData,
       Skills: selectedSkills // Utiliser selectedSkills au lieu de userData.Skills
@@ -218,14 +210,30 @@ function ModifierAdmin() {
   
     console.log('Submitting user data:', userDataToSend); // Log user data before making the request
     axios.put(`http://localhost:3000/Admin/update/${email}`, userDataToSend)
-    .then(response => {
-      console.log('User updated successfully:', response.data);
-      window.location.href = '/companylist';
-    })
-    .catch(error => {
-      console.error('Error updating user:', error);
-    });
-};
+      .then(response => {
+        console.log('User updated successfully:', response.data);
+  
+        // Redirection en fonction du rôle de l'utilisateur
+        switch (userData.role) {
+          case 'company':
+            window.location.href = '/companylist';
+            break;
+          case 'challenger':
+            window.location.href = '/tables';
+            break;
+          case 'admin':
+            window.location.href = '/AdminList';
+            break;
+          default:
+            // Si le rôle n'est pas reconnu, rediriger vers une page par défaut
+            window.location.href = '/';
+        }
+      })
+      .catch(error => {
+        console.error('Error updating user:', error);
+      });
+  };
+  
   
 
   const handleCancel = () => {
@@ -257,10 +265,11 @@ function ModifierAdmin() {
 
   return (
     <Layout>
+      
       <div className="flex flex-col gap-9">
         <form onSubmit={handleSubmit} className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-            <h3 className="font-medium text-black dark:text-white">Edit User</h3>
+            <h3 className="font-medium text-black dark:text-white">Edit</h3>
           </div>
           <div className="p-6.5">
             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -292,6 +301,33 @@ function ModifierAdmin() {
               />
               {!isPhoneValid && <p className="text-red-500 text-sm mt-1">Please enter a valid phone number.</p>}
             </div>
+
+            <div className="mb-4">
+          <label className="mb-2.5 block font-medium text-black dark:text-white">
+            image
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              value={imageUrlValue}
+              onChange={(e) => checkImageUrl(e.target.value)}
+              placeholder="Enter your description"
+              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+
+            {imageUrlValueError &&
+              <div className="flex">
+                <p className="error-msg">{imageUrlValueError}</p>
+              </div>
+            }
+            <span className="absolute right-0 top-4">
+              <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
+            </span> 
+          </div>
+          </div>
+            {userData.role !== 'admin' &&  (
+          <>
+
             <div className="mb-4.5">
               <label className="mb-2.5 block text-black dark:text-white">Address</label>
               <input type="text" name="address" value={userData.address} onChange={handleChange} placeholder="Enter your address" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
@@ -370,29 +406,7 @@ function ModifierAdmin() {
               <label className="mb-2.5 block text-black dark:text-white">Description</label>
               <textarea rows={6} name="Description" value={userData.Description} onChange={handleChange} placeholder="Enter description" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
             </div>
-           <div className="mb-4">
-          <label className="mb-2.5 block font-medium text-black dark:text-white">
-            image
-          </label>
-          <div className="relative">
-            <input
-              type="file"
-              value={imageUrlValue}
-              onChange={(e) => checkImageUrl(e.target.value)}
-              placeholder="Enter your description"
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            />
-
-            {imageUrlValueError &&
-              <div className="flex">
-                <p className="error-msg">{imageUrlValueError}</p>
-              </div>
-            }
-            <span className="absolute right-0 top-4">
-              <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
-            </span> 
-          </div>
-          </div>
+           
 
 
 
@@ -401,79 +415,47 @@ function ModifierAdmin() {
 
 
 
+</>
+         ) }
 
 
-
-
-            {/* Company Fields */}
-            {userData.role === 'company' && (
-              <>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Company Name</label>
-                  <input
-                    type="text"
-                    name="company.name"
-                    value={userData.company.name}
-                    onChange={handleChange}
-                    placeholder="Enter company name"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Company Address</label>
-                  <input
-                    type="text"
-                    name="company.address"
-                    value={userData.company.address}
-                    onChange={handleChange}
-                    placeholder="Enter company address"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Company Email</label>
-                  <input
-                    type="email"
-                    name="company.email"
-                    value={userData.company.emailCompany}
-                    onChange={handleChange}
-                    placeholder="Enter company email"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Company Description</label>
-                  <textarea
-                    rows={6}
-                    name="company.description"
-                    value={userData.company.description}
-                    onChange={handleChange}
-                    placeholder="Enter company description"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Company Phone</label>
-                  <PhoneInput
-                    name="company.phone"
-                    placeholder="Enter company phone number"
-                    value={userData.company.phone || ''}
-                    onChange={(value: string | undefined) => handlePhoneChange(value)}
-                    country="FR"
-                  />
-                </div>
-
-
-
-
-
-
-
-
-
-                
-              </>
-            )}
+          {userData.role === 'company' &&  (
+            
+          <>
+           <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Email <span className="text-meta-1">*</span></label>
+              <input type="email" name="email" value={userData.email} onChange={handleChange} placeholder="Enter your email address" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+            </div>
+          
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Company Name</label>
+              <input type="text" name="company.name" value={userData.company.name} onChange={handleChange} placeholder="Enter company name" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+            </div>
+            
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Company Address</label>
+              <input type="text" name="company.address" value={userData.company.address} onChange={handleChange} placeholder="Enter company address" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+            </div>
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Company Email</label>
+              <input type="email" name="company.email" value={userData.company.emailCompany} onChange={handleChange} placeholder="Enter company email" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+            </div>
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Company Description</label>
+              <textarea rows={6} name="company.description" value={userData.company.description} onChange={handleChange} placeholder="Enter company description" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
+            </div>
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">Company Phone</label>
+              <PhoneInput
+                name="company.phone"
+                placeholder="Enter company phone number"
+                value={userData.company.phone || ''}
+                onChange={(value: string | undefined) => handlePhoneChange(value)}
+                country="FR"
+              />
+            </div>
+          </>
+         ) }
 
 
 <button

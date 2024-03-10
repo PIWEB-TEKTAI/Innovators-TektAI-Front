@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Définissez le type des données attendues
 interface User {
-    _id: string;
     email: string;
     FirstName: string;
     LastName: string;
@@ -150,7 +149,7 @@ export default function FetchData() {
                         </thead>
                         <tbody>
     {Array.isArray(filteredData) && filteredData.map((company) => (
-        <tr key={company._id}>
+        <tr key={company.email}>
             <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                 <h5 className="font-medium text-black dark:text-white">
                     {company.company.name}
@@ -186,10 +185,10 @@ export default function FetchData() {
             </td>
             <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                 <div className="flex items-center space-x-3.5" >
-                    <button className="hover:text-primary" onClick={(e) => handleEdit(company.company.email, e)}>
+                    <button className="hover:text-primary" onClick={(e) => handleEdit(company.email, e)}>
                         <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
                     </button>
-                    <button className="hover:text-primary" onClick={() => bloquer(company.company.email)}>
+                    <button className="hover:text-primary" onClick={() => bloquer(company.email)}>
                         <svg
                             className="fill-current"
                             width="22"
@@ -212,7 +211,7 @@ export default function FetchData() {
                     <Link to={`/Archiver`} className="hover:text-primary" >
                         <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
                     </Link>
-                    <button className="hover:text-primary" onClick={() => debloquer(company.company.email)}>
+                    <button className="hover:text-primary" onClick={() => debloquer(company.email)}>
                         <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
                     </button>
                 </div>
