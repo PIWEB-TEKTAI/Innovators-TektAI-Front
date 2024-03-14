@@ -4,7 +4,7 @@ import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
 import AddChallengerByAdmin from './AddChallengerByAdmin';
 import { Link, useNavigate } from 'react-router-dom';
-import { faAdd, faCheck, faCircleExclamation, faPenNib, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faCheck, faCircleExclamation, faCircleStop, faPenNib, faPencil, faRemove, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Définissez le type des données attendues
@@ -59,12 +59,26 @@ const filteredData = data.filter(user =>
   user.LastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
   user.phone.includes(searchTerm)
 );
+var archive = (email: string) => {
+  const updatedData = data.map(user =>
+    user.email === email ? { ...user, state: 'validated' as const } : user
+  );
+
+  console.log(`http://localhost:3000/Admin/${email}/updateState`)
+  axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'archive' })
+    .then(response => {
+      console.log('User validated successfully:', response.data);
+      setData(updatedData);
+    })
+    .catch(err => console.log('Error validated user:', err));
+};
 
   var bloquer = (email: string) => {
     const updatedData = data.map(user =>
       user.email === email ? { ...user, state: 'blocked' as const } : user
     );
 
+  
     // console.log('Updated Data:', updatedData);
 
     console.log(`http://localhost:3000/Admin/${email}/updateState`)
@@ -157,8 +171,8 @@ const filteredData = data.filter(user =>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((users, index) => (
-                <tr key={index}>
+            {currentUsers.map(users => (
+                <tr className="bg-white dark:bg-boxdark" key={users._id}>
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">{users.FirstName}</h5>
                   </td>
@@ -190,40 +204,21 @@ const filteredData = data.filter(user =>
 
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5" >
-                      <button className="hover:text-primary" onClick={(e) => handleEdit(users.email, e)}>
-                        <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
-                      </button>
-
-                      <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
-
-                        <svg
-                          className="fill-current"
-                          width="22"
-                          height="22"
-                          viewBox="0 0 22 22"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.5">
-                            <path
-                              d="M11 0C4.92487 0 0 4.92487 0 11s4.92487 11 11 11 11-4.92487 11-11S17.0751 0 11 0ZM11 20.25C5.5335 20.25 1.75 16.4665 1.75 11S5.5335 1.75 11 1.75 20.25 5.5335 20.25 11 16.4665 20.25 11 20.25Z"
-                              fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                            <path
-                              d="M16.75 11.8981H5.25C4.73859 11.8981 4.32349 11.483 4.32349 10.9716C4.32349 10.4602 4.73859 10.0451 5.25 10.0451H16.75C17.2614 10.0451 17.6765 10.4602 17.6765 10.9716C17.6765 11.483 17.2614 11.8981 16.75 11.8981Z"
-                              fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                          </g>
-                        </svg>
-                      </button>
-                      <Link to={`/Archiver`} className="hover:text-primary" >
-
-                        <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
-
-                      </Link>
-                      <button className="hover:text-primary" onClick={() => debloquer(users.email)}>
-
-                        <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
-                      </button>
+                    <button className="hover:text-primary" onClick={(e) => handleEdit(users.email, e)}>
+  <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
+</button>
+<Link to={`/switchToCompany/${users.email}`} className="hover:text-primary">
+<FontAwesomeIcon icon={faUser} style={{ color: "#26707E" }} className="mt-1 ml-1" />
+</Link>
+<button className="hover:text-primary" onClick={() => bloquer(users.email)}>
+<FontAwesomeIcon icon={faRemove} style={{ color: "#000000" }} className="mt-1 ml-1" />
+</button>
+<Link to={`/archive`} className="hover:text-primary" onClick={() => archive(users.email)}>
+  <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
+</Link>
+<button className="hover:text-primary" onClick={() => debloquer(users.email)}>
+  <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
+</button>
 
                     </div>
 

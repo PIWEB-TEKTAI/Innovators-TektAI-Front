@@ -5,7 +5,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../../layout/DefaultLayout';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import axios from 'axios';
-
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 const FormElements1 = () => {
   const { email } = useParams();
   const professionalFields1 =
@@ -57,7 +57,7 @@ const FormElements1 = () => {
 
         setCompanyNameValue(userData.company.name);
         setCompanyAddressValue(userData.company.address);
-        setCompanyEmailValue(userData.company.emailCompany);
+        setCompanyEmailValue(userData.company.email);
         setdescriptionValue(userData.company.description)
         setCompanyPhoneError(userData.company.phone);
         setCompanyProfessionalFieldsValue(userData.company.CompanyProfessionalFieldsValue);
@@ -77,7 +77,7 @@ const FormElements1 = () => {
         company: {
          name: CompanyNameValue,
          address:companyAddressValue,
-         emailCompany:companyEmailValue,
+         email:companyEmailValue,
          phone:companyPhoneValue,
          professionnalFields:CompanyProfessionalFieldsValue,
          description:descriptionValue
@@ -144,6 +144,27 @@ const FormElements1 = () => {
       setCompanyPhoneError('');
     }
   };
+  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
+  const handlePhoneChange = (value: any) => {
+    const stringValue = String(value); // Convert value to a string
+  
+    setIsPhoneValid(isValidPhoneNumber(stringValue));
+ 
+  
+    // Vérifier si le formulaire est valide
+    //validateForm();
+    if (!stringValue.trim()) {
+      setCompanyPhoneError('Please enter your phone number');
+    } else if (!isValidPhoneNumber(stringValue)) {
+      setCompanyPhoneError(
+        'Please enter a valid phone number for the selected country'
+      );
+    } else {
+      setCompanyPhoneError('');
+      setCompanyPhoneValue(stringValue);
+    }
+  };
+
 
   const checkdescription = (value: any) => {
     setdescriptionValue(value)
@@ -157,7 +178,7 @@ const FormElements1 = () => {
   return (
     <Layout>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <Breadcrumb pageName="Add Challengers" />
+        <Breadcrumb pageName="Switch To Company " />
         <form onSubmit={handleSubmit}>
           {/* Company Name */}
           <div className="mb-4">
@@ -219,14 +240,13 @@ const FormElements1 = () => {
               Company phone number
             </label>
             <div className="relative">
-              <input
+            <PhoneInput
+                name="phone"
+                placeholder="Enter your phone number"
                 value={companyPhoneValue}
-                onChange={(e) => checkCompanyPhone(e.target.value)}
-                type="text"
-                placeholder="Enter the company phone number"
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                onChange={handlePhoneChange}
+                country="FR"
               />
-
               {companyPhoneError && (
                 <div className="flex">
                   <p className="error-msg">{companyPhoneError}</p>
