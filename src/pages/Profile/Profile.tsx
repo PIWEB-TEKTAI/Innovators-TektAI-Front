@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout'
 import  React, { useEffect, useState } from 'react';
 import { getProfile, uploadImage } from '../../services/user.service';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import Modal from '../../components/modal';
 
 

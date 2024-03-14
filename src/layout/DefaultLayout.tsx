@@ -2,7 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
 import { getProfile } from '../services/user.service';
-import { User } from '../types/User';
+import { User } from '../types/user';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

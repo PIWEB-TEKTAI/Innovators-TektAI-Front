@@ -1,5 +1,5 @@
 import axios from "axios";
-import {User} from '../types/User';
+import {User} from '../types/user';
 const Admin_URL = "http://localhost:3000/admin2/";
 const API_URL = "http://localhost:3000/";
 

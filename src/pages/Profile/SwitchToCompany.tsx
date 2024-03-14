@@ -1,7 +1,7 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { checkEmailUnique, getProfile, switchAccount, } from '../../services/user.service'; 
 import { useEffect, useState } from 'react';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
@@ -61,6 +61,7 @@ const SwitchToCompany = () => {
   
   const [companyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose company professional fields');
   const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
+  const [isForm2Submited, setIsForm2Submited] = useState(false);
 
   // ... (other state variables)
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
@@ -158,6 +159,7 @@ const SwitchToCompany = () => {
       });
 
       if(switchedAccount){
+        setIsForm2Submited(true);
         setAlert({
           type: 'success',
           message:
@@ -507,7 +509,7 @@ const SwitchToCompany = () => {
                       />
                                    
                               </div>
-                          </div>
+                      </div>
                     <div className="relative">
                     { companyPhoneError &&
                         <div className="flex">
@@ -575,7 +577,7 @@ const SwitchToCompany = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-30"
                       type="submit"
-                      disabled={!isForm2Valid()}
+                      disabled={!isForm2Valid() || isForm2Submited}
                     >
                       Save
                     </button>

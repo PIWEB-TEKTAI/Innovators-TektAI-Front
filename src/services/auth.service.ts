@@ -4,7 +4,6 @@ import Cookies from 'universal-cookie';
 const API_URL = "http://localhost:3000/auth/";
 const cookies = new Cookies();
 
-
 /*export const login = (email: string, password: string) => {
 
   return axios.post('http://localhost:3000/login', { email: email, password: password}, { withCredentials: true })
@@ -69,7 +68,7 @@ export const signIn = async (email: string, password: string , captchaToken:any)
     return response.data;
   } catch (error) {
     console.error('Login failed:', error);
-    throw error; // Re-throw the error to handle it in the calling code if needed
+    throw error;
   }
 };
 export const signOut = async () => {
@@ -81,6 +80,7 @@ export const signOut = async () => {
 
     if (response.ok) {
       document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+   
       return true; 
     } else {
       console.error('Sign-out failed.');

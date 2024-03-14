@@ -2,7 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
-import { User } from '../types/User';
+import { User } from '../types/user';
 import { getProfile } from '../services/user.service';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -15,7 +15,6 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
   const isAuthPath = pathname.includes('/auth');
 
   useEffect(() => {
-    console.log("rou")
     const fetchAuthenticationStatus = async () => {
       try {
         const connectedUser = await getProfile();

@@ -1,7 +1,7 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { checkEmailUnique, getProfile, updateCompany, updateUser } from '../../services/user.service'; 
 import { useEffect, useState } from 'react';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
@@ -83,6 +83,8 @@ const ProfileSettings = () => {
   const [companyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose company professional fields');
   const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [isForm1Submited, setIsForm1Submited] = useState(false);
+  const [isForm2Submited, setIsForm2Submited] = useState(false);
 
   // ... (other state variables)
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
@@ -280,6 +282,8 @@ const ProfileSettings = () => {
 
   
       });
+      setIsForm1Submited(true);
+
       if(updatedUser){
         setAlert({
           type: 'success',
@@ -319,6 +323,7 @@ const ProfileSettings = () => {
       });
 
       if(updatedCompany){
+        setIsForm2Submited(true);
         setAlert({
           type: 'success',
           message:
@@ -974,7 +979,7 @@ const ProfileSettings = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
-                      disabled={!isFormValid()}
+                      disabled={!isFormValid() || isForm1Submited }
                     >
                       Save
                     </button>
@@ -1276,7 +1281,7 @@ const ProfileSettings = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
-                      disabled={!isForm2Valid()}
+                      disabled={!isForm2Valid() || isForm2Submited }
                     >
                       Save
                     </button>

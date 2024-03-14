@@ -28,20 +28,26 @@ import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
 import SwitchToCompany from './pages/Profile/SwitchToCompany';
 import ListAccountSwitchRequest from './pages/SuperAdmin/ListAccountSwitchRequest';
-import { User } from './types/User';
+import { User } from './types/user';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
+import { useAuth } from './components/Auth/AuthProvider';
+import PrivateRoute from './components/Auth/PrivateRoute';
+import AuthRoutes from './components/Auth/AuthRoutes';
 
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [authenticated, setAuthenticated] = useState(false);
   const [connectedUser, setconnectedUser] = useState<User | null>(null);
 
   const { pathname } = useLocation();
 
   const navigate = useNavigate();
+  const { authenticated} = useAuth();
+
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,22 +57,7 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
-  useEffect(() => {
-    const fetchAuthenticationStatus = async () => {
-      try {
-        const connectedUser = await getProfile();
-        setconnectedUser(connectedUser);
-        setAuthenticated(true);
 
-      } catch (error) {
-        setAuthenticated(false);
-      } 
-    };
-
-    fetchAuthenticationStatus();
-    console.log(authenticated)
-
-  }, []);
 
   return loading ? (
     <Loader />
@@ -181,8 +172,10 @@ function App() {
           path="/profile"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Profile />
+              <PrivateRoute requiredRoles={["challenger","company"]} component={
+
+                <Profile/>
+              }/>
             </>
           }
         />
@@ -250,7 +243,7 @@ function App() {
           element={
             <>
               <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignIn />
+              <AuthRoutes component={<SignIn/>}/>
             </>
           }
         />

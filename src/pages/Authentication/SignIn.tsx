@@ -10,6 +10,7 @@ import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import CryptoJS from 'crypto-js'; 
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 
 
@@ -22,11 +23,15 @@ const SignIn: React.FC = () => {
 
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
-const [isFormValid, setIsFormValid] = useState(false);
+const [isFormValid, setIsFormValid] = useState(true);
 const [alert, setAlert] = useState<{ type:  'success' | 'error' | 'warning'; message: string } | null>(null);
 const [user, setUser] = useState<TokenResponse | null>(null);
 const [alert2, setAlert2] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
 const [profile, setProfile] = useState<UserProfile | null>(null);
+const { loginAuth} = useAuth();
+
+
+
 interface UserProfile {
   id: string;
   name: string;
@@ -174,12 +179,12 @@ const handleSignIn = async () => {
       setPasswordError('Password is required');
       return;
     }
-
     // Perform form validation
-    setIsFormValid(!emailError && !passwordError);
 
     if (isFormValid) {
       const responseData = await signIn(email, password ,captchaToken);
+      setIsFormValid(false);
+
       if (rememberMe) {
         const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
         document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
@@ -188,7 +193,7 @@ const handleSignIn = async () => {
       }
 
 
-      console.log('Login successful:', responseData);
+        
       if (responseData.message !== 'User not reactivated') {
         if (responseData.wasReactivated) {
           setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
@@ -215,6 +220,8 @@ const handleSignIn = async () => {
           navigate("/companylist");
         }
       }, 3000);
+      loginAuth(responseData);
+      console.log('Login successful:', responseData);
     }
   } catch (error: any) {
     // Handle login errors
@@ -224,9 +231,11 @@ const handleSignIn = async () => {
         'Login failed:' +
         (error.response?.data?.message || 'An error occurred during login.'),
     });
-    console.error('Login failed:', error);
     resetRecaptcha();
     setTimeout(() => {
+      if(error.response?.data?.message =="maxFailedAttempts passed"){
+       navigate("/auth/forgotPassword")
+      }
       setAlert(null);
     }, 3000);
   }
@@ -401,18 +410,14 @@ const handleSignIn = async () => {
           
 
               <div className="mb-5">
-                  <input
-                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSignIn();
-                    }
-                  }}
+                  <button
+                  disabled={!isFormValid}
                   onClick={handleSignIn}
                   type="submit"
-                    value="Sign In"
-                    className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
-                  />
+                    className="w-full text-center disabled:bg-opacity-65 cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent "
+                  >Sign In
+                    </button>
+
                 </div>
 
                 <button onClick={handleGoogleLogin} className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">

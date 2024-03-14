@@ -8,7 +8,7 @@ interface CustomAlertProps {
 const CustomAlert: React.FC<CustomAlertProps> = ({ type, message }) => {
   const alertStyles = {
     success: { borderLeftColor: '#34D399', backgroundColor: '#34D399', textColor: 'text-black',opacity:'bg-opacity-[45%]' },
-    error: { borderLeftColor: '#F87171', backgroundColor: '#F87171', textColor: 'text-white', opacity:'bg-opacity-[100%]', iconborder:'border border-white' },
+    error: { borderLeftColor: '#F87171', backgroundColor: '#F87171', textColor: 'text-[#B45454]', opacity:'bg-opacity-15', iconborder:'border border-white' },
     warning: { borderLeftColor: '#9D5425', backgroundColor: '#9D54251A', textColor: 'text-[#D0915C]' },
   }[type];
   const getAlertIcon = () => {
@@ -66,7 +66,8 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ type, message }) => {
   };
   if (type === 'warning') {
     return(
-      <div className={` z-9999 fixed flex lg:w-1/2 lg:right-0 w-full border-l-6 border-warning bg-[#f9e154] bg-opacity-[95%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
+      <div className="bg-white">
+          <div className={` z-9999 fixed flex lg:w-1/2 lg:right-0 w-full border-l-6 border-warning bg-[#f9e154] bg-opacity-[95%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
         <div className={`mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30`}>
           {getAlertIcon()}
         </div>
@@ -74,13 +75,14 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ type, message }) => {
           <h5 className={`mb-3 text-lg font-semibold text-[#9D5425]`}>
             {type.charAt(0).toUpperCase() + type.slice(1)}
           </h5>
-          <p className="leading-relaxed text-black">{message}</p>
+          <p className="leading-relaxed ">{message}</p>
         </div>
+      </div>
       </div>
     );
   }else{
     return (
-      <div className={`flex z-9999 fixed lg:w-1/2 lg:right-0 w-full border-l-6  ${alertStyles.opacity} border-[${alertStyles.borderLeftColor}] bg-[${alertStyles.backgroundColor}] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
+       <div className={`flex z-9999 fixed lg:w-1/2 lg:right-0 w-full border-l-6  ${alertStyles.opacity} border-[${alertStyles.borderLeftColor}] bg-[${alertStyles.backgroundColor}] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9`}>
         <div className={`mr-5 flex h-9 w-full max-w-[36px] items-center  ${alertStyles.iconborder} justify-center rounded-lg  bg-opacity-30 bg-[${alertStyles.backgroundColor}]`}>
         {getAlertIcon()}
   
@@ -89,7 +91,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ type, message }) => {
           <h5 className={`mb-3 text-lg font-semibold ${alertStyles.textColor}`}>
             {type.charAt(0).toUpperCase() + type.slice(1)}
           </h5>
-          <p className={`leading-relaxed ${alertStyles.textColor}`}>{message}</p>
+          <p className={`leading-relaxed font-semibold ${alertStyles.textColor}`}>{message}</p>
         </div>
       </div>
     );

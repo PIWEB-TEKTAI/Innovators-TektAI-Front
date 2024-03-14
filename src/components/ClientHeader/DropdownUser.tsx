@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
+import { useAuth } from '../Auth/AuthProvider';
 
 const DropdownUser =(props: {
   userName: String  | undefined;
@@ -13,6 +14,7 @@ const DropdownUser =(props: {
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
   const navigate = useNavigate();
+  const { authenticated, loginAuth, logoutAuth, userAuth, roleAuth } = useAuth();
 
   // close on click outside
   useEffect(() => {
@@ -43,6 +45,7 @@ const DropdownUser =(props: {
     const signOutSuccess = await signOut();
 
     if (signOutSuccess) {
+      logoutAuth();
       navigate("/landing");
 
     } else {

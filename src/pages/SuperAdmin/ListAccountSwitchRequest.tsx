@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import { acceptSwitchRequest, getUsersWithAccountSwitchRequest } from '../../services/admin.services';
 
 // Définissez le type des données attendues
@@ -25,39 +25,20 @@ export default function FetchData() {
       .catch(err => console.log(err));
   }, []);
 
-
-
-
-  var debloquer = (email: string) => {
-    const updatedData = data.map(user =>
-      user.email === email ? { ...user, state: 'validated' as const } : user
+  const navigate = useNavigate();
+  var accept = (id: string) => {
+    const updatedData = data.map(users =>
+      users._id === id ? { ...users, AlreadyCompany: true as const } : users
     );
-
-    // console.log('Updated Data:', updatedData);
-
-    console.log(`http://localhost:3000/Admin/${email}/updateState`)
-    axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'validated' })
+      acceptSwitchRequest(id)
       .then(response => {
-        console.log('User validated successfully:', response.data);
         setData(updatedData);
       })
-      .catch(err => console.log('Error validated user:', err));
+      .catch(err => console.log('Error accept switch account', err));
   };
 
 
 
-  const navigate = useNavigate();
-
-  const handleEdit = (email: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent default button behavior
-    e.preventDefault();
-    // Redirect to edit form with user ID
-    navigate(`/modifierAdmin/${email}`);
-  };
-
-  var changeToCompany = (users: User) => {
-    console.log(users)
-  }
 
   return (
     <Layout >
@@ -86,7 +67,7 @@ export default function FetchData() {
                 </th>
               
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  View Profile
+                  IsCompany
                 </th>
 
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -126,12 +107,30 @@ export default function FetchData() {
                       {users.company.name}
                     </p>
                   </td>
+                  {users.AlreadyCompany?(
+                    <>
                   <td>
-                   
+                    <p  className='inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-success text-success'>
+                    Yes
+
+                    </p>
                   </td>
+                    </>
+                  ):(
+                    <>
+                       <td >
+                        <p className='inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-danger text-danger'>
+                        No
+
+                        </p>
+                  </td>
+                    </>
+                  )}
+
+                
                   <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark justify-center">
-                  <button onClick={()=>{acceptSwitchRequest(users._id)
-                        window.location.reload();}
+                  <button onClick={()=>{accept(users._id)
+                        }
                       }>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-green-500">
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
