@@ -393,7 +393,7 @@ const StepperForm = () => {
       </div>
 
       {btnClicked == true ? (
-        <div className="flex justify-between mb-[4rem]">
+        <div className="flex justify-between mt-[-3rem]">
           {steps?.map((step, i) => (
             <div
               key={i}
@@ -422,7 +422,7 @@ const StepperForm = () => {
 
       <div>
         {btnClicked == false ? (
-          <div className="mb-[62rem]">
+          <div className="mb-[61rem] scale-[0.9]">
             <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
               Choose your account type
             </h2>
@@ -565,7 +565,7 @@ const StepperForm = () => {
           </div>
         ) : (
 
-          <form className="mt-[-2rem]">
+          <form className="mt-[1rem] scale-[0.9]">
             {currentStep == 1 && (
               <div className="mb-[54rem]">
                 <div className="mb-4">
@@ -881,7 +881,7 @@ const StepperForm = () => {
             )}
 
             {currentStep == 3 && (
-              <div className={isChallenger ? 'mb-[54rem]' : 'mb-[62rem]'}>
+              <div className={isChallenger ? 'mb-[55rem]' : 'mb-[62rem]'}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email

@@ -5,6 +5,7 @@ import  React, { useEffect, useState } from 'react';
 import { getProfile, uploadImage } from '../../services/user.service';
 import { User } from '../../types/user';
 import Modal from '../../components/modal';
+import Footer from '../landing/footer';
 
 
 const Profile = () => {
@@ -125,6 +126,7 @@ useEffect(() => {
              
             <p className="font-medium"> {profileData?.occupation} </p>
               {profileData?.address?(           <><span className="text-sm">{profileData?.address.toLocaleUpperCase()}</span></> 
+
 ):(<><span className="text-sm"></span></>)}
             {profileData?.role=="challenger"?(<>
               <div>
@@ -543,9 +545,13 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <Footer />
 
     </ConnectedClientLayout>
+  
+
   );
+  
 };
 
 export default Profile;

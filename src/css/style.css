@@ -213,3 +213,104 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate__fadeInRight {
+  animation: fadeInRight 0.2s ease-in-out; /* Adjust the animation duration here */
+}
+
+.animated-text {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeIn 0.05s ease forwards; /* Adjust the animation speed here */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card-t {
+  box-shadow: 0 0 2.4em rgba(25, 0, 58, 0.1);
+  padding: 3.5em 1em;
+  border-radius: 0.6em;
+  color: #1f003b;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #ffffff;
+}
+.card-t .img-container {
+  width: 8em;
+  height: 8em;
+  background-color: #a993ff;
+  padding: 0.5em;
+  border-radius: 50%;
+  margin: 0 auto 2em auto;
+  overflow: hidden; /* Ensure that the image doesn't overflow the container */
+}
+
+.card-t img {
+  width: 100%; /* Ensure the image takes up the entire container */
+  height: 100%; /* Maintain the image's aspect ratio */
+  border-radius: 100%; /* Apply circular clipping mask */
+}
+
+.card-t h3 {
+  font-weight: 500;
+}
+.card-t p {
+  font-weight: 300;
+  text-transform: uppercase;
+  margin: 0.5em 0 2em 0;
+  letter-spacing: 2px;
+}
+.icons {
+  width: 50%;
+  min-width: 180px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.card-t a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.4em;
+}
+.card-t:hover {
+  background: linear-gradient(#6045ea, #8567f7);
+  color: #ffffff;
+}
+.card-t:hover .img-container {
+  transform: scale(1.15);
+}
+@media screen and (min-width: 768px) {
+  section-t {
+    padding: 1em 7em;
+  }
+}
+@media screen and (min-width: 992px) {
+  section-t {
+    padding: 1em;
+  }
+  .card-t {
+    padding: 5em 1em;
+  }
+  .column-t {
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+    padding: 0 1em;
+  }
+}

@@ -33,7 +33,7 @@ const SignUp: React.FC = () => {
         <div className="flex flex-wrap items-center">
 
           <div className="hidden w-full xl:block xl:w-1/2">
-            <div className=" pb-[60rem] px-26 text-center">
+            <div className="pb-[60rem] px-26 text-center">
               <Link className="mb-5.5 inline-block" to="/">
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
               </p>
 
               <span className="mt-15 inline-block">
-                <img src="/src/images/auth/Forms-amico.png" alt="signup" className='w-90'/>
+                <img src="/src/images/auth/Forms-amico.png" alt="signup" className='w-80'/>
               </span>
             </div>
           </div>

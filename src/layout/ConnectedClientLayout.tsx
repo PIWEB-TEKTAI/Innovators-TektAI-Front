@@ -2,8 +2,9 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import SidebarClient from '../components/SidebarClient';
 import { useLocation } from 'react-router-dom';
-import { User } from '../types/user';
+import { User } from '../types/User';
 import { getProfile } from '../services/user.service';
+import Footer from '../pages/landing/footer';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -96,7 +97,7 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
         </div>
         {/* <!-- ===== Content Area End ===== --> */}
       </div>
-      {/* <!-- ===== Page Wrapper End ===== --> */}
+      <Footer />
     </div>
   );
 };

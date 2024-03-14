@@ -271,7 +271,7 @@ const handleSignIn = async () => {
     
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
-        <div className="hidden w-full xl:block xl:w-1/2">
+        <div className="hidden scale-[0.9] w-full xl:block xl:w-1/2">
           <div className="pb-30 px-26 text-center">
             <Link className="mb-2 pt-2 inline-block" to="/">
               <img className="hidden dark:block" src={Logo} alt="Logo" />
@@ -282,13 +282,13 @@ const handleSignIn = async () => {
             </p>
 
             <span className="mt-15 inline-block">
-              <img src="/src/images/auth/My password-amico.png" alt="signup" className='w-90' />
+              <img src="/src/images/auth/My password-amico.png" alt="signup" className='w-100' />
             </span>
           </div>
         </div>
 
-        <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
-          <div className="w-full px-4 sm:p-12.5 xl:p-17.5 xl:pt-0 mt-[5rem]">
+        <div className="w-full scale-[0.9] border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+          <div className="w-full px-4 sm:p-12.5 xl:p-17.5 xl:pt-0 mt-[3rem]">
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign In to TektAI
             </h2>
