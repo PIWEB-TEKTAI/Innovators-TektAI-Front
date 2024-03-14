@@ -101,12 +101,12 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
     
     <div className="flex flex-col items-center pb-10">
 
-        <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src={connectedUser?.imageUrl} alt="Bonnie image"/>
-        <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
-        <span className="text-sm text-black-500 dark:text-gray-400"> {connectedUser?.occupation}</span>
+        <img className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg" src={connectedUser?.imageUrl} alt="Bonnie image"/>
+        <h5 className="mb-1 text-xl font-medium  text-gray-900 dark:text-white hover:scale-[1.05] cursor-pointer">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
+        <span className="text-sm text-black-500 dark:text-gray-400 hover:scale-[1.05] cursor-pointer"> {connectedUser?.occupation}</span>
         <div className="flex mt-4 md:mt-6">
           {connectedUser?.AlreadyCompany?(<>
-           <a onClick={handleSwitchAccount } className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+           <a onClick={handleSwitchAccount } className="hover:scale-[1.05] cursor-pointer inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
            {
             connectedUser?.role=='challenger'?(  <>
               Switch to company
@@ -275,14 +275,14 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
           {/* <!-- Others Group --> */}
         
         </nav>
-  <div className="pt-10">
+  <div className="pt-10 ">
   {connectedUser?.skills ? (
-  <div className="rounded-lg bg-white py-4 px-4 lg:px-6">
+  <div className="rounded-lg  bg-white py-4 px-4 lg:px-6">
     <div className="flex flex-col space-x-2">
       <span className="text-gray-700 uppercase font-bold mb-2">Skills</span>
       <ul>
         {connectedUser.skills.map((skill, index) => (
-          <li key={index} className="bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
+          <li key={index} className="hover:scale-[1.05] cursor-pointer hover:m-1 bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
             {skill}
           </li>
         ))}

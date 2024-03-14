@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import {signIn, signInWithGoogle} from '../../services/auth.service'
 import { CodeResponse, TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import ClientLayout from '../../layout/clientLayout'
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import CustomAlert from '../UiElements/CostumAlert';
 import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import CryptoJS from 'crypto-js'; 
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 
 
@@ -22,11 +23,15 @@ const SignIn: React.FC = () => {
 
 const [emailError, setEmailError] = useState('');
 const [passwordError, setPasswordError] = useState('');
-const [isFormValid, setIsFormValid] = useState(false);
+const [isFormValid, setIsFormValid] = useState(true);
 const [alert, setAlert] = useState<{ type:  'success' | 'error' | 'warning'; message: string } | null>(null);
 const [user, setUser] = useState<TokenResponse | null>(null);
 const [alert2, setAlert2] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
 const [profile, setProfile] = useState<UserProfile | null>(null);
+const { loginAuth} = useAuth();
+
+
+
 interface UserProfile {
   id: string;
   name: string;
@@ -100,8 +105,7 @@ useEffect(
                     if(data.role == "challenger" || data.role=="company"){
                       navigate("/profile");
                     }
-                    if(data.role == "admin" || data.role=="superAdmin"){    
-                        navigate("/companylist");
+                    if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/companylist");
                     }
                     
                   }).catch((error) =>
@@ -135,8 +139,6 @@ useEffect(
       setRememberMe(true);
     }
   }, []);
-
-
   const navigate = useNavigate();
   const checkEmail = (value:any) =>{
     setEmail(value)
@@ -149,108 +151,100 @@ useEffect(
       setEmailError("");
     }
    }
-    const checkPassword = (value:any) =>{
-    setPassword(value)
-    if (!value.trim()) {
-      setPasswordError("Password is required");
-    } else {
-       setPasswordError("");
-    }}
-
-    const handleRememberMeChange = () => {
-      setRememberMe(!rememberMe);
-    };
-
-
-    const isForm1Valid = () => {
-        return (
-          email !== '' &&
-          password !== '' &&
-          emailError == '' &&
-          passwordError == ''
-        );
-      };
+const checkPassword = (value:any) =>{
+setPassword(value)
+if (!value.trim()) {
+  setPasswordError("Password is required");
+} else {
+  setPasswordError("");
+}
+}
+const handleRememberMeChange = () => {
+  setRememberMe(!rememberMe);
+};
   
-      const handleSignIn = async () => {
-        if (captchaToken === '') {
-            setAlert({
-                type: 'error',
-                message: "Please make sure to check the captcha checkbox",
-            });
-        } else {
-            try {
-                const captchaResponse = await axios.post("http://localhost:3000/verify-captcha", { token: captchaToken });
-                console.log('CAPTCHA Verification Response:', captchaResponse.data);
-    
-                await signIn(email, password)
-                    .then((responseData) => {
-                        if (rememberMe) {
-                            const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
-                            document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
-                            localStorage.setItem('rememberedEmail', email);
-                            localStorage.setItem('rememberedPassword', encryptedPassword);
-                        }
-    
-                        console.log('Login successful:', responseData);
-                        if (responseData.message !== 'User not reactivated') {
-                            if (responseData.wasReactivated) {
-                                setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
-                                setshowWelcome(true);
-    
-                                setTimeout(() => {
-                                    setshowWelcome(false);
-                                }, 10000);
-                            } else {
-                                setshowWelcome(false);
-                            }
-                        } else {
-                            setshowWelcome(false);
-                        }
-    
-                        setAlert({
-                            type: 'success',
-                            message: "Authentication successful",
-                        });
-    
-                        // Naviguer vers la page de profil après 5 secondes
-                        setTimeout(() => {
-                            if (responseData.role === "challenger" || responseData.role === "company") {
-                                console.log("role" + responseData.role);
-                                navigate("/profile");
-                            }
-                            if (responseData.role === "admin" || responseData.role === "superAdmin") {
-                                console.log("role" + responseData.role);
-                                navigate("/companylist");
-                            }
-                        }, 3000);
-                    }).catch((error) => {
-                       resetRecaptcha();
-                        // Gérer les erreurs de connexion
-                        setAlert({
-                            type: 'error',
-                            message: 'Login failed:' + (error.response?.data?.message || 'An error occurred during login.'),
-                        });
-                        console.error('Login failed:', error);
-                        if(error.response?.data?.message == 'Please verify your email'){
-                          setTimeout(() => {
-                            navigate("/auth/ResendVerifEmail");
-                        }, 3000);
-                        }
-                        setTimeout(() => {
-                            setAlert(null);
-                        }, 3000);
-                    });
-            } catch (error) {
-                // Gérer les erreurs de vérification du recaptcha
-                setAlert({
-                    type: 'error',
-                    message: "Captcha Verification failed",
-                });
-                console.error('CAPTCHA verification failed:', error);
-            }
-        }
+const handleSignIn = async () => {
+  try {
+    setEmailError('');
+    setPasswordError('');
+  
+    // Validation de l'email
+    if (!email) {
+      setEmailError('Email is required');
+      return;
     }
 
+    // Validation du mot de passe
+    if (!password) {
+      setPasswordError('Password is required');
+      return;
+    }
+    // Perform form validation
+
+    if (isFormValid) {
+      const responseData = await signIn(email, password ,captchaToken);
+      setIsFormValid(false);
+
+      if (rememberMe) {
+        const encryptedPassword = CryptoJS.AES.encrypt(password, 'your-secret-key').toString();
+        document.cookie = `token=${responseData.token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedPassword', encryptedPassword);
+      }
+
+
+        
+      if (responseData.message !== 'User not reactivated') {
+        if (responseData.wasReactivated) {
+          setWelcomeMessage('Welcome Back. We hope that you enjoyed your break');
+          setshowWelcome(true); 
+      
+          setTimeout(() => {
+            setshowWelcome(false);
+          }, 10000);
+        } else {
+          setshowWelcome(false);
+        }
+      } else {
+        setshowWelcome(false);
+      }
+      
+      // Navigate to the profile page after 5 seconds
+      setTimeout(() => {
+        if(responseData.role == "challenger" || responseData.role=="company"){
+          console.log("role"+responseData.role);
+          navigate("/profile");
+        }
+        if(responseData.role == "admin" || responseData.role=="superAdmin"){
+          console.log("role"+responseData.role);
+          navigate("/companylist");
+        }
+      }, 3000);
+      loginAuth(responseData);
+      console.log('Login successful:', responseData);
+    }
+  } catch (error: any) {
+    // Handle login errors
+    setAlert({
+      type: 'error',
+      message:
+        'Login failed:' +
+        (error.response?.data?.message || 'An error occurred during login.'),
+    });
+    resetRecaptcha();
+    if(error.response?.data?.message == 'Please verify your email'){
+      setTimeout(() => {
+        navigate("/auth/ResendVerifEmail");
+    }, 3000);
+    }
+    setTimeout(() => {
+      if(error.response?.data?.message =="maxFailedAttempts passed"){
+       navigate("/auth/forgotPassword")
+      }
+      setAlert(null);
+    }, 3000);
+  }
+};
     return (
     <ClientLayout>
                 {alert2 && (
@@ -287,8 +281,8 @@ useEffect(
               Empowering Collaboration, Solving Challenges
             </p>
 
-            <span className="mt-5 inline-block">
-              <img src="/src/images/auth/My password-amico.png" alt="signup" className='w-100' />
+            <span className="mt-15 inline-block">
+              <img src="/src/images/auth/My password-amico.png" alt="signup" className='w-90' />
             </span>
           </div>
         </div>
@@ -421,59 +415,52 @@ useEffect(
           
 
               <div className="mb-5">
-                  <input
-                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSignIn();
-                    }
-                  }}
+                  <button
+                  disabled={!isFormValid}
                   onClick={handleSignIn}
                   type="submit"
-                    value="Sign In"
-                    disabled={!isForm1Valid()}
-                    className="w-full text-center cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent disabled:bg-opacity-60"
-                  />
-                </div>
-               
-                  <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
-                    <span>
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clipPath="url(#clip0_191_13499)">
-                          <path
-                            d="M19.999 10.2217C20.0111 9.53428 19.9387 8.84788 19.7834 8.17737H10.2031V11.8884H15.8266C15.7201 12.5391 15.4804 13.162 15.1219 13.7195C14.7634 14.2771 14.2935 14.7578 13.7405 15.1328L13.7209 15.2571L16.7502 17.5568L16.96 17.5774C18.8873 15.8329 19.9986 13.2661 19.9986 10.2217"
-                            fill="#4285F4"
-                          />
-                          <path
-                            d="M10.2055 19.9999C12.9605 19.9999 15.2734 19.111 16.9629 17.5777L13.7429 15.1331C12.8813 15.7221 11.7248 16.1333 10.2055 16.1333C8.91513 16.1259 7.65991 15.7205 6.61791 14.9745C5.57592 14.2286 4.80007 13.1801 4.40044 11.9777L4.28085 11.9877L1.13101 14.3765L1.08984 14.4887C1.93817 16.1456 3.24007 17.5386 4.84997 18.5118C6.45987 19.4851 8.31429 20.0004 10.2059 19.9999"
-                            fill="#34A853"
-                          />
-                          <path
-                            d="M4.39899 11.9777C4.1758 11.3411 4.06063 10.673 4.05807 9.99996C4.06218 9.32799 4.1731 8.66075 4.38684 8.02225L4.38115 7.88968L1.19269 5.4624L1.0884 5.51101C0.372763 6.90343 0 8.4408 0 9.99987C0 11.5589 0.372763 13.0963 1.0884 14.4887L4.39899 11.9777Z"
-                            fill="#FBBC05"
-                          />
-                          <path
-                            d="M10.2059 3.86663C11.668 3.84438 13.0822 4.37803 14.1515 5.35558L17.0313 2.59996C15.1843 0.901848 12.7383 -0.0298855 10.2059 -3.6784e-05C8.31431 -0.000477834 6.4599 0.514732 4.85001 1.48798C3.24011 2.46124 1.9382 3.85416 1.08984 5.51101L4.38946 8.02225C4.79303 6.82005 5.57145 5.77231 6.61498 5.02675C7.65851 4.28118 8.9145 3.87541 10.2059 3.86663Z"
-                            fill="#EB4335"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_191_13499">
-                            <rect width="20" height="20" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </span>
-                    Sign in with Google
-                  </button>
-             
+                    className="w-full text-center disabled:bg-opacity-65 cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:border-transparent "
+                  >Sign In
+                    </button>
 
+                </div>
+
+                <button onClick={handleGoogleLogin} className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                  <span>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clipPath="url(#clip0_191_13499)">
+                        <path
+                          d="M19.999 10.2217C20.0111 9.53428 19.9387 8.84788 19.7834 8.17737H10.2031V11.8884H15.8266C15.7201 12.5391 15.4804 13.162 15.1219 13.7195C14.7634 14.2771 14.2935 14.7578 13.7405 15.1328L13.7209 15.2571L16.7502 17.5568L16.96 17.5774C18.8873 15.8329 19.9986 13.2661 19.9986 10.2217"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M10.2055 19.9999C12.9605 19.9999 15.2734 19.111 16.9629 17.5777L13.7429 15.1331C12.8813 15.7221 11.7248 16.1333 10.2055 16.1333C8.91513 16.1259 7.65991 15.7205 6.61791 14.9745C5.57592 14.2286 4.80007 13.1801 4.40044 11.9777L4.28085 11.9877L1.13101 14.3765L1.08984 14.4887C1.93817 16.1456 3.24007 17.5386 4.84997 18.5118C6.45987 19.4851 8.31429 20.0004 10.2059 19.9999"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M4.39899 11.9777C4.1758 11.3411 4.06063 10.673 4.05807 9.99996C4.06218 9.32799 4.1731 8.66075 4.38684 8.02225L4.38115 7.88968L1.19269 5.4624L1.0884 5.51101C0.372763 6.90343 0 8.4408 0 9.99987C0 11.5589 0.372763 13.0963 1.0884 14.4887L4.39899 11.9777Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M10.2059 3.86663C11.668 3.84438 13.0822 4.37803 14.1515 5.35558L17.0313 2.59996C15.1843 0.901848 12.7383 -0.0298855 10.2059 -3.6784e-05C8.31431 -0.000477834 6.4599 0.514732 4.85001 1.48798C3.24011 2.46124 1.9382 3.85416 1.08984 5.51101L4.38946 8.02225C4.79303 6.82005 5.57145 5.77231 6.61498 5.02675C7.65851 4.28118 8.9145 3.87541 10.2059 3.86663Z"
+                          fill="#EB4335"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_191_13499">
+                          <rect width="20" height="20" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </span>
+                  Sign in with Google
+                </button>
                 <div className="flex justify-center mt-5 mb-5">
                   <ReCAPTCHA
                     sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
@@ -487,8 +474,8 @@ useEffect(
                 <div className="mt-6 text-center">
                   <p>
                     Don’t have any account?{' '}
-                    <Link to="/auth/signup" className="text-primary font-semibold">
-                      Sign up
+                    <Link to="/auth/signup" className="text-primary">
+                      Sign Up
                     </Link>
                   </p>
                 </div>

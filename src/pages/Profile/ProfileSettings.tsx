@@ -6,8 +6,14 @@ import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import axios from 'axios';
+import { countryFlagsPhone } from '../Authentication/CountryList';
 
 const TIMEOUT_DURATION = 5000; // 5 seconds 
+interface Country {
+  name:any;
+  flagPath:any;
+  code:any;
+}
 
 
 const ProfileSettings = () => {
@@ -57,7 +63,9 @@ const ProfileSettings = () => {
 
   const [CompanyNameValue, setCompanyNameValue] = useState('');
   const [CompanyNameError, setCompanyNameError] = useState('');
- 
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [selectedCompanyCountry, setSelectedCompanyCountry] = useState<Country | null>(null);
+
   const [companyAddessValue, setCompanyAddressValue] = useState('');
   const [companyAddessError, setCompanyAddressError] = useState('');
 
@@ -74,6 +82,9 @@ const ProfileSettings = () => {
   
   const [companyProfessionnalFieldsValue, setCompanyProfessionnalFieldsValue] = useState('Choose company professional fields');
   const [companyProfessionnalFieldsError, setCompanyProfessionnalFieldsError] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isForm1Submited, setIsForm1Submited] = useState(false);
+  const [isForm2Submited, setIsForm2Submited] = useState(false);
 
   // ... (other state variables)
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
@@ -85,10 +96,23 @@ const ProfileSettings = () => {
       setSkillsInput(''); // Clear the input after adding a skill
     }
   };
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleRemoveSkill = (index: number) => {
     setSkills((prevSkills) => prevSkills.filter((_, i) => i !== index));
   };
+  const handleCountrySelect = (country:Country) => {
+    setSelectedCountry(country);
+    setIsOpen(false); 
+  };
+
+  const handleCompanyCountrySelect = (country:Country) => {
+    setSelectedCompanyCountry(country);
+    setIsOpen(false); 
+  };
+
 
   const validateEmail = async(value:any) =>{
     setEmail(value)
@@ -258,6 +282,8 @@ const ProfileSettings = () => {
 
   
       });
+      setIsForm1Submited(true);
+
       if(updatedUser){
         setAlert({
           type: 'success',
@@ -297,6 +323,7 @@ const ProfileSettings = () => {
       });
 
       if(updatedCompany){
+        setIsForm2Submited(true);
         setAlert({
           type: 'success',
           message:
@@ -653,14 +680,84 @@ const ProfileSettings = () => {
                     </div>
                 
                   </div>
-                  <div className="mb-5.5">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="phone"
-                      >
-                        Phone Number
-                      </label>
-                      <input
+                  <div className="mb-5 5">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Company phone number
+                    </label>
+                  <div className="flex items-center ">
+                    
+                  <button
+                                  id="dropdown-phone-button"
+                                  className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                                  onClick={toggleDropdown}
+                                  type="button">
+                                  {selectedCountry && (
+                                      <>
+                                        {selectedCountry.flagPath}
+                                        {selectedCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
+                                </button>
+                                {isOpen && (
+                                  <div
+                                    id="dropdown-phone"
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
+                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                   <input
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
                         name="phone"
@@ -670,8 +767,9 @@ const ProfileSettings = () => {
                         onChange={(e) =>validatePhone(e.target.value)} 
 
                       />
-                          {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
 
+                    </div>
+                    {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
                     </div>
                   <div className="mb-5.5">
                     <label
@@ -881,7 +979,7 @@ const ProfileSettings = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
-                      disabled={!isFormValid()}
+                      disabled={!isFormValid() || isForm1Submited }
                     >
                       Save
                     </button>
@@ -1030,13 +1128,90 @@ const ProfileSettings = () => {
                       Company phone number
                     </label>
                     <div className="relative">
-                      <input
+                    <div className="flex items-center">
+                          <button
+                                  id="dropdown-phone-button"
+                                  className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                                  onClick={toggleDropdown}
+                                  type="button">
+                                  {selectedCompanyCountry && (
+                                      <>
+                                        {selectedCompanyCountry.flagPath}
+                                        {selectedCompanyCountry.code}
+                                        <svg
+                                          className="w-2.5 h-2.5 ms-2.5"
+                                          aria-hidden="true"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 10 6"
+                                        >
+                                          <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                          />
+                                        </svg>
+                                      </>
+                                    )}
+                                      {!selectedCompanyCountry && (
+                                        <>
+                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
+                                          +216{" "}
+                                          <svg
+                                            className="w-2.5 h-2.5 ms-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 10 6"
+                                          >
+                                            <path
+                                              stroke="currentColor"
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth="2"
+                                              d="m1 1 4 4 4-4"
+                                            />
+                                          </svg>
+                                        </>
+                                      )}  
+
+                                </button>
+
+                                {isOpen && (
+                                  <div
+                                    id="dropdown-phone"
+                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
+                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
+                                      {countryFlagsPhone.map((country, index) => (
+                                        <li key={index}>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCompanyCountrySelect(country)}
+                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                                            role="menuitem">
+                                            <div className="inline-flex items-center">
+                                              {country.flagPath}
+                                              {country.name} 
+                                            </div>
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              <div className="relative w-full">
+                              <input
                         value={companyPhoneValue}
                         onChange={(e)=> checkCompanyPhone(e.target.value)}
                         type="text"
                         placeholder="Enter the company phone number"
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       />
+                                   
+                              </div>
+                          </div>
 
                     { companyPhoneError &&
                         <div className="flex">
@@ -1106,7 +1281,7 @@ const ProfileSettings = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                       type="submit"
-                      disabled={!isForm2Valid()}
+                      disabled={!isForm2Valid() || isForm2Submited }
                     >
                       Save
                     </button>

@@ -15,8 +15,21 @@ export const getProfile = (): Promise<User>=> {
       return response.data.user;
     })
     .catch((error) => {
-      console.error("Error fetching user profile:", error);
       throw error;
+    });
+};
+export const checkAuth = (): Promise<Boolean>=> {
+  return axios
+    .get(User_URL + "profile", {
+      withCredentials: true,
+    })
+    .then((response) => {
+      console.log(response);
+      return true;
+    })
+    .catch((error) => {
+      console.error("Error fetching user profile:", error);
+      return false;
     });
 };
 interface UserProfileProps {
@@ -94,7 +107,6 @@ export const checkEmailUnique = async (email: string): Promise<boolean> => {
 
     return response.data.isUnique;
   } catch (error) {
-    console.error('Error checking email uniqueness:', error);
     throw new Error('Error checking email uniqueness');
   }
 };

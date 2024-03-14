@@ -2,8 +2,9 @@ import  { useEffect, useState } from 'react';
 import DropdownUser from './DropdownUser';
 import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import { User } from '../../types/User';
-
+import { User } from '../../types/user';
+import { countryFlags } from './flag';
+import DropDownLanguage from './DropDownLanguage';
 const ClientHeader =(props: {
   connectedUser: User  | null;
   authenticated:Boolean;
@@ -11,11 +12,20 @@ const ClientHeader =(props: {
 })=> {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const userName = `${props.connectedUser?.FirstName} ${props.connectedUser?.LastName}`;
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<any | null>(null);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+  const handleCountrySelectFunction = (selectedCountry:any) => {
+    console.log(`Selected country: ${selectedCountry.name}`);
+    // Implement any other logic you need with the selected country
+    setIsOpen(false);
+    setSelectedCountry(selectedCountry);
 
+
+  };
 
   return (
       
@@ -27,8 +37,8 @@ const ClientHeader =(props: {
                   to="/landing"
                  >
                   <a href="" className="flex items-center">
-                <img src="/src/images/landing/logo-transparent.png" className="mr-3 h-6 sm:h-14" alt="Flowbite Logo" />
-                <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">TektAI</span>
+                <img src="/src/images/landing/logo-transparent.png" className="mr-3 h-6 sm:h-14" alt="TektAi Logo" />
+                <span className="font-satoshi self-center text-xl font-semibold whitespace-nowrap dark:text-white"><span className='text-black'>Tekt</span><span className='text-primary'>AI</span></span>
             </a>                </NavLink>
        
             <div className="flex items-center lg:order-2">
@@ -38,6 +48,7 @@ const ClientHeader =(props: {
               <DropdownUser userName={userName} occupation={props.connectedUser?.occupation} imageUrl={props.connectedUser?.imageUrl}/>
             </>
           ) :    (<>
+     
           <Link to="/auth/signin"><a className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">
             Log in
           </a>
@@ -47,10 +58,12 @@ const ClientHeader =(props: {
             Sign Up
           </a>
           </Link>
+          
         </>
       ) }
+         
 
-                
+
             {/* Mobile Menu Button */}
             <button
               type="button"
@@ -72,15 +85,14 @@ const ClientHeader =(props: {
             </div>
             <div className={` ${mobileMenuOpen ? '' : 'hidden'} justify-between items-center w-full lg:flex lg:w-auto lg:order-1`} id="mobile-menu-2">
                 <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                    <li>
-                        <a href="#" className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white" aria-current="page">Home</a>
-                    </li>
+   
                     <li>
                         <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 focus:bg-primary rounded focus:text-white lg:hover:text-primary lg:p-0 dark:text-gray-400 focus:bg-primary lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Competitions</a>
                     </li>
                     <li>
                         <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">DataSets</a>
                     </li>
+                    
                     <li>
                         <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Ranking</a>
                     </li>
@@ -90,8 +102,18 @@ const ClientHeader =(props: {
                     <li>
                         <a href="/landing#contactUs" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                     </li>
+                    <li>
+                    <DropDownLanguage
+                      countryFlagsPhone={countryFlags}
+                      handleCompanyCountrySelect={handleCountrySelectFunction}
+                      isOpen={isOpen}
+                      selectedCountry={selectedCountry}
+                      setIsOpen={setIsOpen}
+                    />
+                    </li>
                 </ul>
             </div>
+            
         </div>
     </nav>
 </header>

@@ -4,7 +4,6 @@ import Cookies from 'universal-cookie';
 const API_URL = "http://localhost:3000/auth/";
 const cookies = new Cookies();
 
-
 /*export const login = (email: string, password: string) => {
 
   return axios.post('http://localhost:3000/login', { email: email, password: password}, { withCredentials: true })
@@ -56,13 +55,20 @@ export const getUsers = () => {
     });
 };
 
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (email: string, password: string,captchaToken:any) => {
   try {
+    const captchaResponse = await axios.post("http://localhost:3000/verify-captcha" , { token : captchaToken });
+    console.log('CAPTCHA Verification Response:', captchaResponse.data);
+
+    if (!captchaResponse.data.success) {
+        throw new Error('CAPTCHA verification failed');
+        console.log("captcha");
+    }
     const response = await axios.post(`${API_URL}/signin`, { email, password }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error('Login failed:', error);
-    throw error; // Re-throw the error to handle it in the calling code if needed
+    throw error;
   }
 };
 export const signOut = async () => {
@@ -74,6 +80,7 @@ export const signOut = async () => {
 
     if (response.ok) {
       document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+   
       return true; 
     } else {
       console.error('Sign-out failed.');

@@ -119,7 +119,7 @@ const ResendEmailVerification: React.FC = () => {
               </p>
 
               <span className="mt-15 inline-block">
-                  <img src="/src/images/auth/verificationMail.png" alt="verificationMail" />
+                  <img src="/src/images/auth/verificationMail.png" alt="verificationMail" className='w-90' />
               </span>
             </div>
           </div>
