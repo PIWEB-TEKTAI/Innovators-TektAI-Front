@@ -1,32 +1,28 @@
-export type User= {
-  _id: string;
-  FirstName: string;
-  LastName: string;
-  email: string;
-  password: string;
-  imageUrl?: string;
-  phone?: string;
-  address?: string;
-  birthDate?: Date;
-  occupation: string;
-  Description?: string;
-  Education?: string;
-  skills?: Array<string>;
-  country:string;
-  company: {
-    name: string;
-    address: string;
-    email: string;
-    description: string;
-    phone: string;
-    professionnalFields: string
-  };
-  isEmailVerified?: boolean;
-  isDeactivated?: boolean;
+export type User = {
+    id: number;
+    email:string;
+    FirstName:string;
+    LastName:string;
+    Description:string;
+    occupation:string;
+    phone:string;
+    address:string;
+    skills:Array<string>;
+    userName:string;
+    role:string;
+    imageUrl:string;
+    contry:string;
+    Skills:Array<string>;
+    company: {
+      name: string,
+      address: string,
+      email: string,
+      description:string,
+      phone: string,
+      professionnalFields: string
+    },
 
-  state: 'validated' | 'not validated';
-  role: 'super admin' | 'admin' | 'challenger' | 'company';
-  isExternalUser:boolean;
-  AlreadyCompany:boolean,
-  isDemandingToSwitchAccount:boolean
-}
+
+  };/*   email:string;
+  password:string;
+  token:string;*/ 
