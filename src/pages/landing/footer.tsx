@@ -1,6 +1,12 @@
 import React from 'react';
 
 const Footer: React.FC = () => {
+        // Define your Google Maps API Key
+        const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
+
+        // Generate Google Maps Static API URL
+        const staticMapUrl = `https://www.google.com/maps/place/ESPRIT+Ecole+Sup%C3%A9rieure+Priv%C3%A9e+d'Ing%C3%A9nierie+et+de+Technologies/@36.8991051,10.1892737,15z/data=!4m6!3m5!1s0x12e2cb75abbb1733:0x557a99cdf6c13b7b!8m2!3d36.8991051!4d10.1892737!16s%2Fg%2F11dybgg6rl?entry=ttu${GOOGLE_MAPS_API_KEY}`;
+    
     return (
       <footer className="bg-white dark:bg-gray-800">
       <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
@@ -120,6 +126,22 @@ const Footer: React.FC = () => {
                   </li>
               </ul>
           </div>
+                    <div>
+                        <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact</h3>
+                        <ul className="text-gray-500 dark:text-gray-400">
+                            <li className="mb-4">
+                                Phone: <a href="tel:YOUR_PHONE_NUMBER">+216 52 717 171</a>
+                            </li>
+                            <li className="mb-4">
+                                Address: Esprit , El ghazela , Ariana
+                            </li>
+                            <li className="mb-4">
+                                <img src={staticMapUrl} alt="Google Maps Location" className="w-full h-auto" />
+                            </li>
+                        </ul>
+                    </div>
+            
+                <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8"/>
       </div>
   </footer>
 

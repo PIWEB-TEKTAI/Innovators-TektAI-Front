@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Footer from '../landing/footer';
-
+import '@fortawesome/fontawesome-free/css/all.css';
 interface CardProps {
     title: string;
     imageSrc: string;
@@ -169,8 +169,12 @@ const Landing: React.FC = () => {
 
     useEffect(() => {
       fetchAboutUsContent();
+      fetchWhyUsContent();
+
     }, []);
     const [aboutUsContent, setAboutUsContent] = useState('');
+    const [whyUsContent, setWhyUsContent] = useState([]);
+
     const fetchAboutUsContent = async () => {
       try {
         const response = await axios.get('http://localhost:3000/adminlan/aboutus');
@@ -179,6 +183,15 @@ const Landing: React.FC = () => {
         console.error('Error fetching About Us content:', error);
       }
     };
+    const fetchWhyUsContent = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/adminlan/whyus');
+        setWhyUsContent(response.data);
+      } catch (error) {
+        console.error('Error fetching Why Choose Us content:', error);
+      }
+    };
+  
               
   
   return (
@@ -327,7 +340,122 @@ const Landing: React.FC = () => {
     </div>
   </div>
 </section>
+<section className="bg-gray-200">
+  <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+    <div className="text-center">
+      <h2 className="text-4xl font-extrabold text-black dark:text-white">Why Choose Us</h2>
+      <div className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent.length, 4)}`}>
+        {whyUsContent.map((content, index) => (
+          <div
+            key={index}
+            className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
+          >
+            <div className="px-6 py-8">
+              <h3 className="text-xl font-semibold text-white mb-2">{content.title}</h3>
+              <p className="text-white">{content.contentwhy}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 
+
+<section className="bg-white dark:bg-gray-900">
+  <div className="container mx-auto px-4 py-8 lg:py-16">
+    <div className="text-center">
+      <h2 className="text-4xl font-extrabold text-black dark:text-white mb-8">Our Team</h2>
+    </div>
+    <div className="flex flex-wrap justify-center -mx-4">
+      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
+      <div className="card-t bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl">
+          <div className="img-container">
+            <img className="w-full h-auto" src="src\images\user\feryel.png" alt="Luna Turner" />
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Feryel Ouerfelli</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
+            <div className="flex items-center justify-center space-x-4">
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
+      <div className="card-t bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl">
+          <div className="img-container">
+            <img className="w-full h-auto" src="src\images\user\lina.jpg" alt="Luna Turner" />
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Lina Laroussi</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
+            <div className="flex items-center justify-center space-x-4">
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
+      <div className="card-t bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl">
+          <div className="img-container">
+            <img className="w-full h-auto" src="src\images\user\Rouaida.jpg" alt="Luna Turner" />
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Rouaida BenRabeh</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
+            <div className="flex items-center justify-center space-x-4">
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
+      <div className="card-t bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl">
+          <div className="img-container">
+            <img className="w-full h-auto" src="src\images\user\Rouaida.jpg" alt="Luna Turner" />
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Fatma Abid</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
+            <div className="flex items-center justify-center space-x-4">
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
+      <div className="card-t bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl">
+          <div className="img-container">
+            <img className="w-full h-auto" src="src\images\user\emna.jpg" alt="Luna Turner" />
+          </div>
+          <div className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Emna Khiari </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
+            <div className="flex items-center justify-center space-x-4">
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
+              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
