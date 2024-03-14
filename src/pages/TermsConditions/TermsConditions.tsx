@@ -91,7 +91,6 @@ const TermsConditions = () => {
 
 
       const handleDelete = async (index: string) => {
-            setShowModal(true);
             deleteTermsConditions(index)
             .then((response) => {
               console.log(response)
@@ -191,7 +190,7 @@ const TermsConditions = () => {
       />
           <div className='flex justify-end'>
             <FontAwesomeIcon icon={faPencil} onClick={() => handleEdit(index)} className='mr-2' fontSize={18} color='orange' />
-            <FontAwesomeIcon icon={faTrash}  onClick={()=>  handleDelete(item._id)} fontSize={18} color='red' />
+            <FontAwesomeIcon icon={faTrash} onClick={()=>setShowModal(true)} fontSize={18} color='red' />
           </div>
           <h3 className="text-md mt-2 font-semibold text-primary dark:text-white">
              {item.title}
