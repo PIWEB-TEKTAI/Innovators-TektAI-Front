@@ -30,9 +30,10 @@ import { User } from './types/User';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
-import StepperForm1 from './pages/Authentication/stepperForm';
 import EmailVerification from './pages/Authentication/EmailVerification';
-import SignIn from './pages/Authentication/Signin';
+import SignIn from './pages/Authentication/SignIn';
+import TermsConditions from './pages/TermsConditions/TermsConditions';
+import AddTermsConditions from './pages/TermsConditions/AddTermsConditions';
 
 
 function App() {
@@ -265,19 +266,6 @@ function App() {
           }
         /> 
 
-
-        <Route
-          path="/auth/signup1"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <StepperForm1 />
-            </>
-          }
-        /> 
-
-
-
          <Route
           path="/auth/forgotPassword"
           element={
@@ -327,6 +315,28 @@ function App() {
             </>
           }
         />
+
+        <Route
+          path="/updateTermsConditions"
+          element={
+            <>
+              <PageTitle title="Terms conditions | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <AddTermsConditions />
+            </>
+          }
+        />
+
+
+        <Route
+          path="/termsConditions"
+          element={
+            <>
+              <PageTitle title="Terms conditions | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <TermsConditions />
+            </>
+          }
+        />
+
       </Routes>
     </>
   );

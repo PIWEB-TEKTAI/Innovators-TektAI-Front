@@ -116,17 +116,17 @@ function ResetPassword() {
               </Link>
               <p className="2xl:px-20">Empowering Collaboration, Solving Challenges</p>
               <span className="mt-15 inline-block">
-                <img src="/src/images/auth/Reset password-amico.png" alt="forgotPasword" />
+                <img src="/src/images/auth/Reset password-amico.png" alt="forgotPasword" className='w-80'/>
               </span>
             </div>
           </div>
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <h2 className="mb-10 ">
+              <h2 className="mb-5 ">
                 <span className='text-2xl font-bold text-black dark:text-white sm:text-title-xl2'>Reset Password</span>
               </h2>
               {successMessage ? (
-                <div>
+                <div className='mt-5'>
                   <p className="text-green-500  font-medium">{successMessage}</p>
                   <img src="/src/images/auth/resetsuccess.jpg" alt="check" className='w-40 sm:w-50 md:w-60 lg:w-70 xl:w-80' />
 

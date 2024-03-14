@@ -315,6 +315,20 @@ const StepperForm = () => {
     }
   };
 
+  const resetForm =  () => {
+    setFirstNameValue(""),
+    setLastNameValue(""),
+    setEmailValue(""),
+    setPasswordValue(""),
+    setConfirmPasswordValue(""),
+    setDateBirthValue(""),
+    setPersonnalPhoneValue(""),
+    setPersonnalAddressValue("")
+    setCompanyAddressValue(""),
+    setCompanyEmailValue(""),
+    setCompanyNameValue("")
+  }
+
   function handleSubmit(e: any) {
     if(captchaToken == ''){
       setAlert({
@@ -333,6 +347,7 @@ const StepperForm = () => {
           type: 'success',
           message: '' + response.msg,
         });
+        resetForm();
         setTimeout(() => {
           navigate(`/auth/verifyEmail/${response.data.id}`);
         }, 3000);
@@ -367,6 +382,8 @@ const StepperForm = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+
+ 
   return (
     <>
       <div className="mb-4">
@@ -405,7 +422,7 @@ const StepperForm = () => {
 
       <div>
         {btnClicked == false ? (
-          <div className="mb-[50rem]">
+          <div className="mb-[62rem]">
             <h2 className="mb-3 text-title-sm font-semibold text-black dark:text-white sm:text-title-md">
               Choose your account type
             </h2>
@@ -550,7 +567,7 @@ const StepperForm = () => {
 
           <form className="mt-[-2rem]">
             {currentStep == 1 && (
-              <div className="mb-[45rem]">
+              <div className="mb-[54rem]">
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     First name
@@ -738,7 +755,7 @@ const StepperForm = () => {
             )}
 
             {currentStep == 2 && (
-              <div className="mb-[54rem]">
+              <div className="mb-[62rem]">
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Country
@@ -864,7 +881,7 @@ const StepperForm = () => {
             )}
 
             {currentStep == 3 && (
-              <div className={isChallenger ? 'mb-[47rem]' : 'mb-[53rem]'}>
+              <div className={isChallenger ? 'mb-[54rem]' : 'mb-[62rem]'}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -1238,7 +1255,7 @@ const StepperForm = () => {
             )}
 
             {currentStep == 4 && (
-              <div className='mb-[48rem]'>
+              <div className='mb-[57rem]'>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Company name
