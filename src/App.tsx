@@ -32,6 +32,7 @@ import { User } from './types/User';
 import { getProfile } from './services/user.service';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
+import Statistique from "../src/components/Charts/statistique"; // Assurez-vous que le nom du composant commence par une majuscule
 
 
 function App() {
@@ -82,6 +83,16 @@ function App() {
             </>
           }
         />
+ <Route
+          path="/statistique"
+          element={
+            <>
+              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              < Statistique />
+            </>
+          }
+        />
+
         <Route
           path="/calendar"
           element={

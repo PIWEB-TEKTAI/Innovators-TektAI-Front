@@ -14,7 +14,7 @@ const Chart: React.FC = () => {
         <ChartOne />
         <ChartTwo />
         <ChartThree />
-      </div>
+      </div>  
     </DefaultLayout>
   );
 };
