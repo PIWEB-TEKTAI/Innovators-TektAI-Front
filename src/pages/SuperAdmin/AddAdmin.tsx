@@ -1,32 +1,15 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Layout from '../../layout/DefaultLayout';
 import axios from 'axios';
-import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
+
 import 'react-phone-number-input/style.css';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { parsePhoneNumberFromString, CountryCode } from 'libphonenumber-js';
-import Select from 'react-select';
-import MultiSelect from '../../components/Forms/MultiSelect';
+
+
 const FormElements = () => {
-  const professionalSkills = [
-    'Programming Languages: Python, R',
-    'Statistical Analysis and Mathematics',
-    'Machine Learning: TensorFlow, PyTorch',
-    ' Data Wrangling: Pandas',
-    'Data Visualization: Matplotlib, Seaborn, Tableau',
-    'Big Data Technologies: Hadoop, Spark',
-    ' Database Knowledge: SQL',
-    ' Domain Knowledge',
-    ' Data Ethics',
-    ' Communication Skills',
-    'Problem-Solving Skills',
-    ' Version Control: Git',
-    ' Collaboration',
-    '  Continuous Learning',
-    'Project Management',
-  ];
+
   const permission = [
     'AddChallengers',
     'AddCompanies',
@@ -40,23 +23,6 @@ const FormElements = () => {
     'viewCompanies',
   ];
 
-  const Education = [
-    ' Computer Science/Computer Engineering',
-    'Statistics/Mathematics',
-    'Machine Learning',
-    'Data Engineering',
-    'Data Analytics',
-    'Database Management',
-    'Business/Domain Knowledge',
-    'Data Ethics and Privacy',
-    'Data Visualization',
-    'Big Data Technologies',
-    'Communication and Presentation',
-    'Optimization Techniques',
-    'Data Governance',
-    'Software Development',
-    'Domain-Specific Specializations',
-  ];
 
   const [LastNameValue, setLastNameValue] = useState('');
   const [LastnameError, setLastNameError] = useState('');
@@ -68,42 +34,16 @@ const FormElements = () => {
 
   const [PasswordValue, setPasswordValue] = useState('');
   const [PasswordError, setPasswordError] = useState('');
-  const [DateBirthValue, setDateBirthValue] = useState('');
-  const [DateBirthError, setDateBirthError] = useState('');
 
-  const [showAlert, setShowAlert] = useState(false);
-  const [personnalAddressValue, setPersonnalAddressValue] = useState('');
-  const [personnalAddressError, setPersonnalAddressError] = useState('');
 
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
-  const [personnalPhoneValue, setPersonnalPhoneValue] = useState('');
-  const [personnalPhoneError, setPersonnalPhoneError] = useState('');
-  ///////////////////////////////////////////////////////////////////////////
-  const [imageUrlValue, setimageUrlValue] = useState('');
-  const [imageUrlValueError, setimageUrlValueError] = useState('');
 
-  const [descriptionValue, setdescriptionValue] = useState('');
-  const [descriptionValueError, setdescriptionValueError] = useState('');
 
-  const [EducationValue, setEducationValueValue] = useState(
-    'Choose personnal Education',
-  );
-  const [EducationValueError, setEducationValueError] = useState('');
-
-  const [SkillsValue, setSkillsValue] = useState(
-    'Choose personal professional skills',
-  );
-  const [SkillsValueError, setSkillsValueError] = useState('');
-  ////////////////////////////////////////////////////////////////////////////
-
-  const [occupationValue, setOccupationValue] = useState('occupation');
-  const [occupationError, setOccupationError] = useState('');
-
-  const [permissionValue, setpermissionValueValue] = useState('');
+  const [permissionValue, setpermissionValueValue] = useState<string[]>([]);
   const [permissionValueError, setpermissionValueError] = useState('');
 
-  const newImageValue = imageUrlValue.slice(3, 1);
+
 
   const checkFirstName = (value: any) => {
     setFirstNameValue(value);
@@ -113,15 +53,20 @@ const FormElements = () => {
       setFirstNameError('');
     }
   };
+  const handleMultiChange1 = (value: any) => {
+    const updatedPermissions = [...selectedPermissions];
 
-  const checkImageUrl = (value: any) => {
-    setimageUrlValue(value);
-    if (!value.trim()) {
-      setimageUrlValueError('Please enter your first name');
+    if (updatedPermissions.includes(value)) {
+      updatedPermissions.splice(updatedPermissions.indexOf(value), 1);
     } else {
-      setimageUrlValueError('');
+      updatedPermissions.push(value);
     }
+
+    setSelectedPermissions(updatedPermissions);
+    setpermissionValueValue(updatedPermissions);
   };
+
+
   const checkEmail = async (value: any) => {
     setEmailValue(value);
     if (!value.trim()) {
@@ -133,7 +78,7 @@ const FormElements = () => {
         // Check if the email is unique by making a request to your server
         const response = await axios.post(
           'http://localhost:3000/Admin/checkUniqueEmail',
-          { email: value },
+          { email: value }, { withCredentials: true }
         );
 
         if (response.data.isUnique) {
@@ -146,32 +91,7 @@ const FormElements = () => {
       }
     }
   };
-  const checkdescription = (value: any) => {
-    setdescriptionValue(value);
-    if (!value.trim()) {
-      setdescriptionValueError('Please enter your professionnal Description');
-    } else {
-      setdescriptionValueError('');
-    }
-  };
 
-  const checkDateBirth = (value: any) => {
-    setDateBirthValue(value);
-    if (!value.trim()) {
-      setDateBirthError('Please enter your birth day');
-    } else {
-      setDateBirthError('');
-    }
-  };
-
-  const checkPersonnalAddress = (value: any) => {
-    setPersonnalAddressValue(value);
-    if (!value.trim()) {
-      setPersonnalAddressError('Please enter your address');
-    } else {
-      setPersonnalAddressError('');
-    }
-  };
   const checkPermision = (value: any) => {
     setpermissionValueValue(value);
     if (value == 'Choose Admin Permision') {
@@ -180,83 +100,8 @@ const FormElements = () => {
       setpermissionValueError('');
     }
   };
-  const [isPhoneValid, setIsPhoneValid] = useState<boolean>(true);
 
-  const [personnalPhoneCountry, setPersonnalPhoneCountry] =
-    useState<CountryCode>('FR'); // Remplacez 'tn' par le code de pays par défaut souhaité
 
-  const handlePhoneChange = (value: string) => {
-    if (typeof value === 'string') {
-      const isValid = isValidPhoneNumber(value);
-      setIsPhoneValid(isValid);
-    }
-
-    // Vérifier si le formulaire est valide
-    // validateForm();
-  };
-  const checkPersonnalPhone = (value: string) => {
-    handlePhoneChange(value);
-    const phoneNumber = parsePhoneNumberFromString(
-      value,
-      personnalPhoneCountry,
-    );
-
-    if (!value.trim()) {
-      setPersonnalPhoneError('Veuillez entrer votre numéro de téléphone');
-    } else if (!phoneNumber || !phoneNumber.isValid()) {
-      setPersonnalPhoneError(
-        'Veuillez entrer un numéro de téléphone valide pour le pays sélectionné',
-      );
-    } else {
-      setPersonnalPhoneError('');
-      setPersonnalPhoneValue(value);
-    }
-  };
-
-  const checkOccupationValue = (value: any) => {
-    setOccupationValue(value);
-    if (value == 'occupation') {
-      setOccupationError('Please enter your occupation');
-    } else {
-      setOccupationError('');
-    }
-  };
-
-  const checkSkillsProfesionnalValue = (value: any) => {
-    setSkillsValue(value);
-    if (value == 'Choose personnal professional skills') {
-      setSkillsValueError('Please enter the personnal professionnal skills');
-    } else {
-      setSkillsValueError('');
-    }
-  };
-
-  const checkEducationValue = (value: any) => {
-    setEducationValueValue(value);
-    if (value == 'Choose personnal Education') {
-      setEducationValueError('Please enter your personnal Education');
-    } else {
-      setEducationValueError('');
-    }
-  };
-
-  const isFormValid = () => {
-    return (
-      FirstNameValue !== '' &&
-      LastNameValue !== '' &&
-      EmailValue !== '' &&
-      PasswordValue !== ''
-    );
-  };
-
-  const isForm1Valid = () => {
-    return (
-      DateBirthValue !== '' &&
-      personnalAddressValue !== '' &&
-      personnalPhoneValue !== '' &&
-      occupationValue !== 'occupation'
-    );
-  };
 
   const checkLastName = (value: any) => {
     setLastNameValue(value);
@@ -291,23 +136,18 @@ const FormElements = () => {
     LastName: LastNameValue,
     email: EmailValue,
     password: PasswordValue,
-    imageUrl: imageUrlValue,
-    birthDate: DateBirthValue,
-    address: personnalAddressValue,
-    phone: personnalPhoneValue,
-    Description: descriptionValue,
-    occupation: occupationValue,
-    Education: EducationValue,
-    Skills: SkillsValue,
     permissions: permissionValue,
   };
-
+  const isFormValid = () => {
+    return FirstNameValue !== '' && LastNameValue !== '' && EmailValue !== '' && PasswordValue !== '' ;
+  };
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/Admin/AddAdminBySA',
+        'http://localhost:3000/Admin//AddAdminBySA',
         formData,
         {
           headers: {
@@ -318,7 +158,7 @@ const FormElements = () => {
 
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
-        setShowAlert(true);
+
 
         // Réinitialiser l'alerte après quelques secondes (facultatif)
 
@@ -520,263 +360,25 @@ const FormElements = () => {
             </div>
           </div>
 
-          <div className="mb-4">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Date of Birth
-            </label>
-            <div className="relative">
-              <input
-                type="date"
-                style={{ color: '#00000079' }}
-                onBlur={(e) => checkDateBirth(e.target.value)}
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary no-calendar-icon"
-              />
-            </div>
-            {DateBirthError && (
-              <div className="flex">
-                <p className="error-msg">{DateBirthError}</p>
-                <FontAwesomeIcon
-                  icon={faCircleExclamation}
-                  style={{ color: '#f20202' }}
-                  className="mt-1 ml-1"
-                />
-              </div>
-            )}
-          </div>
-          <div className="mb-4">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Address
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={personnalAddressValue}
-                onChange={(e) => checkPersonnalAddress(e.target.value)}
-                placeholder="Enter your address"
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              />
-
-              {personnalAddressError && (
-                <div className="flex">
-                  <p className="error-msg">{personnalAddressError}</p>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    style={{ color: '#f20202' }}
-                    className="mt-1 ml-1"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mb-4">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Phone number
-            </label>
-            <div className="relative">
-              <PhoneInput
-                country={personnalPhoneCountry}
-                value={personnalPhoneValue}
-                onChange={checkPersonnalPhone}
-                placeholder="Enter your phone number"
-                inputProps={{
-                  name: 'phone',
-                  required: true,
-                }}
-              />
-              {personnalPhoneError && <p>{personnalPhoneError}</p>}
-
-              {personnalPhoneError && (
-                <div className="flex">
-                  <p className="error-msg">{personnalPhoneError}</p>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    style={{ color: '#f20202' }}
-                    className="mt-1 ml-1"
-                  />
-                </div>
-              )}
-              <span className="absolute right-0 top-4">
-                <img
-                  src="../../images/logo/logo-tekt-gray2-nobg.png"
-                  alt="tel"
-                  width="45%"
-                />
-              </span>
-            </div>
-          </div>
-          <div className="mb-4">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Description
-            </label>
-            <div className="relative">
-              <textarea
-                value={descriptionValue}
-                onChange={(e) => checkdescription(e.target.value)}
-                placeholder="Enter your description"
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              ></textarea>
-
-              {descriptionValueError && (
-                <div className="flex">
-                  <p className="error-msg">{descriptionValueError}</p>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    style={{ color: '#f20202' }}
-                    className="mt-1 ml-1"
-                  />
-                </div>
-              )}
-              <span className="absolute right-0 top-4">
-                <img
-                  src="../../images/logo/logo-tekt-gray2-nobg.png"
-                  alt="tel"
-                  width="45%"
-                />
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              image
-            </label>
-            <div className="relative">
-              <input
-                type="file"
-                value={imageUrlValue}
-                onChange={(e) => checkImageUrl(e.target.value)}
-                placeholder="Enter your description"
-                className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              />
-
-              {imageUrlValueError && (
-                <div className="flex">
-                  <p className="error-msg">{imageUrlValueError}</p>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    style={{ color: '#f20202' }}
-                    className="mt-1 ml-1"
-                  />
-                </div>
-              )}
-              <span className="absolute right-0 top-4">
-                <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Occupation
-            </label>
-            <select
-              id="occupations"
-              value={occupationValue}
-              onChange={(e) => checkOccupationValue(e.target.value)}
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            >
-              <option value="occupation">Choose your occupation</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="company">Company</option>
-              <option value="freelancer">Freelancer</option>
-              <option value="searcher">Searcher</option>
-            </select>
-
-            {occupationError && (
-              <div className="flex">
-                <p className="error-msg">{occupationError}</p>
-                <FontAwesomeIcon
-                  icon={faCircleExclamation}
-                  style={{ color: '#f20202' }}
-                  className="mt-1 ml-1"
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="mb-6">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Skills
-            </label>
-            <select
-              id="professionnalFields"
-              value={SkillsValue}
-              onChange={(e) => checkSkillsProfesionnalValue(e.target.value)}
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            >
-              <option value="Choose company professional fields">
-                Choose Skills professional fields
-              </option>
-              {professionalSkills.map((item, index) => (
-                <option key={index} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-
-            {SkillsValueError && (
-              <div className="flex">
-                <p className="error-msg">{SkillsValueError}</p>
-                <FontAwesomeIcon
-                  icon={faCircleExclamation}
-                  style={{ color: '#f20202' }}
-                  className="mt-1 ml-1"
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="mb-6">
-            <label className="mb-2.5 block font-medium text-black dark:text-white">
-              Education
-            </label>
-            <select
-              id="professionnalFields"
-              value={EducationValue}
-              onChange={(e) => checkEducationValue(e.target.value)}
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            >
-              <option value="Choose personnal Education">
-                Choose personnal Education
-              </option>
-              {Education.map((item1, index1) => (
-                <option key={index1} value={item1}>
-                  {item1}
-                </option>
-              ))}
-            </select>
-
-            {EducationValueError && (
-              <div className="flex">
-                <p className="error-msg">{EducationValueError}</p>
-                <FontAwesomeIcon
-                  icon={faCircleExclamation}
-                  style={{ color: '#f20202' }}
-                  className="mt-1 ml-1"
-                />
-              </div>
-            )}
-          </div>
-
           <div className="mb-6">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
               Permissions
             </label>
-            <select
-              id="permissions"
-              value={permissionValue}
-              onChange={(e) => checkPermision(e.target.value)}
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-            >
-              <option value="Choose permissions">Choose permissions</option>
+            <div className="flex flex-wrap">
               {permission.map((item, index) => (
-                <option key={index} value={item}>
-                  {item}
-                </option>
+                <div key={index} className="flex items-center mr-4 mb-4">
+                  <input
+                    type="checkbox"
+                    id={`permissionCheckbox_${index}`}
+                    value={item}
+                    checked={selectedPermissions.includes(item)}
+                    onChange={() => handleMultiChange1(item)}
+                    className="mr-2"
+                  />
+                  <label htmlFor={`permissionCheckbox_${index}`}>{item}</label>
+                </div>
               ))}
-            </select>
-            {/* Utilisez permissionValue comme valeur sélectionnée */}
+            </div>
             {permissionValueError && (
               <div className="flex">
                 <p className="error-msg">{permissionValueError}</p>
@@ -788,36 +390,13 @@ const FormElements = () => {
             <div className="flex justify-end">
               <button
                 type="submit"
+                disabled={!isFormValid()}
                 className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
               >
                 Add Admin
               </button>
             </div>
 
-            {showAlert && (
-              <div className="flex w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
-                <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
-                  <svg
-                    width="16"
-                    height="12"
-                    viewBox="0 0 16 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15.2984 0.826822L15.2868 0.811827L15.2741 0.797751C14.9173 0.401867 14.3238 0.400754 13.9657 0.794406L5.91888 9.45376L2.05667 5.2868C1.69856 4.89287 1.10487 4.89389 0.747996 5.28987C0.417335 5.65675 0.417335 6.22337 0.747996 6.59026L0.747959 6.59029L0.752701 6.59541L4.86742 11.0348C5.14445 11.3405 5.52858 11.5 5.89581 11.5C6.29242 11.5 6.65178 11.3355 6.92401 11.035L15.2162 2.11161C15.5833 1.74452 15.576 1.18615 15.2984 0.826822Z"
-                      fill="white"
-                      stroke="white"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="w-full">
-                  <h5 className="mb-3 text-lg font-semibold text-black dark:text-[#34D399]">
-                    Admin added Successfully
-                  </h5>
-                </div>
-              </div>
-            )}
           </div>
         </form>
       </div>
