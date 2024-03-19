@@ -37,7 +37,7 @@ export const ModalTermsConditions = ({ isOpen, onClose } : any) => {
       }, []);  
   
     return (
-        <div className="fixed top-0 right-0 bottom-0 left-0 flex justify-center items-center z-50">
+        <div className="fixed top-0 right-5 bottom-0 left-0 flex justify-center items-center z-50">
             <div className="relative p-4 w-full max-w-2xl max-h-full">
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">

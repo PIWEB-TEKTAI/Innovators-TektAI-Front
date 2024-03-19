@@ -9,7 +9,7 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [connectedUser, setconnectedUser] = useState<User | null>(null);
   const { pathname } = location;
     // Check if the current path contains "auth"
-  const isAuthPath = pathname.includes('/auth');
+  const isLanding = pathname.includes('/landing');
 
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
@@ -39,7 +39,7 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
-            <div className="mx-auto mt-0 max-w-screen-2xl ">
+            <div className="mx-auto mt-0 max-w-screen-2xl" >
               {children}
             </div>
           </main>

@@ -332,7 +332,7 @@ const Landing: React.FC = () => {
     </div>
     <div className="flex flex-wrap justify-center -mx-4">
       <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="hover:bg-gray-500 card-t bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transition-colors duration-300">
+      <div className="card-t hover:bg-gray-500 bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
       <div className="img-container">
         <img className="w-full h-auto" src="src\images\user\feryel.png" alt="Luna Turner" />
       </div>
@@ -349,7 +349,7 @@ const Landing: React.FC = () => {
      </div>
       </div>
       <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
+      <div className="card-t hover:bg-gray-500 bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
           <div className="img-container">
             <img className="w-full h-auto" src="src\images\user\lina.jpg" alt="Luna Turner" />
           </div>

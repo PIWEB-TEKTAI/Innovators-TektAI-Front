@@ -245,7 +245,7 @@ span.flatpickr-weekday,
 
 .card-t {
   box-shadow: 0 0 2.4em rgba(25, 0, 58, 0.1);
-  padding: 3.5em 1em;
+  padding: 2rem;
   border-radius: 0.6em;
   color: #1f003b;
   cursor: pointer;
@@ -255,7 +255,7 @@ span.flatpickr-weekday,
 .card-t .img-container {
   width: 8em;
   height: 8em;
-  background-color: #a993ff;
+  background-color: #7088f5;
   padding: 0.5em;
   border-radius: 50%;
   margin: 0 auto 2em auto;
@@ -289,10 +289,7 @@ span.flatpickr-weekday,
   color: inherit;
   font-size: 1.4em;
 }
-.card-t:hover {
-  background: linear-gradient(#6045ea, #8567f7);
-  color: #ffffff;
-}
+
 .card-t:hover .img-container {
   transform: scale(1.15);
 }

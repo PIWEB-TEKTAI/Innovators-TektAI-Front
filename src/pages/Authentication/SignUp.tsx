@@ -14,6 +14,16 @@ const SignUp: React.FC = () => {
     "Building Bridges, Overcoming Obstacles"
   ];
 
+  const coloredPhrases = phrases.map(phrase => {
+    const parts = phrase.split(','); 
+    const coloredPart = <span style={{ color: 'rgb(60 80 224 / var(--tw-text-opacity))'}}>{parts[0]}</span>; 
+    return (
+      <div>
+        {coloredPart}, {parts[1]}
+      </div>
+    );
+  });
+
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
 
   useEffect(() => {
@@ -29,7 +39,7 @@ const SignUp: React.FC = () => {
 
   return (
     <ClientLayout>
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="h-screen rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
 
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -38,8 +48,8 @@ const SignUp: React.FC = () => {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
-              <p className="2xl:px-20">
-                {phrases[currentPhraseIndex]}
+              <p className="2xl:px-20 font-semibold">
+                {coloredPhrases[currentPhraseIndex]}
               </p>
 
               <span className="mt-15 inline-block">

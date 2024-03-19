@@ -74,22 +74,22 @@ const Footer: React.FC = () => {
                       </li>
                   </ul>
               </div>
-              <div>
-                  <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Documentation</h3>
-                  <ul className="text-gray-500 dark:text-gray-400">
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">Competitions</a>
-                      </li>
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">Datasets</a>
-                      </li>
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">Models</a>
-                      </li>
-                  
-                  </ul>
-              </div>
-          </div>
+
+                <div>
+                  <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact</h3>
+                    <ul className="text-gray-500 dark:text-gray-400">
+                            <li className="mb-4">
+                                Phone: <a href="tel:YOUR_PHONE_NUMBER">+216 52 717 171</a>
+                            </li>
+                            <li className="mb-4">
+                                Email: <a href="#">Tektai@gmail.com</a>
+                            </li>
+                            <li className="mb-4">
+                                Address: Esprit , El ghazela , Ariana
+                            </li>
+                        </ul>
+                    </div>
+               </div>
           <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8"/>
           <div className="text-center">
               <a href="#" className="flex items-center justify-center mb-5 mr-4 text-2xl font-semibold text-gray-900 dark:text-white">

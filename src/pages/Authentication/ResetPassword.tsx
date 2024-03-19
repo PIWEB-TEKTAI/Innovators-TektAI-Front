@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
@@ -18,7 +18,7 @@ function ResetPassword() {
 
 
   const [captchaToken, setCaptchaToken] = useState('');
-
+  
   
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -64,7 +64,7 @@ function ResetPassword() {
           setErrorMessage("Cannot reuse previous password, Please try another one");
         } else {
           console.log(err);
-          setErrorMessage("An error occurred, please try again.");
+          setErrorMessage("Link expired, please try again.");
         }
       });
 }};
@@ -104,6 +104,36 @@ function ResetPassword() {
    };
 
 
+   const phrases = [
+    "Empowering Collaboration, Solving Challenges",
+    "Unlocking Potential, Achieving Success",
+    "Fostering Innovation, Driving Results",
+    "Building Bridges, Overcoming Obstacles"
+  ];
+
+  const coloredPhrases = phrases.map(phrase => {
+    const parts = phrase.split(','); 
+    const coloredPart = <span style={{ color: 'rgb(60 80 224 / var(--tw-text-opacity))'}}>{parts[0]}</span>; 
+    return (
+      <div>
+        {coloredPart}, {parts[1]}
+      </div>
+    );
+  });
+
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prevIndex: number) =>
+        prevIndex === phrases.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000); // Change phrase every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+
   return (
     <ClientLayout>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -114,7 +144,7 @@ function ResetPassword() {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
-              <p className="2xl:px-20">Empowering Collaboration, Solving Challenges</p>
+              <p className="2xl:px-20 font-semibold"> {coloredPhrases[currentPhraseIndex]}</p>
               <span className="mt-15 inline-block">
                 <img src="/src/images/auth/Reset password-amico.png" alt="forgotPasword" className='w-80'/>
               </span>

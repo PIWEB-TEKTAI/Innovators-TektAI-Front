@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import axios from 'axios';
@@ -55,7 +55,7 @@ function ForgotPassword() {
           setSuccessMessage('');
         }
       })
-      .catch(err => {
+      .catch(_err => {
         resetRecaptcha();
         setErrorMessage('An error occurred. Please try again later.');
         setSuccessMessage('');
@@ -79,6 +79,35 @@ function ForgotPassword() {
     return email !== '' ;
    };
 
+   const phrases = [
+    "Empowering Collaboration, Solving Challenges",
+    "Unlocking Potential, Achieving Success",
+    "Fostering Innovation, Driving Results",
+    "Building Bridges, Overcoming Obstacles"
+  ];
+
+  const coloredPhrases = phrases.map(phrase => {
+    const parts = phrase.split(','); 
+    const coloredPart = <span style={{ color: 'rgb(60 80 224 / var(--tw-text-opacity))'}}>{parts[0]}</span>; 
+    return (
+      <div>
+        {coloredPart}, {parts[1]}
+      </div>
+    );
+  });
+
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhraseIndex((prevIndex: number) =>
+        prevIndex === phrases.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000); // Change phrase every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
 
 
   return (
@@ -91,7 +120,8 @@ function ForgotPassword() {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
-              <p className="2xl:px-20">Empowering Collaboration, Solving Challenges</p>
+              <p className="2xl:px-20 font-semibold"> {coloredPhrases[currentPhraseIndex]}</p>
+
               <span className="mt-15 inline-block">
                 <img src="/src/images/auth/Forgot password-amico.png" alt="forgotPassword" className='w-90' />
               </span>

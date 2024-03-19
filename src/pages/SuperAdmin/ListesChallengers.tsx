@@ -44,12 +44,7 @@ export default function FetchData() {
     setSearchTerm(event.target.value);
   };
 
-  // Filtrer les données en fonction du terme de recherche
-  const filteredData = data.filter(user =>
-    user.FirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.LastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.phone.includes(searchTerm)
-  );
+
 
   var bloquer = (email: string) => {
     const updatedData = data.map(user =>
@@ -82,9 +77,14 @@ export default function FetchData() {
   const [usersPerPage] = useState(5);
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
+  let currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
+  // Filtrer les données en fonction du terme de recherche
+  currentUsers = data.filter(user =>
+    user.FirstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.LastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.phone?.includes(searchTerm)
+  );
   var archive = (email: string) => {
     const updatedData = data.map(user =>
       user.email === email ? { ...user, state: 'validated' as const } : user
@@ -129,7 +129,6 @@ export default function FetchData() {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"></th>
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   FirstName
                 </th>
@@ -148,11 +147,7 @@ export default function FetchData() {
             <tbody>
             {currentUsers.map(users => (
                 <tr className="bg-white dark:bg-boxdark" key={users._id}>
-                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">
-                    <img className="w-12 h-12 mb-3 rounded-full shadow-lg" src={users?.imageUrl} alt="Bonnie image"/>
-                    </h5>
-                  </td>
+                  
                   <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                     <h5 className="font-medium text-black dark:text-white">{users.FirstName}</h5>
                   </td>
@@ -200,12 +195,16 @@ flex items-center space-x-3.5">
 </tbody>
 </table>
 </div>
+<div className='mb-3'>
 <Pagination
           usersPerPage={usersPerPage}
           totalUsers={data.length}
           currentPage={currentPage}
           paginate={paginate}
+        
         />
+</div>
+
 </div>
 </Layout>
 );

@@ -57,16 +57,19 @@ export default function FetchData() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = data.filter(user =>
-    user.company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.company.phone.includes(searchTerm)
-  );
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
+  let currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
+
+
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  currentUsers = data.filter(user =>
+    user.company.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.company.phone?.includes(searchTerm)
+  );
     var bloquer = (email: string) => {
         const updatedData = data.map(user =>
             user.email === email ? { ...user, state: 'blocked' as const } : user
@@ -211,12 +214,15 @@ export default function FetchData() {
 
                     </table>
                 </div>
+                <div className='mb-3'>
                 <Pagination
-          usersPerPage={usersPerPage}
-          totalUsers={data.length}
-          currentPage={currentPage}
-          paginate={paginate}
-        />
+                    usersPerPage={usersPerPage}
+                    totalUsers={data.length}
+                    currentPage={currentPage}
+                    paginate={paginate}
+                    />
+                </div>
+    
             </div>
         </Layout>
     );

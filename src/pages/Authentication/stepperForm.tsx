@@ -386,7 +386,7 @@ const StepperForm = () => {
  
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-8">
         {alert?.type == 'success' && successfullToast(alert.message)}
 
         {alert?.type == 'error' && ErrorToast(alert.message)}
