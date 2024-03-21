@@ -88,7 +88,7 @@ function App() {
           element={
             <>
               <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              < Statistique />
+              <Statistique/>
             </>
           }
         />

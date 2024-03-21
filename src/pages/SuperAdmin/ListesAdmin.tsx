@@ -1,288 +1,315 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import 'animate.css';
-import Layout from '../../layout/DefaultLayout';
-import AddChallengerByAdmin from './AddChallengerByAdmin';
-import { Link, useNavigate } from 'react-router-dom';
-import { faAdd, faCheck, faCircleExclamation, faPenNib, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+  import React, { useEffect, useState } from 'react';
+  import axios from 'axios';
+  import 'animate.css';
+  import Layout from '../../layout/DefaultLayout';
+  import AddChallengerByAdmin from './AddChallengerByAdmin';
+  import { Link, useNavigate } from 'react-router-dom';
+  import { faAdd, faCheck, faCircleExclamation, faPenNib, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+  import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+  import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus } from 'react-icons/fa'; // Importation des icônes
+  import { MdEdit, MdBlock, MdDelete, MdCheck } from 'react-icons/md'; // Importation des icônes
+  import Swal from 'sweetalert2';
 
-// Définissez le type des données attendues
-interface User {
-  _id: string;
-  email: string;
-  FirstName: string;
-  LastName: string;
-  password: string;
-  imageUrl: string;
-  phone: string;
-  address: string;
-  birthDate: Date | null;
-  occupation: string;
-  Description: string;
-  Education: string;
-  Skills: string;
-  isEmailVerified: boolean;
-  state: 'validated' | 'not validated' | 'blocked';
-  role: 'super admin' | 'admin' | 'challenger' | 'company';
-}
-
-
-// ... (previous imports)
-
-export default function FetchData() {
-  
-  const [data, setData] = useState<User[]>([]);
-  const [showAddSection, setShowAddSection] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5);
-  const [searchTerm, setSearchTerm] = useState('');
+  // Définissez le type des données attendues
+  interface User {
+    _id: string;
+    email: string;
+    FirstName: string;
+    LastName: string;
+    password: string;
+    imageUrl: string;
+    phone: string;
+    address: string;
+    birthDate: Date | null;
+    occupation: string;
+    Description: string;
+    Education: string;
+    Skills: string;
+    isEmailVerified: boolean;
+    state: 'validated' | 'not validated' | 'blocked';
+    role: 'super admin' | 'admin' | 'challenger' | 'company';
+  }
 
 
-  useEffect(() => {
-    axios.get<User[]>('http://localhost:3000/Admin/admin')
-      .then(response => {
-        setData(prevData => response.data);
-      })
-      .catch(err => console.log(err));
-  }, []);
+  // ... (previous imports)
 
-  
-// Fonction de gestion pour mettre à jour le terme de recherche
-const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setSearchTerm(event.target.value);
+  export default function FetchData() {
+    const [data, setData] = useState<User[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(5);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedRole, setSelectedRole] = useState('');
+
+
+    useEffect(() => {
+      fetchData();
+      console.log(data); // Vérifiez les données après chaque mise à jour
+    }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
+    
+    const fetchData = () => {
+  axios.get<User[]>(`http://localhost:3000/Admin/${selectedRole || 'All'}`)
+    .then(response => {
+      const filteredUsers = response.data.filter(user =>
+        (user.FirstName.toLowerCase().startsWith(searchTerm) ||
+        user.LastName.toLowerCase().startsWith(searchTerm) ||
+        user.phone.startsWith(searchTerm))
+      );
+      setData(filteredUsers);
+    })
+    .catch(err => console.log(err));
 };
 
-// Filtrer les données en fonction du terme de recherche
-const filteredData = data.filter(user =>
-  user.FirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  user.LastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  user.phone.includes(searchTerm)
-);
+const sortUsersByFirstName = (users: User[]) => {
+  return users.slice().sort((a, b) => {
+    const firstNameA = a.FirstName.toLowerCase();
+    const firstNameB = b.FirstName.toLowerCase();
+    if (firstNameA < firstNameB) return -1;
+    if (firstNameA > firstNameB) return 1;
+    return 0;
+  });
+};
+
+    
+  // Fonction de gestion pour mettre à jour le terme de recherche
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+  };
+
+
+  // Filtrer les données en fonction du terme de recherche
+  const filteredData = data.filter(user =>
+    (user.FirstName.toLowerCase().startsWith(searchTerm) ||
+    user.LastName.toLowerCase().startsWith(searchTerm) ||
+    user.phone.startsWith(searchTerm))
+  );
+  console.log(filteredData); // Ajoutez cette ligne
+  
 
   var bloquer = (email: string) => {
-    const updatedData = data.map(user =>
-      user.email === email ? { ...user, state: 'blocked' as const } : user
-    );
-
-    // console.log('Updated Data:', updatedData);
-
-    console.log(`http://localhost:3000/Admin/${email}/updateState`)
-    axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
-      .then(response => {
-        console.log('User blocked successfully:', response.data);
-        setData(updatedData);
-      })
-      .catch(err => console.log('Error blocking user:', err));
+    const userToBlock = data.find(user => user.email === email);
+    if (!userToBlock) {
+      console.error('User not found');
+      return;
+    }
+  
+    if (userToBlock.state === 'blocked') {
+      console.log('User is already blocked');
+      return;
+    }
+  
+    // Afficher une boîte de dialogue de confirmation
+    Swal.fire({
+      title: 'Are you sure you want to block this user?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, block !',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Si l'utilisateur confirme, alors procédez avec le blocage
+        axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'blocked' })
+          .then(response => {
+            console.log('User blocked successfully:', response.data);
+            const updatedData = data.map(user =>
+              user.email === email ? { ...user, state: 'blocked' as const } : user
+            );
+            setData(updatedData);
+          })
+          .catch(err => console.log('Error blocking user:', err));
+      }
+    });
   };
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-
+  
   var debloquer = (email: string) => {
-    const updatedData = data.map(user =>
-      user.email === email ? { ...user, state: 'validated' as const } : user
-    );
-
-    // console.log('Updated Data:', updatedData);
-
-    console.log(`http://localhost:3000/Admin/${email}/updateState`)
-    axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'validated' })
-      .then(response => {
-        console.log('User validated successfully:', response.data);
-        setData(updatedData);
-      })
-      .catch(err => console.log('Error validated user:', err));
+    const userToValidate = data.find(user => user.email === email);
+    if (!userToValidate) {
+      console.error('User not found');
+      return;
+    }
+  
+    if (userToValidate.state === 'validated') {
+      console.log('User is already validated');
+      return;
+    }
+  
+    // Afficher une boîte de dialogue de confirmation
+    Swal.fire({
+      title: 'Are you sure you want to validate this user?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, validate !',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Si l'utilisateur confirme, alors procédez avec la validation
+        axios.put(`http://localhost:3000/Admin/${email}/updateState`, { email, state: 'validated' })
+          .then(response => {
+            console.log('User validated successfully:', response.data);
+            const updatedData = data.map(user =>
+              user.email === email ? { ...user, state: 'validated' as const } : user
+            );
+            setData(updatedData);
+          })
+          .catch(err => console.log('Error validating user:', err));
+      }
+    });
   };
 
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = data.slice(indexOfFirstUser, indexOfLastUser);
 
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+    const navigate = useNavigate();
 
-  const navigate = useNavigate();
+    const handleEdit = (email: string, e: React.MouseEvent<HTMLButtonElement>) => {
+      // Prevent default button behavior
+      e.preventDefault();
+      // Redirect to edit form with user ID
+      navigate(`/modifierAdmin/${email}`);
+    };
 
-  const handleEdit = (email: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent default button behavior
-    e.preventDefault();
-    // Redirect to edit form with user ID
-    navigate(`/modifierAdmin/${email}`);
-  };
+    var changeToCompany = (users: User) => {
+      console.log(users)
+    }
 
-  var changeToCompany = (users: User) => {
-    console.log(users)
-  }
-
-  return (
-    <Layout >
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Admin List</h2>
-
-          <Link to="/AddAdmin" className="bg-[#1C6F55] text-white py-2 px-4 ">
-            +
+    return (
+      <Layout>
+        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">List</h2>
+            <div className="flex items-center space-x-4">
+            <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+              >
+                <option value="">All Users</option>
+                <option value="admin">Admin</option>
+                <option value="challenger">Challenger</option>
+                <option value="company">Company</option>
+              </select>
+                <Link to="/AddAdmin" className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+                <FaUserPlus className="mr-2" />
+                Add Admin
+              </Link>
+            
+            </div>
+          </div>
+          <div className="max-w-full overflow-x-auto">
+              {/* Champ de recherche */}
+              <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="mb-4 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+            />
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="bg-gray-200 text-left dark:bg-meta-4">
+                  <th className="px-4 py-3">First Name</th>
+                  <th className="px-4 py-3">Last Name</th>
+                  <th className="px-4 py-3">Phone</th>
+                  <th className="px-4 py-3">Role</th>
+                  <th className="px-4 py-3">State</th>
+                  <th className="px-4 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+  {sortUsersByFirstName(currentUsers).map((user, index) => (
+    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
+      <td className="px-4 py-3">{user.FirstName}</td>
+      <td className="px-4 py-3">{user.LastName}</td>
+      <td className="px-4 py-3">{user.phone}</td>
+      <td className="px-4 py-3">{user.role}</td>
+      <td className="px-4 py-3">
+        <span
+          className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
+            user.state === 'validated' ? 'bg-green-400 text-white' :
+            user.state === 'blocked' ? 'bg-red-400 text-white' :
+            'bg-yellow-400 text-black'
+          }`}
+        >
+          {user.state}
+        </span>
+      </td>
+      <td className="px-4 py-3">
+        <div className="flex items-center space-x-2">
+          <button onClick={(e) => handleEdit(user.email, e)}>
+            <FaUserEdit className="text-yellow-500" />
+          </button>
+          <button onClick={() => bloquer(user.email)}>
+            <FaBan className="text-red-500" />
+          </button>
+          <Link to={`/Archiver`}>
+            <FaTrashAlt className="text-red-500" />
           </Link>
+          <button onClick={() => debloquer(user.email)}>
+            <FaCheck className="text-green-500" />
+          </button>
         </div>
-         <div className="max-w-full overflow-x-auto ">
-           {/* Champ de recherche */}
-           <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="mb-4 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
-          />
-          <table className="w-full table-auto ">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-               
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  FirstName
-                </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  LastName
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Phone
-                </th>
-
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  State
-                </th>
-
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((users, index) => (
-                <tr key={index}>
-                  <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">{users.FirstName}</h5>
-                  </td>
-                  
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {users.LastName}
-                    </p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <p className="text-black dark:text-white">
-                      {users.phone}
-                    </p>
-                  </td>
-
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark" >
-                    <p
-                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${users.state === 'validated'
-                        ? 'bg-success text-success'
-                        : users.state === 'blocked'
-                          ? 'bg-danger text-danger'
-                          : 'bg-warning text-warning'
-                        }`}
-
-                    >
-                      {users.state}
-                    </p>
-                  </td>
-
-                  <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                    <div className="flex items-center space-x-3.5" >
-                      <button className="hover:text-primary" onClick={(e) => handleEdit(users.email, e)}>
-                        <FontAwesomeIcon icon={faPencil} style={{ color: "#EC7C0C" }} className="mt-1 ml-1" />
-                      </button>
-
-                      <button className="hover:text-primary" onClick={() => bloquer(users.email)}>
-
-                        <svg
-                          className="fill-current"
-                          width="22"
-                          height="22"
-                          viewBox="0 0 22 22"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.5">
-                            <path
-                              d="M11 0C4.92487 0 0 4.92487 0 11s4.92487 11 11 11 11-4.92487 11-11S17.0751 0 11 0ZM11 20.25C5.5335 20.25 1.75 16.4665 1.75 11S5.5335 1.75 11 1.75 20.25 5.5335 20.25 11 16.4665 20.25 11 20.25Z"
-                              fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                            <path
-                              d="M16.75 11.8981H5.25C4.73859 11.8981 4.32349 11.483 4.32349 10.9716C4.32349 10.4602 4.73859 10.0451 5.25 10.0451H16.75C17.2614 10.0451 17.6765 10.4602 17.6765 10.9716C17.6765 11.483 17.2614 11.8981 16.75 11.8981Z"
-                              fill="#000000" // Remplacez cette valeur par votre couleur personnalisée
-                            />
-                          </g>
-                        </svg>
-                      </button>
-                      <Link to={`/Archiver`} className="hover:text-primary" >
-
-                        <FontAwesomeIcon icon={faTrash} style={{ color: "#A91A1A" }} className="mt-1 ml-1" />
-
-                      </Link>
-                      <button className="hover:text-primary" onClick={() => debloquer(users.email)}>
-
-                        <FontAwesomeIcon icon={faCheck} style={{ color: "#28A471" }} className="mt-1 ml-1" />
-                      </button>
-
-                    </div>
-
-                  </td>
-                  </tr>
-              ))}
-
-            </tbody>
-          </table>
+      </td>
+    </tr>
+  ))}
+</tbody>
           
+            </table>
+          </div>
+          <Pagination
+            usersPerPage={usersPerPage}
+            totalUsers={filteredData.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
         </div>
-        <Pagination
-          usersPerPage={usersPerPage}
-          totalUsers={data.length}
-          currentPage={currentPage}
-          paginate={paginate}
-        />
-      </div>
-    </Layout>
-  );
-}
+      </Layout>
+    );
+    
+                      }
 
 
-function Pagination({
-  usersPerPage,
-  totalUsers,
-  currentPage,
-  paginate
-}: {
-  usersPerPage: number;
-  totalUsers: number;
-  currentPage: number;
-  paginate: (pageNumber: number) => void;
-}) {
-  const pageNumbers = [];
+  function Pagination({
+    usersPerPage,
+    totalUsers,
+    currentPage,
+    paginate
+  }: {
+    usersPerPage: number;
+    totalUsers: number;
+    currentPage: number;
+    paginate: (pageNumber: number) => void;
+  }) {
+    const pageNumbers = [];
 
-  for (let i = 1; i <= Math.ceil(totalUsers / usersPerPage); i++) {
-    pageNumbers.push(i);
+    for (let i = 1; i <= Math.ceil(totalUsers / usersPerPage); i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <nav className="flex justify-center mt-4">
+        <ul className="flex items-center">
+          {pageNumbers.map(number => (
+            <li key={number}>
+              <a
+                onClick={() => paginate(number)}
+                href="#"
+                className={`${
+                  currentPage === number
+                    ? 'bg-[#1C6F55] text-white'
+                    : 'bg-white text-[#1C6F55]'
+                } py-2 px-4 mx-1 rounded-full`}
+              >
+                {number}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
   }
-
-  return (
-    <nav className="flex justify-center mt-4">
-      <ul className="flex items-center">
-        {pageNumbers.map(number => (
-          <li key={number}>
-            <a
-              onClick={() => paginate(number)}
-              href="#"
-              className={`${
-                currentPage === number
-                  ? 'bg-[#1C6F55] text-white'
-                  : 'bg-white text-[#1C6F55]'
-              } py-2 px-4 mx-1 rounded-full`}
-            >
-              {number}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}

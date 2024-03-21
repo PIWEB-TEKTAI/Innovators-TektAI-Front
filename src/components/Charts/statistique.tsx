@@ -47,11 +47,11 @@ const StatsBarChart = () => {
 
   return (
     <div>
-      <h2>Graphique à barres des statistiques</h2>
+      <h2 style={{ color: 'blue', textAlign: 'center', fontWeight: 'bold' }}>Statistiques</h2>
       {stats && (
         <Bar
           data={{
-            labels: ['Challenger', 'Entreprise', 'Admin'],
+            labels: ['Challenger', 'Company', 'Admin'],
             datasets: [
               {
                 label: 'Nombre dutilisateurs',

@@ -27,7 +27,7 @@
       name: string;
       address: string;
 
-      emailCompany: string;
+      email: string;
       description: string;
       phone: string;
       professionnalFields: string[];
@@ -82,6 +82,7 @@
     const [firstNameError] = useState<string>('');
     const [lastNameError] = useState<string>('');
 
+    const [birthDateError, setBirthDateError] = useState<string>('');
 
     const [userData, setUserData] = useState<User>({
 
@@ -103,7 +104,7 @@
       company: {
         name: '',
         address: '',
-        emailCompany: '',
+        email: '',
         description: '',
         phone: '',
         professionnalFields: [],
@@ -128,6 +129,7 @@
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      validateForm();
 
       setUserData(prevState => {
         if (name.startsWith('company.')) {
@@ -179,33 +181,46 @@
 
 
 
-
+    const validateEmail = (email: string): boolean => {
+      return email.trim() !== '' && email.trim().toLowerCase().endsWith('@gmail.com');
+    };
+    
+  
+    
+    // Définir d'autres fonctions de validation pour chaque champ du formulaire
+    
     const validateForm = () => {
+      const today = new Date();
+      const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+      const userBirthDate = userData.birthDate ? new Date(userData.birthDate) : null;
+    
+      const isEmailValid = validateEmail(userData.email);
+      // Ajouter d'autres variables pour les champs de validation supplémentaires
+    
+      const isBirthDateValid = userBirthDate !== null && userBirthDate <= eighteenYearsAgo;
+      setBirthDateError(isBirthDateValid ? '' : 'Please enter a valid birth date.');
+    
       const isValid =
-        userData.email.trim() !== '' &&
-        userData.FirstName.trim() !== '' &&
-        userData.LastName.trim() !== '' &&
-        isValidPhoneNumber(userData.phone) &&
-        userData.occupation !== 'occupation' &&
-        userData.Education !== '' &&
-        userData.Description.trim() !== '' &&
-        userData.Description.trim().length >= 200 &&
-        userData.Description.trim().length <= 400 &&
-        userData.birthDate !== null &&
-        new Date().getFullYear() - new Date(userData.birthDate).getFullYear() >= 18;
-
+        isEmailValid &&
+        // Ajouter d'autres conditions de validation ici
+        // Assurez-vous de respecter les dépendances des champs si nécessaire
+        // Par exemple, la validation de la date de naissance dépend de sa présence
+        isBirthDateValid;
+    
       setFormIsValid(isValid);
     };
+    
+    
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      if (!isPhoneValid) {
-        alert('Veuillez saisir un numéro de téléphone valide.');
+      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         validateForm();
 
-        return;
-      }
+        e.preventDefault();
+
+    if (!formIsValid) { // Ajoutez la vérification de la validité du formulaire ici
+
+          return;
+        }
 
       const userDataToSend = {
         ...userData,
@@ -218,50 +233,26 @@
           console.log('User updated successfully:', response.data);
 
           // Redirection en fonction du rôle de l'utilisateur
-          switch (userData.role) {
-            case 'company':
-              window.location.href = '/companylist';
-              break;
-            case 'challenger':
-              window.location.href = '/tables';
-              break;
-            case 'admin':
+        
               window.location.href = '/AdminList';
-              break;
-            default:
-              // Si le rôle n'est pas reconnu, rediriger vers une page par défaut
-              window.location.href = '/';
           }
-        })
-        .catch(error => {
-          console.error('Error updating user:', error);
-        });
+        
+        )
     };
 
 
 
     const handleCancel = () => {
-      // Redirection vers la liste sans effectuer de changement
-      switch (userData.role) {
-        case 'company':
-          window.location.href = '/companylist';
-          break;
-        case 'challenger':
-          window.location.href = '/tables';
-          break;
-        case 'admin':
-          window.location.href = '/AdminList';
-          break;
-        default:
+     
           // Si le rôle n'est pas reconnu, rediriger vers une page par défaut
-          window.location.href = '/';
-      }
+          window.location.href = '/AdminList';
+        
     };
 
     const checkImageUrl = (value: any) => {
       setimageUrlValue(value)
       if (!value.trim()) {
-        setimageUrlValueError("Please enter your first name");
+        setimageUrlValueError("Please enter image");
       } else {
         setimageUrlValueError("");
       }
@@ -337,9 +328,7 @@
                       <p className="error-msg">{imageUrlValueError}</p>
                     </div>
                   }
-                  <span className="absolute right-0 top-4">
-                    <img src="/src/images/icon/tel.png" alt="tel" width="45%" />
-                  </span>
+                 
                 </div>
               </div>
               {userData.role !== 'admin' && (
@@ -350,15 +339,16 @@
                     <input type="text" name="address" value={userData.address} onChange={handleChange} placeholder="Enter your address" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" required />
                   </div>
                   <div className="mb-4.5">
-                    <label className="mb-2.5 block text-black dark:text-white">Birth Date</label>
-                    <input
-                      type="date"
-                      name="birthDate"
-                      value={userData.birthDate ? new Date(userData.birthDate).toISOString().split('T')[0] : ''}
-                      onChange={handleChange}
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    />
-                  </div>
+  <label className="mb-2.5 block text-black dark:text-white">Birth Date</label>
+  <input
+    type="date"
+    name="birthDate"
+    value={userData.birthDate ? new Date(userData.birthDate).toISOString().split('T')[0] : ''}
+    onChange={handleChange}
+    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+  />
+  {birthDateError && <p className="text-red-500 text-sm mt-1">{birthDateError}</p>}
+</div>
 
                   <div className="mb-6">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -446,35 +436,48 @@
                   </div>
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">Company Email</label>
-                    <input type="email" name="company.email" value={userData.company.emailCompany} onChange={handleChange} placeholder="Enter company email" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" required />
+                    <input type="email" name="company.email" value={userData.company.email} onChange={handleChange} placeholder="Enter company email" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" required />
                   </div>
                   <div className="mb-4.5">
                     <label className="mb-2.5 block text-black dark:text-white">Company Description</label>
                     <textarea rows={6} name="company.description" value={userData.company.description} onChange={handleChange} placeholder="Enter company description" className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" required />
                   </div>
+                  
+
+
                   <div className="mb-4.5">
-                    <label className="mb-2.5 block text-black dark:text-white">Company Phone</label>
-                    <PhoneInput
-                      name="company.phone"
-                      placeholder="Enter company phone number"
-                      value={userData.company.phone || ''}
-                      onChange={(value: string | undefined) => handlePhoneChange(value)}
-                      country="FR"
-                    />
-                  </div>
+                <label className="mb-2.5 block text-black dark:text-white">Company Phone <span className="text-meta-1">*</span></label>
+                <PhoneInput
+                  name="Company Phone"
+                  value={userData.company.phone}
+                  onChange={handlePhoneChange}
+                  country="FR"
+                />
+                {!isPhoneValid && <p className="text-red-500 text-sm mt-1">Please enter a valid phone number.</p>}
+              </div>
+
+
+
                 </>
               )}
 
 
-              <button
-                type="submit"
-                className={`flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 `}
-              >
-                Save Changes
-              </button>
+<div className="flex justify-between mt-3">
+  <button
+    type="submit"
+    className={`flex justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90`}
+  >
+    Save Changes
+  </button>
 
-
-              <button type="button" className="flex w-full justify-center rounded bg-red-500 p-3 font-medium text-white hover:bg-opacity-90 mt-3" onClick={handleCancel}>Cancel</button>
+  <button 
+    type="button" 
+    className="flex justify-center rounded bg-red-500 p-3 font-medium text-white hover:bg-opacity-90 ml-3" 
+    onClick={handleCancel}
+  >
+    Cancel
+  </button>
+</div>
             </div>
           </form>
         </div>
