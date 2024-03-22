@@ -147,7 +147,7 @@ const FormElements = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/Admin//AddAdminBySA',
+        'http://localhost:3000/Admin/AddAdminBySA',
         formData,
         {
           headers: {
@@ -162,7 +162,7 @@ const FormElements = () => {
 
         // Réinitialiser l'alerte après quelques secondes (facultatif)
 
-        window.location.href = '/AdminList';
+        window.location.href = '/List';
       } else {
         console.error("Échec de l'envoi des données au serveur.");
       }

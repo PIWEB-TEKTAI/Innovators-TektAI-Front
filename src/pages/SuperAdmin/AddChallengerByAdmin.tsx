@@ -324,7 +324,7 @@ const FormElements = () => {
 
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
-        window.location.href = '/tables';
+        window.location.href = '/List';
       } else {
         console.error('Échec de l\'envoi des données au serveur.');
       }

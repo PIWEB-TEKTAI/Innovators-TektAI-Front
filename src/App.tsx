@@ -21,7 +21,7 @@ import AddCompany from './pages/SuperAdmin/AddCompany'
 import Modifier1 from './pages/SuperAdmin/ModiferChallenger'
 import A from './pages/SuperAdmin/UpdateChallengerToCompany'
 import ModifierAdmin from './pages/SuperAdmin/ModiferChallenger';
-import ListesAdmin from './pages/SuperAdmin/ListesAdmin';
+import ListesAdmin from './pages/SuperAdmin/List';
 import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
 import SwitchToCompany from './pages/Profile/SwitchToCompany';
@@ -105,7 +105,7 @@ function App() {
           }
         />
          <Route
-          path="/AdminList"
+          path="/List"
           element={
             <>
               <PageTitle title="Admin List | TektAi" />
@@ -123,7 +123,7 @@ function App() {
           }
         />
         <Route
-          path="/ajouterChallenger"
+          path="/Addchallenger"
           element={
             <>
               <PageTitle title="Add Challenger | TektAi" />
@@ -133,11 +133,11 @@ function App() {
         />
         
         <Route
-          path="/tables"
+          path="/Addchallenger"
           element={
             <>
               <PageTitle title="Challengers List | TektAi" />
-              <ListesChallengers />
+             
             </>
           }
         />
@@ -161,7 +161,7 @@ function App() {
         />
 
         <Route
-          path="/companyAdd"
+          path="/Addcompany"
           element={
             <>
               <PageTitle title="Add Company | TektAi" />
