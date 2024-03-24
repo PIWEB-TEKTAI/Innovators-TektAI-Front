@@ -409,7 +409,7 @@ const FormElements = () => {
 
       if (response.status === 200) {
         console.log('Données envoyées avec succès!');
-        window.location.href = '/companylist';
+        window.location.href = '/List';
       } else {
         console.error('Échec de l\'envoi des données au serveur. Statut:', response.status);
       }
