@@ -1,12 +1,13 @@
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { checkEmailUnique, getProfile, updateCompany, updateUser } from '../../services/user.service'; 
 import { useEffect, useState } from 'react';
-import { User } from '../../types/User';
+import { User } from '../../types/user';
 import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import axios from 'axios';
-import { countryFlagsPhone } from '../Authentication/CountryList';
+import PhoneInputWithCountrySelect, { isValidPhoneNumber } from 'react-phone-number-input';
+import ReactFlagsSelect from "react-flags-select";
 
 const TIMEOUT_DURATION = 5000; // 5 seconds 
 interface Country {
@@ -160,14 +161,14 @@ const ProfileSettings = () => {
    const validatePhone = (value:any) =>{
     setPhone(value)
     if (!value.trim()) {
-      setPhoneError("phone is required");
-    } else if(!/^\d{8}$/.test(value)){
-      setPhoneError("Please enter a valid phone number")
-    }
-    else {
-      setPhoneError("");
-    }
+      setPhoneError('Please enter your phone number');
+   } else if (!isValidPhoneNumber(value)) {
+       setPhoneError('Please enter a valid phone number'); 
+   } else {
+       setPhoneError(''); 
    }
+   }
+
    const validateCountry = (value:any) =>{
     setContry(value)
     if (!value.trim()) {
@@ -244,13 +245,12 @@ const ProfileSettings = () => {
   const checkCompanyPhone = (value:any) =>{
     setCompanyPhoneValue(value)
     if (!value.trim()) {
-      setCompanyPhoneError("Please enter the company phone number");
-
-    }else if(!/^\d{8}$/.test(value)){
-      setCompanyPhoneError("Please enter a valid phone number")
-    }else {
-      setCompanyPhoneError("");
-    }
+      setCompanyPhoneError('Please enter your phone number');
+   } else if (!isValidPhoneNumber(value)) {
+      setCompanyPhoneError('Please enter a valid phone number'); 
+   } else {
+      setCompanyPhoneError(''); 
+   }
   }
 
 
@@ -490,14 +490,7 @@ const ProfileSettings = () => {
       return (
     <ConnectedClientLayout>
       {alert&&<CustomAlert type={alert.type} message={alert?.message} />}
-      <div className="flex justify-end">
-      <button
-        className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
-        onClick={handleDeactivateAccount}
-      >
-        Deactivate Account
-      </button>
-    </div>
+    
     {showPrompt && (
       <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
         <div className="bg-white p-8 rounded-lg text-center">
@@ -590,7 +583,7 @@ const ProfileSettings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="First Name"
                       >
-                        First Name
+                        First name
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -636,7 +629,7 @@ const ProfileSettings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="LastName"
                       >
-                        LastName
+                        Last name
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -682,93 +675,20 @@ const ProfileSettings = () => {
                   </div>
                   <div className="mb-5 5">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Company phone number
+                     Phone number
                     </label>
                   <div className="flex items-center ">
-                    
-                  <button
-                                  id="dropdown-phone-button"
-                                  className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                                  onClick={toggleDropdown}
-                                  type="button">
-                                  {selectedCountry && (
-                                      <>
-                                        {selectedCountry.flagPath}
-                                        {selectedCountry.code}
-                                        <svg
-                                          className="w-2.5 h-2.5 ms-2.5"
-                                          aria-hidden="true"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 10 6"
-                                        >
-                                          <path
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="m1 1 4 4 4-4"
-                                          />
-                                        </svg>
-                                      </>
-                                    )}
-                                      {!selectedCountry && (
-                                        <>
-                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
-                                          +216{" "}
-                                          <svg
-                                            className="w-2.5 h-2.5 ms-2.5"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 10 6"
-                                          >
-                                            <path
-                                              stroke="currentColor"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth="2"
-                                              d="m1 1 4 4 4-4"
-                                            />
-                                          </svg>
-                                        </>
-                                      )}  
-
-                                </button>
-                                {isOpen && (
-                                  <div
-                                    id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      {countryFlagsPhone.map((country, index) => (
-                                        <li key={index}>
-                                          <button
-                                            type="button"
-                                            onClick={() => handleCountrySelect(country)}
-                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            role="menuitem">
-                                            <div className="inline-flex items-center">
-                                              {country.flagPath}
-                                              {country.name} 
-                                            </div>
-                                          </button>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                                   <input
-                        className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        type="text"
-                        name="phone"
-                        id="phone"
-                        placeholder="+990 3343 7865"
-                        value={phone}
-                        onChange={(e) =>validatePhone(e.target.value)} 
-
+                    <PhoneInputWithCountrySelect
+                      placeholder="Enter phone number"
+                      value={phone}
+                      onChange={(value) => {
+                        if (value) {
+                          validatePhone(value.toString());
+                      }}}
+                      className='w-full flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white'
                       />
 
-                    </div>
+                  </div>
                     {phoneError && <p className="text-red-500 text-sm mt-1">{phoneError}</p>}
                     </div>
                   <div className="mb-5.5">
@@ -776,7 +696,7 @@ const ProfileSettings = () => {
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="email"
                     >
-                      Email Address
+                      Email address
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -829,16 +749,14 @@ const ProfileSettings = () => {
                     >
                       Country
                     </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="text"
-                      name="conttry"
-                      id="contry"
-                      placeholder="tunis"
-                      value={contry}
-                      onChange={(e) =>validateCountry(e.target.value)} 
-
-                    />
+                    <ReactFlagsSelect
+                          selected={contry}
+                          onSelect={(code)=>validateCountry(code)}
+                          selectButtonClassName='w-full rounded-lg border border-stroke outline-none h-12'
+                          placeholder="Select your country"
+                          searchable={true}
+                      />
+               
                         {contryError && <p className="text-red-500 text-sm mt-1">{contryError}</p>}
 
                   </div>
@@ -984,12 +902,35 @@ const ProfileSettings = () => {
                       Save
                     </button>
                   </div>
+                 
                 </form>
-                        
-           
+
+                
               </div>
             </div>
-          </div>
+
+              
+                  <div className="rounded-sm border mt-5 border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                    <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                      <h3 className="font-medium text-black dark:text-white">
+                        Deactivate account
+                      </h3>
+                    </div>
+
+                    <div className="px-7 py-4">
+                          <p>Just a tap on the button below and your account deactivation will be done smoothly.</p>
+                          <button
+                            className="text-white mt-3 bg-gray-500 hover:bg-gray-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+                            onClick={handleDeactivateAccount}
+                          >
+                            Deactivate Account
+                          </button>
+                    </div>
+                  </div>
+            
+        </div>
+
+
           {profileData?.role == "company"?(<> <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
@@ -1128,90 +1069,18 @@ const ProfileSettings = () => {
                       Company phone number
                     </label>
                     <div className="relative">
-                    <div className="flex items-center">
-                          <button
-                                  id="dropdown-phone-button"
-                                  className="flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                                  onClick={toggleDropdown}
-                                  type="button">
-                                  {selectedCompanyCountry && (
-                                      <>
-                                        {selectedCompanyCountry.flagPath}
-                                        {selectedCompanyCountry.code}
-                                        <svg
-                                          className="w-2.5 h-2.5 ms-2.5"
-                                          aria-hidden="true"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 10 6"
-                                        >
-                                          <path
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="m1 1 4 4 4-4"
-                                          />
-                                        </svg>
-                                      </>
-                                    )}
-                                      {!selectedCompanyCountry && (
-                                        <>
-                                          <svg xmlns="http://www.w3.org/2000/svg" id="flag-icons-tn" viewBox="0 0 512 512" width="30" height="20"><path fill="#e70013" d="M0 0h512v512H0z"/><path fill="#fff" d="M256 135a1 1 0 0 0-1 240 1 1 0 0 0 0-241zm72 174a90 90 0 1 1 0-107 72 72 0 1 0 0 107m-4.7-21.7-37.4-12.1-23.1 31.8v-39.3l-37.3-12.2 37.3-12.2v-39.4l23.1 31.9 37.4-12.1-23.1 31.8z"/></svg>,
-                                          +216{" "}
-                                          <svg
-                                            className="w-2.5 h-2.5 ms-2.5"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 10 6"
-                                          >
-                                            <path
-                                              stroke="currentColor"
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth="2"
-                                              d="m1 1 4 4 4-4"
-                                            />
-                                          </svg>
-                                        </>
-                                      )}  
-
-                                </button>
-
-                                {isOpen && (
-                                  <div
-                                    id="dropdown-phone"
-                                    className="absolute top-15 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700">
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-phone-button">
-                                      {countryFlagsPhone.map((country, index) => (
-                                        <li key={index}>
-                                          <button
-                                            type="button"
-                                            onClick={() => handleCompanyCountrySelect(country)}
-                                            className="inline-flex w-full px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            role="menuitem">
-                                            <div className="inline-flex items-center">
-                                              {country.flagPath}
-                                              {country.name} 
-                                            </div>
-                                          </button>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                )}
-                              <div className="relative w-full">
-                              <input
-                        value={companyPhoneValue}
-                        onChange={(e)=> checkCompanyPhone(e.target.value)}
-                        type="text"
-                        placeholder="Enter the company phone number"
-                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      <div className="flex items-center">
+                      <PhoneInputWithCountrySelect
+                         placeholder="Enter company phone number"
+                         value={companyPhoneValue}
+                         onChange={(value) => {
+                            if (value) {
+                              checkCompanyPhone(value.toString());
+                           }}}
+                         className='w-full flex-shrink-0 z-10 inline-flex items-center py-4 px-3 rounded-lg border border-stroke bg-transparent text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white'
                       />
-                                   
-                              </div>
-                          </div>
+                                    
+                    </div>
 
                     { companyPhoneError &&
                         <div className="flex">

@@ -11,7 +11,7 @@ export type User = {
     userName:string;
     role:string;
     imageUrl:string;
-    contry:string;
+    country:string;
     Skills:Array<string>;
     company: {
       name: string,

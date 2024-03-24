@@ -2,7 +2,7 @@
 
 export function successfullToast(msg:string){
       return(
-        <div className="top-5 right-5 flex w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+        <div className="z-9999 fixed flex lg:w-1/2 lg:right-0 lg:top-17 w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
             <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
             <svg
                 width="16"
@@ -19,7 +19,7 @@ export function successfullToast(msg:string){
             </svg>
             </div>
             <div className="w-full">
-            <h5 className="mb-3 text-lg font-semibold text-[#34D399] dark:text-[#34D399] ">
+            <h5 className="mb-3 font-semibold text-[#34D399] dark:text-[#34D399] ">
                 {msg}
             </h5>
            
@@ -31,7 +31,7 @@ export function successfullToast(msg:string){
 
 export function ErrorToast(msg:string){
     return(
-    <div className="top-5 right-5 flex w-full border-l-6 border-[#F87171] bg-[#F87171] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
+    <div className="z-9999 fixed flex lg:w-1/2 lg:right-0 lg:top-17 w-full border-l-6 border-[#F87171] bg-[#F87171] bg-opacity-[20%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
         <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#F87171]">
           <svg
             width="13"

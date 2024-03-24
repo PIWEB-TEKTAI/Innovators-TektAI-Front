@@ -70,14 +70,14 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[18rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.2]"
+          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[20rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >              
           <div className="flex">
 
           <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.4] " src={imageSrc} alt="ai" loading='lazy'
  />
           <a href="#" className="text-primary hover:text-primary-dark group-hover:text-white flex-auto">
-            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
+            <h5 className="mb-2 text-xl w-50 font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
           </a>
           </div>
           <p className="mb-3 font-normal text-gray-500 group-hover:text-white group-hover:font-semibold dark:text-gray-400">{description}</p>
@@ -131,6 +131,7 @@ const forwardCards = [
   ];
 
 import ClientLayout from '../../layout/clientLayout'
+import { WhyChooseUs } from '../../types/whyChooseUs';
 const Landing: React.FC = () => {
 
   const [emailError, setEmailError] = useState('');
@@ -173,7 +174,7 @@ const Landing: React.FC = () => {
 
     }, []);
     const [aboutUsContent, setAboutUsContent] = useState('');
-    const [whyUsContent, setWhyUsContent] = useState([]);
+    const [whyUsContent, setWhyUsContent] = useState<WhyChooseUs | null>(null);
 
     const fetchAboutUsContent = async () => {
       try {
@@ -238,7 +239,7 @@ const Landing: React.FC = () => {
               data science developers.
             </p>
             <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-              <a href="#" className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
+              <a href="/auth/signup" className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
                 Join Now
               </a> 
               <a href="#" className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
@@ -269,7 +270,7 @@ const Landing: React.FC = () => {
        </RevealOnScroll>
        <RevealOnScroll delay=''>
 
-          <h2 className="text-4xl font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
+          <h2 className="text-4xl mt-5 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
           
           {backwardCards.map((card, index) => (
@@ -307,8 +308,8 @@ const Landing: React.FC = () => {
   <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
     <div className="text-center">
       <h2 className="text-4xl font-extrabold text-black dark:text-white">Why Choose Us</h2>
-      <div className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent.length, 4)}`}>
-        {whyUsContent.map((content, index) => (
+      <div className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}>
+        {whyUsContent && whyUsContent.map((content, index) => (
           <div
             key={index}
             className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
@@ -323,104 +324,6 @@ const Landing: React.FC = () => {
     </div>
   </div>
 </section>
-
-
-<section className="bg-white dark:bg-gray-900">
-  <div className="container mx-auto px-4 py-8 lg:py-16">
-    <div className="text-center">
-      <h2 className="text-4xl font-extrabold text-black dark:text-white mb-8">Our Team</h2>
-    </div>
-    <div className="flex flex-wrap justify-center -mx-4">
-      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t hover:bg-gray-500 bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
-      <div className="img-container">
-        <img className="w-full h-auto" src="src\images\user\feryel.png" alt="Luna Turner" />
-      </div>
-      <div className="text-center">
-        <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Feryel Ouerfelli</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
-        <div className="flex items-center justify-center space-x-4">
-          <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
-          <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
-          <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
-          <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
-        </div>
-      </div>
-     </div>
-      </div>
-      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t hover:bg-gray-500 bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
-          <div className="img-container">
-            <img className="w-full h-auto" src="src\images\user\lina.jpg" alt="Luna Turner" />
-          </div>
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Lina Laroussi</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
-            <div className="flex items-center justify-center space-x-4">
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
-          <div className="img-container">
-            <img className="w-full h-auto" src="src\images\user\Rouaida.jpg" alt="Luna Turner" />
-          </div>
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Rouaida BenRabeh</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
-            <div className="flex items-center justify-center space-x-4">
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
-          <div className="img-container">
-            <img className="w-full h-auto" src="src\images\user\fatma.jpg" alt="Luna Turner" />
-          </div>
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Fatma Abid</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
-            <div className="flex items-center justify-center space-x-4">
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="w-full sm:w-1/2 lg:w-1/3 px-4 mb-8">
-      <div className="card-t bg-gradient-to-br from-gray-300 to-gray-300 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.05] hover:shadow-xl">
-          <div className="img-container">
-            <img className="w-full h-auto" src="src\images\user\emna.jpg" alt="Luna Turner" />
-          </div>
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Emna Khiari </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Founder</p>
-            <div className="flex items-center justify-center space-x-4">
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-twitter"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-linkedin"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fab fa-github"></i></a>
-              <a href="#" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"><i className="fas fa-envelope"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
 
  <RevealOnScroll additionalProp={false} delay="">
     <section id="contactUs" className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg">

@@ -255,7 +255,8 @@ span.flatpickr-weekday,
 .card-t .img-container {
   width: 8em;
   height: 8em;
-  background-color: #7088f5;
+  /*background-color: #7088f5;*/
+  background-color: #7984da;
   padding: 0.5em;
   border-radius: 50%;
   margin: 0 auto 2em auto;

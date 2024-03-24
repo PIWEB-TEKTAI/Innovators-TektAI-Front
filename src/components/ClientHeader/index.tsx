@@ -90,14 +90,14 @@ const ClientHeader =(props: {
                         <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 focus:bg-primary rounded focus:text-white lg:hover:text-primary lg:p-0 dark:text-gray-400 focus:bg-primary lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Competitions</a>
                     </li>
                     <li>
-                        <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">DataSets</a>
+                        <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Datasets</a>
                     </li>
                     
                     <li>
                         <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Ranking</a>
                     </li>
                     <li>
-                        <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Companies</a>
+                        <a href="/teams" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Teams</a>
                     </li>
                     <li>
                         <a href="/landing#contactUs" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Contact</a>

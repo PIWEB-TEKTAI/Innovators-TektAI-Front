@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import CryptoJS from 'crypto-js'; 
 import { useAuth } from '../../components/Auth/AuthProvider';
+import { ErrorToast, successfullToast } from '../../components/Toast';
 
 
 
@@ -277,6 +278,7 @@ const handleSignIn = async () => {
 };
     return (
     <ClientLayout>
+
                 {alert2 && (
                 <CustomAlert type={alert2.type} message={alert2.message} />
                 )}

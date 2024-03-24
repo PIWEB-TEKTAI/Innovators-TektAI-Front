@@ -37,6 +37,7 @@ import { useAuth } from './components/Auth/AuthProvider';
 import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthRoutes from './components/Auth/AuthRoutes';
 import AboutUs from "./pages/SuperAdmin/AboutUs"
+import Teams from './pages/landing/teams';
 
 
 
@@ -306,6 +307,17 @@ function App() {
             <>
               <PageTitle title="Landing | TektAi" />
               <Landing />
+            </>
+          }
+        />
+
+
+          <Route
+            path="/teams"
+            element={
+            <>
+              <PageTitle title="Teams | TektAi" />
+              <Teams />
             </>
           }
         />

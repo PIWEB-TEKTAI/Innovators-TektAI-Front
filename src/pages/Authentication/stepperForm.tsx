@@ -94,6 +94,8 @@ const StepperForm = () => {
     setFirstNameValue(value);
     if (!value.trim()) {
       setFirstNameError('Please enter your first name');
+    } else if(!/^[a-zA-Z]+$/.test(value)) {
+      setFirstNameError('Please enter a valid first name');
     } else {
       setFirstNameError('');
     }
@@ -103,7 +105,9 @@ const StepperForm = () => {
     setLastNameValue(value);
     if (!value.trim()) {
       setLastNameError('Please enter your last name');
-    } else {
+    } else if(!/^[a-zA-Z]+$/.test(value)) {
+      setLastNameError('Please enter a valid last name');
+    }else {
       setLastNameError('');
     }
   };
@@ -152,9 +156,14 @@ const StepperForm = () => {
   };
 
   const checkDateBirth = (value: any) => {
+    const today = new Date();
+    const birthDate = new Date(value);
+    const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
     setDateBirthValue(value);
     if (!value.trim()) {
       setDateBirthError('Please enter your birth day');
+    }else if (birthDate > minDate) {
+      setDateBirthError('You must be at least 18 years old to sign up'); 
     } else {
       setDateBirthError('');
     }
@@ -386,6 +395,7 @@ const StepperForm = () => {
  
   return (
     <>
+   
       <div className="mb-8">
         {alert?.type == 'success' && successfullToast(alert.message)}
 
