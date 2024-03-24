@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
@@ -238,23 +238,10 @@ const validateForm = () => {
   };
   
   
+  const navigate = useNavigate();
 
   const handleCancel = () => {
-    // Redirection vers la liste sans effectuer de changement
-    switch (userData.role) {
-      case 'company':
-        window.location.href = '/companylist';
-        break;
-      case 'challenger':
-        window.location.href = '/tables';
-        break;
-      case 'admin':
-        window.location.href = '/AdminList';
-        break;
-      default:
-        // Si le rôle n'est pas reconnu, rediriger vers une page par défaut
-        window.location.href = '/';
-    }
+      navigate("/list")
   };
   
   const checkImageUrl = (value: any) => {
@@ -474,14 +461,21 @@ const validateForm = () => {
          ) }
 
 
-<button
-  type="submit"
-  className={`flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 `}
->
-  Save Changes
-</button>
+          <div className='flex justify-end'>
+            <button
+              onClick={() => handleCancel()}
+              className=" w-20 rounded-sm bg-gray-500 p-2 mr-2 text-lg font-semibold text-gray hover:bg-opacity-90">
+              cancel
+            </button>
+            <button
+              type="submit"
+              className=" w-20 rounded-sm bg-primary p-2 text-lg font-semibold text-gray hover:bg-opacity-90">
+                save
+            </button>
+          </div>
 
-            <button type="button" className="flex w-full justify-center rounded bg-red-500 p-3 font-medium text-white hover:bg-opacity-90 mt-3" onClick={handleCancel}>Cancel</button>
+         
+
           </div>
         </form>
       </div>

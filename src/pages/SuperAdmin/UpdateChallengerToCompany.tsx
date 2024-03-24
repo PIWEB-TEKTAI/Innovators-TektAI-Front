@@ -165,6 +165,9 @@ const FormElements1 = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate("/list")
+  };
 
   const checkdescription = (value: any) => {
     setdescriptionValue(value)
@@ -332,14 +335,18 @@ const FormElements1 = () => {
           </div>
 
         </div>
-        <div className="flex justify-end">
-  <button
-    type='submit'
-    className="rounded-sm bg-[#28A471] p-2 text-sm font-medium text-gray hover:bg-opacity-90"
-  >
-    Update to company
-  </button>
-</div>
+        <div className='flex justify-end'>
+            <button
+              onClick={() => handleCancel()}
+              className=" w-20 rounded-sm bg-gray-500 p-2 mr-2 text-lg font-semibold text-gray hover:bg-opacity-90">
+              cancel
+            </button>
+            <button
+              type="submit"
+              className=" w-20 rounded-sm bg-primary p-2 text-lg font-semibold text-gray hover:bg-opacity-90">
+                save
+            </button>
+          </div>
         </form>
       </div>
     </Layout>

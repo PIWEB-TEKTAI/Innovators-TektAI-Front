@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
-import AddChallengerByAdmin from './AddChallengerByAdmin';
 import { Link, useNavigate } from 'react-router-dom';
-import { faAdd, faCheck, faCircleExclamation, faPenNib, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus } from 'react-icons/fa'; // Importation des icônes
-import { MdEdit, MdBlock, MdDelete, MdCheck } from 'react-icons/md'; // Importation des icônes
 import Swal from 'sweetalert2';
 
 // Définissez le type des données attendues
@@ -30,6 +26,11 @@ interface User {
   role: 'super admin' | 'admin' | 'challenger' | 'company' |'archive';
 }
 
+const toTitleCase = (str:string) => {
+  return str.toLowerCase().split(' ').map(word => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(' ');
+};
 
 // ... (previous imports)
 
@@ -240,7 +241,7 @@ var debloquer = (email: string) => {
               <tr className="bg-gray-200 text-left dark:bg-meta-4">
                 <th className="px-4 py-3">First Name</th>
                 <th className="px-4 py-3">Last Name</th>
-                <th className="px-4 py-3">Phone</th>
+                <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">Role</th>
                 <th className="px-4 py-3">State</th>
                 <th className="px-4 py-3">Actions</th>
@@ -249,19 +250,19 @@ var debloquer = (email: string) => {
             <tbody>
 {sortUsersByFirstName(currentUsers).map((user, index) => (
   <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-    <td className="px-4 py-3">{user.FirstName}</td>
-    <td className="px-4 py-3">{user.LastName}</td>
-    <td className="px-4 py-3">{user.phone}</td>
-    <td className="px-4 py-3">{user.role}</td>
+    <td className="px-4 py-3">{toTitleCase(user.FirstName)}</td>
+    <td className="px-4 py-3">{toTitleCase(user.LastName)}</td>
+    <td className="px-4 py-3">{user.email}</td>
+    <td className="px-4 py-3">{toTitleCase(user.role)}</td>
     <td className="px-4 py-3">
       <span
         className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
-          user.state === 'validated' ? 'bg-green-400 text-white' :
-          user.state === 'blocked' ? 'bg-red-400 text-white' :
-          'bg-yellow-400 text-black'
+          user.state === 'validated' ? 'bg-green-400 text-white font-semibold' :
+          user.state === 'blocked' ? 'bg-black text-white font-semibold' :
+          'bg-red-400 text-white font-semibold'
         }`}
       >
-        {user.state}
+        {toTitleCase(user.state)}
       </span>
     </td>
     <td className="px-4 py-3">
@@ -289,12 +290,16 @@ var debloquer = (email: string) => {
         
           </table>
         </div>
-        <Pagination
-          usersPerPage={usersPerPage}
-          totalUsers={filteredData.length}
-          currentPage={currentPage}
-          paginate={paginate}
-        />
+        <div className='mb-5'>
+          <Pagination
+            usersPerPage={usersPerPage}
+            totalUsers={filteredData.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          
+          />
+        </div>
+        
       </div>
     </Layout>
   );
