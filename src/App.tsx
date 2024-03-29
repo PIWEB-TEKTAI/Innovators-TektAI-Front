@@ -14,7 +14,7 @@ import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import ProfileSettings from './pages/Profile/ProfileSettings';
 import ResendEmailVerification from './pages/Authentication/ResendEmailVerification';
-import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
+import ListesChallengers from './pages/SuperAdmin/ListesChallenge';
 import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
 import ListCompany from './pages/SuperAdmin/ListesCompany'
 import AddCompany from './pages/SuperAdmin/AddCompany'
@@ -38,6 +38,11 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthRoutes from './components/Auth/AuthRoutes';
 import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
+import ChallengeList from "./pages/SuperAdmin/ListesChallenge"
+
+
+import ChallengeListFront from "./pages/competitions/challengesListFront"
+
 
 
 
@@ -105,6 +110,7 @@ function App() {
             </>
           }
         />
+       
          <Route
           path="/List"
           element={
@@ -114,12 +120,32 @@ function App() {
             </>
           }
         />
-         <Route
+
+<Route
+          path="/ListChallenge"
+          element={
+            <>
+              <PageTitle title="Admin List | TektAi" />
+              <ChallengeList/>
+            </>
+          }
+        />         <Route
           path="/AddAdmin"
           element={
             <>
               <PageTitle title="Add Admin | TektAi" />
               <AddAdmin1/>
+            </>
+          }
+        />
+
+
+<Route
+          path="/LCFront"
+          element={
+            <>
+              <PageTitle title="Add Admin | TektAi" />
+              <ChallengeListFront/>
             </>
           }
         />

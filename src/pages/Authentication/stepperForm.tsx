@@ -315,14 +315,14 @@ const StepperForm = () => {
     setCaptchaToken(token);
   };
 
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
+ // const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Fonction pour décocher le reCAPTCHA
-  const resetRecaptcha = () => {
+ /* const resetRecaptcha = () => {
     if (recaptchaRef.current) {
       recaptchaRef.current.reset();
     }
-  };
+  };*/
 
   const resetForm =  () => {
     setFirstNameValue(""),
@@ -339,16 +339,10 @@ const StepperForm = () => {
   }
 
   function handleSubmit(e: any) {
-    if(captchaToken == ''){
-      setAlert({
-        type: 'error',
-        message: "Please make sure to check the captcha checkbox",
-      });
-      
-    }else{
+ 
 
     e.preventDefault();
-    register(formData, captchaToken)
+    register(formData)
       .then((response) => {
         console.log(response)
         console.log('Inscription réussie :', response.msg);
@@ -362,7 +356,7 @@ const StepperForm = () => {
         }, 3000);
       })
       .catch((error: AxiosError<any>) => {
-        resetRecaptcha();
+       // resetRecaptcha();
         if (error.response && error.response.data && error.response.data.msg) {
           const errorMessage = error.response.data.msg;
           console.error("Erreur lors de l'inscription :", errorMessage);
@@ -380,7 +374,7 @@ const StepperForm = () => {
         setTimeout(() => {
           navigate('/auth/signup');
         }, 3000);
-      });}
+      });
   }
 
   const togglePasswordVisibility = () => {
@@ -1255,11 +1249,7 @@ const StepperForm = () => {
                 </div>
                   {isChallenger ? (
                     <div className="flex justify-center mt-5 mb-5">
-                      <ReCAPTCHA
-                        sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
-                        onChange={handleCaptchaChange}
-                        ref={recaptchaRef}
-                      />
+                     
                     </div>) : null}
                 </div>
             )}
@@ -1409,11 +1399,7 @@ const StepperForm = () => {
                   </button>
                 </div>
                 <div className="flex justify-center mt-5 mb-5">
-                  <ReCAPTCHA
-                    sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
-                    onChange={handleCaptchaChange}
-                    ref={recaptchaRef}
-                  />
+                
                 </div>
               </div>
             )}
