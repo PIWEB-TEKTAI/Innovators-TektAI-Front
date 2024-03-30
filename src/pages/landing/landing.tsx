@@ -56,7 +56,7 @@ interface CardProps {
   const Card2: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="cursor-pointer  max-w-[18rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.15]"
+          className="cursor-pointer  max-w-[30rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >
           <img className="h-35 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15]" src={imageSrc} alt="ai" loading='lazy' />
           <a href="#" className="text-[#00004b] group-hover:text-white">
@@ -70,11 +70,11 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[20rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
+          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[32rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >              
           <div className="flex">
 
-          <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.4] " src={imageSrc} alt="ai" loading='lazy'
+          <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.2] " src={imageSrc} alt="ai" loading='lazy'
  />
           <a href="#" className="text-primary hover:text-primary-dark group-hover:text-white flex-auto">
             <h5 className="mb-2 text-xl w-50 font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
@@ -262,7 +262,7 @@ const Landing: React.FC = () => {
         <RevealOnScroll delay=''>
 
         <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">Competitions</h2>
-          <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
+          <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 justify-center sm:grid-cols-2">
           {forwardCards.map((card, index) => (
         <Card key={index} {...card} />
       ))}
@@ -271,7 +271,7 @@ const Landing: React.FC = () => {
        <RevealOnScroll delay=''>
 
           <h2 className="text-4xl mt-5 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
-          <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 sm:grid-cols-2">
+          <div className="grid md:grid-cols-3 gap-2 justify-center lg:grid-cols-4 sm:grid-cols-2">
           
           {backwardCards.map((card, index) => (
         <Card2 key={index} {...card} />

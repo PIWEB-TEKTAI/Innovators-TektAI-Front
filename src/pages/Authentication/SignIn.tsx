@@ -53,6 +53,7 @@ const handleThankuClick = () => {
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse: TokenResponse) => {
+
         setUser(codeResponse);
 
       console.log('Google Login Successful:', codeResponse);
@@ -65,6 +66,7 @@ const handleThankuClick = () => {
 
   const handleGoogleLogin = () => {
     login();
+
   };
 
 
@@ -118,8 +120,6 @@ const handleThankuClick = () => {
   
 useEffect(
     () => {
-      
-      console.log("userrrrrrrr"+user)
         if (user) {
             axios
                 .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
@@ -132,7 +132,8 @@ useEffect(
                 .then((res) => {
                   signInWithGoogle(res).then(
                     (data) => {
-                    setProfile(res.data);
+                          loginAuth(data);
+
                     if(data.role == "challenger" || data.role=="company"){
                       navigate("/profile");
                     }
