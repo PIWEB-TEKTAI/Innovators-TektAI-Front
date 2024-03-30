@@ -38,6 +38,7 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthRoutes from './components/Auth/AuthRoutes';
 import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
+import Competitions from './pages/landing/Competitions';
 
 
 
@@ -318,6 +319,16 @@ function App() {
             <>
               <PageTitle title="Teams | TektAi" />
               <Teams />
+            </>
+          }
+        />
+
+<Route
+            path="/Competitions"
+            element={
+            <>
+              <PageTitle title="Competitions | TektAi" />
+              <Competitions/>
             </>
           }
         />

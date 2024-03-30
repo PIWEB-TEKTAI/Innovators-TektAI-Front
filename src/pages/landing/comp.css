@@ -1,0 +1,198 @@
+.row-cols-1 {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.col {
+    width: 300px;
+    height: 400px; 
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    margin-right: 20px; /* Ajouter une marge à droite */
+    display: flex; 
+    flex-direction: column; 
+}
+.one-line-title::after {
+    content: '\00a0'; /* Ajoute une espace non cassable */
+    display: block;
+  }
+  
+.col{
+    margin-left: 30px; 
+}
+
+.col:last-child {
+    margin-right: 0; 
+}
+
+.card img {
+    width: 100%;
+    height: 150px; /* Ajustez la hauteur selon vos besoins */
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 10px;
+    flex-grow: 1; 
+    display: flex; /* Ajouter l'affichage en mode flex */
+    flex-direction: column; /* Définir la direction de flex en colonne */
+    justify-content: space-between; 
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4f3390;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #363232;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.two-lines-description {
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer {
+    padding: 10px 20px;
+    border-top: 2px solid #5f4f9b; /* Déplacer la bordure supérieure ici */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4f3390;
+    order: 1; /* Réorganiser l'ordre des éléments flex */
+  }
+  
+  .date {
+    font-size: 1rem;
+    color: #777;
+    order: 2; /* Réorganiser l'ordre des éléments flex */
+  }
+  
+  .status {
+    font-size: 1rem;
+  }
+
+
+.price, .date {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin: 0; 
+}
+
+.date {
+    text-align: right; /* Aligner la date à droite */
+      margin-left: auto; /* Pour aligner la date à droite */
+
+}
+
+.card:hover {
+    border: 1px solid #00000044;
+    box-shadow: 0 7px 50px 10px #000000aa;
+    transform: scale(1.015);
+}
+
+.card:hover::before {
+    position: fixed;
+    content: "";
+    box-shadow: 0 0 100px 40px #dc4b4b08;
+    top: -10%;
+    left: -100%;
+    transform: rotate(-45deg);
+    height: 60rem;
+    transition: .7s all;
+    filter: brightness(.5);
+    top: -100%;
+    left: 200%;
+}
+
+.bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bg h1 {
+    font-size: 20rem;
+    filter: opacity(0.5);
+}
+
+/* Style pour l'état */
+.status {
+    font-size: 1rem;
+    font-weight: bold; /* Met en gras */
+    text-transform: uppercase; /* Met en majuscules */
+}
+
+
+@media (max-width: 992px) {
+    .col {
+        width: calc(33.33% - 20px); /* 3 cartes par ligne sur les écrans moyens */
+    }
+}
+
+@media (max-width: 768px) {
+    .col {
+        width: calc(50.33% - 20px); /* 3 cartes par ligne sur les écrans moyens */
+    }
+}
+
+@media (max-width: 576px) {
+    .col {
+        width: 100%; /* 1 carte par ligne sur les écrans extra-petits */
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
+
+.status-and-actions-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 5px; /* Espace entre les boutons */
+  }
+  
+  .archive-button,
+  .open-button,
+  .completed-button {
+    background-color: #e0e0e0; /* Couleur de fond pour les boutons */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .archive-button:hover,
+  .open-button:hover,
+  .completed-button:hover {
+    background-color: #d5d5d5; /* Couleur de fond au survol */
+  }
+  
