@@ -1,6 +1,8 @@
+import { useState } from "react"
 
 
 export function successfullToast(msg:string){
+
       return(
         <div className="z-9999 fixed flex lg:w-1/2 lg:right-0 lg:top-17 w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-9">
             <div className="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
@@ -55,4 +57,19 @@ export function ErrorToast(msg:string){
         </div>
       </div>
     )
+}
+
+
+
+export function NotifToast(msg:string){
+
+
+  return (
+        <div id="alert-border-1" className="z-9999 fixed flex lg:w-1/2 lg:right-0 lg:top-17 items-center p-4 mb-4 h-20 w-20 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800" role="alert">
+          <div className="ms-3 text-md font-medium ">
+            {msg}
+          </div>
+          
+        </div>
+  );
 }

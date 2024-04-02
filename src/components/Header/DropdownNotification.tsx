@@ -4,9 +4,49 @@ import { Link } from 'react-router-dom';
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
+  const [Data, setData] = useState<Notification[] | null>(null);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+
+
+  
+  const toTitleCase = (str:string) => {
+    return str.toLowerCase().split(' ').map(word => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  };
+
+
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    };
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', options);
+  };
+
+  const url = "http://localhost:3000/notif"  
+
+  useEffect(() => {
+      const fetchNotifications = async () => {
+        try {
+          const response = await fetch(`${url}/list`); 
+          const data = await response.json();
+          if (data.notifications) { 
+              setData(data.notifications); 
+          }
+          console.log(Data)
+        } catch (error) {
+          console.error('Error fetching data notif:', error);
+        }
+      };
+  
+      fetchNotifications();
+    }, [dropdownOpen]);  
+
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -76,73 +116,29 @@ const DropdownNotification = () => {
         }`}
       >
         <div className="px-4.5 py-3">
-          <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
+          <h5 className="text-sm font-medium text-bodydark2">Notifications</h5>
         </div>
 
         <ul className="flex h-auto flex-col overflow-y-auto">
-          <li>
+        {Data!==null && Data.map((item:any, index:any) => (   
+          <li key={index}>
             <Link
               className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
               to="#"
             >
               <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  Edit your information in a swipe
-                </span>{' '}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
-              </p>
+                 <span className='font-semibold'>{toTitleCase(item.createdAccountUserId.FirstName)}  {toTitleCase(item.createdAccountUserId.LastName)} </span> {item.content}
+              </p> 
 
-              <p className="text-xs">12 May, 2025</p>
+             
+
+              
+
+              <p className="text-xs text-primary font-medium"  >{formatDate(item.createdAt)}</p>
             </Link>
           </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  It is a long established fact
-                </span>{' '}
-                that a reader will be distracted by the readable.
-              </p>
-
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">04 Jan, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
+        ))}
+          
         </ul>
       </div>
     </li>

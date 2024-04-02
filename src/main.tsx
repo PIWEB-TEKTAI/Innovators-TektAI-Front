@@ -10,6 +10,9 @@ import 'jsvectormap/dist/css/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import './i18n';
 import { AuthProvider } from './components/Auth/AuthProvider';
+import { SocketProvider } from './SocketContext';
+
+
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <GoogleOAuthProvider clientId="33413435539-pllrildqg82dfnc08de7hoabr1tlsa5q.apps.googleusercontent.com">
@@ -17,9 +20,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
     <AuthProvider>
-      <App />
-      </AuthProvider>
-
+      <SocketProvider>
+        <App />
+      </SocketProvider>
+    </AuthProvider>
     </Router>
   </React.StrictMode>,
   </GoogleOAuthProvider>

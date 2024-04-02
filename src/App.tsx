@@ -14,7 +14,6 @@ import ForgotPassword from './pages/Authentication/ForgotPassword';
 import ResetPassword from './pages/Authentication/ResetPassword';
 import ProfileSettings from './pages/Profile/ProfileSettings';
 import ResendEmailVerification from './pages/Authentication/ResendEmailVerification';
-import ListesChallengers from './pages/SuperAdmin/ListesChallengers';
 import AddChallengerByAdmin from './pages/SuperAdmin/AddChallengerByAdmin';
 import ListCompany from './pages/SuperAdmin/ListesCompany'
 import AddCompany from './pages/SuperAdmin/AddCompany'
@@ -38,6 +37,8 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthRoutes from './components/Auth/AuthRoutes';
 import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
+import NotFound from './pages/NotFound';
+import EditChallenge from './pages/Challenge/EditChallenge';
 
 
 
@@ -179,6 +180,19 @@ function App() {
               <PrivateRoute requiredRoles={["challenger","company"]} component={
 
                 <Profile/>
+              }/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="/challenge/edit/:id"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["company"]} component={
+
+                <EditChallenge/>
               }/>
             </>
           }
@@ -350,6 +364,17 @@ function App() {
             <>
               <PageTitle title="About Us | TektAi" />
               <AboutUs/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="*"
+          element={
+            <>
+              <PageTitle title="About Us | TektAi" />
+              <NotFound/>
             </>
           }
         />

@@ -2,18 +2,46 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
 import { getProfile } from '../services/user.service';
-import { User } from '../types/User';
+import { User } from '../types/user';
+import { NotifToast } from '../components/Toast';
+import { useSocket } from '../SocketContext';
+
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [connectedUser, setconnectedUser] = useState<User | null>(null);
-  const { pathname } = location;
-    // Check if the current path contains "auth"
-  const isAuthPath = pathname.includes('/auth');
+
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null,
+  );
+
+  const toTitleCase = (str:string) => {
+    return str.toLowerCase().split(' ').map(word => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  };
+
+  const socket = useSocket();
 
   useEffect(() => {
-    console.log("rou")
+    socket.on('newUserRegistered', (userData) => {
+      console.log('New user created:', userData.firstname);
+      let msg = `${toTitleCase(userData.firstname)} ${toTitleCase(userData.lastname)} has created an account`;
+      setAlert({
+        type: "info",
+        message: msg
+      });
+    });
+
+    return () => {
+      socket.off('newUserRegistered');
+    };
+  }, [socket]);
+
+
+
+  useEffect(() => {
     const fetchAuthenticationStatus = async () => {
       try {
         const connectedUser = await getProfile();
@@ -26,6 +54,19 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     fetchAuthenticationStatus();
   }, []);
+
+
+  useEffect(() => {
+    if (alert && alert.type === 'info') {
+      const timer = setTimeout(() => {
+        setAlert(null);
+      }, 5000); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
+
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark"
     style={{ 
@@ -46,6 +87,10 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
+          <div>
+             {alert?.type == 'info' && NotifToast(alert.message)}
+          </div>
+
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
               {children}
             </div>

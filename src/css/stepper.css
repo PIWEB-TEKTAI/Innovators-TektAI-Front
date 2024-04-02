@@ -51,3 +51,10 @@
     @apply font-semibold;
  }
 
+
+.active-edit  {
+  @apply bg-primary;
+}
+.complete-edit  {
+  @apply bg-green-600;
+}
