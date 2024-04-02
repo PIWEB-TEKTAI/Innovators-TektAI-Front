@@ -424,7 +424,7 @@ const StepperForm = () => {
                   i + 1
                 )}
               </div>
-              <p className="text-gray-700">{step}</p>
+              <p className="text-gray-700 font-medium">{step}</p>
             </div>
           ))}
         </div>

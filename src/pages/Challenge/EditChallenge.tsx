@@ -100,6 +100,7 @@ const EditChallenge = () => {
   };
 
   const prevStep = () => {
+    setSubmitted(false);
     setStep(step - 1);
   };
 
@@ -183,16 +184,28 @@ const EditChallenge = () => {
                 <li
                   className={`flex w-[10rem] items-center text-blue-600 dark:text-blue-500 ${step === 1 ? 'bg-blue-10 font-bold' : step === 2 ? 'after:border-green-600 text-white font-semibold' : ''} after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800 `}
                 >
-                  <span className={`flex items-center justify-center w-8 h-8 bg-primary text-white font-semibold rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0 ${step === 1 ? 'bg-blue-10 font-bold' : step === 2 ? 'bg-green-600 text-white font-semibold' : ''}`}>
+                  <span className={`flex items-center justify-center w-8 h-8  text-white font-semibold rounded-full lg:h-12 lg:w-12  shrink-0 ${step === 1 ? 'bg-primary font-bold' : step === 2 ? 'bg-green-600 text-white font-semibold' : ''}`}>
                     {step === 2 ? <TiTick size={24} /> : '1'}
                   </span>
+
                 </li>
+
                 <li
                   className={`flex items-center  ${step === 2 ? 'font-semibold' : ''  }`}
                 >
-                  <span className={`flex items-center justify-center w-8 h-8 bg-primary text-white font-semibold ${submitted ? 'bg-green-600 text-white font-semibold' : ''} bg-gray-100 rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
+                  <span className={`flex items-center justify-center w-8 h-8 text-white font-semibold ${submitted ? 'bg-green-600 text-white font-semibold' : 'bg-primary'}  rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0`}>
                     {submitted ? <TiTick size={24} /> : '2'}
                   </span>
+                </li>
+              </ol>
+              <ol className="flex justify-center items-cente w-full">
+                <li className={`mr-8`}>
+                   <span className={`font-medium ${step === 1 ? 'text-gray-700 font-bold' : step === 2 ? 'text-green-700 font-semibold' : ''}`}>Challenge Info</span>
+
+                </li>
+
+                <li className='ml-8'>
+                  <span className={`font-medium text-gray-700 ${submitted ? 'text-green-700 font-semibold' : ''}`}>Dataset Info</span>
                 </li>
               </ol>
             </div>
