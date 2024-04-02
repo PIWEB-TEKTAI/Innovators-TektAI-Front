@@ -55,23 +55,17 @@ const EmailVerification: React.FC = () => {
    const recaptchaRef = useRef<ReCAPTCHA>(null);
  
    // Fonction pour décocher le reCAPTCHA
-   const resetRecaptcha = () => {
+  /* const resetRecaptcha = () => {
      if (recaptchaRef.current) {
        recaptchaRef.current.reset();
      }
-   };
+   };*/
  
 
 
    function verifyEmail(e:any){
     e.preventDefault();
-    if(captchaToken == ''){
-      setAlert({
-        type: 'error',
-        message: "Please make sure to check the captcha checkbox",
-      });
-
-    }else{
+  
     VerifcationEmail(CodeValue,id,captchaToken)
         .then((response) => {
             console.log("Verification email successfully :", response.msg);
@@ -85,7 +79,7 @@ const EmailVerification: React.FC = () => {
             }, 3000);
         })
         .catch((error: AxiosError<any>) => {
-          resetRecaptcha();
+         // resetRecaptcha();
           if (error.response && error.response.data && error.response.data.msg) {
               const errorMessage = error.response.data.msg;
               console.error("Verification Error :", errorMessage);
@@ -102,7 +96,7 @@ const EmailVerification: React.FC = () => {
           }
           
       });
-    }}
+    }
 
 
     function resendCode(e:any){

@@ -39,6 +39,11 @@ import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
 import NotFound from './pages/NotFound';
 import EditChallenge from './pages/Challenge/EditChallenge';
+import ChallengeList from "./pages/SuperAdmin/ListesChallenge"
+
+
+import ChallengeListFront from "./pages/competitions/challengesListFront"
+
 
 
 
@@ -106,6 +111,7 @@ function App() {
             </>
           }
         />
+       
          <Route
           path="/List"
           element={
@@ -115,12 +121,32 @@ function App() {
             </>
           }
         />
-         <Route
+
+<Route
+          path="/ListChallenge"
+          element={
+            <>
+              <PageTitle title="Admin List | TektAi" />
+              <ChallengeList/>
+            </>
+          }
+        />         <Route
           path="/AddAdmin"
           element={
             <>
               <PageTitle title="Add Admin | TektAi" />
               <AddAdmin1/>
+            </>
+          }
+        />
+
+
+<Route
+          path="/LCFront"
+          element={
+            <>
+              <PageTitle title="Add Admin | TektAi" />
+              <ChallengeListFront/>
             </>
           }
         />
