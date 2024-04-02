@@ -38,6 +38,9 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import AuthRoutes from './components/Auth/AuthRoutes';
 import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
+import ChallengeDetails from './pages/Challenges/challengedetails';
+import ChallengeStatistics from './pages/Challenges/challengesstatics';
+
 
 
 
@@ -310,7 +313,24 @@ function App() {
             </>
           }
         />
-
+       <Route
+            path="/challenge/:id"
+            element={
+            <>
+              <PageTitle title="Landing | TektAi" />
+              <ChallengeDetails />
+            </>
+          }
+        />
+         <Route
+            path="/challenge/statistics"
+            element={
+            <>
+              <PageTitle title="Landing | TektAi" />
+              <ChallengeStatistics />
+            </>
+          }
+        />
 
           <Route
             path="/teams"
