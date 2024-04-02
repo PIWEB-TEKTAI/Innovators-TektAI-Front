@@ -196,3 +196,71 @@
     background-color: #d5d5d5; /* Couleur de fond au survol */
   }
   
+
+
+  .search {
+    
+    display: inline-block;
+    position: relative;
+    margin-left: 20px; /* Ajoute de la marge en bas */
+  }
+
+  
+  .search input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .status-dropdown {
+    display: inline-block;
+    position: relative;
+    margin-right: 50px; /* Ajoute de la marge en bas */
+
+
+  }
+  
+  .status-dropdown select {
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    color: #3f3067;
+    background-color: #cbd7f3bb; /* Couleur de fond */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    appearance: none; /* Supprimer le style par défaut du navigateur */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  
+  .status-dropdown label {
+    margin-right: 10px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination a {
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 0 5px; /* Ajoute une marge entre les boutons */
+  }
+  
+  .pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+  
+  
+  
+
+  
