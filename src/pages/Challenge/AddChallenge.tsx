@@ -6,6 +6,8 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
 import { useState } from 'react';
 import { addChallenge } from '../../services/challengeService';
+import CheckboxOne from '../../components/Checkboxes/CheckboxOne';
+import CheckboxR from '../../components/Checkboxes/CheckboxR';
 
 const AddChallenge = () => {
   const [step, setStep] = useState(1);
@@ -15,14 +17,48 @@ const AddChallenge = () => {
   const [description, setDescription] = useState('');
   const [priceError, setPriceError] = useState('');
   const [price, setPrice] = useState('');
+  const [awardError, setawardError] = useState('');
+  const [award, setAward] = useState('');
   const [endDateError, setEndDateError] = useState('');
   const [endDate, setEndDate] = useState('');
   const [DataSetFileError, setDataSetError] = useState('');
   const [DataSetFile, setDataSetFile] = useState<string | Blob >('');
+  const [FileName, setFileName] = useState('');
+  const [ImageName, setImageName] = useState('');
+
+  const [ImageError, setImageError] = useState('');
+  const [Image, SetImage] = useState<string | Blob >('');
   const [dataSetDescriptionError, setDataSetDescriptionError] = useState('');
   const [dataSetDescription, setDataSetDescription] = useState('');
   const [dataSetTitleError, setDataSetTitleError] = useState('');
   const [dataSetTitle, setDataSetTitle] = useState('');
+  const [textInputVisible, setTextInputVisible] = useState(false);
+  const [numberInputVisible, setNumberInputVisible] = useState(false);
+  const [isPrizesChecked, setIsPrizesChecked] = useState<boolean>(false);
+  const [isMonetaryChecked, setIsMonetaryChecked] = useState<boolean>(false)
+  const handleTextCheckboxChange = () => {
+    
+    setNumberInputVisible(false);
+    setIsPrizesChecked(!isPrizesChecked);
+    setPrice('');
+    setPriceError('');
+    if (isMonetaryChecked) {
+      setIsMonetaryChecked(false);
+      setAward('');
+      setawardError('');
+    }
+    setTextInputVisible(!textInputVisible);
+  };
+
+  const handleNumberCheckboxChange = () => {
+    setIsMonetaryChecked(!isMonetaryChecked);
+    if (isPrizesChecked) {
+      setIsPrizesChecked(false);
+    }
+    setTextInputVisible(false);
+    setNumberInputVisible(!numberInputVisible);
+  };
+
   const checkValidity = (name:any,value:any) =>{
     if(name=="title"){
       setTitle(value)
@@ -46,6 +82,14 @@ const AddChallenge = () => {
         setPriceError("Price is required");
       }else {
         setPriceError("");
+      }
+    }
+    else if(name=="award"){
+      setAward(value)
+      if (!value.trim()) {
+        setawardError("Award is required");
+      }else {
+        setawardError("");
       }
     }
     else if(name=="endDate"){
@@ -91,7 +135,7 @@ const AddChallenge = () => {
   const isFirstPageValid = () => {
     return (
       title!== ''&&
-      price!==''&&
+      (price!==''||award!=="")&&
       description!==''&&
       endDate!=''&&
       titleError === '' &&
@@ -103,39 +147,48 @@ const AddChallenge = () => {
 
   const handleFileChange = (e:any) => {
     const file = e.target.files[0];
-    console.log("file"+file);
     setDataSetFile(file);
+    setFileName(file.name)
+
+
+  };
+  const handleImageChange  = (e:any) => {
+    const image = e.target.files[0];
+    SetImage(image);
+    setImageName(image.name)
 
   };
   // Callback function to update endDate in form data
   const handleEndDateChange = (endDate:any) => {
     checkValidity("endDate",endDate);
-  };
-  const formData = new FormData(); // Create FormData object to handle file upload
-  
+  };  
   const handleSubmit = (e:any) => {
+    
     e.preventDefault();
+    console.log('file'+DataSetFile);
+    console.log("image"+Image)
+    let prizes = price;
+    if(isPrizesChecked){
+      prizes = award;
+    }
     addChallenge({
       title:title,
       description:description,
-      price:price,
+      price:prizes,
       endDate:endDate,
       dataset: 
         {
           name: dataSetTitle,
           description: dataSetDescription,
-        }
-        ,
-       file:DataSetFile
-   
+        },
+       file:DataSetFile,
+       image:Image
 
     })
       .then((response) => {
-        // Handle success
         console.log('Challenge added successfully:', response);
       })
       .catch((error) => {
-        // Handle error
         console.error('Error adding challenge:', error);
       });
   };
@@ -165,7 +218,7 @@ const AddChallenge = () => {
               {/* Content for Step 1 */}
               <div className={step === 1 ? '' : 'hidden'}>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Title</label>
+                  <label className="mb-2.5 font-medium block text-black dark:text-white">Title</label>
                   <input
                     type="text"
                     name="title"
@@ -177,18 +230,67 @@ const AddChallenge = () => {
                       {titleError && <p className="text-red-500 text-sm mt-1">{titleError}</p>}
 
                 </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Price</label>
+                <div>
+                <div className="mb-4.5 flex">
+                  <div className="mr-4">
+                  <CheckboxR onChange={handleTextCheckboxChange} labelText="Prizes"  checked={isPrizesChecked} />
+
+                  </div>
+                  <CheckboxR onChange={handleNumberCheckboxChange} labelText="Monetary" checked={isMonetaryChecked} />
+                </div>
+                  {textInputVisible && (
+                    <div>
+                  <div className="mb-4.5">
+                  <label className="mb-2.5 font-medium block text-black dark:text-white">Awards</label>
                   <input
                     type="text"
-                    name="price"
-                    value={price}
+                    name="award"
+                    value={award}
                     placeholder="Enter the price"
-                    onChange={(e)=>checkValidity("price",e.target.value)}
+                    onChange={(e)=>checkValidity("award",e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
-                      {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
+                      {awardError && <p className="text-red-500 text-sm mt-1">{awardError}</p>}
 
+                </div>
+                    </div>
+                  )}
+                  {numberInputVisible && (
+                         <div className="mb-4.5">
+                         <label className="mb-2.5 font-medium block text-black dark:text-white">Price</label>
+                         <input
+                           type="number"
+                           name="price"
+                           value={price}
+                           placeholder="Enter the price"
+                           onChange={(e)=>checkValidity("price",e.target.value)}
+                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                         />
+                             {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
+       
+                       </div>
+                  )}
+                </div>               
+        
+
+                <div className="mb-4 5">
+                <label className="mb-3 block font-medium text-black dark:text-white">Challenge Image</label>
+
+                <div className="relative overflow-hidden">
+                          <input
+                            type="file"
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                            id="customFile"
+                            name="image"
+                            onChange={handleImageChange}
+                          />
+                          <label
+                            className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                            htmlFor="customFile"
+                          >
+                            {ImageName ? ImageName : 'Upload Challenge Image'}
+                          </label>
+                    </div>
                 </div>
                 <div className="mb-4 5">
                   <DateTimePicker onChange={handleEndDateChange}  />
@@ -196,7 +298,7 @@ const AddChallenge = () => {
 
                 </div>
                 <div className="mb-6">
-                  <label className="mb-2.5 block text-black dark:text-white">Add Challenge description</label>
+                  <label className="mb-2.5 font-medium  block text-black dark:text-white">Add Challenge description</label>
                   <textarea
                     name="description"
                     value={description}
@@ -212,7 +314,7 @@ const AddChallenge = () => {
               {/* Content for Step 2 */}
               <div className={step === 2 ? '' : 'hidden'}>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">DataSet Title</label>
+                  <label className="mb-2.5 font-medium  block text-black dark:text-white">DataSet Title</label>
                   <input
                     type="text"
                     name="dataSetTitle"
@@ -225,24 +327,34 @@ const AddChallenge = () => {
 
                 </div>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">Add DataSet description</label>
+                  <label className="mb-2.5 block font-medium  text-black dark:text-white">Add DataSet description</label>
                   <textarea
-                    name={dataSetDescription}
+                    name="dataSetDescription"
+                    value={dataSetDescription}
                     rows={6}
                     placeholder="Type your description"
-                    onChange={(e)=>checkValidity("DataSetDescription",e.target.value)}
+                    onChange={(e)=>checkValidity("DatasetDescription",e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     ></textarea>
                     </div>
                     <div className="mb-4.5">
                     <div>
-                    <label className="mb-3 block text-black dark:text-white">Attach dataSet file</label>
-                    <input
-                      type="file"
-                      name='file'
-                      onChange={handleFileChange}
-                      className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-                    />
+                    <label className="mb-3 block font-medium text-black dark:text-white">Attach dataSet file</label>
+                    <div className="relative overflow-hidden">
+                          <input
+                            type="file"
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                            id="customFile"
+                            name="file"
+                            onChange={handleFileChange}
+                          />
+                          <label
+                            className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                            htmlFor="customFile"
+                          >
+                            {FileName ? FileName : 'Upload Dataset File'}
+                          </label>
+                    </div>
                     {dataSetDescriptionError && <p className="text-red-500 text-sm mt-1">{dataSetDescriptionError}</p>}
 
               </div>
@@ -251,17 +363,17 @@ const AddChallenge = () => {
                     {/* Navigation buttons */}
                     {step > 1 && (
                     <div className="flex justify-between">
-                    <button className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" onClick={prevStep}>
+                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={prevStep}>
                     Previous
                     </button>
-                    <button className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" onClick={handleSubmit}>
+                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={handleSubmit}>
                     Submit
                     </button>
                     </div>
                     )}
                     {step < 2 && (
                     <div className="flex justify-end">
-                    <button className="rounded bg-primary p-3 font-medium text-gray disabled:opacity-60 hover:bg-opacity-90" onClick={nextStep} disabled={!isFirstPageValid()}>
+                    <button className="rounded bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90" onClick={nextStep} disabled={!isFirstPageValid()}>
                     Next
                     </button>
                     </div>
