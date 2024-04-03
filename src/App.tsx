@@ -46,6 +46,9 @@ import ChallengeListFront from "./pages/competitions/challengesListFront";
 
 import Competitions from './pages/landing/Competitions';
 import AddChallenge from './pages/Challenge/AddChallenge';
+import ChallengeDetails from './pages/Challenges/challengedetails';
+import ChallengeStatistics from './pages/Challenges/challengesstatics';
+
 
 
 
@@ -365,7 +368,24 @@ function App() {
             </>
           }
         />
-
+       <Route
+            path="/challenge/:id"
+            element={
+            <>
+              <PageTitle title="Landing | TektAi" />
+              <ChallengeDetails />
+            </>
+          }
+        />
+         <Route
+            path="/challenge/statistics"
+            element={
+            <>
+              <PageTitle title="Landing | TektAi" />
+              <ChallengeStatistics />
+            </>
+          }
+        />
 
           <Route
             path="/teams"
