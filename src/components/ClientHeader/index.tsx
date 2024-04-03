@@ -2,7 +2,7 @@ import  { useEffect, useState } from 'react';
 import DropdownUser from './DropdownUser';
 import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import { countryFlags } from './flag';
 import DropDownLanguage from './DropDownLanguage';
 const ClientHeader =(props: {

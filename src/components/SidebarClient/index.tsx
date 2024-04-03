@@ -81,8 +81,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
-  console.log(connectedUser)
 
+  
   return (
     <aside
       ref={sidebar}
@@ -101,8 +101,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
     
     <div className="flex flex-col items-center pb-10">
 
-        <img className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg" src={connectedUser?.imageUrl} alt="Bonnie image"/>
-        <h5 className="mb-1 text-xl font-medium  text-gray-900 dark:text-white hover:scale-[1.05] cursor-pointer">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
+        <img className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg shadow-primary" src={connectedUser?.imageUrl} alt="Bonnie image"/>
+        <h5 className="mb-1 text-xl font-medium  text-black dark:text-white hover:scale-[1.05] cursor-pointer capitalize">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
         <span className="text-sm text-black-500 dark:text-gray-400 hover:scale-[1.05] cursor-pointer"> {connectedUser?.occupation}</span>
         <div className="flex mt-4 md:mt-6">
           {connectedUser?.AlreadyCompany?(<>
@@ -161,8 +161,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
               <li>
                 <NavLink
                   to="/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-primary focus:text-white text-black duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4 ${
-                    pathname.includes('profile')&&'bg-primary text-white font-bold'
+                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-[#E2595B] hover-opacity-90 focus:text-white text-black duration-300 ease-in-out hover:bg-[#E2595B] dark:hover:bg-meta-4 ${
+                    pathname.includes('profile')&&'bg-[#E2595B] text-white font-bold'
                   }`}
                 >
                   <svg
@@ -189,6 +189,44 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
 
            
               {/* <!-- Menu Item Forms --> */}
+
+              {/* <!-- Menu Item Tables --> */}
+              <li>
+                <NavLink
+                  to={`${connectedUser?.role=="company" ? '/competitions':'/submittions'} `}
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium rounded-2 focus:bg-primary focus:text-white focus:font-bold text-black duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4 ${
+                    pathname.includes('tables') && 'bg-primary text-white font-bold'
+                  }`}
+                >
+                  <svg
+                    className="fill-current"
+                    width="18"
+                    height="19"
+                    viewBox="0 0 18 19"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_130_9756)">
+                      <path
+                        d="M15.7501 0.55835H2.2501C1.29385 0.55835 0.506348 1.34585 0.506348 2.3021V15.8021C0.506348 16.7584 1.29385 17.574 2.27822 17.574H15.7782C16.7345 17.574 17.5501 16.7865 17.5501 15.8021V2.3021C17.522 1.34585 16.7063 0.55835 15.7501 0.55835ZM6.69385 10.599V6.4646H11.3063V10.5709H6.69385V10.599ZM11.3063 11.8646V16.3083H6.69385V11.8646H11.3063ZM1.77197 6.4646H5.45635V10.5709H1.77197V6.4646ZM12.572 6.4646H16.2563V10.5709H12.572V6.4646ZM2.2501 1.82397H15.7501C16.0313 1.82397 16.2563 2.04897 16.2563 2.33022V5.2271H1.77197V2.3021C1.77197 2.02085 1.96885 1.82397 2.2501 1.82397ZM1.77197 15.8021V11.8646H5.45635V16.3083H2.2501C1.96885 16.3083 1.77197 16.0834 1.77197 15.8021ZM15.7501 16.3083H12.572V11.8646H16.2563V15.8021C16.2563 16.0834 16.0313 16.3083 15.7501 16.3083Z"
+                        fill=""
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_130_9756">
+                        <rect
+                          width="18"
+                          height="18"
+                          fill="white"
+                          transform="translate(0 0.052124)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  {connectedUser?.role=="challenger"?<>Submitions</>:<>Competitions</>}
+                </NavLink>
+              </li>
+              {/* <!-- Menu Item Tables --> */}
 
               {/* <!-- Menu Item Settings --> */}
               <li>
@@ -244,7 +282,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
       <span className="text-gray-700 uppercase font-bold mb-2">Skills</span>
       <ul>
         {connectedUser.skills.map((skill, index) => (
-          <li key={index} className="hover:scale-[1.05] cursor-pointer hover:m-1 bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
+          <li key={index} className="hover:scale-[1.05] cursor-pointer  hover:m-1 bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
             {skill}
           </li>
         ))}

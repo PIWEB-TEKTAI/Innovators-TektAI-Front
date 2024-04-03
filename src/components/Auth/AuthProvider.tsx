@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import { getProfile } from '../../services/user.service';
 import { useNavigate } from 'react-router-dom';
 
@@ -73,7 +73,7 @@ export const useAuth = () => {
 
 interface AuthContextProps {
   authenticated: boolean;
-  loginAuth: (user: User) => void;
+  loginAuth: (user: any) => void;
   logoutAuth: () => void;
   userAuth: User | null;
   roleAuth: string | null;
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     isAuthenticated();
   }, []);
-  const loginAuth = (user: User) => {
+  const loginAuth = (user: any) => {
     setUserAuth(user);
     setRole(user.role);
     setAuthenticated(true);

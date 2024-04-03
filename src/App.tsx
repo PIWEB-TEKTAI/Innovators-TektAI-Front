@@ -25,7 +25,7 @@ import AddAdmin1 from './pages/SuperAdmin/AddAdmin';
 import Profile from './pages/Profile/Profile';
 import SwitchToCompany from './pages/Profile/SwitchToCompany';
 import ListAccountSwitchRequest from './pages/SuperAdmin/ListAccountSwitchRequest';
-import { User } from './types/user';
+import { User } from './types/User';
 import { useNavigate } from 'react-router-dom';
 import ListArchivee from "./pages/SuperAdmin/ListArchive"
 import EmailVerification from './pages/Authentication/EmailVerification';
@@ -45,6 +45,7 @@ import ChallengeList from "./pages/SuperAdmin/ListesChallenge";
 import ChallengeListFront from "./pages/competitions/challengesListFront";
 
 import Competitions from './pages/landing/Competitions';
+import AddChallenge from './pages/Challenge/AddChallenge';
 
 
 
@@ -93,6 +94,7 @@ function App() {
             </>
           }
         />
+        
           <Route
           path="/archive"
           element={
@@ -220,6 +222,18 @@ function App() {
               <PrivateRoute requiredRoles={["company"]} component={
 
                 <EditChallenge/>
+              }/>
+            </>
+          }
+        />
+        
+        <Route
+          path="/challenge/add"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["company"]} component={
+
+                <AddChallenge/>
               }/>
             </>
           }

@@ -66,7 +66,7 @@ export default function FetchData() {
   }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
   
   const fetchData = () => {
-axios.get<Challenge[]>(`http://localhost:3000/challenge/${selectedRole || 'AllChallenge'}`)
+axios.get<Challenge[]>(`http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`)
   .then(response => {
     const filteredUsers = response.data.filter(challenge =>
       (challenge.title.toLowerCase().startsWith(searchTerm) ||
@@ -326,9 +326,7 @@ var completed = (id: string) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-200 text-left dark:bg-meta-4">
-              <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Description</th>
                 <th className="px-4 py-3">Price</th>
              
                 <th className="px-4 py-3">Status</th>
@@ -340,20 +338,16 @@ var completed = (id: string) => {
 {sortUsersByFirstName(currentUsers).map((user, index) => (
   <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : ""}>
     
-       <td className="px-4 py-3">
-  
-      <img src={user.image} alt={user.title} className="h-10 w-10 rounded-full object-cover" />
-    </td>
+    
     <td className="px-4 py-3">{toTitleCase(user.title)}</td>
-    <td className="px-4 py-3">{toTitleCase(user.description)}</td>
     <td className="px-4 py-3">{user.price}</td>
  
     <td className="px-4 py-3">
       <span
         className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
-          user.status === 'open' ? 'bg-green-400 text-white font-semibold' :
-          user.status === 'archived' ? 'bg-black text-white font-semibold' :
-          'bg-red-400 text-white font-semibold'
+          user.status === 'open' ? 'bg-blue-400 text-white font-semibold' :
+          user.status === 'archived' ? 'bg-red-600 text-white font-semibold' :
+          'bg-green-400 text-white font-semibold'
         }`}
       >
         {toTitleCase(user.status)}

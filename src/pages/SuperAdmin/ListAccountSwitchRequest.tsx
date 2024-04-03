@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../types/user';
+import { User } from '../../types/User';
 import { acceptSwitchRequest, getUsersWithAccountSwitchRequest } from '../../services/admin.services';
 
 // Définissez le type des données attendues

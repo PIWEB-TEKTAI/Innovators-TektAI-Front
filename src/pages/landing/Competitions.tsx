@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './comp.css'; // Import du fichier CSS
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArchive, faPlayCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
-import ClientLayout from '../../layout/clientLayout';
+import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
+import { useNavigate } from 'react-router-dom';
 
 interface Challenge {
   _id: string;
@@ -26,6 +26,7 @@ interface Challenge {
     fileUrl: string;
   }[];
 }
+
 
 const Competitions: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // État pour le terme de recherche
@@ -190,18 +191,33 @@ const Competitions: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
+  const navigate = useNavigate();
+
+
+  function add (){
+       navigate('/challenge/add')
+  }
+
+
   return (
-    <ClientLayout>
-      <div className="container">
-        <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4 text-center">Challenges</h2>
+    <ConnectedClientLayout>
+
+      <div className="flex flex-col gap-9 border-full">
+          <div className="rounded-sm rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
+
+            <h2 className='font-bold text-black text-title-xl mb-8'>Competitions</h2>
 
         <div className="search">
           <input placeholder="Search..." type="text" value={searchTerm} onChange={handleSearchTermChange} />
         </div>
 
         {/* Liste déroulante pour sélectionner le statut */}
-        <div className="row">
-          <div className="col-md-6 offset-md-6 text-end">
+        <div className="flex justify-end">
+          <div>
+             <button onClick={add} className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold  text-gray disabled:opacity-60 hover:bg-opacity-90">Host a competition</button>
+          </div>
+          <div className="col-md-2  text-end">
             <div className="status-dropdown">
               <label htmlFor="status-select"> </label>
               <select id="status-select" value={selectedStatus} onChange={handleStatusChange} className="form-select">
@@ -212,17 +228,19 @@ const Competitions: React.FC = () => {
               </select>
             </div>
           </div>
+        
         </div>
         
         {/* Affichage des challenges filtrés */}
         <div className="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
           {filteredChallenges.map(challenge => (
+
             <div className="col" key={challenge._id}>
               <div className="card h-100 card-hover">
                 <div className="status-and-actions-container">
                   <div className={`status inline-flex rounded-full py-1 px-3 text-sm font-medium ${
                     challenge.status === 'completed' ? 'bg-green-400 text-white font-semibold' :
-                    challenge.status === 'archived' ? 'bg-black text-white font-semibold' :
+                    challenge.status === 'archived' ? 'bg-red-600 text-white font-semibold' :
                     challenge.status === 'open' ? 'bg-blue-400 text-white font-semibold' :
                     'bg-red-400 text-white font-semibold'
                   }`}>
@@ -234,7 +252,7 @@ const Competitions: React.FC = () => {
                     <button className="archive-button" onClick={() => handleArchive(challenge._id)}><FontAwesomeIcon icon={faArchive} /></button>
                   </div>
                 </div>
-                <img src={challenge.image} className="card-img-top" alt="Card image" />
+                <img src={`http://localhost:3000/images/${challenge.image}`} className="card-img-top mt-3" alt="Card image" />
                 <div className="card-body">
                   <h5 className={`card-title ${addEmptyLineIfNeeded(challenge.title, 24).length < 24 ? 'one-line-title' : ''}`} title={challenge.title}>{addEmptyLineIfNeeded(challenge.title, 40)}</h5>
                   <p className="card-text two-lines-description">
@@ -261,8 +279,9 @@ const Competitions: React.FC = () => {
   <a  onClick={() => paginate(currentPage + 1)}>&raquo;</a>
 </div>
       </div>
-      <Footer />
-    </ClientLayout>
+      </div>
+      </div>
+    </ConnectedClientLayout>
   );  
 };
 
