@@ -325,6 +325,8 @@ span.flatpickr-weekday,
 .card {
   width: 100%; /* Set width to 100% to make it responsive */
   max-width: 1350px; /* Set maximum width */
+  max-height: 700px; /* Set maximum width */
+
   height: auto; /* Allow height to adjust based on content */
   border-radius: 15px;
   margin: 0 auto; 
