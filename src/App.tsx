@@ -39,11 +39,12 @@ import AboutUs from "./pages/SuperAdmin/AboutUs"
 import Teams from './pages/landing/teams';
 import NotFound from './pages/NotFound';
 import EditChallenge from './pages/Challenge/EditChallenge';
-import ChallengeList from "./pages/SuperAdmin/ListesChallenge"
+import ChallengeList from "./pages/SuperAdmin/ListesChallenge";
 
 
-import ChallengeListFront from "./pages/competitions/challengesListFront"
+import ChallengeListFront from "./pages/competitions/challengesListFront";
 
+import Competitions from './pages/landing/Competitions';
 
 
 
@@ -358,6 +359,16 @@ function App() {
             <>
               <PageTitle title="Teams | TektAi" />
               <Teams />
+            </>
+          }
+        />
+
+<Route
+            path="/Competitions"
+            element={
+            <>
+              <PageTitle title="Competitions | TektAi" />
+              <Competitions/>
             </>
           }
         />
