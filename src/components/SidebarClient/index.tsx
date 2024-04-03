@@ -81,8 +81,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
       document.querySelector('body')?.classList.remove('sidebar-expanded');
     }
   }, [sidebarExpanded]);
-  console.log(connectedUser)
 
+  
   return (
     <aside
       ref={sidebar}
@@ -101,8 +101,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
     
     <div className="flex flex-col items-center pb-10">
 
-        <img className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg" src={connectedUser?.imageUrl} alt="Bonnie image"/>
-        <h5 className="mb-1 text-xl font-medium  text-gray-900 dark:text-white hover:scale-[1.05] cursor-pointer">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
+        <img className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg shadow-primary" src={connectedUser?.imageUrl} alt="Bonnie image"/>
+        <h5 className="mb-1 text-xl font-medium  text-black dark:text-white hover:scale-[1.05] cursor-pointer capitalize">{connectedUser?.FirstName}  {connectedUser?.LastName} </h5>
         <span className="text-sm text-black-500 dark:text-gray-400 hover:scale-[1.05] cursor-pointer"> {connectedUser?.occupation}</span>
         <div className="flex mt-4 md:mt-6">
           {connectedUser?.AlreadyCompany?(<>
@@ -161,8 +161,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
               <li>
                 <NavLink
                   to="/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-primary focus:text-white text-black duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4 ${
-                    pathname.includes('profile')&&'bg-primary text-white font-bold'
+                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-[#E2595B] hover-opacity-90 focus:text-white text-black duration-300 ease-in-out hover:bg-[#E2595B] dark:hover:bg-meta-4 ${
+                    pathname.includes('profile')&&'bg-[#E2595B] text-white font-bold'
                   }`}
                 >
                   <svg
@@ -223,7 +223,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
                       </clipPath>
                     </defs>
                   </svg>
-                  Submitions
+                  {connectedUser?.role=="challenger"?<>Submitions</>:<>Competitions</>}
                 </NavLink>
               </li>
               {/* <!-- Menu Item Tables --> */}
@@ -282,7 +282,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
       <span className="text-gray-700 uppercase font-bold mb-2">Skills</span>
       <ul>
         {connectedUser.skills.map((skill, index) => (
-          <li key={index} className="hover:scale-[1.05] cursor-pointer hover:m-1 bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
+          <li key={index} className="hover:scale-[1.05] cursor-pointer  hover:m-1 bg-gray-300 text-primary font-semibold p-2 rounded-full m-0.5 border border-gray-200 text-xs inline-block">
             {skill}
           </li>
         ))}
