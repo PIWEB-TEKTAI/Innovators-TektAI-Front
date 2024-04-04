@@ -198,7 +198,7 @@ const EmailVerification: React.FC = () => {
                       )}  
                     </div>
                            
-                      <h2 className="mb-[6rem] flex flex-col items-center justify-center card">
+                      <h2 className="mb-[6rem] flex flex-col items-center justify-center card-design">
                           <img src="/src/images/auth/email.png" alt="check" className='w-20 sm:w-25 md:w-30 lg:w-35 xl:w-20' />
                           
                           <span className='text-2xl block font-bold text-center text-primary dark:text-white sm:text-title-xl2 mt-5'>Email Verification</span>

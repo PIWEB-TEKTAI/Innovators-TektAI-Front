@@ -272,7 +272,7 @@ var completed = (id: string) => {
     // Prevent default button behavior
     e.preventDefault();
     // Redirect to edit form with user ID
-    navigate(`/modifierAdmin/${email}`);
+    navigate(`/EditChallengeAdmin/${email}`);
   
   };
   const view = (email: string,e: React.MouseEvent<HTMLButtonElement>) => {
@@ -356,7 +356,7 @@ var completed = (id: string) => {
     <td className="px-4 py-3">
       <div className="flex items-center space-x-2">
         <button onClick={(e) => handleEdit(user._id, e)}>
-          <FaUserEdit className="text-yellow-500" />
+          <FaUserEdit className="text-yellow-500"   />
         </button>
    
         <button onClick={() => completed(user._id)}>

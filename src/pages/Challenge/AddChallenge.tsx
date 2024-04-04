@@ -1,7 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import SelectGroupOne from '../../components/Forms/SelectGroup/SelectGroupOne';
-import DefaultLayout from '../../layout/DefaultLayout';
+import { useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
 import { useState } from 'react';
@@ -200,7 +197,7 @@ const AddChallenge = () => {
         console.log('Challenge added successfully:', response);
         setAlert({
           type: 'success',
-          message: 'Challenge editted successfully' ,
+          message: 'Challenge added successfully' ,
         });
         setTimeout(() => {
           navigate("/competitions");
@@ -211,7 +208,7 @@ const AddChallenge = () => {
         console.error('Error adding challenge:', error);
         setAlert({
           type: 'error',
-          message: 'Error edditing challenge',
+          message: 'Error adding challenge',
         });
       });
   };
@@ -228,7 +225,7 @@ const AddChallenge = () => {
         <div className="flex flex-col gap-9 border-full">
           <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
-
+           
 
               {/* Stepper */}
               <ol className="flex justify-center items-center w-full">
@@ -292,7 +289,7 @@ const AddChallenge = () => {
                     type="text"
                     name="award"
                     value={award}
-                    placeholder="Enter the price of your competition"
+                    placeholder="Enter the award of your competition"
                     onChange={(e)=>checkValidity("award",e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
@@ -308,7 +305,7 @@ const AddChallenge = () => {
                            type="number"
                            name="price"
                            value={price}
-                           placeholder="Enter the price"
+                           placeholder="Enter the price of your competition"
                            onChange={(e)=>checkValidity("price",e.target.value)}
                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                          />

@@ -309,7 +309,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   };
   return (
     <div
-      className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 flex flex-col items-start w-100 h-120"
+      className="bg-white  rounded-lg shadow-lg p-6 flex flex-col items-start w-100 h-120"
       onClick={toggleDetails}
     >
       <div className="flex items-center mb-4">
@@ -333,7 +333,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         </span>
       </div>
       <hr className="my-2 border-gray-300" />
-      <span className="font-semibold">Job Description </span>
+      <span className="font-semibold">Description </span>
 
       <p className="text-gray-700 dark:text-gray-300">{description}</p>
       <hr className="my-2 border-gray-300" />
@@ -375,7 +375,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
           {status}
         </span>
       </div>
-      <button onClick={handleCardClick}>Voir les détails</button>
+      <button onClick={handleCardClick} className='mt-5 text-primary font-semibold'>Voir les détails</button>
       {selectedChallenge && (
         <ChallengeModal
           challenge={selectedChallenge}
@@ -484,12 +484,25 @@ const ListChallengerFront: React.FC = () => {
 
   return (
     <ClientLayout>
-      <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
+      <section className="bg-white bg-opacity-85 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
           <RevealOnScroll delay="">
-            <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">
-              Competitions
+            <h2 className="text-4xl text-center mb-10 font-extrabold text-black dark:text-white pb-4">
+              <span className="animated-text text-black" style={{animationDelay: '0.1s'}}>C</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.2s'}}>o</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.3s'}}>m</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.4s'}}>p</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.5s'}}>e</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.6s'}}>t</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.7s'}}>i</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.8s'}}>t</span>
+               <span className="animated-text text-black" style={{animationDelay: '0.9s'}}>i</span>
+               <span className="animated-text text-black" style={{animationDelay: '1s'}}>o</span>      
+               <span className="animated-text text-black" style={{animationDelay: '1.1s'}}>n</span>              
+               <span className="animated-text text-black" style={{animationDelay: '1.2s'}}>s</span>              
+        
             </h2>
+            
             <div className="flex flex-col sm:flex-row items-center gap-2 bg-white border border-gray-300 rounded-full p-2 focus-within:border-blue-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
