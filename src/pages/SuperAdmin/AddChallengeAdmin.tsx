@@ -9,8 +9,9 @@ import { addChallenge } from '../../services/challengeService';
 import CheckboxR from '../../components/Checkboxes/CheckboxR';
 import { TiTick } from 'react-icons/ti';
 import { ErrorToast, successfullToast } from '../../components/Toast';
+import ClientLayout from '../../layout/clientLayout';
 
-const AddChallenge = () => {
+const AddChallengeAdmin = () => {
   const [step, setStep] = useState(1);
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
@@ -154,12 +155,6 @@ const AddChallenge = () => {
 
   const handleFileChange = (e:any) => {
     const file = e.target.files[0];
-    if(file.type !="application/vnd.ms-excel" && file.type !="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
-      setDataSetError("You should provide an xsl file")
-    }else{
-      setDataSetError("")
-
-    }
     setDataSetFile(file);
     setFileName(file.name)
 
@@ -167,12 +162,6 @@ const AddChallenge = () => {
   };
   const handleImageChange  = (e:any) => {
     const image = e.target.files[0];
-    console.log(image.type);
-    if(image.type !="image/jpg" && image.type!="image/jpeg" && image.type!="image/png"){
-      setImageError("you should provide an image of type:jpg,jpeg or png")
-    }else{
-      setImageError('');
-    }
     SetImage(image);
     setImageName(image.name)
 
@@ -212,10 +201,10 @@ const AddChallenge = () => {
         console.log('Challenge added successfully:', response);
         setAlert({
           type: 'success',
-          message: 'Challenge editted successfully' ,
+          message: 'Challenge added successfully' ,
         });
         setTimeout(() => {
-          navigate("/competitions");
+          navigate("/ListChallenge");
         }, 3000);
 
       })
@@ -223,13 +212,13 @@ const AddChallenge = () => {
         console.error('Error adding challenge:', error);
         setAlert({
           type: 'error',
-          message: 'Error edditing challenge',
+          message: 'Error adding challenge',
         });
       });
   };
 
   return (
-    <ConnectedClientLayout>
+    <ClientLayout>
 
       <div className={`${alert && `mt-8`}`}>
         {alert?.type == 'success' && successfullToast(alert.message)}
@@ -348,10 +337,7 @@ const AddChallenge = () => {
                           >
                             {ImageName ? ImageName : 'Upload Challenge Image'}
                           </label>
-
                     </div>
-                    {ImageError && <p className="text-red-500 text-sm mt-1">{ImageError}</p>}
-
                 </div>
                 <div className="mb-4 5">
                   <DateTimePicker onChange={handleEndDateChange} value={endDate}  />
@@ -398,8 +384,6 @@ const AddChallenge = () => {
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     ></textarea>
                     </div>
-                    {dataSetDescriptionError && <p className="text-red-500 text-sm mt-1">{dataSetDescriptionError}</p>}
-
                     <div className="mb-4.5">
                     <div>
                     <label className="mb-3 block font-medium text-black dark:text-white">Attach dataSet file</label>
@@ -418,37 +402,37 @@ const AddChallenge = () => {
                             {FileName ? FileName : 'Upload Dataset File'}
                           </label>
                     </div>
-                    {DataSetFileError&& <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>}
+                    {dataSetDescriptionError && <p className="text-red-500 text-sm mt-1">{dataSetDescriptionError}</p>}
 
               </div>
-                    </div>
-                    </div>
-                    {/* Navigation buttons */}
-                    {step > 1 && (
-                    <div className="flex justify-between">
-                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={prevStep}>
-                    Previous
-                    </button>
-                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={handleSubmit}>
-                    Submit
-                    </button>
-                    </div>
-                    )}
-                    {step < 2 && (
-                    <div className="flex justify-end">
-                    <button className="rounded bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90" onClick={nextStep} disabled={!isFirstPageValid()}>
-                    Next
-                    </button>
-                    </div>
-                    )}
-                    </div>
-                    </div>
-                    </div>
-                    </ConnectedClientLayout>
-                    );
-                    };
+            </div>
+            </div>
+            {/* Navigation buttons */}
+            {step > 1 && (
+            <div className="flex justify-between">
+            <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={prevStep}>
+            Previous
+            </button>
+            <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={handleSubmit}>
+            Submit
+            </button>
+            </div>
+            )}
+            {step < 2 && (
+            <div className="flex justify-end">
+            <button className="rounded bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90" onClick={nextStep} disabled={!isFirstPageValid()}>
+            Next
+            </button>
+            </div>
+            )}
+            </div>
+            </div>
+            </div>
+            </ClientLayout>
+            );
+            };
                     
-                    export default AddChallenge;
+export default AddChallengeAdmin;
 
 
 

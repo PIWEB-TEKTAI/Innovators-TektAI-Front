@@ -53,7 +53,7 @@ const ModalForm: React.FC<ModalProps> = ({
             className="fixed inset-0 bg-black opacity-50"
             onClick={handleBackdropClick}
           />         
-          <div className="relative z-50 bg-white rounded-lg overflow-hidden max-w-3xl w-full ">
+          <div className="absolute z-50 bg-white rounded-lg overflow-hidden max-w-3xl w-full ">
             {/* content */}
             <div className="flex flex-col h-full">
               {/* header */}

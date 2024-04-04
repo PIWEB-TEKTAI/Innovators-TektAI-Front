@@ -16,3 +16,14 @@ export const addSubmission= async (formData: any,id:any) => {
         throw error;
     }
 };
+export const getSubmissionsByChallengeId = async (challengeId: any) => {
+  try {
+    const response = await axios.get(`${API_URL}/${challengeId}/submissions`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error getting submissions by challenge ID:', error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
+};

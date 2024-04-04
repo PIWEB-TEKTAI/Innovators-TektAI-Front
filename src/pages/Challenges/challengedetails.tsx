@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
-import { addSubmission } from '../../services/submissionService';
+import { addSubmission, getSubmissionsByChallengeId } from '../../services/submissionService';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
 import { useAuth } from '../../components/Auth/AuthProvider';
@@ -211,7 +211,25 @@ const ChallengeDetails: React.FC = () => {
     
     
     const { id } = useParams();
+    const [submissions, setSubmissions] = useState<any[]>([]); 
 
+    useEffect(() => {
+        const fetchSubmissions = async () => {
+          try {
+            const fetchedSubmissions = await getSubmissionsByChallengeId(id);
+            setSubmissions(fetchedSubmissions);
+          } catch (error) {
+            console.error('Error fetching submissions:', error);
+          }
+        };
+    
+        fetchSubmissions();
+      }, [id]); 
+      const itemsPerPage = 10;
+      const [currentPage, setCurrentPage] = useState(1);
+      const indexOfLastItem = currentPage * itemsPerPage;
+      const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+      const currentItems = submissions.slice(indexOfFirstItem, indexOfLastItem);
     const fetchChallengeDetails = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/challenge/${id}`, {
@@ -255,8 +273,6 @@ const ChallengeDetails: React.FC = () => {
 
     const formattedStartDate = format(new Date(challengeDetails.startDate), 'dd MMMM, yyyy');
     const formattedEndDate = format(new Date(challengeDetails.endDate), 'dd MMMM, yyyy');
-
-    // Calculate the time left
     const now = new Date();
     const endDate = new Date(challengeDetails.endDate);
     const monthsLeft = differenceInMonths(endDate, now);
@@ -264,6 +280,9 @@ const ChallengeDetails: React.FC = () => {
     const hoursLeft = differenceInHours(endDate, now) % 24;
     const minutesLeft = differenceInMinutes(endDate, now) % 60;
     const secondsLeft = differenceInSeconds(endDate, now) % 60;
+  
+
+    const paginate = (pageNumber: any)=> setCurrentPage(pageNumber);
 
     const timeLeftString = `${monthsLeft > 0 ? `${monthsLeft} months, ` : ''}${daysLeft > 0 ? `${daysLeft} days, ` : ''}${hoursLeft > 0 ? `${hoursLeft} hours, ` : ''}${minutesLeft > 0 ? `${minutesLeft} minutes, ` : ''}${secondsLeft} seconds`;
 
@@ -277,7 +296,7 @@ const ChallengeDetails: React.FC = () => {
         
         <ClientLayout>
 
-            <div className="mx-auto sm:mx-[10rem] my-4 rounded-lg px-4 py-8">
+            <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
                 <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
                
                     <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
@@ -313,22 +332,22 @@ const ChallengeDetails: React.FC = () => {
                <div className="bg-white rounded-lg my-6">
                     <ul className="p-8 flex cursor-pointer flex-wrap sm:flex-nowrap border-gray-200 border-b py-4">
                             <li className="-mb-px mr-1">
-                                <a className={`bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('overview')}>
+                                <a className={`bg-white inline-block rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 border-l border-t border-r ' : ''}`} onClick={() => handleTabChange('overview')}>
                                     Overview
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('leaderboard')}>
+                                <a className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('leaderboard')}>
                                     Leaderboard
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('discussion')}>
+                                <a className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('discussion')}>
                                     Discussion
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('submission')}>
+                                <a className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('submission')}>
                                     Submission
                                 </a>
                             </li>
@@ -337,12 +356,12 @@ const ChallengeDetails: React.FC = () => {
                         <div className="p-8">
                             {activeTab === 'overview' && (
                                 <>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-2">Description</h2>
-                                    <p className="text-gray-600 mt-4 break-words">{challengeDetails.description}</p>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-8">Prizes</h2>
-                                    <p className="text-gray-600 mt-4">{challengeDetails.price}Dt</p>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-8">Submission Guidelines</h2>
-                                    <p className="text-gray-600 mt-4 break-words">{challengeDetails.description}</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-2">Description</h2>
+                                    <p className="text-gray-600 mt-4 break-words text-black">{challengeDetails.description}</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-8">Prizes</h2>
+                                    <p className="text-gray-600 mt-4 text-black">{challengeDetails.price}Dt</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-8 ">Submission Guidelines</h2>
+                                    <p className="text-gray-600 mt-4 break-words text-black">{challengeDetails.description}</p>
                                 </>
                             )}
                             {activeTab === 'leaderboard' && (
@@ -356,8 +375,11 @@ const ChallengeDetails: React.FC = () => {
                                 </div>
                             )}
                             {activeTab === 'submission' && (
-                                    <div className="flex justify-end">
-                                    {userAuth?.role === 'challenger' && (
+                        <div>
+                           
+
+                        <div className="flex justify-end mb-4">
+                            {userAuth?.role === 'challenger' && (
                             <button
                                 onClick={openModal}
                                 className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold text-gray disabled:opacity-60 hover:bg-opacity-90"
@@ -365,14 +387,42 @@ const ChallengeDetails: React.FC = () => {
                                 Add Submission
                             </button>
                             )}
-                                    <ModalForm
-                            showModal={showModal}
-                            setShowModal={setShowModal}
-                            title="Add Submission"
-                            content={<AddSubmissionForm />} // Pass the AddSubmissionForm as content
-                            onClose={closeModal}
-                            onSave={()=>{}} // Handle save logic
-                        />
+     
+                            <ModalForm
+                                showModal={showModal}
+                                setShowModal={setShowModal}
+                                title="Add Submission"
+                                content={<AddSubmissionForm />} 
+                                onClose={closeModal}
+                                onSave={()=>{}}
+                            />
+                    </div>
+                    <ul>
+                {currentItems.map(submission => (
+                    <li className='border-b border-gray-300 justify-between flex p-2' key={submission.id}>
+                        <div className="flex-col">
+                            <p className='break-words text-black font-semibold'>{submission.title}</p>
+                            <p className='break-words text-black'>{submission.description.substring(0, 60)}</p>
+                        </div>
+                        <p className='break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg'>
+                            {submission.files[0].name.substring(0, 15)}...
+                        </p>
+                    </li>
+                ))}
+            </ul>
+            {/* Pagination */}
+            <nav>
+                <ul className='pagination'>
+                    {submissions.length > itemsPerPage &&
+                        Array.from({ length: Math.ceil(submissions.length / itemsPerPage) }).map((_, index) => (
+                            <li key={index} className='page-item'>
+                                <button onClick={() => paginate(index + 1)} className='page-link bg-primary h-[2rem] w-[2rem] text-white rounded-full '>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                </ul>
+            </nav>
                     </div>
                     )}
                 </div>                

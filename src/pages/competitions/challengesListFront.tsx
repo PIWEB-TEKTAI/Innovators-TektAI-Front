@@ -204,11 +204,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
             />
           </div>
           <div>
-            <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
-              <span className="font-semibold">
-                Ranking {renderStars(challengeRank)}
-              </span>
-            </div>
+          
             <hr className="my-2 border-gray-300" />
             <span className="font-semibold">Description</span>
             <p className="text-gray-700 dark:text-gray-300">{description}</p>
@@ -316,7 +312,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       <div className="flex items-center mb-4">
         <img
           src={`http://localhost:3000/images/${image}`}
-          className="card-img-top mt-3 w-40"
+          className="card-img-top mt-3 m-4 rounded-lg w-40"
           alt="Card image"
         />
 
@@ -328,11 +324,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         </div>
       </div>
 
-      <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
-        <span className="font-semibold">
-          Ranking {renderStars(challengeRank)}
-        </span>
-      </div>
+     
       <hr className="my-2 border-gray-300" />
       <span className="font-semibold">Job Description </span>
 
@@ -485,9 +477,7 @@ const ListChallengerFront: React.FC = () => {
 
   return (
     <ClientLayout>
-      <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
-        <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
-          <RevealOnScroll delay="">
+        <div className="mx-auto xl:mx-[5rem] my-8 rounded-lg max-w-screen-xl bg-white px-4 py-8  ">
             <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">
               Competitions
             </h2>
@@ -532,9 +522,7 @@ const ListChallengerFront: React.FC = () => {
               </Link>
             ))}
           </div>
-          </RevealOnScroll>
         </div>
-      </section>
 
       <RevealOnScroll delay="400">
         <Footer />

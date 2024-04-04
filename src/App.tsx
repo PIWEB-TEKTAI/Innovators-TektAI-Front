@@ -48,7 +48,7 @@ import AddChallenge from './pages/Challenge/AddChallenge';
 import ChallengeDetails from './pages/Challenges/challengedetails';
 import ChallengeDetailsCompany from './pages/Challenges/challengedetailscompany';
 import ChallengeStatistics from './pages/Challenges/challengesstatics';
-import ChallengeDetailsPage from './pages/competitions/challengeDetails';
+import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 
 
 
@@ -379,11 +379,11 @@ function App() {
           }
         />
            <Route
-            path="/challengeDetail/:challengeId"
+            path="/admin/addChallenge"
             element={
             <>
-              <PageTitle title="Challenge Details | TektAi" />
-              <ChallengeDetailsPage />
+              <PageTitle title="Admin : Add Challeng | TektAi" />
+              <AddChallengeAdmin />
             </>
           }
         />

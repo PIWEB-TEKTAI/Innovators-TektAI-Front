@@ -4,6 +4,7 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
+import { getSubmissionsByChallengeId } from '../../services/submissionService';
 
 
 const ChallengeDetailsCompany: React.FC = () => {
@@ -11,18 +12,39 @@ const ChallengeDetailsCompany: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
 
     const { id } = useParams();
+    const [submissions, setSubmissions] = useState<any[]>([]); 
+
+    useEffect(() => {
+        const fetchSubmissions = async () => {
+          try {
+            const fetchedSubmissions = await getSubmissionsByChallengeId(id);
+            setSubmissions(fetchedSubmissions);
+          } catch (error) {
+            console.error('Error fetching submissions:', error);
+          }
+        };
+    
+        fetchSubmissions();
+      }, [id]); 
+      const itemsPerPage = 10;
+      const [currentPage, setCurrentPage] = useState(1);
+      const indexOfLastItem = currentPage * itemsPerPage;
+      const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+      const currentItems = submissions.slice(indexOfFirstItem, indexOfLastItem);
+      const paginate = (pageNumber: any)=> setCurrentPage(pageNumber);
 
     const fetchChallengeDetails = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/challenge/${id}`, {
                 withCredentials: true
-              });
-                          setChallengeDetails(response.data);
+              });            setChallengeDetails(response.data);
 
         } catch (error) {
             console.error('Error fetching challenge details:', error);
         }
     };
+
+
 
     useEffect(() => {
         fetchChallengeDetails();
@@ -77,7 +99,7 @@ const ChallengeDetailsCompany: React.FC = () => {
     return (
         <ConnectedClientLayout>
 
-<div className="mx-auto rounded-lg px-4 ">
+<div className="mx-auto   rounded-lg px-4 ">
                 <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
                
                     <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
@@ -104,25 +126,25 @@ const ChallengeDetailsCompany: React.FC = () => {
                 </div>
           
                 {/* Navigation Menu */}
-               <div className="bg-white rounded-lg my-6">
+                <div className="bg-white rounded-lg my-6">
                     <ul className="p-8 flex cursor-pointer flex-wrap sm:flex-nowrap border-gray-200 border-b py-4">
                             <li className="-mb-px mr-1">
-                                <a className={`bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('overview')}>
+                                <a className={`bg-white inline-block rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 border-l border-t border-r ' : ''}`} onClick={() => handleTabChange('overview')}>
                                     Overview
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('leaderboard')}>
+                                <a className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('leaderboard')}>
                                     Leaderboard
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('discussion')}>
+                                <a className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('discussion')}>
                                     Discussion
                                 </a>
                             </li>
                             <li className="mr-1">
-                                <a className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100' : ''}`} onClick={() => handleTabChange('submission')}>
+                                <a className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('submission')}>
                                     Submission
                                 </a>
                             </li>
@@ -131,12 +153,12 @@ const ChallengeDetailsCompany: React.FC = () => {
                         <div className="p-8">
                             {activeTab === 'overview' && (
                                 <>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-2">Description</h2>
-                                    <p className="text-gray-600 mt-4 break-words">{challengeDetails.description}</p>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-8">Prizes</h2>
-                                    <p className="text-gray-600 mt-4">{challengeDetails.price}Dt</p>
-                                    <h2 className="text-3xl font-bold text-gray-900 mt-8">Submission Guidelines</h2>
-                                    <p className="text-gray-600 mt-4 break-words">{challengeDetails.description}</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-2">Description</h2>
+                                    <p className="text-gray-600 mt-4 break-words text-black">{challengeDetails.description}</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-8">Prizes</h2>
+                                    <p className="text-gray-600 mt-4 text-black">{challengeDetails.price}Dt</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 mt-8 ">Submission Guidelines</h2>
+                                    <p className="text-gray-600 mt-4 break-words text-black">{challengeDetails.description}</p>
                                 </>
                             )}
                             {activeTab === 'leaderboard' && (
@@ -150,8 +172,35 @@ const ChallengeDetailsCompany: React.FC = () => {
                                 </div>
                             )}
                             {activeTab === 'submission' && (
-                                    <div className="flex justify-end">
-                        
+                        <div>
+               <div className="flex justify-end">
+                    </div>
+                    <ul>
+                {currentItems.map(submission => (
+                    <li className='border-b border-gray-300 justify-between flex p-2' key={submission.id}>
+                        <div className="flex-col">
+                            <p className='break-words text-black font-semibold'>{submission.title}</p>
+                            <p className='break-words text-black'>{submission.description.substring(0, 60)}</p>
+                        </div>
+                        <p className='break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg'>
+                            {submission.files[0].name.substring(0, 15)}...
+                        </p>
+                    </li>
+                ))}
+            </ul>
+            {/* Pagination */}
+            <nav>
+                <ul className='pagination'>
+                    {submissions.length > itemsPerPage &&
+                        Array.from({ length: Math.ceil(submissions.length / itemsPerPage) }).map((_, index) => (
+                            <li key={index} className='page-item'>
+                                <button onClick={() => paginate(index + 1)} className='page-link bg-primary h-[2rem] w-[2rem] text-white rounded-full '>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                </ul>
+            </nav>
                     </div>
                     )}
                 </div>                
