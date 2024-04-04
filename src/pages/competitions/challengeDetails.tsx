@@ -124,10 +124,10 @@ function ChallengeDetailsPage() {
             {alert?.type == 'error' && ErrorToast(alert.message)}
         </div>
             
-        <div className="flex w-full p-2 flex-col gap-9 border-full">
+        <div className="flex w-full p-2 flex-col gap-1 border-full">
               
                     {/* Content for Step 1 */}
-                    <div className="mb-4.5">
+                    <div className="">
                         <label className="mb-2.5 font-medium block text-black dark:text-white">Title</label>
                         <input
                         type="text"
@@ -142,7 +142,7 @@ function ChallengeDetailsPage() {
                     </div>
                 
                   
-                    <div className="mb-6">
+                    <div className="">
                         <label className="mb-2.5 font-medium  block text-black dark:text-white">Description</label>
                         <textarea
                         name="description"
@@ -156,9 +156,9 @@ function ChallengeDetailsPage() {
 
                     </div>
         
-                    <div className="mb-4.5">
+                    <div className="">
                     <div>
-                    <label className="mb-3 block font-medium text-black dark:text-white">Attach submission file</label>
+                    <label className="mb-2 block font-medium text-black dark:text-white">Attach submission file</label>
                     <div className="relative overflow-hidden">
                             <input
                             type="file"
@@ -197,17 +197,6 @@ function ChallengeDetailsPage() {
 
   return (
     <div>
-     <div>
-     <h2>Challenge Details</h2>
-      <p>Challenge ID: {challengeId}</p>
-      {/* Button to open the modal */}
-      <button onClick={openModal} className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold  text-gray disabled:opacity-60 hover:bg-opacity-90">
-        Add Submission
-      </button>
-      ggggggggg
-     </div>
-
-      {/* Render the Modal component */}
       <ModalForm
         showModal={showModal}
         setShowModal={setShowModal}
@@ -216,6 +205,15 @@ function ChallengeDetailsPage() {
         onClose={closeModal}
         onSave={()=>{}} // Handle save logic
       />
+     <div>
+     <h2>Challenge Details</h2>
+      <p>Challenge ID: {challengeId}</p>
+      <button onClick={openModal} className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold  text-gray disabled:opacity-60 hover:bg-opacity-90">
+        Add Submission
+      </button>
+     </div>
+
+      
     </div>
   );
 }

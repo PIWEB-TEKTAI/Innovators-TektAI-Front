@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom'; 
 import axios from 'axios';
 import Modal from 'react-modal';
 import Footer from '../landing/footer';
@@ -523,13 +524,14 @@ const ListChallengerFront: React.FC = () => {
                 </select>
               </div>
 
-            <div className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              
-
-              {filteredCards.map((card, index) => (
-                <Card key={index} {...card} />
-              ))}
-            </div>
+              <div className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredCards.map((card, index) => (
+              <Link key={index} to={`/challenge/details/${card._id}`}>
+                
+                <Card {...card} />
+              </Link>
+            ))}
+          </div>
           </RevealOnScroll>
         </div>
       </section>

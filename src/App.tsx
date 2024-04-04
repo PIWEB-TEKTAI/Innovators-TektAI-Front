@@ -41,12 +41,12 @@ import NotFound from './pages/NotFound';
 import EditChallenge from './pages/Challenge/EditChallenge';
 import ChallengeList from "./pages/SuperAdmin/ListesChallenge";
 
-
 import ChallengeListFront from "./pages/competitions/challengesListFront";
 
 import Competitions from './pages/landing/Competitions';
 import AddChallenge from './pages/Challenge/AddChallenge';
 import ChallengeDetails from './pages/Challenges/challengedetails';
+import ChallengeDetailsCompany from './pages/Challenges/challengedetailscompany';
 import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import ChallengeDetailsPage from './pages/competitions/challengeDetails';
 
@@ -370,10 +370,10 @@ function App() {
           }
         />
        <Route
-            path="/challenge/:id"
+            path="/challenge/details/:id"
             element={
             <>
-              <PageTitle title="Landing | TektAi" />
+              <PageTitle title="Challenge | TektAi" />
               <ChallengeDetails />
             </>
           }
@@ -391,8 +391,17 @@ function App() {
             path="/challenge/statistics"
             element={
             <>
-              <PageTitle title="Landing | TektAi" />
+              <PageTitle title="Challenge | TektAi" />
               <ChallengeStatistics />
+            </>
+          }
+        />
+           <Route
+            path="/challengecompany/details/:id"
+            element={
+            <>
+              <PageTitle title="Challenge | TektAi" />
+              <ChallengeDetailsCompany />
             </>
           }
         />

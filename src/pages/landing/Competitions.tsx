@@ -8,6 +8,8 @@ import { faArchive, faPlayCircle, faCheckCircle } from '@fortawesome/free-solid-
 
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 interface Challenge {
   _id: string;
@@ -238,7 +240,11 @@ const Competitions: React.FC = () => {
           {filteredChallenges.map(challenge => (
 
             <div className="col" key={challenge._id}>
-              <div onClick={() => navigateToDetails(challenge._id)} className="card h-100 card-hover">
+
+            <Link to={`/challengecompany/details/${challenge._id}`} >
+
+
+              <div className="card h-100 card-hover">
                 <div className="status-and-actions-container">
                   <div className={`status inline-flex rounded-full py-1 px-3 text-sm font-medium ${
                     challenge.status === 'completed' ? 'bg-green-400 text-white font-semibold' :
@@ -268,6 +274,7 @@ const Competitions: React.FC = () => {
                   </div>
                 </div>
               </div>
+              </Link>
             </div>
           ))}
         </div>
