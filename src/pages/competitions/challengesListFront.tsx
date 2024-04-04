@@ -526,7 +526,8 @@ const ListChallengerFront: React.FC = () => {
 
               <div className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCards.map((card, index) => (
-              <Link key={index} to={`/challenge/${card._id}`}>
+              <Link key={index} to={`/challenge/details/${card._id}`}>
+                
                 <Card {...card} />
               </Link>
             ))}

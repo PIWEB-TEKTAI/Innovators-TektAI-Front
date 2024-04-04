@@ -4,25 +4,12 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
-import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
 
 
-const ChallengeDetails: React.FC = () => {
+const ChallengeDetailsCompany: React.FC = () => {
     const [challengeDetails, setChallengeDetails] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState<any>(null);
 
-    const handleCompanyNameClick = (companyDetails: any) => {
-        console.log('Company details:', companyDetails); 
-        setSelectedCompany(companyDetails);
-        setIsModalOpen(true);
-    };
-    useEffect(() => {
-        console.log('isModalOpen:', isModalOpen); // Check if this log updates when the modal state changes
-    }, [isModalOpen]);
-    
-    
     const { id } = useParams();
 
     const fetchChallengeDetails = async () => {
@@ -83,10 +70,10 @@ const ChallengeDetails: React.FC = () => {
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
     };
-   
+
 
     return (
-        <ClientLayout>
+        <ConnectedClientLayout>
 
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -102,26 +89,12 @@ const ChallengeDetails: React.FC = () => {
                                     </svg>
                                     <p className="text-gray-600">{formattedStartDate} - {formattedEndDate}</p>
                                 </div>
-
-                                <p
-                                    className="text-gray-600 font-bold cursor-pointer"
-                                    onClick={() => handleCompanyNameClick(challengeDetails.createdBy.company)}
-                                >
-                                    Hostetd by : {challengeDetails.createdBy.company.name}
-                                </p>
-
                                 {challengeDetails.status === 'open' && (
                                     <p className="mt-2 text-gray-600">Time Left: {timeLeftString}</p>
                                 )}
                             </div>
                         </div>
                     </div>
-                    {isModalOpen && (
-                        <CompanyModal
-                            company={selectedCompany}
-                            onClose={() => setIsModalOpen(false)}
-                        />
-                    )}
 
 
                     {/* Navigation Menu */}
@@ -150,16 +123,14 @@ const ChallengeDetails: React.FC = () => {
                                 Discussion
                             </a>
                         </li>
-
                         <li className="mr-1">
                             <a
                                 className={`bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100' : ''}`}
                                 onClick={() => handleTabChange('submission')}
                             >
-                                Submission 
+                                Submission
                             </a>
                         </li>
-
                     </ul>
 
                     <div className="p-8">
@@ -180,28 +151,31 @@ const ChallengeDetails: React.FC = () => {
                         )}
                         {activeTab === 'leaderboard' && (
                             <div>
+                                {/* Render leaderboard component */}
                                 <h2>Leaderboard</h2>
                             </div>
                         )}
                         {activeTab === 'discussion' && (
                             <div>
+                                {/* Render discussion component */}
                                 <h2>Discussion</h2>
                             </div>
                         )}
-                         {activeTab === 'submission' && (
+                        {activeTab === 'submission' && (
                             <div>
-                                {/* khedmeet l solution */}
-                                <h2>Submission</h2>
+                                {/* liste des solutions */}
+                                <h2>Liste Fatma</h2>
                             </div>
                         )}
+
                     </div>
                 </div>
             </div>
 
 
 
-        </ClientLayout>
+        </ConnectedClientLayout>
     );
 };
 
-export default ChallengeDetails;
+export default ChallengeDetailsCompany;
