@@ -10,7 +10,7 @@ interface ModalProps {
   postSaveMessage?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const ModalForm: React.FC<ModalProps> = ({
   showModal,
   setShowModal,
   title,
@@ -48,12 +48,12 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       {showModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center">
+        <div className="sticky my-[4rem] mx-[1rem] sm:mx-auto inset-0 z-50 overflow-y-auto flex items-center justify-center">
  <div
             className="fixed inset-0 bg-black opacity-50"
             onClick={handleBackdropClick}
           />         
-          <div className="relative z-50 bg-white rounded-lg overflow-hidden max-w-3xl  max-w-lg w-full ">
+          <div className="relative z-50 bg-white rounded-lg overflow-hidden max-w-3xl w-full ">
             {/* content */}
             <div className="flex flex-col max-h-screen">
               {/* header */}
@@ -88,12 +88,7 @@ const Modal: React.FC<ModalProps> = ({
                 >
                   Cancel
                 </button>
-                <button
-                  className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg text-sm focus:outline-none"
-                  onClick={onSave}
-                >
-                  Confirm
-                </button>
+               
               </div>
             </div>
           </div>
@@ -103,4 +98,4 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-export default Modal;
+export default ModalForm;

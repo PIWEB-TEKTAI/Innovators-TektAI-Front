@@ -115,7 +115,9 @@ const Competitions: React.FC = () => {
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStatus(e.target.value);
   };
-
+  const navigateToDetails = (challengeId:any) => {
+    navigate(`/challengeDetail/${challengeId}`);
+    };
   const handleArchive = async (challengeId: string) => {
     try {
       console.log("Sending PUT request to update challenge status to 'archived' for challenge ID:", challengeId);
@@ -236,7 +238,7 @@ const Competitions: React.FC = () => {
           {filteredChallenges.map(challenge => (
 
             <div className="col" key={challenge._id}>
-              <div className="card h-100 card-hover">
+              <div onClick={() => navigateToDetails(challenge._id)} className="card h-100 card-hover">
                 <div className="status-and-actions-container">
                   <div className={`status inline-flex rounded-full py-1 px-3 text-sm font-medium ${
                     challenge.status === 'completed' ? 'bg-green-400 text-white font-semibold' :
