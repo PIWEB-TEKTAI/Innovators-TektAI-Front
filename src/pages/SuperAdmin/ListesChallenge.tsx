@@ -302,7 +302,7 @@ var completed = (id: string) => {
        
       </select>
       {selectedRole && selectedRole !== 'archivedChallenge' ? (
-        <Link to={`/Add${selectedRole}`} className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+        <Link to="/admin/addChallenge" className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
           <FaUserPlus className="mr-2" />
           
         </Link>

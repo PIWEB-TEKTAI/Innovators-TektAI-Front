@@ -324,7 +324,6 @@ const Landing: React.FC = () => {
     </div>
   </div>
 </section>
-
  <RevealOnScroll additionalProp={false} delay="">
     <section id="contactUs" className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg">
 

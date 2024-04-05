@@ -203,11 +203,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
             />
           </div>
           <div>
-            <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
-              <span className="font-semibold">
-                Ranking {renderStars(challengeRank)}
-              </span>
-            </div>
+           
             <hr className="my-2 border-gray-300" />
             <span className="font-semibold">Description</span>
             <p className="text-gray-700 dark:text-gray-300">{description}</p>
@@ -281,29 +277,26 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   };
 
   const [showDetails, setShowDetails] = useState(false);
-  const formattedStartDate = new Date(startDate);
-  const formattedEndDate =
-    endDate instanceof Date ? endDate.toDateString() : '';
-  const challengeRank = 4.5;
-  const today = new Date();
-  let durationText = '';
-  // Calcul de la différence en millisecondes
-  if (formattedStartDate instanceof Date) {
-    const differenceMs = today.getTime() - formattedStartDate.getTime();
+  
+  const calculateTimeRemaining = (endDate: string) => {
+    const endDateTime = new Date(endDate).getTime();
+    const currentTime = new Date().getTime();
+    const timeRemaining = endDateTime - currentTime;
 
-    // Conversion de la différence en jours, heures, minutes, secondes
-    const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (differenceMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    const daysRemaining = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hoursRemaining = Math.floor(
+      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
-    const minutes = Math.floor((differenceMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((differenceMs % (1000 * 60)) / 1000);
+    const minutesRemaining = Math.floor(
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+    );
 
-    // Affichage du résultat
-    durationText = `${days} jours, ${hours} heures`;
-  } else {
-    console.error("startDate n'est pas une instance de Date");
-  }
+   
+    return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
+  };
+
+  
+
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -312,7 +305,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       className="bg-white  rounded-lg shadow-lg p-6 flex flex-col items-start w-100 h-120"
       onClick={toggleDetails}
     >
-      <div className="flex items-center mb-4">
+      <div className="flex items-center justify-between gap-8 mb-4 ">
         <img
           src={`http://localhost:3000/images/${image}`}
           className="card-img-top mt-3 w-40"
@@ -320,41 +313,23 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         />
 
         <div className="flex flex-col items-start mb-4">
-          <h3 className="text-xl font-bold text-black dark:text-white">
+          <h3 className="text-xl font-bold text-black dark:text-white capitalize">
             {title}
           </h3>
-          <p style={{ color: '#B8B9B9' }}>{durationText}</p>
+          <div className='font-medium mt-2'>
+            {status == 'open' && <p className=' text-red-600'>Time Left </p>}
+            {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString())}</span> : null }       
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
-        <span className="font-semibold">
-          Ranking {renderStars(challengeRank)}
-        </span>
-      </div>
+    
       <hr className="my-2 border-gray-300" />
       <span className="font-semibold">Description </span>
 
-      <p className="text-gray-700 dark:text-gray-300">{description}</p>
+      <p className="text-gray-700 dark:text-gray-300">{description.substring(0,80)}... </p>
       <hr className="my-2 border-gray-300" />
-      <span className="font-semibold">Skills </span>
-      <hr className="my-2 border-gray-300" />
-      <span className="inline-flex space-x-2">
-        {targetedSkills.map((skill, index) => (
-          <span
-            key={index}
-            className={`rounded-full py-1 px-3 text-sm font-medium ${
-              status === 'open' || status === 'completed'
-                ? 'bg-[#BDC2C3] text-white font-semibold'
-                : status === 'archived'
-                  ? 'bg-black text-white font-semibold'
-                  : 'bg-red-400 text-white font-semibold'
-            }`}
-          >
-            {skill}
-          </span>
-        ))}
-      </span>
+   
       <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
         <FontAwesomeIcon icon={faEuro} className="text-green-500" />
         <span className="font-semibold">Price: {price} DT</span>
@@ -375,7 +350,6 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
           {status}
         </span>
       </div>
-      <button onClick={handleCardClick} className='mt-5 text-primary font-semibold'>Voir les détails</button>
       {selectedChallenge && (
         <ChallengeModal
           challenge={selectedChallenge}
@@ -395,6 +369,7 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 const ListChallengerFront: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -532,7 +507,6 @@ const ListChallengerFront: React.FC = () => {
                   <option value="completedChallenge">
                     completed challenges
                   </option>
-                  <option value="archivedChallenge">Archive challenges</option>
                 </select>
               </div>
 
@@ -540,7 +514,9 @@ const ListChallengerFront: React.FC = () => {
               
 
               {filteredCards.map((card, index) => (
-                <Card key={index} {...card} />
+                <Link key={index} to={`/challenge/details/${card._id}`}>
+                  <Card key={index} {...card} />
+                </Link>
               ))}
             </div>
           </RevealOnScroll>

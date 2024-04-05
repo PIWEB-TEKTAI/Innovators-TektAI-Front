@@ -172,7 +172,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               icon={faList}
                               style={{ color: 'white' }}
                         />
-                  List Challenge
+                  List Competitions
                 </NavLink>
 
               </li>

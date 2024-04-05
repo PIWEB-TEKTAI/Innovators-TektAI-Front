@@ -61,7 +61,7 @@ export const resendVerifcationEmail = async (id:any) => {
 export const resendVerifcationEmailAfterSignIn = async (formData:any) => {
 
     try {
-        const response = await axios.post(`${url}/resendEmail` , formData);
+        const response = await axios.post(`${url}/resendEmail`, formData);
         console.log('Response:', response.data);
         return response.data
 
