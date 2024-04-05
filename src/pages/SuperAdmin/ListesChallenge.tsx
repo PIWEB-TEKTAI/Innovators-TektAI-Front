@@ -5,6 +5,10 @@ import Layout from '../../layout/DefaultLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus, FaStop, FaStopCircle, FaHands, FaHandPointUp, FaStopwatch, FaBullseye, FaEye } from 'react-icons/fa'; // Importation des icônes
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTasks, faCheckCircle, faArchive , faLightbulb , faUnlockAlt , faBrain ,faBullseye,faClock   } from '@fortawesome/free-solid-svg-icons';
+
+
 
 // Définissez le type des données attendues
 interface User {
@@ -44,6 +48,7 @@ interface Challenge {
 }
 
 
+
 const toTitleCase = (str:string) => {
   return str.toLowerCase().split(' ').map(word => {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -58,6 +63,25 @@ export default function FetchData() {
   const [usersPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
+  const [statistics, setStatistics] = useState<any>(null);
+
+  /*useEffect(() => {
+      const fetchChallengeStatistics = async () => {
+          try {
+              const response = await axios.get(`http://localhost:3000/challenge/statistics`);
+              setStatistics(response.data.statistics);
+          } catch (error) {
+              console.error('Error fetching challenge statistics:', error);
+          }
+      };
+
+      fetchChallengeStatistics();
+  }, []);
+
+  if (!statistics) {
+      return <div>Loading...</div>;
+  }
+*/
 
 
   useEffect(() => {
@@ -283,9 +307,12 @@ var completed = (id: string) => {
   
   };
 
+
+
  
   return (
     <Layout>
+
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">List</h2>

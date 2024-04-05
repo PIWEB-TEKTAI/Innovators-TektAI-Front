@@ -11,7 +11,9 @@ import {
   differenceInMinutes,
   differenceInSeconds,
 } from 'date-fns';
-import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
+import CompanyModal from './companydetailsmodal'; 
+import SubmissionDetailsModal from './submissiondetailsmodal '; 
+
 import {
   addSubmission,
   getSubmissionsByChallengeId,
@@ -99,7 +101,7 @@ const AddSubmissionForm: React.FC = () => {
           message: 'submission added successfully',
         });
         setTimeout(() => {
-          navigate('/competitions');
+          navigate('/LCFront');
         }, 3000);
       })
       .catch((error) => {
@@ -199,6 +201,10 @@ const ChallengeDetails: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+  const [showModalsub, setShowModalsub] = useState(false);
+const [selectedSubmission, setSelectedSubmission] = useState(null);
+
+
 
   const openModal = () => {
     setShowModal(true);
@@ -207,11 +213,22 @@ const ChallengeDetails: React.FC = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+  const openModalsub = () => {
+    setShowModalsub(true);
+  };
+  const closeModalsub = () => {
+    setShowModalsub(false);
+  };
   const handleCompanyNameClick = (companyDetails: any) => {
     console.log('Company details:', companyDetails);
     setSelectedCompany(companyDetails);
     setIsModalOpen(true);
   };
+  const handleSubmissionClick = (submission : any) => {
+    setSelectedSubmission(submission);
+    setShowModalsub(true);
+  };
+  
   useEffect(() => {
     console.log('isModalOpen:', isModalOpen); // Check if this log updates when the modal state changes
   }, [isModalOpen]);
@@ -454,25 +471,27 @@ const ChallengeDetails: React.FC = () => {
                   />
                 </div>
                 <ul>
-                  {currentItems.map((submission) => (
-                    <li
-                      className="border-b border-gray-300 justify-between flex p-2"
-                      key={submission.id}
-                    >
-                      <div className="flex-col">
-                        <p className="break-words text-black font-semibold">
-                          {submission.title}
-                        </p>
-                        <p className="break-words text-black">
-                          {submission.description.substring(0, 60)}
-                        </p>
-                      </div>
-                      <p className="break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                        {submission.files[0].name.substring(0, 15)}...
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+  {currentItems.map((submission) => (
+    <li
+      className="border-b border-gray-300 justify-between flex p-2"
+      key={submission.id}
+      onClick={() => handleSubmissionClick(submission)} // Handle click event
+    >
+      <div className="flex-col">
+        <p className="break-words text-black font-semibold">
+          {submission.title}
+        </p>
+        <p className="break-words text-black">
+          {submission.description.substring(0, 60)}
+        </p>
+      </div>
+      <p className="break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
+        {submission.files[0].name.substring(0, 15)}...
+      </p>
+    </li>
+  ))}
+</ul>
+
                 {/* Pagination */}
                 <nav>
                   <ul className="pagination">
@@ -496,8 +515,18 @@ const ChallengeDetails: React.FC = () => {
           </div>
         </div>
       </div>
+      {showModalsub && (
+        <SubmissionDetailsModal
+          submission={selectedSubmission}
+          onClose={closeModalsub} // Pass the close function here
+          
+        />
+      )}
+
     </ClientLayout>
+    
   );
+  
 };
 
 export default ChallengeDetails;
