@@ -9,7 +9,12 @@ const ChallengeStatistics: React.FC = () => {
     useEffect(() => {
         const fetchChallengeStatistics = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/challenge/statistics`);
+                const response = await axios.get(`http://localhost:3000/challenge/statistics`,{
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                    },
+                    withCredentials: true
+                  });
                 setStatistics(response.data.statistics);
             } catch (error) {
                 console.error('Error fetching challenge statistics:', error);

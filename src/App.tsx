@@ -119,6 +119,15 @@ function App() {
             </>
           }
         />
+          <Route
+          path="/statistics" 
+          element={
+            <>
+              <PageTitle title="Statistics| TektAi" />
+              <ChallengeStatistics/>
+            </>
+          }
+        />
        
          <Route
           path="/List"

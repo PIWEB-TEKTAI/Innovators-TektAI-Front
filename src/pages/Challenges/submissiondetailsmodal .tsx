@@ -61,7 +61,7 @@ const SubmissionDetailsModal: React.FC<SubmissionDetailsModalProps> = ({ submiss
         </div>
         <div>
           <span className="font-semibold">Submitted By :</span>
-          <p className="text-gray-700 dark:text-gray-300">{submission.submittedBy}</p> {/* Update with actual submission properties */}
+          <p className="text-gray-700 dark:text-gray-300">{submission.submittedBy.email}</p> {/* Update with actual submission properties */}
           <hr className="my-2 border-gray-300" />
 
           <span className="font-semibold">Submitted At :</span>

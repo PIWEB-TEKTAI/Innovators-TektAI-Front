@@ -414,6 +414,14 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
                 Submission
               </a>
             </li>
+            <li className="mr-1">
+              <a
+                className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'datasets' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
+                onClick={() => handleTabChange('datsets')}
+              >
+                Datasets
+              </a>
+            </li>
           </ul>
 
           <div className="p-8">

@@ -55,12 +55,12 @@ const CompanyModal: React.FC<CompanyModalProps> = ({ company, onClose }) => {
       <div className="modal-body flex items-center mb-4">
           <div className="w-[250px] rounded-lg mr-5 overflow-hidden">
             <img
-             src="/src/images/landing/flight.jpeg"
+             src="/src/images/logo/logo-tekt-gray2.png"
               className="card-img-top mt-3 w-50"
               alt="Card image"
-
             />
           </div>
+          
           <div>
            
             <span className="font-semibold">Location</span>
