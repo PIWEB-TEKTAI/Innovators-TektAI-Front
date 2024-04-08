@@ -237,10 +237,13 @@ const AddChallenge = () => {
         {alert?.type == 'error' && ErrorToast(alert.message)}
       </div>
        
-        <div className="flex flex-col gap-9 border-full">
-          <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="flex flex-col gap-9 sm:justify-center sm:items-center border-full">
+          <div className="rounded-lg shadow-primary sm:w-[90%]  shadow-2xl  border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
             <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
-
+            <div className="flex justify-center xs:justify-end sm:justify-around">
+              <div></div>
+                    <img src="/src/images/forms/undraw_fill_form_re_cwyf.svg" className='max-h-[7rem] drop-shadow-[0_10px_8px_#4959cd]' alt="" />
+                </div>
 
               {/* Stepper */}
               <ol className="flex justify-center items-center w-full">

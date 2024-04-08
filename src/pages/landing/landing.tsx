@@ -56,11 +56,11 @@ interface CardProps {
   const Card2: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="cursor-pointer  max-w-[30rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
+          className="shadow-xl shadow-[#d96f1e] cursor-pointer break-words	 max-w-[30rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >
           <img className="h-35 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15]" src={imageSrc} alt="ai" loading='lazy' />
           <a href="#" className="text-[#00004b] group-hover:text-white">
-            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">{title}</h5>
+            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75  break-words">{title}</h5>
           </a>
           <p className="mb-3 font-normal text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105">{description}</p>
         </div>
@@ -70,14 +70,14 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[32rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
+          className="shadow-xl shadow-primary cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[32rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >              
           <div className="flex">
 
           <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.2] " src={imageSrc} alt="ai" loading='lazy'
  />
           <a href="#" className="text-primary hover:text-primary-dark group-hover:text-white flex-auto">
-            <h5 className="mb-2 text-xl w-50 font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
+            <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900  dark:text-white break-words	">{title}</h5>
           </a>
           </div>
           <p className="mb-3 font-normal text-gray-500 group-hover:text-white group-hover:font-semibold dark:text-gray-400">{description}</p>
@@ -193,7 +193,26 @@ const Landing: React.FC = () => {
       }
     };
   
-              
+  const [images, setImages] = useState([
+    "/src/images/landing/undraw_chat_bot_re_e2gj.svg",
+    "/src/images/landing/undraw_artificial_intelligence_re_enpp.svg",
+    //"/src/images/landing/undraw_lightbulb_moment_re_ulyo.svg",
+    
+
+
+    
+  ]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Increment the current image index
+      setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
+    }, 5000); // Change image every 5 seconds (5000 milliseconds)
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [images.length]); 
   
   return (
     <ClientLayout>
@@ -202,34 +221,34 @@ const Landing: React.FC = () => {
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
             <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-              <span className="animated-text">T</span>
-              <span className="animated-text" style={{animationDelay: '0.1s'}}>r</span>
-              <span className="animated-text" style={{animationDelay: '0.2s'}}>a</span>
-              <span className="animated-text" style={{animationDelay: '0.3s'}}>n</span>
-              <span className="animated-text" style={{animationDelay: '0.4s'}}>s</span>
-              <span className="animated-text" style={{animationDelay: '0.5s'}}>f</span>
-              <span className="animated-text" style={{animationDelay: '0.6s'}}>o</span>
-              <span className="animated-text" style={{animationDelay: '0.7s'}}>r</span>
-              <span className="animated-text" style={{animationDelay: '0.8s'}}>m</span>
-              <span className="animated-text" style={{animationDelay: '0.9s'}}>i</span>
-              <span className="animated-text" style={{animationDelay: '1s'}}>n</span>
-              <span className="animated-text" style={{animationDelay: '1.1s'}}>g</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]">T</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.1s'}}>r</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.2s'}}>a</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.3s'}}>n</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.4s'}}>s</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.5s'}}>f</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.6s'}}>o</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.7s'}}>r</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.8s'}}>m</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.9s'}}>i</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1s'}}>n</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.1s'}}>g</span>
               <br />
-              <span className="animated-text" style={{animationDelay: '1.3s'}}>C</span>
-              <span className="animated-text" style={{animationDelay: '1.4s'}}>h</span>
-              <span className="animated-text" style={{animationDelay: '1.5s'}}>a</span>
-              <span className="animated-text" style={{animationDelay: '1.6s'}}>l</span>
-              <span className="animated-text" style={{animationDelay: '1.7s'}}>l</span>
-              <span className="animated-text" style={{animationDelay: '1.8s'}}>e</span>
-              <span className="animated-text" style={{animationDelay: '1.9s'}}>n</span>
-              <span className="animated-text" style={{animationDelay: '2s'}}>g</span>
-              <span className="animated-text" style={{animationDelay: '2.1s'}}>e</span>
-              <span className="animated-text" style={{animationDelay: '2.2s'}}>s</span>
-              <span className="animated-text" style={{animationDelay: '2.3s'}}>&nbsp;</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.3s'}}>C</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.4s'}}>h</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.5s'}}>a</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.6s'}}>l</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.7s'}}>l</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.8s'}}>e</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]t" style={{animationDelay: '1.9s'}}>n</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2s'}}>g</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.1s'}}>e</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.2s'}}>s</span>
+              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.3s'}}>&nbsp;</span>
 
-              <span className="animated-text text-primary" style={{animationDelay: '2.3s'}}> Into </span>
+              <span className="animated-text text-primary " style={{animationDelay: '2.3s'}}> Into </span>
               <br />
-              <span className="animated-text text-primary" style={{animationDelay: '2.4s'}}> Solutions</span>
+              <span className="animated-text text-primary " style={{animationDelay: '2.4s'}}> Solutions</span>
             </h1>
             <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
               Welcome to our collaborative data science platform, 
@@ -248,7 +267,9 @@ const Landing: React.FC = () => {
             </div>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2] animate__animated animate__fadeInRight">
-            <img src="/src/images/landing/ai3.jpg" alt="mockup"/>
+            <img 
+              src={images[currentImageIndex]}
+              className=" drop-shadow-[0_10px_8px_#4959cd]" alt="mockup"/>
           </div>                
 
         </div>
@@ -261,7 +282,7 @@ const Landing: React.FC = () => {
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
         <RevealOnScroll delay=''>
 
-        <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">Competitions</h2>
+        <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4" >Competitions</h2>
           <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 justify-center sm:grid-cols-2">
           {forwardCards.map((card, index) => (
         <Card key={index} {...card} />
@@ -285,21 +306,21 @@ const Landing: React.FC = () => {
 <RevealOnScroll additionalProp={false} delay="">
 <section>
       <div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
-        <div className="sm:w-1/2 p-10">
-          <div className="image object-center text-center hover:scale-[1.05]">
-            <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
-          </div>
-        </div>
-        <div className="sm:w-1/2 p-5">
-          <div className="text group cursor-pointer">
+        <div className="sm:w-2/3 p-4 sm:p-[5rem]">
+        <div className="text group cursor-pointer shadow-black shadow-2xl rounded-full px-4 py-[5rem] sm:p-[5rem]">
             <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
-            <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">About <span className="text-indigo-600">TektAI</span>
+            <h2 className="my-4 font-bold text-3xl text-black sm:text-4xl group-hover:scale-[1.05]  break-words	">About <span className="text-indigo-600">TektAI</span>
             </h2>
-            <p className="text-gray-700  group-hover:scale-[1.05]">
+            <p className="text-gray-700  group-hover:scale-[1.01] font-semibold break-words	">
               {aboutUsContent}
             </p>
           </div>
         </div>
+        <div className="hidden sm:block xs:block sm:w-1/3 p-5">
+  <div className="image object-center text-center hover:scale-[1.05] ">
+    <img src="/src/images/landing/undraw_sentiment_analysis_jp6w.svg" className="max-h-[30rem] max-w-[30rem]  drop-shadow-[0_10px_8px_#4959cd]" alt="About Us" />
+  </div>
+</div>
       </div>
     </section>
 </RevealOnScroll>
