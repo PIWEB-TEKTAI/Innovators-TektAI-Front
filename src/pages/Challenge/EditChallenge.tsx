@@ -2,10 +2,11 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
 import { useEffect, useState } from 'react';
 import { editChallenge, getChallengeById } from '../../services/challengeServices';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import '../../css/stepper.css';
 import { TiTick } from 'react-icons/ti';
+import CheckboxR from '../../components/Checkboxes/CheckboxR';
 
 const EditChallenge = () => {
   const [step, setStep] = useState(1);
@@ -23,6 +24,11 @@ const EditChallenge = () => {
   const [dataSetDescription, setDataSetDescription] = useState('');
   const [dataSetTitleError, setDataSetTitleError] = useState('');
   const [dataSetTitle, setDataSetTitle] = useState('');
+  const [ImageName, setImageName] = useState('');
+  const [awardError, setawardError] = useState('');
+  const [award, setAward] = useState('');
+  const [Image, SetImage] = useState<string | Blob >('');
+
   const [submitted , setSubmitted] = useState(false);
   
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
@@ -31,6 +37,8 @@ const EditChallenge = () => {
 
   const { id } = useParams();
 
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChallenge = async () => {
@@ -44,6 +52,7 @@ const EditChallenge = () => {
         setDataSetTitle(data?.dataset.name || ''); 
         setDataSetDescription(data?.dataset.description || ''); 
         setFileName(data?.dataset.fileUrl || ''); 
+        setImageName(data?.image || '');
         console.log(FileName)
        } catch (error) {
         console.error('Error fetching challenge data:', error);
@@ -55,6 +64,33 @@ const EditChallenge = () => {
   }, []); 
 
 
+  const [textInputVisible, setTextInputVisible] = useState(false);
+  const [numberInputVisible, setNumberInputVisible] = useState(false);
+  const [isPrizesChecked, setIsPrizesChecked] = useState<boolean>(false);
+  const [isMonetaryChecked, setIsMonetaryChecked] = useState<boolean>(false)
+
+  const handleTextCheckboxChange = () => {
+    
+    setNumberInputVisible(false);
+    setIsPrizesChecked(!isPrizesChecked);
+    setPrice('');
+    setPriceError('');
+    if (isMonetaryChecked) {
+      setIsMonetaryChecked(false);
+      setAward('');
+      setawardError('');
+    }
+    setTextInputVisible(!textInputVisible);
+  };
+
+  const handleNumberCheckboxChange = () => {
+    setIsMonetaryChecked(!isMonetaryChecked);
+    if (isPrizesChecked) {
+      setIsPrizesChecked(false);
+    }
+    setTextInputVisible(false);
+    setNumberInputVisible(!numberInputVisible);
+  };
 
 
 
@@ -124,6 +160,16 @@ const EditChallenge = () => {
     setDataSetFile(file);
     setFileName(file.name);
   };
+
+
+  const handleImageChange  = (e:any) => {
+    const image = e.target.files[0];
+    SetImage(image);
+    setImageName(image.name)
+
+  };
+
+
   // Callback function to update endDate in form data
   const handleEndDateChange = (endDate: any) => {
     console.log(endDate)
@@ -144,14 +190,19 @@ const EditChallenge = () => {
         description: dataSetDescription,
       },
       file: DataSetFile,
+      image:Image
     },id)
       .then((response) => {
         // Handle success
-        console.log('Challenge editted successfully', response);
+        console.log('Challenge eddited successfully', response);
         setAlert({
           type: 'success',
-          message: 'Challenge editted successfully' ,
+          message: 'Challenge eddited successfully' ,
         });
+        setTimeout(() => {
+          navigate("/competitions");
+        }, 3000);
+
       })
       .catch((error) => {
         // Handle error
@@ -179,6 +230,7 @@ const EditChallenge = () => {
         <div className="flex flex-col gap-9 border-full">
           <div className=" rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
+          
               {/* Stepper */}
               <ol className="flex justify-center items-center w-full">
                 <li
@@ -200,7 +252,7 @@ const EditChallenge = () => {
               </ol>
               <ol className="flex justify-center items-cente w-full">
                 <li className={`mr-8`}>
-                   <span className={`font-medium ${step === 1 ? 'text-gray-700 font-bold' : step === 2 ? 'text-green-700 font-semibold' : ''}`}>Challenge Info</span>
+                   <span className={`font-medium ${step === 1 ? 'text-gray-700 font-bold' : step === 2 ? 'text-green-700 font-semibold' : ''}`}>Competition Info</span>
 
                 </li>
 
@@ -228,22 +280,71 @@ const EditChallenge = () => {
                     <p className="text-red-500 text-sm mt-1">{titleError}</p>
                   )}
                 </div>
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black font-medium dark:text-white">
-                    Price
-                  </label>
+                
+                <div>
+                <div className="mb-4.5 flex">
+                  <div className="mr-4">
+                  <CheckboxR onChange={handleTextCheckboxChange} labelText="Non-Monetary"  checked={isPrizesChecked} />
+
+                  </div>
+                  <CheckboxR onChange={handleNumberCheckboxChange} labelText="Monetary" checked={isMonetaryChecked} />
+                </div>
+                  {textInputVisible && (
+                    <div>
+                  <div className="mb-4.5">
+                  <label className="mb-2.5 font-medium block text-black dark:text-white">Awards</label>
                   <input
                     type="text"
-                    name="price"
-                    value={price}
-                    placeholder="Enter the price of your challenge"
-                    onChange={(e) => checkValidity('price', e.target.value)}
+                    name="award"
+                    value={award}
+                    placeholder="Enter the award of your competition"
+                    onChange={(e)=>checkValidity("award",e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
-                  {priceError && (
-                    <p className="text-red-500 text-sm mt-1">{priceError}</p>
-                  )}
+                      {awardError && <p className="text-red-500 text-sm mt-1">{awardError}</p>}
+
                 </div>
+                    </div>
+                  )}
+                  {numberInputVisible && (
+                         <div className="mb-4.5">
+                         <label className="mb-2.5 font-medium block text-black dark:text-white">Price</label>
+                         <input
+                           type="number"
+                           name="price"
+                           value={price}
+                           placeholder="Enter the price of your competition"
+                           onChange={(e)=>checkValidity("price",e.target.value)}
+                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                         />
+                             {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
+       
+                       </div>
+                  )}
+                </div>     
+
+
+                <div className="mb-4 5">
+                <label className="mb-3 block font-medium text-black dark:text-white">Image</label>
+
+                <div className="relative overflow-hidden">
+                          <input
+                            type="file"
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                            id="customFile"
+                            name="image"
+                            onChange={handleImageChange}
+                          />
+                          <label
+                            className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                            htmlFor="customFile"
+                          >
+                            {ImageName ? ImageName : 'Upload Challenge Image'}
+                          </label>
+                    </div>
+                </div>
+
+
                 <div className="mb-4 5">
                   <DateTimePicker onChange={handleEndDateChange} value={endDate} />
                   {endDateError && (
@@ -252,7 +353,7 @@ const EditChallenge = () => {
                 </div>
                 <div className="mb-6">
                   <label className="mb-2.5 block text-black font-medium dark:text-white">
-                     Challenge description
+                      Description
                   </label>
                   <textarea
                     name="description"

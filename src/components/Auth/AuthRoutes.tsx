@@ -12,6 +12,7 @@ const AuthRoutes: React.FC<AuthRouteProps> = ({
 })=> {
   const { userAuth } = useAuth();
 
+  
   if (userAuth) {
     if(userAuth.role == "admin" || userAuth.role=="superAdmin"){
       return <Navigate to="/" />;

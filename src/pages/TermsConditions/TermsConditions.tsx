@@ -147,7 +147,7 @@ const TermsConditions = () => {
 
   {Data && Data.map((item:any, index:any) => (   
 
-     <div className='mb-3 card' key={index}>
+     <div className='mb-3 card-design' key={index}>
       {editIndex === index ? (
        <div>
       

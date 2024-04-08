@@ -6,6 +6,7 @@ export type challenge = {
     endDate: Date,
     createdBy:string,
     targetedSkills: Array<string>, 
+    image:string,
     dataset: {
       name: string,
       description: string,

@@ -1,13 +1,15 @@
-import { useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
-import { useState } from 'react';
-import { addChallenge } from '../../services/challengeService';
-import CheckboxR from '../../components/Checkboxes/CheckboxR';
-import { TiTick } from 'react-icons/ti';
+import { useEffect, useState } from 'react';
+import { editChallenge, getChallengeById } from '../../services/challengeServices';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorToast, successfullToast } from '../../components/Toast';
+import '../../css/stepper.css';
+import { TiTick } from 'react-icons/ti';
+import CheckboxR from '../../components/Checkboxes/CheckboxR';
+import DefaultLayout from '../../layout/DefaultLayout';
 
-const AddChallenge = () => {
+const EditChallengeAdmin = () => {
   const [step, setStep] = useState(1);
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
@@ -15,30 +17,58 @@ const AddChallenge = () => {
   const [description, setDescription] = useState('');
   const [priceError, setPriceError] = useState('');
   const [price, setPrice] = useState('');
-  const [awardError, setawardError] = useState('');
-  const [award, setAward] = useState('');
   const [endDateError, setEndDateError] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState("");
   const [DataSetFileError, setDataSetError] = useState('');
-  const [DataSetFile, setDataSetFile] = useState<string | Blob >('');
+  const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
   const [FileName, setFileName] = useState('');
-  const [ImageName, setImageName] = useState('');
-
-  const [ImageError, setImageError] = useState('');
-  const [Image, SetImage] = useState<string | Blob >('');
-  const [dataSetDescriptionError, setDataSetDescriptionError] = useState('');
   const [dataSetDescription, setDataSetDescription] = useState('');
   const [dataSetTitleError, setDataSetTitleError] = useState('');
   const [dataSetTitle, setDataSetTitle] = useState('');
+  const [ImageName, setImageName] = useState('');
+  const [awardError, setawardError] = useState('');
+  const [award, setAward] = useState('');
+  const [Image, SetImage] = useState<string | Blob >('');
+
+  const [submitted , setSubmitted] = useState(false);
+  
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
   );
+
+  const { id } = useParams();
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchChallenge = async () => {
+      try {
+        const data = await getChallengeById(id);
+        console.log(data)
+        setTitle(data?.title || ''); 
+        setPrice(data?.price || ''); 
+        setDescription(data?.description || ''); 
+        setEndDate(data?.endDate.toString() || ''); 
+        setDataSetTitle(data?.dataset.name || ''); 
+        setDataSetDescription(data?.dataset.description || ''); 
+        setFileName(data?.dataset.fileUrl || ''); 
+        setImageName(data?.image || '');
+        console.log(FileName)
+       } catch (error) {
+        console.error('Error fetching challenge data:', error);
+      }
+    };
+
+
+    fetchChallenge();
+  }, []); 
+
 
   const [textInputVisible, setTextInputVisible] = useState(false);
   const [numberInputVisible, setNumberInputVisible] = useState(false);
   const [isPrizesChecked, setIsPrizesChecked] = useState<boolean>(false);
   const [isMonetaryChecked, setIsMonetaryChecked] = useState<boolean>(false)
-  const [submitted , setSubmitted] = useState(false);
 
   const handleTextCheckboxChange = () => {
     
@@ -63,153 +93,112 @@ const AddChallenge = () => {
     setNumberInputVisible(!numberInputVisible);
   };
 
-  const checkValidity = (name:any,value:any) =>{
-    if(name=="title"){
-      setTitle(value)
+
+
+  const checkValidity = (name: any, value: any) => {
+    if (name == 'title') {
+      setTitle(value);
       if (!value.trim()) {
-        setTitleError("Title is required");
-      }else {
-        setTitleError("");
+        setTitleError('Title is required');
+      } else {
+        setTitleError('');
       }
-    }
-    else if(name=="description"){
-      setDescription(value)
+    } else if (name == 'description') {
+      setDescription(value);
       if (!value.trim()) {
-        setDescriptionError("Description is required");
-      }else {
-        setDescriptionError("");
+        setDescriptionError('Description is required');
+      } else {
+        setDescriptionError('');
       }
-    }
-    else if(name=="price"){
-      setPrice(value)
+    } else if (name == 'price') {
+      setPrice(value);
       if (!value.trim()) {
-        setPriceError("Price is required");
-      }else {
-        setPriceError("");
+        setPriceError('Price is required');
+      } else {
+        setPriceError('');
       }
-    }
-    else if(name=="award"){
-      setAward(value)
+    } else if (name == 'endDate') {
+      setEndDate(value);
       if (!value.trim()) {
-        setawardError("Award is required");
-      }else {
-        setawardError("");
+        setEndDateError('EndDate is required');
+      } else {
+        setEndDateError('');
       }
-    }
-    else if(name=="endDate"){
-      setEndDate(value)
-      if (!value.trim()) {
-        setEndDateError("EndDate is required");
-      }else {
-        setEndDateError("");
-      }
-    }
-    else if(name=="DataSetTitle"){
-      setDataSetTitle(value)
-     {/*  if (!value.trim()) {
-        setDataSetTitleError("DataSet title is required");
-      }else {
-        setDataSetTitleError("");
-      } */}
-    }
-    else if(name=="DatasetDescription"){
-      setDataSetDescription(value)
-      {/* if (!value.trim()) {
-        setDataSetTitleError("DataSet title is required");
-      }else {
-        setDataSetTitleError("");
-      } */}
-    }
-    else if(name=="DataSetFile"){
-      {/* if (!value.trim()) {
-        setDataSetTitleError("DataSet title is required");
-      }else {
-        setDataSetTitleError("");
-      } */}
-    }
-   }
+    } else if (name == 'DataSetTitle') {
+      setDataSetTitle(value);
+      
+    } else if (name == 'DatasetDescription') {
+      setDataSetDescription(value);
+      
+    } 
+  };
   const nextStep = () => {
     setStep(step + 1);
   };
 
   const prevStep = () => {
+    setSubmitted(false);
     setStep(step - 1);
   };
 
   const isFirstPageValid = () => {
     return (
-      title!== ''&&
-      (price!==''||award!=="")&&
-      description!==''&&
-      endDate!=''&&
+      title !== '' &&
+      price !== '' &&
+      description !== '' &&
+      endDate != '' &&
       titleError === '' &&
       priceError === '' &&
       descriptionError === '' &&
-      endDateError === '' 
+      endDateError === ''
     );
   };
 
-  const handleFileChange = (e:any) => {
+  
+  const handleFileChange = (e: any) => {
     const file = e.target.files[0];
-    if(file.type !="application/vnd.ms-excel" && file.type !="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
-      setDataSetError("You should provide an xsl file")
-    }else{
-      setDataSetError("")
-
-    }
+    console.log('file' + file);
     setDataSetFile(file);
-    setFileName(file.name)
-
-
+    setFileName(file.name);
   };
+
+
   const handleImageChange  = (e:any) => {
     const image = e.target.files[0];
-    console.log(image.type);
-    if(image.type !="image/jpg" && image.type!="image/jpeg" && image.type!="image/png"){
-      setImageError("you should provide an image of type:jpg,jpeg or png")
-    }else{
-      setImageError('');
-    }
     SetImage(image);
     setImageName(image.name)
 
   };
 
-  const navigate = useNavigate();
 
   // Callback function to update endDate in form data
-  const handleEndDateChange = (endDate:any) => {
-    checkValidity("endDate",endDate);
-  };  
-  const handleSubmit = (e:any) => {
+  const handleEndDateChange = (endDate: any) => {
+    console.log(endDate)
+    checkValidity('endDate', endDate);
+  };
+  const formData = new FormData(); // Create FormData object to handle file upload
+
+  const handleSubmit = (e: any) => {
     setSubmitted(true);
-
     e.preventDefault();
-    console.log('file'+DataSetFile);
-    console.log("image"+Image)
-    let prizes = price;
-    if(isPrizesChecked){
-      prizes = award;
-    }
-    addChallenge({
-      title:title,
-      description:description,
-      price:prizes,
-      endDate:endDate,
-      dataset: 
-        {
-          name: dataSetTitle,
-          description: dataSetDescription,
-        },
-       file:DataSetFile,
-       image:Image
-
-    })
+    editChallenge({
+      title: title,
+      description: description,
+      price: price,
+      endDate: endDate,
+      dataset: {
+        name: dataSetTitle,
+        description: dataSetDescription,
+      },
+      file: DataSetFile,
+      image:Image
+    },id)
       .then((response) => {
-        console.log('Challenge added successfully:', response);
+        // Handle success
+        console.log('Challenge eddited successfully', response);
         setAlert({
           type: 'success',
-          message: 'Challenge added successfully' ,
+          message: 'Challenge eddited successfully' ,
         });
         setTimeout(() => {
           navigate("/competitions");
@@ -217,31 +206,33 @@ const AddChallenge = () => {
 
       })
       .catch((error) => {
-        console.error('Error adding challenge:', error);
+        // Handle error
+        console.error('Error edditing challenge', error);
         setAlert({
           type: 'error',
-          message: 'Error adding challenge',
+          message: 'Error edditing challenge',
         });
       });
   };
 
   return (
-    <ConnectedClientLayout>
+    <DefaultLayout>
 
-      <div className={`${alert && `mt-8`}`}>
+       
+     <div className={`${alert && `mt-8`}`}>
         {alert?.type == 'success' && successfullToast(alert.message)}
 
         {alert?.type == 'error' && ErrorToast(alert.message)}
       </div>
-       
-        <div className="flex flex-col gap-9 sm:justify-center sm:items-center border-full">
-          <div className="rounded-lg shadow-primary sm:w-[90%]  shadow-2xl  border border-stroke bg-white  dark:border-strokedark dark:bg-boxdark">
-            <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
-            <div className="flex justify-center xs:justify-end sm:justify-around">
-              <div></div>
-                    <img src="/src/images/forms/undraw_fill_form_re_cwyf.svg" className='max-h-[7rem] drop-shadow-[0_10px_8px_#4959cd]' alt="" />
-                </div>
 
+
+         
+
+        <div className="flex flex-col gap-9 border-full">
+          <div className=" rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
+         
+          
               {/* Stepper */}
               <ol className="flex justify-center items-center w-full">
                 <li
@@ -276,22 +267,26 @@ const AddChallenge = () => {
               {/* Content for Step 1 */}
               <div className={step === 1 ? '' : 'hidden'}>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 font-medium block text-black dark:text-white">Title</label>
+                  <label className="mb-2.5 block text-black font-medium dark:text-white">
+                    Title
+                  </label>
                   <input
                     type="text"
                     name="title"
                     value={title}
-                    placeholder="Enter the title of your competition"
-                    onChange={(e) =>checkValidity("title",e.target.value)}
+                    placeholder="Enter the title of your challenge"
+                    onChange={(e) => checkValidity('title', e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
-                      {titleError && <p className="text-red-500 text-sm mt-1">{titleError}</p>}
-
+                  {titleError && (
+                    <p className="text-red-500 text-sm mt-1">{titleError}</p>
+                  )}
                 </div>
+                
                 <div>
                 <div className="mb-4.5 flex">
                   <div className="mr-4">
-                  <CheckboxR onChange={handleTextCheckboxChange} labelText="Prizes"  checked={isPrizesChecked} />
+                  <CheckboxR onChange={handleTextCheckboxChange} labelText="Non-Monetary"  checked={isPrizesChecked} />
 
                   </div>
                   <CheckboxR onChange={handleNumberCheckboxChange} labelText="Monetary" checked={isMonetaryChecked} />
@@ -328,11 +323,11 @@ const AddChallenge = () => {
        
                        </div>
                   )}
-                </div>               
-        
+                </div>     
+
 
                 <div className="mb-4 5">
-                <label className="mb-3 block font-medium text-black dark:text-white">Challenge Image</label>
+                <label className="mb-3 block font-medium text-black dark:text-white">Image</label>
 
                 <div className="relative overflow-hidden">
                           <input
@@ -348,107 +343,137 @@ const AddChallenge = () => {
                           >
                             {ImageName ? ImageName : 'Upload Challenge Image'}
                           </label>
-
                     </div>
-                    {ImageError && <p className="text-red-500 text-sm mt-1">{ImageError}</p>}
-
                 </div>
-                <div className="mb-4 5">
-                  <DateTimePicker onChange={handleEndDateChange} value={endDate}  />
-                  {endDateError && <p className="text-red-500 text-sm mt-1">{endDateError}</p>}
 
+
+                <div className="mb-4 5">
+                  <DateTimePicker onChange={handleEndDateChange} value={endDate} />
+                  {endDateError && (
+                    <p className="text-red-500 text-sm mt-1">{endDateError}</p>
+                  )}
                 </div>
                 <div className="mb-6">
-                  <label className="mb-2.5 font-medium  block text-black dark:text-white">Description</label>
+                  <label className="mb-2.5 block text-black font-medium dark:text-white">
+                      Description
+                  </label>
                   <textarea
                     name="description"
                     value={description}
                     rows={6}
-                    placeholder="Enter the description of your competition"
-                    onChange={(e)=>checkValidity("description",e.target.value)}
+                    placeholder="Enter the description of your challenge"
+                    onChange={(e) =>
+                      checkValidity('description', e.target.value)
+                    }
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   ></textarea>
-                      {descriptionError && <p className="text-red-500 text-sm mt-1">{descriptionError}</p>}
-
+                  {descriptionError && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {descriptionError}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* Content for Step 2 */}
               <div className={step === 2 ? '' : 'hidden'}>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 font-medium  block text-black dark:text-white">Dataset title</label>
+                  <label className="mb-2.5 block text-black font-medium dark:text-white">
+                    Dataset title
+                  </label>
                   <input
                     type="text"
                     name="dataSetTitle"
                     value={dataSetTitle}
                     placeholder="Enter the title of the dataset"
-                    onChange={(e)=>checkValidity("DataSetTitle",e.target.value)}
+                    onChange={(e) =>
+                      checkValidity('DataSetTitle', e.target.value)
+                    }
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
-                      {dataSetTitleError && <p className="text-red-500 text-sm mt-1">{dataSetTitleError}</p>}
-
+                  {dataSetTitleError && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {dataSetTitleError}
+                    </p>
+                  )}
                 </div>
                 <div className="mb-4.5">
-                  <label className="mb-2.5 block font-medium  text-black dark:text-white">Dataset description</label>
+                  <label className="mb-2.5 block text-black font-medium dark:text-white">
+                     Dataset description
+                  </label>
                   <textarea
-                    name="dataSetDescription"
+                    name="DatasetDescription"
                     value={dataSetDescription}
                     rows={6}
-                    placeholder="Enter the description of the dataset "
-                    onChange={(e)=>checkValidity("DatasetDescription",e.target.value)}
+                    placeholder="Enter the description of the dataset"
+                    onChange={(e) =>
+                      checkValidity('DatasetDescription', e.target.value)
+                    }
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    ></textarea>
-                    </div>
-                    {dataSetDescriptionError && <p className="text-red-500 text-sm mt-1">{dataSetDescriptionError}</p>}
-
-                    <div className="mb-4.5">
-                    <div>
-                    <label className="mb-3 block font-medium text-black dark:text-white">Attach dataSet file</label>
+                  ></textarea>
+                </div>
+                <div className="mb-4.5">
+                  <div>
+                    <label className="mb-2.5 block text-black font-medium dark:text-white">
+                     Dataset file
+                    </label>
+                    
                     <div className="relative overflow-hidden">
                           <input
                             type="file"
                             className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                             id="customFile"
-                            name="file"
+                            name="img[]"
                             onChange={handleFileChange}
                           />
                           <label
-                            className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                            className="flex items-center justify-between py-2 px-4 border-stroke bg-gray-200 rounded-lg cursor-pointer"
                             htmlFor="customFile"
                           >
                             {FileName ? FileName : 'Upload Dataset File'}
                           </label>
                     </div>
-                    {DataSetFileError&& <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>}
 
+                    {DataSetFileError && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {DataSetFileError}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
-                    </div>
-                    </div>
-                    {/* Navigation buttons */}
-                    {step > 1 && (
-                    <div className="flex justify-between">
-                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={prevStep}>
+              {/* Navigation buttons */}
+              {step > 1 && (
+                <div className="flex justify-between">
+                  <button
+                    className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+                    onClick={prevStep}
+                  >
                     Previous
-                    </button>
-                    <button className="rounded bg-primary p-3  text-gray hover:bg-opacity-90" onClick={handleSubmit}>
+                  </button>
+                  <button
+                    className="rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+                    onClick={handleSubmit}
+                  >
                     Submit
-                    </button>
-                    </div>
-                    )}
-                    {step < 2 && (
-                    <div className="flex justify-end">
-                    <button className="rounded bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90" onClick={nextStep} disabled={!isFirstPageValid()}>
+                  </button>
+                </div>
+              )}
+              {step < 2 && (
+                <div className="flex justify-end">
+                  <button
+                    className="rounded bg-primary p-3 font-medium text-gray disabled:opacity-60 hover:bg-opacity-90"
+                    onClick={nextStep}
+                    disabled={!isFirstPageValid()}
+                  >
                     Next
-                    </button>
-                    </div>
-                    )}
-                    </div>
-                    </div>
-                    </div>
-                    </ConnectedClientLayout>
-                    );
-                    };
-                    
-                    export default AddChallenge;
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+    </DefaultLayout>
+  );
+};
 
-
-
+export default EditChallengeAdmin;

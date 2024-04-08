@@ -152,13 +152,13 @@
 
 @media (max-width: 992px) {
     .col {
-        width: calc(33.33% - 20px); /* 3 cartes par ligne sur les écrans moyens */
+        width: 70%
     }
 }
 
 @media (max-width: 768px) {
     .col {
-        width: calc(50.33% - 20px); /* 3 cartes par ligne sur les écrans moyens */
+        width: 70%
     }
 }
 
@@ -168,6 +168,22 @@
         margin-right: 0;
         margin-left: 0;
     }
+}
+
+
+@media (max-width: 650px) {
+  .search {
+    width: 300%;
+    margin-bottom: 4%;
+}
+}
+
+
+@media (max-width: 576px) {
+  .search {
+      width: 300%;
+      margin-bottom: 4%;
+  }
 }
 
 .status-and-actions-container {
@@ -207,11 +223,9 @@
 
   
   .search input[type="text"] {
-    width: 200px;
     padding: 10px;
-    border: none;
+    border: 1px solid rgb(173, 172, 172);
     border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
   .status-dropdown {

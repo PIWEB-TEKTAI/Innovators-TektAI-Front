@@ -4,8 +4,6 @@ import 'animate.css';
 import Layout from '../../layout/DefaultLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus, FaStop, FaStopCircle, FaHands, FaHandPointUp, FaStopwatch, FaBullseye, FaEye } from 'react-icons/fa'; // Importation des icônes
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTasks, faCheckCircle, faArchive , faLightbulb , faUnlockAlt , faBrain ,faBullseye,faClock   } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 // Définissez le type des données attendues
@@ -274,7 +272,7 @@ var completed = (id: string) => {
     // Prevent default button behavior
     e.preventDefault();
     // Redirect to edit form with user ID
-    navigate(`/modifierAdmin/${email}`);
+    navigate(`/EditChallengeAdmin/${email}`);
   
   };
   const view = (email: string,e: React.MouseEvent<HTMLButtonElement>) => {
@@ -285,57 +283,9 @@ var completed = (id: string) => {
   
   };
 
-    const [statistics, setStatistics] = useState<any>(null);
-
-    useEffect(() => {
-     
-
-    }, []);
-
-    if (!statistics) {
-        return <div>Loading...</div>;
-    }
-
-
  
   return (
     <Layout>
-      <div className="flex flex-wrap justify-center space-x-4">
-
-<div className="cursor-pointer w-[15rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faBullseye} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-red-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-md font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">All Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.totalChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[15rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faUnlockAlt} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-yellow-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-md font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">Open Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.openChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[15rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faCheckCircle} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-green-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-md font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Completed Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.completedChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[15rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faArchive} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-black text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-md font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Archived Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.archivedChallenges}</p>
-</div>
-
-</div>
-
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">List</h2>
@@ -352,7 +302,7 @@ var completed = (id: string) => {
        
       </select>
       {selectedRole && selectedRole !== 'archivedChallenge' ? (
-        <Link to={`/Add${selectedRole}`} className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+        <Link to="/admin/addChallenge" className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
           <FaUserPlus className="mr-2" />
           
         </Link>
@@ -406,7 +356,7 @@ var completed = (id: string) => {
     <td className="px-4 py-3">
       <div className="flex items-center space-x-2">
         <button onClick={(e) => handleEdit(user._id, e)}>
-          <FaUserEdit className="text-yellow-500" />
+          <FaUserEdit className="text-yellow-500"   />
         </button>
    
         <button onClick={() => completed(user._id)}>

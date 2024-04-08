@@ -30,7 +30,7 @@ const ChallengeDetailsCompany: React.FC = () => {
       const [currentPage, setCurrentPage] = useState(1);
       const indexOfLastItem = currentPage * itemsPerPage;
       const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-      const currentItems = submissions.slice(indexOfFirstItem, indexOfLastItem);
+      const currentItems = submissions && submissions.length > 0 ? submissions.slice(indexOfFirstItem, indexOfLastItem) : [];
       const paginate = (pageNumber: any)=> setCurrentPage(pageNumber);
 
     const fetchChallengeDetails = async () => {
@@ -105,7 +105,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                     <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
                         <img src={`http://localhost:3000/images/${challengeDetails.image}`} alt="Challenge" className="w-50 h-30 mr-4 px-auto rounded-lg" />
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900 mt-2">{challengeDetails.title}</h2>
+                            <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize">{challengeDetails.title}</h2>
                             <div className="flex items-center mt-4">
                                 <div className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${challengeDetails.status === 'open' ? 'bg-green-500' : 'bg-red-500'} text-white`}>
                                     {challengeDetails.status === 'open' ? 'Open' : 'Completed'}
@@ -116,7 +116,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                                 <p className="text-gray-600">{formattedStartDate} - {formattedEndDate}</p>
                             </div>
                             <p className="text-gray-600 font-bold cursor-pointer mt-2" >
-                                Hostetd by: {challengeDetails.createdBy.company.name}
+                                Hosted by: {challengeDetails.createdBy.company.name}
                             </p>
                             {challengeDetails.status === 'open' && (
                                 <p className="mt-2 text-gray-600">Time Left: {timeLeftString}</p>

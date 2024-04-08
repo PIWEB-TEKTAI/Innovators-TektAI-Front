@@ -161,8 +161,8 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
               <li>
                 <NavLink
                   to="/profile"
-                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-[#E2595B] hover-opacity-90 focus:text-white text-black duration-300 ease-in-out hover:bg-[#E2595B] dark:hover:bg-meta-4 ${
-                    pathname.includes('profile')&&'bg-[#E2595B] text-white font-bold'
+                  className={`group relative flex items-center gap-2.5 rounded-sm focus:font-bold py-2 px-4 font-medium rounded-2 focus:bg-primary hover-opacity-90 focus:text-white text-black duration-300 ease-in-out hover:bg-primary dark:hover:bg-meta-4 ${
+                    pathname.includes('profile')&&'bg-primary text-white font-bold'
                   }`}
                 >
                   <svg

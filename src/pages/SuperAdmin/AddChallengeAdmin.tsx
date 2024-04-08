@@ -1,15 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import SelectGroupOne from '../../components/Forms/SelectGroup/SelectGroupOne';
+
 import DefaultLayout from '../../layout/DefaultLayout';
-import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
 import { useState } from 'react';
 import { addChallenge } from '../../services/challengeService';
 import CheckboxR from '../../components/Checkboxes/CheckboxR';
 import { TiTick } from 'react-icons/ti';
 import { ErrorToast, successfullToast } from '../../components/Toast';
-import ClientLayout from '../../layout/clientLayout';
 
 const AddChallengeAdmin = () => {
   const [step, setStep] = useState(1);
@@ -218,7 +215,7 @@ const AddChallengeAdmin = () => {
   };
 
   return (
-    <ClientLayout>
+    <DefaultLayout>
 
       <div className={`${alert && `mt-8`}`}>
         {alert?.type == 'success' && successfullToast(alert.message)}
@@ -428,7 +425,7 @@ const AddChallengeAdmin = () => {
             </div>
             </div>
             </div>
-            </ClientLayout>
+            </DefaultLayout>
             );
             };
                     

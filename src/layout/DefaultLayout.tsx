@@ -2,7 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import Header from '../components/Header/index';
 import Sidebar from '../components/Sidebar/index';
 import { getProfile } from '../services/user.service';
-import { User } from '../types/user';
+import { User } from '../types/User';
 import { NotifToast } from '../components/Toast';
 import { useSocket } from '../SocketContext';
 
@@ -60,7 +60,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (alert && alert.type === 'info') {
       const timer = setTimeout(() => {
         setAlert(null);
-      }, 5000); 
+      }, 8000); 
 
       return () => clearTimeout(timer);
     }
