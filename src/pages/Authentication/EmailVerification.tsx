@@ -12,6 +12,7 @@ import VerificationInput from "react-verification-input";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import ReCAPTCHA from 'react-google-recaptcha';
+import Copyrightfooter from '../landing/copyRightFooter';
 
 
 const EmailVerification: React.FC = () => {
@@ -163,6 +164,7 @@ const EmailVerification: React.FC = () => {
 
 
   return (
+    <div>
     <ClientLayout>
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -257,6 +259,9 @@ const EmailVerification: React.FC = () => {
         </div>
  
     </ClientLayout>
+    <Copyrightfooter/>
+
+    </div>
   );
 };
 

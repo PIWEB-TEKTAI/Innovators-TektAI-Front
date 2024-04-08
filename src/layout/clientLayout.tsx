@@ -2,6 +2,7 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import { getProfile } from '../services/user.service';
 import { User } from '../types/User';
+import Copyrightfooter from '../pages/landing/copyRightFooter';
 
 const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -48,6 +49,8 @@ const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         {/* <!-- ===== Content Area End ===== --> */}
       </div>
       {/* <!-- ===== Page Wrapper End ===== --> */}
+
+  
     </div>
   );
 };

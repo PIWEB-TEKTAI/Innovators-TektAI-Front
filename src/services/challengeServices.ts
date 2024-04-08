@@ -5,9 +5,6 @@ const API_URL = "http://localhost:3000/challenge";
 export const editChallenge = async (formData: any , id:any) => {
     try {
         const response = await axios.put(`${API_URL}/edit/${id}` , formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
             withCredentials: true,
           });
         return response.data;
@@ -21,9 +18,6 @@ export const editChallenge = async (formData: any , id:any) => {
 
 export const getChallengeById = (id:any): Promise<challenge>=> {
     return axios.get(`${API_URL}/get/${id}`, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
         withCredentials: true,
       })
       .then((response) => {

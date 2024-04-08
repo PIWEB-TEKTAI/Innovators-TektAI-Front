@@ -144,7 +144,7 @@ console.log(filteredData); // Ajoutez cette ligne
     }).then((result:any) => {
       if (result.isConfirmed) {
         // Si l'utilisateur confirme, alors procédez avec la validation
-        axios.put(`http://localhost:3000/challenge/${id}/updateStatus`, { id, status: 'archived' })
+        axios.put(`http://localhost:3000/challenges/${id}/updateStatus`, { id, status: 'archived' },{withCredentials:true})
           .then(response => {
             console.log('User validated successfully:', response.data);
             const updatedData = data.map(user =>
@@ -183,7 +183,7 @@ console.log(filteredData); // Ajoutez cette ligne
     }).then((result:any) => {
       if (result.isConfirmed) {
         // Si l'utilisateur confirme, alors procédez avec la validation
-        axios.put(`http://localhost:3000/challenge/${id}/updateStatus`, { id, status: 'open' })
+        axios.put(`http://localhost:3000/challenges/${id}/updateStatus`, { id, status: 'open' },{withCredentials:true})
           .then(response => {
             console.log('challenge opened successfully:', response.data);
             const updatedData = data.map(user =>
@@ -247,7 +247,7 @@ var completed = (id: string) => {
   }).then((result:any) => {
     if (result.isConfirmed) {
       // Si l'utilisateur confirme, alors procédez avec la validation
-      axios.put(`http://localhost:3000/challenge/${id}/updateStatus`, { id, status: 'completed' })
+      axios.put(`http://localhost:3000/challenges/${id}/updateStatus`, { id, status: 'completed' },{withCredentials:true})
         .then(response => {
           console.log('challenge complete successfully:', response.data);
           const updatedData = data.map(user =>

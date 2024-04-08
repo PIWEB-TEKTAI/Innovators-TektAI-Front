@@ -11,6 +11,7 @@ import { resendVerifcationEmailAfterSignIn } from "../../services/userServices";
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import { AxiosError } from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
+import Copyrightfooter from '../landing/copyRightFooter';
 
 const ResendEmailVerification: React.FC = () => {
 
@@ -134,6 +135,7 @@ useEffect(() => {
 
 
   return (
+    <div>
     <ClientLayout>
 
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -244,6 +246,9 @@ useEffect(() => {
         </div>
       </div>
     </ClientLayout>
+    <Copyrightfooter/>
+
+    </div>
   );
 };
 

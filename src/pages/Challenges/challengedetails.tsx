@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ClientLayout from '../../layout/clientLayout';
-import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
-import axios from 'axios';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import axios, { AxiosError } from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   format,
@@ -14,11 +14,17 @@ import {
 import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
 import {
   addSubmission,
+  editSubmission,
+  getSubmissionById,
   getSubmissionsByChallengeId,
+  deleteSubmission
 } from '../../services/submissionService';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
 import { useAuth } from '../../components/Auth/AuthProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Props } from 'react-select';
+import Swal from 'sweetalert2';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -99,7 +105,7 @@ const AddSubmissionForm: React.FC = () => {
           message: 'submission added successfully',
         });
         setTimeout(() => {
-          navigate('/competitions');
+          window.location.reload();
         }, 3000);
       })
       .catch((error) => {
@@ -193,16 +199,228 @@ const AddSubmissionForm: React.FC = () => {
   );
 };
 
+const EditSubmissionForm: React.FC<Props> = ({id}) => {
+
+  const [titleError, setTitleError] = useState('');
+  const [title, setTitle] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
+  const [DataSetFileError, setDataSetFileError] = useState('');
+
+  const [FileName, setFileName] = useState('');
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null,
+  );
+
+  const checkValidity = (name: any, value: any) => {
+    if (name == 'title') {
+      setTitle(value);
+      if (!value.trim()) {
+        setTitleError('Title is required');
+      } else {
+        setTitleError('');
+      }
+    } else if (name == 'description') {
+      setDescription(value);
+      if (!value.trim()) {
+        setDescriptionError('Description is required');
+      } else {
+        setDescriptionError('');
+      }
+    } else if (name == 'dataSetFile') {
+      if (!value.trim()) {
+        setDataSetFileError('File is required');
+      } else {
+        setDataSetFileError('');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchSubmission = async () => {
+      try {
+        const data = await getSubmissionById(id);
+        console.log(data)
+        setTitle(data?.title || ''); 
+        setDescription(data?.description || '');
+        setFileName(data?.files[0].name);
+       } catch (error) {
+        console.error('Error fetching submission data:', error);
+      }
+    };
+
+
+    fetchSubmission();
+  }, []); 
+
+  const isFormValid = () => {
+    return (
+      title !== '' &&
+      description !== '' &&
+      titleError === '' &&
+      descriptionError === '' &&
+      DataSetFile !== '' &&
+      DataSetFileError === ''
+    );
+  };
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+
+    setDataSetFile(file);
+    setFileName(file.name);
+    if (!file) {
+      setDataSetFileError('File is required');
+    } else {
+      setDataSetFileError('');
+    }
+  };
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log('file' + DataSetFile);
+
+    editSubmission(
+      {
+        title: title,
+        description: description,
+        file: DataSetFile,
+      },
+      id,
+    )
+      .then((response) => {
+        setAlert({
+          type: 'success',
+          message: 'submission edited successfully',
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+
+        }, 3000);
+      
+      })
+      .catch((error) => {
+        setAlert({
+          type: 'error',
+          message: 'Error editing submission',
+        });
+      });
+  };
+  return (
+    <div>
+      <div className={`${alert && `mt-8`}`}>
+        {alert?.type == 'success' && successfullToast(alert.message)}
+
+        {alert?.type == 'error' && ErrorToast(alert.message)}
+      </div>
+
+      <div className="flex w-full p-1 flex-col  gap-1 border-full">
+        {/* Content for Step 1 */}
+        <div className="">
+          <label className="mb-2.5 font-medium block text-black dark:text-white">
+            Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            value={title}
+            placeholder="Enter the title of your competition"
+            onChange={(e) => checkValidity('title', e.target.value)}
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+          />
+          {titleError && (
+            <p className="text-red-500 text-sm mt-1">{titleError}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="mb-2.5 font-medium  block text-black dark:text-white">
+            Description
+          </label>
+          <textarea
+            name="description"
+            value={description}
+            rows={1}
+            placeholder="Enter the description of your competition"
+            onChange={(e) => checkValidity('description', e.target.value)}
+            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+          ></textarea>
+          {descriptionError && (
+            <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
+          )}
+        </div>
+
+        <div>
+          <div>
+            <label className="mb-3 block font-medium text-black dark:text-white">
+              Attach submission file
+            </label>
+            <div className="relative overflow-hidden">
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                id="customFile"
+                name="file"
+                onChange={handleFileChange}
+              />
+              <label
+                className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                htmlFor="customFile"
+              >
+                {FileName ? FileName : 'Upload submission file'}
+              </label>
+              {DataSetFileError && (
+                <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* Navigation buttons */}
+        <div className="flex justify-end">
+          <button
+            className="rounded bg-primary p-3  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ChallengeDetails: React.FC = () => {
   const [challengeDetails, setChallengeDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+  const [EditShowModal, setShowEditModal] = useState(false); // State to manage modal visibility
+  const [openDropdowns, setOpenDropdowns] = useState(false);
+
+  const toggleDropdown = () => {
+    if (openDropdowns === false) {
+      setOpenDropdowns(true);
+    } else {
+      setOpenDropdowns(false);
+    }
+  };
 
   const openModal = () => {
     setShowModal(true);
   };
+
+  const openEditModal = () => {
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowModal(false);
+  };
+
   const { userAuth } = useAuth();
   const closeModal = () => {
     setShowModal(false);
@@ -224,6 +442,7 @@ const ChallengeDetails: React.FC = () => {
       try {
         const fetchedSubmissions = await getSubmissionsByChallengeId(id);
         setSubmissions(fetchedSubmissions);
+        console.log(fetchedSubmissions)
       } catch (error) {
         console.error('Error fetching submissions:', error);
       }
@@ -236,6 +455,9 @@ const ChallengeDetails: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = submissions.slice(indexOfFirstItem, indexOfLastItem);
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null,
+  );
   const fetchChallengeDetails = async () => {
     try {
       const response = await axios.get(
@@ -304,10 +526,61 @@ const ChallengeDetails: React.FC = () => {
     setActiveTab(tab);
   };
 
+
+  const handleDeleteSubmission = (id:any)=> {
+    Swal.fire({
+      title: 'Are you sure you want to delete your submission ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, validate !',
+      cancelButtonText: 'Cancel'
+    }).then((result:any) => {
+      if (result.isConfirmed) {
+        deleteSubmission(id)
+        .then((response:any) => {
+          console.log(response)
+          console.log('data deleted successfully :', response.msg);
+          setAlert({
+            type: 'success',
+            message: '' + response.msg,
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        })
+        .catch((error: AxiosError<any>) => {
+          if (error.response && error.response.data && error.response.data.msg) {
+            const errorMessage = error.response.data.msg;
+            console.error("Erreur lors du delete data :", errorMessage);
+            setAlert({
+              type: 'error',
+              message: errorMessage,
+            });
+          } else {
+            console.error("Erreur lors du delete data :", error.message);
+            setAlert({
+              type: 'error',
+              message: error.message,
+            });
+          }
+        });
+      }
+    });
+  }
+
   return (
     <ClientLayout>
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
+
+        <div className={`${alert && `mt-8`}`}>
+          {alert?.type == 'success' && successfullToast(alert.message)}
+    
+          {alert?.type == 'error' && ErrorToast(alert.message)}
+        </div>
+
           <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
             <img
               src={`http://localhost:3000/images/${challengeDetails.image}`}
@@ -452,24 +725,83 @@ const ChallengeDetails: React.FC = () => {
                     onClose={closeModal}
                     onSave={() => {}}
                   />
+
+                   
                 </div>
                 <ul>
+                  
                   {currentItems.map((submission) => (
                     <li
                       className="border-b border-gray-300 justify-between flex p-2"
-                      key={submission.id}
+                      key={submission.id} 
                     >
-                      <div className="flex-col">
-                        <p className="break-words text-black font-semibold">
-                          {submission.title}
-                        </p>
-                        <p className="break-words text-black">
-                          {submission.description.substring(0, 60)}
-                        </p>
+                     <div className="w-full flex justify-between">
+                        <ModalForm
+                        showModal={EditShowModal}
+                        setShowModal={setShowEditModal}
+                        title="Edit Submission"
+                        content={<EditSubmissionForm id={submission._id} />}
+                        onClose={closeEditModal}
+                        onSave={() => {}}
+                       />
+                        <div className="flex-col">
+                          <p className="break-words text-black font-semibold">
+                            {submission.title}
+                          </p>
+                          <p className="break-words text-black">
+                            {submission.description.substring(0, 60)}
+                          </p>
+                        </div>
+
+                        <div className="flex">
+                          <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
+                            {submission.files[0].name.substring(0, 15)}...
+                          </p>
+
+
+                          {userAuth?._id === submission.submittedBy ?
+                          <div className="relative">
+                            <button
+                              id={`dropdownMenuIconButton_${submission.id}`}
+                              onClick={() => toggleDropdown()}
+                              className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                              type="button"
+                            >
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                style={{ color: '#3A8EBA' }}
+                                className="mt-2 ml-1 w-5 h-5 "
+                              />
+                            </button>
+
+                            {/* Dropdown menu */}
+                            <div
+                              id={`dropdownDots${submission.id}`}
+                              className={`${openDropdowns ? 'block' : 'hidden'} z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+                            >
+                              <ul
+                                className="py-2 text-sm text-gray-700 dark:text-gray-200 font-semibold"
+                                aria-labelledby={`dropdownMenuIconButton_${submission.id}`}
+                              >
+                                <li>
+                                  <button
+                                    onClick={openEditModal}
+                                    className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                  >
+                                    Edit
+                                  </button>
+                                 
+                                </li>
+                                <li>
+                                  <button onClick={()=>handleDeleteSubmission(submission._id)} className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold">
+                                    Delete
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          </div> : null}
+                        </div>
                       </div>
-                      <p className="break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                        {submission.files[0].name.substring(0, 15)}...
-                      </p>
                     </li>
                   ))}
                 </ul>

@@ -4,6 +4,8 @@ import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import ClientLayout from '../../layout/clientLayout';
 import StepperForm from './stepperForm';
+import Footer from '../landing/footer';
+import Copyrightfooter from '../landing/copyRightFooter';
 
 const SignUp: React.FC = () => {
 
@@ -38,7 +40,8 @@ const SignUp: React.FC = () => {
 
 
   return (
-    <ClientLayout>
+    <div>
+        <ClientLayout>
       <div className="h-screen rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
 
@@ -67,8 +70,13 @@ const SignUp: React.FC = () => {
             </div>
           </div>
         </div>
+
       </div>
     </ClientLayout>
+    <Copyrightfooter/>
+  </div>
+   
+
   );
 };
 

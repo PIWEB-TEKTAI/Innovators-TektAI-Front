@@ -17,7 +17,7 @@ const AuthRoutes: React.FC<AuthRouteProps> = ({
     if(userAuth.role == "admin" || userAuth.role=="superAdmin"){
       return <Navigate to="/" />;
     }
-    return <Navigate to="/profile" />;
+    return <Navigate to="/landing" />;
   }
   return (component)
 };

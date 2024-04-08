@@ -12,6 +12,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import CryptoJS from 'crypto-js'; 
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { ErrorToast, successfullToast } from '../../components/Toast';
+import Copyrightfooter from '../landing/copyRightFooter';
 
 
 
@@ -213,6 +214,9 @@ const handleSignIn = async () => {
     }
     // Perform form validation
 
+
+    
+
     if (isFormValid) {
       const responseData = await signIn(email, password ,captchaToken);
       setIsFormValid(false);
@@ -245,7 +249,7 @@ const handleSignIn = async () => {
       setTimeout(() => {
         if(responseData.role == "challenger" || responseData.role=="company"){
           console.log("role"+responseData.role);
-          navigate("/profile");
+          navigate("/landing");
         }
         if(responseData.role == "admin" || responseData.role=="superAdmin"){
           console.log("role"+responseData.role);
@@ -278,6 +282,7 @@ const handleSignIn = async () => {
   }
 };
     return (
+   <div>
     <ClientLayout>
 
                 {alert2 && (
@@ -519,7 +524,10 @@ const handleSignIn = async () => {
       </div>
     </div>
     
-  </ClientLayout>
+    </ClientLayout>
+    <Copyrightfooter/>
+
+  </div>
   );
 };
 
