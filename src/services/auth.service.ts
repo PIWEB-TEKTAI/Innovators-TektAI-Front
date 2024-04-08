@@ -40,6 +40,7 @@ export const signInWithGoogle = async (user:any) => {
   }
 
 };
+
 export const getUsers = () => {
   return axios
     .get(API_URL + "users", {
@@ -91,6 +92,8 @@ export const signOut = async () => {
     return false;
   }
 };
+
+
 
 export const checkAuthentication = async () => {
   try {

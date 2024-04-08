@@ -5,6 +5,8 @@ import ClientLayout from '../../layout/clientLayout';
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
+import zxcvbn from 'zxcvbn'; 
+
 
 function ResetPassword() {
   const [password, setPassword] = useState<string>('');
@@ -18,8 +20,6 @@ function ResetPassword() {
 
 
   const [captchaToken, setCaptchaToken] = useState('');
-  
-  
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Fonction pour décocher le reCAPTCHA
@@ -33,7 +33,50 @@ function ResetPassword() {
         console.log('Captcha token:', token);
         setCaptchaToken(token);
   };
- 
+
+  const getPasswordStrength = (password: string) => {
+    const result = zxcvbn(password);
+    return result.score;
+  };
+
+  // Function to render the password strength bar
+  const renderPasswordStrengthBar = () => {
+    if (password === '') {
+      return null; // Don't render anything if the password is empty
+    }
+  
+    const strength = getPasswordStrength(password);
+    let color = '';
+    let width = '0%';
+
+    switch (strength) {
+      case 0:
+        color = 'red';
+        width = '20%';
+
+        break;
+      case 1:
+      case 2:
+        color = 'orange';
+        width = '50%';
+
+        break;
+      case 3:
+      case 4:
+        color = 'green';
+        width = '100%';
+
+        break;
+      default:
+        break;
+    }
+    return (
+      <div style={{ backgroundColor: color, width: width, height: '8px', borderRadius: '4px', marginTop: '5px' }}></div>
+    );
+};
+
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -133,6 +176,7 @@ function ResetPassword() {
     return () => clearInterval(interval);
   }, []);
 
+  
 
   return (
     <ClientLayout>
@@ -263,6 +307,15 @@ function ResetPassword() {
                 </div>
 
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                <div className="mb-6">
+          <label className="mb-2.5 block font-medium text-black dark:text-white">
+            Password Strength
+          </label>
+          <div className="relative">
+            {/* Render password strength bar */}
+            {renderPasswordStrengthBar()}
+          </div>
+        </div>
 
                 <div className="mb-5">
                   <input

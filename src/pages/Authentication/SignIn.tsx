@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
 import { useNavigate } from 'react-router-dom';
-import {signIn, signInWithGoogle} from '../../services/auth.service'
+import { signIn, signInWithGoogle   } from '../../services/auth.service'; // Import signInWithGitHub function
 import { CodeResponse, TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import ClientLayout from '../../layout/clientLayout'
 import axios from 'axios';
@@ -277,6 +277,55 @@ const handleSignIn = async () => {
     }, 3000);
   }
 };
+const [rerender, setRerender] = useState(false);
+const CLIENT_ID="bca5ee03a4266ebe1684"
+ function signInWithGitHub () {
+    window.location.assign("https://github.com/login/oauth/authorize?client_id="+CLIENT_ID);
+}
+useEffect(() => {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const code = urlParams.get("code");
+  console.log(code)
+  if (code && localStorage.getItem('accessToken') === null) {
+    async function getAccessToken() {
+    await fetch("http://localhost:3000/auth/getAccessToken?code=" + code,{
+    method: "GET"
+    })
+    .then((response) => response. json())
+    .then((data) => {
+    console.log(data);
+    if(data.access_token){
+      localStorage.setItem('accessToken',data.access_token)
+      setRerender(!rerender)
+      getUserData()
+    }
+    });
+  }
+getAccessToken();
+}
+else{getUserData()
+
+}
+
+},[]);
+async function getUserData() {
+  await fetch("http://localhost:3000/auth/getUserData", {
+  method: 'GET',
+  headers: {
+  Authorization: 'Bearer ' + localStorage.getItem('accessToken')
+  
+  },
+  })
+  .then((response) => response.json())
+  .then((data) => {
+  console.log(data);
+  setUser(data);
+  });
+  }
+  
+  
+
     return (
     <ClientLayout>
 
@@ -494,6 +543,8 @@ const handleSignIn = async () => {
                   </span>
                   Sign in with Google
                 </button>
+                <button onClick={signInWithGitHub}>Sign in with GitHub</button>
+
                 <div className="flex justify-center mt-5 mb-5">
                   <ReCAPTCHA
                     sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
