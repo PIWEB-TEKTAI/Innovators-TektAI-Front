@@ -417,7 +417,7 @@ function App() {
           }
         />
 
-<Route
+          <Route
             path="/Competitions"
             element={
             <>

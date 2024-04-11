@@ -400,6 +400,7 @@ const ChallengeDetails: React.FC = () => {
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
   const [EditShowModal, setShowEditModal] = useState(false); // State to manage modal visibility
   const [openDropdowns, setOpenDropdowns] = useState(false);
+  const { userAuth } = useAuth();
 
   const toggleDropdown = () => {
     if (openDropdowns === false) {
@@ -421,7 +422,8 @@ const ChallengeDetails: React.FC = () => {
     setShowModal(false);
   };
 
-  const { userAuth } = useAuth();
+
+
   const closeModal = () => {
     setShowModal(false);
   };
@@ -462,9 +464,7 @@ const ChallengeDetails: React.FC = () => {
     try {
       const response = await axios.get(
         `http://localhost:3000/challenge/${id}`,
-        {
-          withCredentials: true,
-        },
+        
       );
       setChallengeDetails(response.data);
     } catch (error) {
@@ -527,6 +527,7 @@ const ChallengeDetails: React.FC = () => {
   };
 
 
+
   const handleDeleteSubmission = (id:any)=> {
     Swal.fire({
       title: 'Are you sure you want to delete your submission ?',
@@ -571,6 +572,7 @@ const ChallengeDetails: React.FC = () => {
   }
 
   return (
+    
     <ClientLayout>
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">

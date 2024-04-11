@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
+import {
+  faChartLine,  
+  faEuro,
+  faLineChart,
+  faTimeline
+} from '@fortawesome/free-solid-svg-icons';
 interface CardProps {
     title: string;
     imageSrc: string;
@@ -130,9 +136,156 @@ const forwardCards = [
     },
   ];
 
+
+  interface Challenge {
+    _id: string;
+    title: string;
+    description: string;
+    price: string;
+    image: string;
+    status: 'open' | 'completed' | 'archived';
+    startDate: Date;
+    endDate: Date;
+    createdBy: User['_id']; // Référence à l'ID de l'utilisateur
+    targetedSkills: string[];
+    dataset: {
+      name: string;
+      description: string;
+      fileUrl: string;
+    };
+    onClick: () => void;
+  }
+
+
+
+  
+
+ 
+
 import ClientLayout from '../../layout/clientLayout'
 import { WhyChooseUs } from '../../types/whyChooseUs';
+import { challenge } from '../../types/challenge';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { User } from '../../types/User';
+import { Link } from 'react-router-dom';
+import { FaLine } from 'react-icons/fa';
 const Landing: React.FC = () => {
+
+
+  const CardCompetition: React.FC<challenge & { onClick: () => void }> = ({
+    onClick,
+    title,
+    image,
+    description,
+    price,
+    status,
+    startDate,
+    endDate,
+    createdBy,
+    targetedSkills,
+    dataset,
+  }) => {
+  
+    const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
+      null,
+    );
+  
+    const handleCardClick = () => {
+      const newChallenge: Challenge = {
+        _id: 'temp-id', // Remplacez 'temp-id' par un ID approprié ou généré dynamiquement
+        onClick: () => {}, // Ajoutez une fonction onClick vide ou définissez-la selon vos besoins
+        title,
+        image,
+        description,
+        price,
+        status,
+        startDate,
+        endDate,
+        createdBy,
+        targetedSkills,
+        dataset,
+      };
+      setSelectedChallenge(newChallenge);
+    };
+    const handleCloseModal = () => {
+      setSelectedChallenge(null);
+    };
+  
+    const [showDetails, setShowDetails] = useState(false);
+    
+    const calculateTimeRemaining = (endDate: string) => {
+      const endDateTime = new Date(endDate).getTime();
+      const currentTime = new Date().getTime();
+      const timeRemaining = endDateTime - currentTime;
+  
+      const daysRemaining = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hoursRemaining = Math.floor(
+        (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+      const minutesRemaining = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      );
+  
+     
+      return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
+    };
+  
+    
+  
+ 
+    return (
+      <div
+        className="bg-white shadow-lg  rounded-lg p-6 flex flex-col items-start hover:shadow-6 h-full"
+      >
+        <div className="flex items-center justify-between gap-8 mb-4 ">
+          <img
+            src={`http://localhost:3000/images/${image}`}
+            className="card-img-top mt-3 w-40"
+            alt="Card image"
+          />
+  
+          <div className="flex flex-col items-start mb-4">
+            <h3 className="text-xl font-bold text-black dark:text-white capitalize">
+              {title}
+            </h3>
+            <div className='font-medium mt-2'>
+              {status == 'open' && <p className=' text-red-600'>Time Left </p>}
+              {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString())}</span> : null }       
+            </div>
+          </div>
+        </div>
+  
+      
+        <hr className="my-2 border-gray-300" />
+        <span className="font-semibold">Description </span>
+  
+        <p className="text-gray-700 dark:text-gray-300">{description.substring(0,80)}... </p>
+        <hr className="my-2 border-gray-300" />
+     
+        <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
+          <FontAwesomeIcon icon={faEuro} className="text-green-500" />
+          <span className="font-semibold">Price: {price} DT</span>
+        </div>
+  
+        <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
+          <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />{' '}
+          <span className="font-semibold">Status : </span>
+          <span
+            className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
+              status === 'open'
+                ? 'bg-blue-400 text-white font-semibold'
+                : status === 'archived'
+                  ? 'bg-red-600 text-white font-semibold'
+                  : 'bg-green-400 text-white font-semibold'
+            }`}
+          >
+            {status}
+          </span>
+        </div>
+        
+      </div>
+    );
+  };
 
   const [emailError, setEmailError] = useState('');
 
@@ -148,6 +301,28 @@ const Landing: React.FC = () => {
     }
    }
 
+
+   const [cardsData, setCardsData] = useState<Challenge[]>([]);
+   let filteredUsers: any[] | ((prevState: Challenge[]) => Challenge[]) = []
+
+  useEffect(() => {
+    fetchData();
+    console.log(cardsData); 
+  }, []); 
+
+  const fetchData = () => {
+    axios
+      .get<Challenge[]>(
+        `http://localhost:3000/challenges/AllChallengeLanding`,
+      )
+      .then((response) => {
+        console.log(response.data);
+         filteredUsers = response.data;
+        setCardsData(filteredUsers);
+        console.log(filteredUsers)
+      })
+      .catch((err) => console.log(err));
+  };
 
 
     const [email, setEmail] = useState('');
@@ -257,20 +432,37 @@ const Landing: React.FC = () => {
 
 
 
-<section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
+     <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
         <RevealOnScroll delay=''>
 
-        <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4">Competitions</h2>
-          <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 justify-center sm:grid-cols-2">
-          {forwardCards.map((card, index) => (
-        <Card key={index} {...card} />
-      ))}
-          </div>
+         <div className='flex justify-between mb-8'>
+            <h2 className="text-4xl font-extrabold text-black dark:text-white">Competitions</h2>
+
+            <div>
+    <Link to="/LCFront">
+      <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+        <img src="/src/images/landing/arrow.png" alt="arrow" className="mr-2 w-3" />
+        View all
+      </a>
+    </Link>
+  </div>
+         </div>
+         <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Build your skills in our competitions, co-hosted by world-class research organizations & companies</p>
+
+          <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
+          {cardsData.map((card, index) => (
+                <Link key={index} to={`/challenge/details/${card._id}`}>
+                  <CardCompetition key={index} {...card}/>
+                </Link>
+              ))}
+    </div>
        </RevealOnScroll>
+
+
        <RevealOnScroll delay=''>
 
-          <h2 className="text-4xl mt-5 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
+          <h2 className="text-4xl mt-15 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 justify-center lg:grid-cols-4 sm:grid-cols-2">
           
           {backwardCards.map((card, index) => (
@@ -281,7 +473,31 @@ const Landing: React.FC = () => {
         </RevealOnScroll>
 
         </div>
+     </section>
+
+
+<section className="bg-gray-200">
+  <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+    <div className="text-center">
+      <h2 className="text-4xl font-extrabold text-black dark:text-white">Why Choose Us</h2>
+      <div className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}>
+        {whyUsContent && whyUsContent.map((content, index) => (
+          <div
+            key={index}
+            className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
+          >
+            <div className="px-6 py-8">
+              <h3 className="text-xl font-semibold text-white mb-2">{content.title}</h3>
+              <p className="text-white">{content.contentwhy}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
 </section>
+
+
 <RevealOnScroll additionalProp={false} delay="">
 <section>
       <div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
@@ -304,26 +520,7 @@ const Landing: React.FC = () => {
     </section>
 </RevealOnScroll>
 
-<section className="bg-gray-200">
-  <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
-    <div className="text-center">
-      <h2 className="text-4xl font-extrabold text-black dark:text-white">Why Choose Us</h2>
-      <div className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}>
-        {whyUsContent && whyUsContent.map((content, index) => (
-          <div
-            key={index}
-            className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
-          >
-            <div className="px-6 py-8">
-              <h3 className="text-xl font-semibold text-white mb-2">{content.title}</h3>
-              <p className="text-white">{content.contentwhy}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+
  <RevealOnScroll additionalProp={false} delay="">
     <section id="contactUs" className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg">
 

@@ -193,7 +193,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
               {/* <!-- Menu Item Tables --> */}
               <li>
                 <NavLink
-                  to={`${connectedUser?.role=="company" ? '/competitions':'/submittions'} `}
+                  to={`${connectedUser?.role=="company" ? '/competitions':'/competitions'} `}
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium rounded-2 focus:bg-primary focus:text-white focus:font-bold text-black duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4 ${
                     pathname.includes('tables') && 'bg-primary text-white font-bold'
                   }`}
