@@ -172,7 +172,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
           },
         }}
       >
-        <div className="modal-header flex items-center justify-between border-b border-gray-200 pb-2 mb-4">
+        <div className="modal-header flex items-center justify-between  border-b border-gray-200 pb-2 mb-4">
           <h2 className="text-xl font-bold">{title}</h2>
           <button
             className="text-gray-500 hover:text-gray-700"
@@ -302,13 +302,13 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   };
   return (
     <div
-      className="bg-white  rounded-lg shadow-lg p-6 flex flex-col items-start w-100 h-120"
+      className="bg-white h-[22rem] rounded-lg shadow-lg p-6 flex flex-col items-start w-100 h-120"
       onClick={toggleDetails}
     >
       <div className="flex items-center justify-between gap-8 mb-4 ">
         <img
           src={`http://localhost:3000/images/${image}`}
-          className="card-img-top mt-3 w-40"
+          className="card-img-top max-h-[7rem] mt-3 w-40"
           alt="Card image"
         />
 

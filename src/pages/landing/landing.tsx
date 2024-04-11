@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
+import {
+  faChartLine,  
+  faEuro,
+  faLineChart,
+  faTimeline
+} from '@fortawesome/free-solid-svg-icons';
 interface CardProps {
     title: string;
     imageSrc: string;
@@ -56,11 +62,11 @@ interface CardProps {
   const Card2: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="shadow-xl shadow-[#d96f1e] cursor-pointer break-words	 max-w-[30rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
+          className="cursor-pointer  max-w-[30rem] group p-6 bg-white hover:bg-primary hover:bg-opacity-80  hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >
           <img className="h-35 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15]" src={imageSrc} alt="ai" loading='lazy' />
           <a href="#" className="text-[#00004b] group-hover:text-white">
-            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75  break-words">{title}</h5>
+            <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">{title}</h5>
           </a>
           <p className="mb-3 font-normal text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105">{description}</p>
         </div>
@@ -70,14 +76,14 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     return (
         <div
-          className="shadow-xl shadow-primary cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[32rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
+          className="cursor-pointer hover:bg-black hover:bg-opacity-95 hover:text-white group max-w-[32rem] p-6 bg-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.1]"
         >              
           <div className="flex">
 
           <img className="flex-none h-14 w-14 mr-2 rounded mb-2 hover:scale-[1.2] " src={imageSrc} alt="ai" loading='lazy'
  />
           <a href="#" className="text-primary hover:text-primary-dark group-hover:text-white flex-auto">
-            <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900  dark:text-white break-words	">{title}</h5>
+            <h5 className="mb-2 text-xl w-50 font-semibold tracking-tight text-gray-900  dark:text-white">{title}</h5>
           </a>
           </div>
           <p className="mb-3 font-normal text-gray-500 group-hover:text-white group-hover:font-semibold dark:text-gray-400">{description}</p>
@@ -130,9 +136,156 @@ const forwardCards = [
     },
   ];
 
+
+  interface Challenge {
+    _id: string;
+    title: string;
+    description: string;
+    price: string;
+    image: string;
+    status: 'open' | 'completed' | 'archived';
+    startDate: Date;
+    endDate: Date;
+    createdBy: User['_id']; // Référence à l'ID de l'utilisateur
+    targetedSkills: string[];
+    dataset: {
+      name: string;
+      description: string;
+      fileUrl: string;
+    };
+    onClick: () => void;
+  }
+
+
+
+  
+
+ 
+
 import ClientLayout from '../../layout/clientLayout'
 import { WhyChooseUs } from '../../types/whyChooseUs';
+import { challenge } from '../../types/challenge';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { User } from '../../types/User';
+import { Link } from 'react-router-dom';
+import { FaLine } from 'react-icons/fa';
 const Landing: React.FC = () => {
+
+
+  const CardCompetition: React.FC<challenge & { onClick: () => void }> = ({
+    onClick,
+    title,
+    image,
+    description,
+    price,
+    status,
+    startDate,
+    endDate,
+    createdBy,
+    targetedSkills,
+    dataset,
+  }) => {
+  
+    const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(
+      null,
+    );
+  
+    const handleCardClick = () => {
+      const newChallenge: Challenge = {
+        _id: 'temp-id', // Remplacez 'temp-id' par un ID approprié ou généré dynamiquement
+        onClick: () => {}, // Ajoutez une fonction onClick vide ou définissez-la selon vos besoins
+        title,
+        image,
+        description,
+        price,
+        status,
+        startDate,
+        endDate,
+        createdBy,
+        targetedSkills,
+        dataset,
+      };
+      setSelectedChallenge(newChallenge);
+    };
+    const handleCloseModal = () => {
+      setSelectedChallenge(null);
+    };
+  
+    const [showDetails, setShowDetails] = useState(false);
+    
+    const calculateTimeRemaining = (endDate: string) => {
+      const endDateTime = new Date(endDate).getTime();
+      const currentTime = new Date().getTime();
+      const timeRemaining = endDateTime - currentTime;
+  
+      const daysRemaining = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hoursRemaining = Math.floor(
+        (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+      const minutesRemaining = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      );
+  
+     
+      return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
+    };
+  
+    
+  
+ 
+    return (
+      <div
+        className="bg-white shadow-lg  rounded-lg p-6 flex flex-col items-start hover:shadow-6 w-[20rem] h-[22rem]"
+      >
+        <div className="flex items-center justify-between gap-8 mb-4 ">
+          <img
+            src={`http://localhost:3000/images/${image}`}
+            className="card-img-top mt-3 h-20 w-30"
+            alt="Card image"
+          />
+  
+          <div className="flex flex-col items-start mb-4">
+            <h3 className="text-xl font-bold text-black dark:text-white capitalize">
+              {title}
+            </h3>
+            <div className='font-medium mt-2'>
+              {status == 'open' && <p className=' text-red-600'>Time Left </p>}
+              {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString())}</span> : null }       
+            </div>
+          </div>
+        </div>
+  
+      
+        <hr className="my-2 border-gray-300" />
+        <span className="font-semibold">Description </span>
+  
+        <p className="text-gray-700 dark:text-gray-300 break-words">{description.substring(0,25)}... </p>
+        <hr className="my-2 border-gray-300" />
+     
+        <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
+          <FontAwesomeIcon icon={faEuro} className="text-green-500" />
+          <span className="font-semibold">Price: {price} DT</span>
+        </div>
+  
+        <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
+          <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />{' '}
+          <span className="font-semibold">Status : </span>
+          <span
+            className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
+              status === 'open'
+                ? 'bg-blue-400 text-white font-semibold'
+                : status === 'archived'
+                  ? 'bg-red-600 text-white font-semibold'
+                  : 'bg-green-400 text-white font-semibold'
+            }`}
+          >
+            {status}
+          </span>
+        </div>
+        
+      </div>
+    );
+  };
 
   const [emailError, setEmailError] = useState('');
 
@@ -148,6 +301,28 @@ const Landing: React.FC = () => {
     }
    }
 
+
+   const [cardsData, setCardsData] = useState<Challenge[]>([]);
+   let filteredUsers: any[] | ((prevState: Challenge[]) => Challenge[]) = []
+
+  useEffect(() => {
+    fetchData();
+    console.log(cardsData); 
+  }, []); 
+
+  const fetchData = () => {
+    axios
+      .get<Challenge[]>(
+        `http://localhost:3000/challenges/AllChallengeLanding`,
+      )
+      .then((response) => {
+        console.log(response.data);
+         filteredUsers = response.data;
+        setCardsData(filteredUsers);
+        console.log(filteredUsers)
+      })
+      .catch((err) => console.log(err));
+  };
 
 
     const [email, setEmail] = useState('');
@@ -193,26 +368,7 @@ const Landing: React.FC = () => {
       }
     };
   
-  const [images, setImages] = useState([
-    "/src/images/landing/undraw_chat_bot_re_e2gj.svg",
-    "/src/images/landing/undraw_artificial_intelligence_re_enpp.svg",
-    //"/src/images/landing/undraw_lightbulb_moment_re_ulyo.svg",
-    
-
-
-    
-  ]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Increment the current image index
-      setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds (5000 milliseconds)
-
-    // Cleanup function to clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, [images.length]); 
+              
   
   return (
     <ClientLayout>
@@ -221,34 +377,34 @@ const Landing: React.FC = () => {
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
             <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]">T</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.1s'}}>r</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.2s'}}>a</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.3s'}}>n</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.4s'}}>s</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.5s'}}>f</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.6s'}}>o</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.7s'}}>r</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.8s'}}>m</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '0.9s'}}>i</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1s'}}>n</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.1s'}}>g</span>
+              <span className="animated-text">T</span>
+              <span className="animated-text" style={{animationDelay: '0.1s'}}>r</span>
+              <span className="animated-text" style={{animationDelay: '0.2s'}}>a</span>
+              <span className="animated-text" style={{animationDelay: '0.3s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '0.4s'}}>s</span>
+              <span className="animated-text" style={{animationDelay: '0.5s'}}>f</span>
+              <span className="animated-text" style={{animationDelay: '0.6s'}}>o</span>
+              <span className="animated-text" style={{animationDelay: '0.7s'}}>r</span>
+              <span className="animated-text" style={{animationDelay: '0.8s'}}>m</span>
+              <span className="animated-text" style={{animationDelay: '0.9s'}}>i</span>
+              <span className="animated-text" style={{animationDelay: '1s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '1.1s'}}>g</span>
               <br />
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.3s'}}>C</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.4s'}}>h</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.5s'}}>a</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.6s'}}>l</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.7s'}}>l</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '1.8s'}}>e</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]t" style={{animationDelay: '1.9s'}}>n</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2s'}}>g</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.1s'}}>e</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.2s'}}>s</span>
-              <span className="animated-text  drop-shadow-[0_10px_8px_#4959cd]" style={{animationDelay: '2.3s'}}>&nbsp;</span>
+              <span className="animated-text" style={{animationDelay: '1.3s'}}>C</span>
+              <span className="animated-text" style={{animationDelay: '1.4s'}}>h</span>
+              <span className="animated-text" style={{animationDelay: '1.5s'}}>a</span>
+              <span className="animated-text" style={{animationDelay: '1.6s'}}>l</span>
+              <span className="animated-text" style={{animationDelay: '1.7s'}}>l</span>
+              <span className="animated-text" style={{animationDelay: '1.8s'}}>e</span>
+              <span className="animated-text" style={{animationDelay: '1.9s'}}>n</span>
+              <span className="animated-text" style={{animationDelay: '2s'}}>g</span>
+              <span className="animated-text" style={{animationDelay: '2.1s'}}>e</span>
+              <span className="animated-text" style={{animationDelay: '2.2s'}}>s</span>
+              <span className="animated-text" style={{animationDelay: '2.3s'}}>&nbsp;</span>
 
-              <span className="animated-text text-primary " style={{animationDelay: '2.3s'}}> Into </span>
+              <span className="animated-text text-primary" style={{animationDelay: '2.3s'}}> Into </span>
               <br />
-              <span className="animated-text text-primary " style={{animationDelay: '2.4s'}}> Solutions</span>
+              <span className="animated-text text-primary" style={{animationDelay: '2.4s'}}> Solutions</span>
             </h1>
             <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
               Welcome to our collaborative data science platform, 
@@ -267,9 +423,7 @@ const Landing: React.FC = () => {
             </div>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2] animate__animated animate__fadeInRight">
-            <img 
-              src={images[currentImageIndex]}
-              className=" drop-shadow-[0_10px_8px_#4959cd]" alt="mockup"/>
+            <img src="/src/images/landing/ai3.jpg" alt="mockup"/>
           </div>                
 
         </div>
@@ -278,20 +432,37 @@ const Landing: React.FC = () => {
 
 
 
-<section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
+     <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
         <RevealOnScroll delay=''>
 
-        <h2 className="text-4xl font-extrabold text-black dark:text-white pb-4" >Competitions</h2>
-          <div className="grid md:grid-cols-3 gap-2 lg:grid-cols-4 justify-center sm:grid-cols-2">
-          {forwardCards.map((card, index) => (
-        <Card key={index} {...card} />
-      ))}
-          </div>
+         <div className='flex justify-between mb-8'>
+            <h2 className="text-4xl font-extrabold text-black dark:text-white">Competitions</h2>
+
+            <div>
+    <Link to="/LCFront">
+      <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+        <img src="/src/images/landing/arrow.png" alt="arrow" className="mr-2 w-3" />
+        View all
+      </a>
+    </Link>
+  </div>
+         </div>
+         <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Build your skills in our competitions, co-hosted by world-class research organizations & companies</p>
+
+          <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
+          {cardsData.map((card, index) => (
+                <Link key={index} to={`/challenge/details/${card._id}`}>
+                  <CardCompetition key={index} {...card}/>
+                </Link>
+              ))}
+    </div>
        </RevealOnScroll>
+
+
        <RevealOnScroll delay=''>
 
-          <h2 className="text-4xl mt-5 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
+          <h2 className="text-4xl mt-15 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">Datasets</h2>
           <div className="grid md:grid-cols-3 gap-2 justify-center lg:grid-cols-4 sm:grid-cols-2">
           
           {backwardCards.map((card, index) => (
@@ -302,28 +473,8 @@ const Landing: React.FC = () => {
         </RevealOnScroll>
 
         </div>
-</section>
-<RevealOnScroll additionalProp={false} delay="">
-<section>
-      <div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
-        <div className="sm:w-2/3 p-4 sm:p-[5rem]">
-        <div className="text group cursor-pointer shadow-black shadow-2xl rounded-full px-4 py-[5rem] sm:p-[5rem]">
-            <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
-            <h2 className="my-4 font-bold text-3xl text-black sm:text-4xl group-hover:scale-[1.05]  break-words	">About <span className="text-indigo-600">TektAI</span>
-            </h2>
-            <p className="text-gray-700  group-hover:scale-[1.01] font-semibold break-words	">
-              {aboutUsContent}
-            </p>
-          </div>
-        </div>
-        <div className="hidden sm:block xs:block sm:w-1/3 p-5">
-  <div className="image object-center text-center hover:scale-[1.05] ">
-    <img src="/src/images/landing/undraw_sentiment_analysis_jp6w.svg" className="max-h-[30rem] max-w-[30rem]  drop-shadow-[0_10px_8px_#4959cd]" alt="About Us" />
-  </div>
-</div>
-      </div>
-    </section>
-</RevealOnScroll>
+     </section>
+
 
 <section className="bg-gray-200">
   <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
@@ -345,6 +496,31 @@ const Landing: React.FC = () => {
     </div>
   </div>
 </section>
+
+
+<RevealOnScroll additionalProp={false} delay="">
+<section>
+      <div id="aboutUs" className="sm:flex items-center max-w-screen bg-white">
+        <div className="sm:w-1/2 p-10">
+          <div className="image object-center text-center hover:scale-[1.05]">
+            <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
+          </div>
+        </div>
+        <div className="sm:w-1/2 p-5">
+          <div className="text group cursor-pointer">
+            <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">About us</span>
+            <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">About <span className="text-indigo-600">TektAI</span>
+            </h2>
+            <p className="text-gray-700  group-hover:scale-[1.05]">
+              {aboutUsContent}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+</RevealOnScroll>
+
+
  <RevealOnScroll additionalProp={false} delay="">
     <section id="contactUs" className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg">
 

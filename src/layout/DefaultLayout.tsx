@@ -5,23 +5,30 @@ import { getProfile } from '../services/user.service';
 import { User } from '../types/User';
 import { NotifToast } from '../components/Toast';
 import { useSocket } from '../SocketContext';
-
+import { useAuth } from '../components/Auth/AuthProvider';
 
 const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const [connectedUser, setconnectedUser] = useState<User | null>(null);
 
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
   );
-
   const toTitleCase = (str:string) => {
     return str.toLowerCase().split(' ').map(word => {
       return word.charAt(0).toUpperCase() + word.slice(1);
     }).join(' ');
   };
-
+  const [connectedUser, setConnectedUser]= useState<any>(null);
+  const { userAuth } = useAuth(); 
+  
+  
+  
+  useEffect(() => {
+    setConnectedUser(userAuth);
+  }, [userAuth]);
+  
+  
   const socket = useSocket();
 
   useEffect(() => {
@@ -41,19 +48,7 @@ const DefaultLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 
 
-  useEffect(() => {
-    const fetchAuthenticationStatus = async () => {
-      try {
-        const connectedUser = await getProfile();
-        setconnectedUser(connectedUser);
-        setAuthenticated(true);
-      } catch (error) {
-        setAuthenticated(false);
-      }
-    };
-
-    fetchAuthenticationStatus();
-  }, []);
+ 
 
 
   useEffect(() => {

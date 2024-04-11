@@ -19,10 +19,13 @@ import {
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
 import { useAuth } from '../../components/Auth/AuthProvider';
+import { addSoloParticipationRequest } from '../../services/challengeService';
+import Modal from '../../components/modal';
+import ChallengeParticipations from './ChallengeParticipations';
+import TeamSelectionModal from './teamSelectionModal';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
-
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
@@ -69,6 +72,7 @@ const AddSubmissionForm: React.FC = () => {
       DataSetFileError === ''
     );
   };
+
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
     setDataSetFile(file);
@@ -194,15 +198,21 @@ const AddSubmissionForm: React.FC = () => {
 };
 
 const ChallengeDetails: React.FC = () => {
+  
   const [challengeDetails, setChallengeDetails] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
-
+  const  [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [confiramtionMessage,setConfirmationMessage] = useState('');
+  const [errorConfirmationMesage,setErrorConfirmationMessage]=useState(false);
   const openModal = () => {
     setShowModal(true);
   };
+  const handleConfirmationModalAppearance =()=>{
+    setShowConfirmationModal(true);
+  }
   const { userAuth } = useAuth();
   const closeModal = () => {
     setShowModal(false);
@@ -295,7 +305,6 @@ const ChallengeDetails: React.FC = () => {
   const hoursLeft = differenceInHours(endDate, now) % 24;
   const minutesLeft = differenceInMinutes(endDate, now) % 60;
   const secondsLeft = differenceInSeconds(endDate, now) % 60;
-
   const paginate = (pageNumber: any) => setCurrentPage(pageNumber);
 
   const timeLeftString = `${monthsLeft > 0 ? `${monthsLeft} months, ` : ''}${daysLeft > 0 ? `${daysLeft} days, ` : ''}${hoursLeft > 0 ? `${hoursLeft} hours, ` : ''}${minutesLeft > 0 ? `${minutesLeft} minutes, ` : ''}${secondsLeft} seconds`;
@@ -303,19 +312,64 @@ const ChallengeDetails: React.FC = () => {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-
+  
+  const handleSoloParticipationRequest=async ()=>{
+    try {
+      const responseData = await addSoloParticipationRequest(id, userAuth?._id);
+      setConfirmationMessage("Participation request Added succesfully");
+    } catch (error:any) {
+      const errorMessage = error.response.data.message;
+      setConfirmationMessage(errorMessage)
+      setErrorConfirmationMessage(true);
+    }
+    finally {
+      setTimeout(() => {
+        setShowConfirmationModal(false);
+      }, 2000);
+    }
+  }
   return (
     <ClientLayout>
-      <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-        <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
-          <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
+        <Modal
+        showModal={showConfirmationModal}
+        setShowModal={setShowConfirmationModal}
+        title="Add Paticipation Request"
+        content="Are you sure you want to participate to this challenge?"
+        onClose={closeModal}
+        onSave={handleSoloParticipationRequest}
+        postSaveMessage={confiramtionMessage}
+        error = {errorConfirmationMesage}
+
+      />
+      <div className="mx-auto xl:mx-[10rem] rounded-lg px-4 py-8">
+        <div className="bg-white px-[1rem] py-[1rem] shadow-lg rounded-lg overflow-hidden">
+          <div className="flex justify-end">
+          {userAuth?.role === "challenger" && 
+          !challengeDetails.participations.soloParticipants.includes(userAuth._id)&&
+          !challengeDetails.participations.soloParticipationRequests.includes(userAuth._id)&&(
+          <div className="flex ">
+            <div className="flex-col m-1">
+              <button onClick={handleConfirmationModalAppearance} className='text-sm p-2 border  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group'>
+                <span className='group-hover:ease-in duration-300'>Solo Join</span>
+              </button>
+            </div>
+            <div className="flex-col my-1">
+              <button className='text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group'>
+                <span className='group-hover:ease-in duration-300'>Join a Team</span>
+              </button>
+            </div>
+          </div>
+)}
+     
+          </div>
+        <div className="flex break-words	py-[1rem] sm:flex-row items-center mt-4 sm:mt-0">
             <img
               src={`http://localhost:3000/images/${challengeDetails.image}`}
               alt="Challenge"
-              className="w-50 h-30 mr-4 px-auto rounded-lg"
+              className="w-50 h-40 mr-4 px-auto rounded-lg "
             />
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize">
+              <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize break-words	">
                 {challengeDetails.title}
               </h2>
               <div className="flex items-center mt-4">
@@ -353,7 +407,9 @@ const ChallengeDetails: React.FC = () => {
                 </p>
               )}
             </div>
+            
           </div>
+     
         </div>
 
         {isModalOpen && (
@@ -367,7 +423,7 @@ const ChallengeDetails: React.FC = () => {
           <ul className="p-8 flex cursor-pointer flex-wrap sm:flex-nowrap border-gray-200 border-b py-4">
             <li className="-mb-px mr-1">
               <a
-                className={`bg-white inline-block rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 border-l border-t border-r ' : ''}`}
+                className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
                 onClick={() => handleTabChange('overview')}
               >
                 Overview
@@ -375,7 +431,7 @@ const ChallengeDetails: React.FC = () => {
             </li>
             <li className="mr-1">
               <a
-                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
+                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
                 onClick={() => handleTabChange('leaderboard')}
               >
                 Leaderboard
@@ -383,12 +439,21 @@ const ChallengeDetails: React.FC = () => {
             </li>
             <li className="mr-1">
               <a
-                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
+                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
                 onClick={() => handleTabChange('discussion')}
               >
                 Discussion
               </a>
             </li>
+            <li className="-mb-px mr-1">
+             <a
+                className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'participations' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
+                onClick={() => handleTabChange('participations')}
+              >
+                Participations
+              </a>
+            </li>
+            
             <li className="mr-1">
               <a
                 className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
@@ -405,7 +470,7 @@ const ChallengeDetails: React.FC = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mt-2">
                   Description
                 </h2>
-                <p className="text-gray-600 mt-4 break-words text-black">
+                <p className="text-gray-600 mt-4 break-words text-black break-words	">
                   {challengeDetails.description}
                 </p>
                 <h2 className="text-2xl font-bold text-gray-900 mt-8">
@@ -432,10 +497,18 @@ const ChallengeDetails: React.FC = () => {
                 <h2>Discussion</h2>
               </div>
             )}
+            {activeTab=="participations" && (
+               <div>
+               <ChallengeParticipations challenge={challengeDetails} userAuth={userAuth} />
+
+             </div>
+            )}
+             
             {activeTab === 'submission' && (
               <div>
                 <div className="flex justify-end mb-4">
-                  {userAuth?.role === 'challenger' && (
+                  {userAuth?.role === 'challenger' && challengeDetails.participations.soloParticipants.includes(userAuth._id) &&
+                  challengeDetails.status=="open"&&(
                     <button
                       onClick={openModal}
                       className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold text-gray disabled:opacity-60 hover:bg-opacity-90"

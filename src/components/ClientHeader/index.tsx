@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { User } from '../../types/User';
 import { countryFlags } from './flag';
 import DropDownLanguage from './DropDownLanguage';
+import { directlySwitchAccount } from '../../services/user.service';
 const ClientHeader =(props: {
   connectedUser: User  | null;
   authenticated:Boolean;
@@ -14,6 +15,8 @@ const ClientHeader =(props: {
   const userName = `${props.connectedUser?.FirstName} ${props.connectedUser?.LastName}`;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { pathname } = location;
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -26,7 +29,25 @@ const ClientHeader =(props: {
 
 
   };
+  const handleSwitchAccount = async () => {
+    try {
+      setIsLoading(true);
 
+      await directlySwitchAccount();
+
+      alert('Account switched successfully');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error('Error switching account', error);
+
+      alert('Error switching account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
       
     <header className='sticky top-0 z-999999'>
@@ -42,7 +63,7 @@ const ClientHeader =(props: {
             </a>                </NavLink>
        
             <div className="flex items-center lg:order-2">
-            {props.authenticated ? (
+            {props.connectedUser!=null ? (
             <>
             
               <DropdownUser userName={userName} occupation={props.connectedUser?.occupation} imageUrl={props.connectedUser?.imageUrl}/>
@@ -102,6 +123,7 @@ const ClientHeader =(props: {
                     <li>
                         <a href="/landing#contactUs" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 focus:bg-primary rounded focus:text-white dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                     </li>
+    
                     <li>
                     <DropDownLanguage
                       countryFlagsPhone={countryFlags}
@@ -111,11 +133,79 @@ const ClientHeader =(props: {
                       setIsOpen={setIsOpen}
                     />
                     </li>
+                    <div className="flex px-4">
+    {props.connectedUser?.AlreadyCompany ? (
+      <>
+        <a onClick={handleSwitchAccount} className="hover:scale-[1.05] cursor-pointer inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {props.connectedUser?.role === 'challenger' ? (
+            <>
+              Switch to company
+            </>
+          ) : (
+            <>
+              Switch to challenger
+            </>
+          )}
+        </a>
+      </>
+    ) : (
+      <Link to="/SwitchToCompany">
+        <a onClick={handleSwitchAccount} className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-black rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {props.connectedUser?.role === 'challenger' ? (
+            <>
+              Switch to company
+            </>
+          ) : (
+            <>
+              Switch to challenger
+            </>
+          )}
+        </a>
+      </Link>
+    )}
+  </div>
                 </ul>
             </div>
             
         </div>
+    
     </nav>
+   {/* {props.connectedUser != null && (
+      <div className={`p-2 z-9999 top-0 ${pathname.includes("landing") || pathname.includes("LCFront") ? 'bg-white' : 'bg-white'}`}>
+  <div className="flex justify-end px-4">
+    {props.connectedUser?.AlreadyCompany ? (
+      <>
+        <a onClick={handleSwitchAccount} className="hover:scale-[1.05] cursor-pointer inline-flex items-center m-1 px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {props.connectedUser?.role === 'challenger' ? (
+            <>
+              Switch to company
+            </>
+          ) : (
+            <>
+              Switch to challenger
+            </>
+          )}
+        </a>
+      </>
+    ) : (
+      <Link to="/SwitchToCompany">
+        <a onClick={handleSwitchAccount} className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-black rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {props.connectedUser?.role === 'challenger' ? (
+            <>
+              Switch to company
+            </>
+          ) : (
+            <>
+              Switch to challenger
+            </>
+          )}
+        </a>
+      </Link>
+    )}
+  </div>
+</div>
+
+)}*/}
 </header>
 
   );

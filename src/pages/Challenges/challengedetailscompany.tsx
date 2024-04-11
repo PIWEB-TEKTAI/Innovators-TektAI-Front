@@ -5,11 +5,14 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { getSubmissionsByChallengeId } from '../../services/submissionService';
+import ChallengeParticipations from './ChallengeParticipations';
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 
 const ChallengeDetailsCompany: React.FC = () => {
     const [challengeDetails, setChallengeDetails] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
+    const { userAuth } = useAuth();
 
     const { id } = useParams();
     const [submissions, setSubmissions] = useState<any[]>([]); 
@@ -100,7 +103,7 @@ const ChallengeDetailsCompany: React.FC = () => {
         <ConnectedClientLayout>
 
 <div className="mx-auto   rounded-lg px-4 ">
-                <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
+                <div className="bg-white px-[2rem] py-[4rem] shadow-lg rounded-lg overflow-hidden">
                
                     <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
                         <img src={`http://localhost:3000/images/${challengeDetails.image}`} alt="Challenge" className="w-50 h-30 mr-4 px-auto rounded-lg" />
@@ -143,6 +146,14 @@ const ChallengeDetailsCompany: React.FC = () => {
                                     Discussion
                                 </a>
                             </li>
+                            <li className="-mb-px mr-1">
+                                <a
+                                    className={`bg-white inline-block rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'participations' ? 'bg-blue-100 border-l border-t border-r ' : ''}`}
+                                    onClick={() => handleTabChange('participations')}
+                                >
+                                    Participations
+                                </a>
+                                </li>
                             <li className="mr-1">
                                 <a className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100 border-l border-t border-r' : ''}`} onClick={() => handleTabChange('submission')}>
                                     Submission
@@ -169,6 +180,12 @@ const ChallengeDetailsCompany: React.FC = () => {
                             {activeTab === 'discussion' && (
                                 <div>
                                     <h2>Discussion</h2>
+                                </div>
+                            )}
+                            {activeTab === 'participations' && (
+                                <div>
+                                    <ChallengeParticipations challenge={challengeDetails} userAuth={userAuth}/>
+
                                 </div>
                             )}
                             {activeTab === 'submission' && (

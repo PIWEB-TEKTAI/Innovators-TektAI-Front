@@ -5,35 +5,30 @@ import { useLocation } from 'react-router-dom';
 import { User } from '../types/User';
 import { getProfile } from '../services/user.service';
 import Footer from '../pages/landing/footer';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../components/Auth/AuthProvider';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const [authenticated, setAuthenticated] = useState(false);
-  const [connectedUser, setconnectedUser] = useState<User | null>(null);
   const { pathname } = location;
-    // Check if the current path contains "auth"
   const isAuthPath = pathname.includes('/auth');
+  const [authenticated, setAuthenticated] = useState(false);
+  const [connectedUser, setConnectedUser]= useState<any>(null);
+  const { userAuth } = useAuth(); 
+
+
 
   useEffect(() => {
-    const fetchAuthenticationStatus = async () => {
-      try {
-        const connectedUser = await getProfile();
-        setconnectedUser(connectedUser);
-        setAuthenticated(true);
-      } catch (error) {
-        setAuthenticated(false);
-      }
-    };
-
-    fetchAuthenticationStatus();
-  }, []);
+    setConnectedUser(userAuth);
+  }, [userAuth]);
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
 
       <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
+      
       <div className="flex">
             <button
             aria-controls="sidebar"
@@ -41,7 +36,7 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
               e.stopPropagation();
               setSidebarOpen(!sidebarOpen);
             }}
-            className="z-99999 block rounded-sm h-auto border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
+            className="z-99999 block rounded-sm h-auto border  mt-4 border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
           >
             <span className="relative block h-5.5 w-5.5 cursor-pointer">
               <span className="du-block absolute right-0 h-full w-full">

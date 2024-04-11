@@ -2,28 +2,24 @@ import React, { useState, ReactNode, useEffect } from 'react';
 import ClientHeader from '../components/ClientHeader/index';
 import { getProfile } from '../services/user.service';
 import { User } from '../types/User';
+import { useAuth } from '../components/Auth/AuthProvider';
 
 const ClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const [connectedUser, setconnectedUser] = useState<User | null>(null);
   const { pathname } = location;
     // Check if the current path contains "auth"
   const isLanding = pathname.includes('/landing');
-
+  const [connectedUser, setConnectedUser]= useState<any>(null);
+  const { userAuth } = useAuth(); 
+  
+  
+  
   useEffect(() => {
-    const fetchAuthenticationStatus = async () => {
-      try {
-        const connectedUser = await getProfile();
-        setconnectedUser(connectedUser);
-        setAuthenticated(true);
-      } catch (error) {
-        setAuthenticated(false);
-      }
-    };
-
-    fetchAuthenticationStatus();
-  }, []);
+    setConnectedUser(userAuth);
+  }, [userAuth]);
+  
+  
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
                 <ClientHeader connectedUser={connectedUser} authenticated={authenticated} />
