@@ -80,7 +80,7 @@ const Teams: React.FC = () => {
                 className="animated-text text-primary"
                 style={{ animationDelay: '1.2s' }}
               >
-                s
+                
               </span>
             </h2>
             <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
