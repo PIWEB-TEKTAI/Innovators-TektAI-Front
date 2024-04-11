@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import '../../css/stepper.css';
 import { TiTick } from 'react-icons/ti';
-import CheckboxR from '../../components/Checkboxes/CheckboxR';
 
 const EditChallenge = () => {
   const [step, setStep] = useState(1);

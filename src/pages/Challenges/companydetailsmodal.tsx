@@ -55,7 +55,7 @@ const CompanyModal: React.FC<CompanyModalProps> = ({ company, onClose }) => {
       <div className="modal-body flex items-center mb-4">
           <div className="w-[250px] rounded-lg mr-5 overflow-hidden">
             <img
-             src="/src/images/landing/flight.jpeg"
+             src="/src/images/challenge/icons8-company-100.png"
               className="card-img-top mt-3 w-50"
               alt="Card image"
 

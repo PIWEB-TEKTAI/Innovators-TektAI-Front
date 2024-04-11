@@ -114,13 +114,23 @@ export const directlySwitchAccount = async (): Promise<boolean> => {
   try {
     const response = await axios.put(
       `${User_URL}/directlySwitchAccount`,
-      null, // No data payload in the request body
-      { withCredentials: true } // Include withCredentials in the configuration object
+      null, 
+      { withCredentials: true }
     );
 
     return response.data;
   } catch (error) {
     console.error('Error switching account', error);
     throw new Error('Error switching account');
+  }
+};
+
+export const getUserById = async (userId:any) => {
+  try {
+    const response = await axios.get(`${API_URL}user/getById/${userId}`,{withCredentials:true});
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
   }
 };

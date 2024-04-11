@@ -62,7 +62,7 @@ const DropdownUser =(props: {
         to="#"
       >
         <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
+          <span className="block text-sm font-medium text-black capitalize dark:text-white">
             {props.userName}
           </span>
           <span className="block text-xs">{props.occupation}</span>

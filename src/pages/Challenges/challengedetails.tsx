@@ -17,7 +17,7 @@ import {
   editSubmission,
   getSubmissionById,
   getSubmissionsByChallengeId,
-  deleteSubmission
+  deleteSubmission,
 } from '../../services/submissionService';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
@@ -25,6 +25,9 @@ import { useAuth } from '../../components/Auth/AuthProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Props } from 'react-select';
 import Swal from 'sweetalert2';
+import ChallengeParticipations from './ChallengeParticipations';
+import { addSoloParticipationRequest } from '../../services/challengeService';
+import Modal from '../../components/modal';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -199,8 +202,7 @@ const AddSubmissionForm: React.FC = () => {
   );
 };
 
-const EditSubmissionForm: React.FC<Props> = ({id}) => {
-
+const EditSubmissionForm: React.FC<Props> = ({ id }) => {
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
@@ -242,18 +244,17 @@ const EditSubmissionForm: React.FC<Props> = ({id}) => {
     const fetchSubmission = async () => {
       try {
         const data = await getSubmissionById(id);
-        console.log(data)
-        setTitle(data?.title || ''); 
+        console.log(data);
+        setTitle(data?.title || '');
         setDescription(data?.description || '');
         setFileName(data?.files[0].name);
-       } catch (error) {
+      } catch (error) {
         console.error('Error fetching submission data:', error);
       }
     };
 
-
     fetchSubmission();
-  }, []); 
+  }, []);
 
   const isFormValid = () => {
     return (
@@ -298,9 +299,7 @@ const EditSubmissionForm: React.FC<Props> = ({id}) => {
 
         setTimeout(() => {
           window.location.reload();
-
         }, 3000);
-      
       })
       .catch((error) => {
         setAlert({
@@ -400,7 +399,15 @@ const ChallengeDetails: React.FC = () => {
   const [showModal, setShowModal] = useState(false); // State to manage modal visibility
   const [EditShowModal, setShowEditModal] = useState(false); // State to manage modal visibility
   const [openDropdowns, setOpenDropdowns] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [confiramtionMessage, setConfirmationMessage] = useState('');
+  const [errorConfirmationMesage, setErrorConfirmationMessage] =
+    useState(false);
   const { userAuth } = useAuth();
+
+  const handleConfirmationModalAppearance = () => {
+    setShowConfirmationModal(true);
+  };
 
   const toggleDropdown = () => {
     if (openDropdowns === false) {
@@ -422,8 +429,6 @@ const ChallengeDetails: React.FC = () => {
     setShowModal(false);
   };
 
-
-
   const closeModal = () => {
     setShowModal(false);
   };
@@ -444,7 +449,7 @@ const ChallengeDetails: React.FC = () => {
       try {
         const fetchedSubmissions = await getSubmissionsByChallengeId(id);
         setSubmissions(fetchedSubmissions);
-        console.log(fetchedSubmissions)
+        console.log(fetchedSubmissions);
       } catch (error) {
         console.error('Error fetching submissions:', error);
       }
@@ -462,10 +467,7 @@ const ChallengeDetails: React.FC = () => {
   );
   const fetchChallengeDetails = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/challenge/${id}`,
-        
-      );
+      const response = await axios.get(`http://localhost:3000/challenge/${id}`);
       setChallengeDetails(response.data);
     } catch (error) {
       console.error('Error fetching challenge details:', error);
@@ -517,7 +519,6 @@ const ChallengeDetails: React.FC = () => {
   const hoursLeft = differenceInHours(endDate, now) % 24;
   const minutesLeft = differenceInMinutes(endDate, now) % 60;
   const secondsLeft = differenceInSeconds(endDate, now) % 60;
-
   const paginate = (pageNumber: any) => setCurrentPage(pageNumber);
 
   const timeLeftString = `${monthsLeft > 0 ? `${monthsLeft} months, ` : ''}${daysLeft > 0 ? `${daysLeft} days, ` : ''}${hoursLeft > 0 ? `${hoursLeft} hours, ` : ''}${minutesLeft > 0 ? `${minutesLeft} minutes, ` : ''}${secondsLeft} seconds`;
@@ -526,9 +527,7 @@ const ChallengeDetails: React.FC = () => {
     setActiveTab(tab);
   };
 
-
-
-  const handleDeleteSubmission = (id:any)=> {
+  const handleDeleteSubmission = (id: any) => {
     Swal.fire({
       title: 'Are you sure you want to delete your submission ?',
       icon: 'warning',
@@ -536,66 +535,129 @@ const ChallengeDetails: React.FC = () => {
       confirmButtonColor: '#28a745',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, validate !',
-      cancelButtonText: 'Cancel'
-    }).then((result:any) => {
+      cancelButtonText: 'Cancel',
+    }).then((result: any) => {
       if (result.isConfirmed) {
         deleteSubmission(id)
-        .then((response:any) => {
-          console.log(response)
-          console.log('data deleted successfully :', response.msg);
-          setAlert({
-            type: 'success',
-            message: '' + response.msg,
+          .then((response: any) => {
+            console.log(response);
+            console.log('data deleted successfully :', response.msg);
+            setAlert({
+              type: 'success',
+              message: '' + response.msg,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error: AxiosError<any>) => {
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.msg
+            ) {
+              const errorMessage = error.response.data.msg;
+              console.error('Erreur lors du delete data :', errorMessage);
+              setAlert({
+                type: 'error',
+                message: errorMessage,
+              });
+            } else {
+              console.error('Erreur lors du delete data :', error.message);
+              setAlert({
+                type: 'error',
+                message: error.message,
+              });
+            }
           });
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response && error.response.data && error.response.data.msg) {
-            const errorMessage = error.response.data.msg;
-            console.error("Erreur lors du delete data :", errorMessage);
-            setAlert({
-              type: 'error',
-              message: errorMessage,
-            });
-          } else {
-            console.error("Erreur lors du delete data :", error.message);
-            setAlert({
-              type: 'error',
-              message: error.message,
-            });
-          }
-        });
       }
     });
-  }
+  };
+
+  const handleSoloParticipationRequest = async () => {
+    try {
+      const responseData = await addSoloParticipationRequest(id, userAuth?._id);
+      setConfirmationMessage('Participation request Added succesfully');
+    } catch (error: any) {
+      const errorMessage = error.response.data.message;
+      setConfirmationMessage(errorMessage);
+      setErrorConfirmationMessage(true);
+    } finally {
+      setTimeout(() => {
+        setShowConfirmationModal(false);
+      }, 2000);
+    }
+  };
 
   return (
-    
     <ClientLayout>
+      <Modal
+        showModal={showConfirmationModal}
+        setShowModal={setShowConfirmationModal}
+        title="Add Paticipation Request"
+        content="Are you sure you want to participate to this challenge?"
+        onClose={closeModal}
+        onSave={handleSoloParticipationRequest}
+        postSaveMessage={confiramtionMessage}
+        error={errorConfirmationMesage}
+      />
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
+          <div className="flex justify-end">
+            {userAuth?.role === 'challenger' &&
+              !challengeDetails.participations.soloParticipants.includes(
+                userAuth._id,
+              ) &&
+              !challengeDetails.participations.soloParticipationRequests.includes(
+                userAuth._id,
+              ) && (
+                <div className="flex ">
+                  <div className="flex-col m-1">
+                    <button
+                      onClick={handleConfirmationModalAppearance}
+                      className="text-sm p-2 border  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
+                    >
+                      <span className="group-hover:ease-in duration-300">
+                        Solo Join
+                      </span>
+                    </button>
+                  </div>
+                  <div className="flex-col my-1">
+                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group">
+                      <span className="group-hover:ease-in duration-300">
+                        Join a Team
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              )}
+          </div>
 
-        <div className={`${alert && `mt-8`}`}>
-          {alert?.type == 'success' && successfullToast(alert.message)}
-    
-          {alert?.type == 'error' && ErrorToast(alert.message)}
-        </div>
+          <div className={`${alert && `mt-8`}`}>
+            {alert?.type == 'success' && successfullToast(alert.message)}
 
-          <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
+            {alert?.type == 'error' && ErrorToast(alert.message)}
+          </div>
+
+          <div className="flex flex-col py-4 sm:flex-row sm:items-center mt-4 sm:mt-0">
             <img
               src={`http://localhost:3000/images/${challengeDetails.image}`}
               alt="Challenge"
-              className="w-50 h-30 mr-4 px-auto rounded-lg"
+              className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"
             />
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize">
+            <div className="flex flex-col sm:flex-grow">
+              <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize break-words">
                 {challengeDetails.title}
               </h2>
               <div className="flex items-center mt-4">
                 <div
-                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${challengeDetails.status === 'open' ? 'bg-blue-400' : challengeDetails.status === 'archived' ? 'bg-red-600' : 'bg-green-500'} text-white`}
+                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${
+                    challengeDetails.status === 'open'
+                      ? 'bg-blue-400'
+                      : challengeDetails.status === 'archived'
+                        ? 'bg-red-600'
+                        : 'bg-green-500'
+                  } text-white`}
                 >
                   {challengeDetails.status === 'open'
                     ? 'Open'
@@ -642,7 +704,7 @@ const ChallengeDetails: React.FC = () => {
           <ul className="p-8 flex cursor-pointer flex-wrap sm:flex-nowrap border-gray-200 border-b py-4">
             <li className="-mb-px mr-1">
               <a
-                className={`bg-white inline-block rounded-t py-2 px-4 text-blue-700 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 border-l border-t border-r ' : ''}`}
+                className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'overview' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
                 onClick={() => handleTabChange('overview')}
               >
                 Overview
@@ -650,7 +712,7 @@ const ChallengeDetails: React.FC = () => {
             </li>
             <li className="mr-1">
               <a
-                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
+                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'leaderboard' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
                 onClick={() => handleTabChange('leaderboard')}
               >
                 Leaderboard
@@ -658,12 +720,21 @@ const ChallengeDetails: React.FC = () => {
             </li>
             <li className="mr-1">
               <a
-                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
+                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
                 onClick={() => handleTabChange('discussion')}
               >
                 Discussion
               </a>
             </li>
+            <li className="-mb-px mr-1">
+              <a
+                className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'participations' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
+                onClick={() => handleTabChange('participations')}
+              >
+                Participations
+              </a>
+            </li>
+
             <li className="mr-1">
               <a
                 className={`bg-white inline-block py-2 px-4 rounded-t  text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'submission' ? 'bg-blue-100 border-l border-t border-r' : ''}`}
@@ -680,7 +751,7 @@ const ChallengeDetails: React.FC = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mt-2">
                   Description
                 </h2>
-                <p className="text-gray-600 mt-4 break-words text-black">
+                <p className="text-gray-600 mt-4 break-words text-black break-words	">
                   {challengeDetails.description}
                 </p>
                 <h2 className="text-2xl font-bold text-gray-900 mt-8">
@@ -707,17 +778,30 @@ const ChallengeDetails: React.FC = () => {
                 <h2>Discussion</h2>
               </div>
             )}
+            {activeTab == 'participations' && (
+              <div>
+                <ChallengeParticipations
+                  challenge={challengeDetails}
+                  userAuth={userAuth}
+                />
+              </div>
+            )}
+
             {activeTab === 'submission' && (
               <div>
                 <div className="flex justify-end mb-4">
-                  {userAuth?.role === 'challenger' && (
-                    <button
-                      onClick={openModal}
-                      className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold text-gray disabled:opacity-60 hover:bg-opacity-90"
-                    >
-                      Add Submission
-                    </button>
-                  )}
+                  {userAuth?.role === 'challenger' &&
+                    challengeDetails.participations.soloParticipants.includes(
+                      userAuth._id,
+                    ) &&
+                    challengeDetails.status == 'open' && (
+                      <button
+                        onClick={openModal}
+                        className="rounded-full bg-green-600 p-3 py-3 text-sm font-semibold text-gray disabled:opacity-60 hover:bg-opacity-90"
+                      >
+                        Add Submission
+                      </button>
+                    )}
 
                   <ModalForm
                     showModal={showModal}
@@ -727,25 +811,22 @@ const ChallengeDetails: React.FC = () => {
                     onClose={closeModal}
                     onSave={() => {}}
                   />
-
-                   
                 </div>
                 <ul>
-                  
                   {currentItems.map((submission) => (
                     <li
                       className="border-b border-gray-300 justify-between flex p-2"
-                      key={submission.id} 
+                      key={submission.id}
                     >
-                     <div className="w-full flex justify-between">
+                      <div className="w-full flex justify-between">
                         <ModalForm
-                        showModal={EditShowModal}
-                        setShowModal={setShowEditModal}
-                        title="Edit Submission"
-                        content={<EditSubmissionForm id={submission._id} />}
-                        onClose={closeEditModal}
-                        onSave={() => {}}
-                       />
+                          showModal={EditShowModal}
+                          setShowModal={setShowEditModal}
+                          title="Edit Submission"
+                          content={<EditSubmissionForm id={submission._id} />}
+                          onClose={closeEditModal}
+                          onSave={() => {}}
+                        />
                         <div className="flex-col">
                           <p className="break-words text-black font-semibold">
                             {submission.title}
@@ -760,48 +841,52 @@ const ChallengeDetails: React.FC = () => {
                             {submission.files[0].name.substring(0, 15)}...
                           </p>
 
-
-                          {userAuth?._id === submission.submittedBy ?
-                          <div className="relative">
-                            <button
-                              id={`dropdownMenuIconButton_${submission.id}`}
-                              onClick={() => toggleDropdown()}
-                              className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                              type="button"
-                            >
-                              <FontAwesomeIcon
-                                icon={faEdit}
-                                style={{ color: '#3A8EBA' }}
-                                className="mt-2 ml-1 w-5 h-5 "
-                              />
-                            </button>
-
-                            {/* Dropdown menu */}
-                            <div
-                              id={`dropdownDots${submission.id}`}
-                              className={`${openDropdowns ? 'block' : 'hidden'} z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
-                            >
-                              <ul
-                                className="py-2 text-sm text-gray-700 dark:text-gray-200 font-semibold"
-                                aria-labelledby={`dropdownMenuIconButton_${submission.id}`}
+                          {userAuth?._id === submission.submittedBy ? (
+                            <div className="relative">
+                              <button
+                                id={`dropdownMenuIconButton_${submission.id}`}
+                                onClick={() => toggleDropdown()}
+                                className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                type="button"
                               >
-                                <li>
-                                  <button
-                                    onClick={openEditModal}
-                                    className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
-                                  >
-                                    Edit
-                                  </button>
-                                 
-                                </li>
-                                <li>
-                                  <button onClick={()=>handleDeleteSubmission(submission._id)} className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold">
-                                    Delete
-                                  </button>
-                                </li>
-                              </ul>
+                                <FontAwesomeIcon
+                                  icon={faEdit}
+                                  style={{ color: '#3A8EBA' }}
+                                  className="mt-2 ml-1 w-5 h-5 "
+                                />
+                              </button>
+
+                              {/* Dropdown menu */}
+                              <div
+                                id={`dropdownDots${submission.id}`}
+                                className={`${openDropdowns ? 'block' : 'hidden'} z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+                              >
+                                <ul
+                                  className="py-2 text-sm text-gray-700 dark:text-gray-200 font-semibold"
+                                  aria-labelledby={`dropdownMenuIconButton_${submission.id}`}
+                                >
+                                  <li>
+                                    <button
+                                      onClick={openEditModal}
+                                      className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                    >
+                                      Edit
+                                    </button>
+                                  </li>
+                                  <li>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteSubmission(submission._id)
+                                      }
+                                      className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                    >
+                                      Delete
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
-                          </div> : null}
+                          ) : null}
                         </div>
                       </div>
                     </li>

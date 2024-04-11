@@ -417,16 +417,18 @@ function App() {
           }
         />
 
-          <Route
-            path="/Competitions"
-            element={
+
+        <Route
+          path="/Competitions"
+          element={
             <>
-              <PageTitle title="Competitions | TektAi" />
+              <PrivateRoute requiredRoles={["challenger","company"]} component={
+
               <Competitions/>
+              }/>
             </>
           }
         />
-
         <Route
           path="/updateTermsConditions"
           element={

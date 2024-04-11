@@ -411,7 +411,7 @@ const Competitions: React.FC = () => {
 
                     <div className="card-body">
                       <h5
-                        className={`card-title capitalize ${addEmptyLineIfNeeded(challenge.title, 24).length < 24 ? 'one-line-title' : ''}`}
+                        className={`card-title ${addEmptyLineIfNeeded(challenge.title, 24).length < 24 ? 'one-line-title' : ''}`}
                         title={challenge.title}
                       >
                         {addEmptyLineIfNeeded(challenge.title, 40)}

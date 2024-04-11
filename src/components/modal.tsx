@@ -8,6 +8,7 @@ interface ModalProps {
   onClose: () => void;
   onSave: () => void;
   postSaveMessage?: string;
+  error?:boolean,
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -18,6 +19,7 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   onSave,
   postSaveMessage,
+  error,
 }) => {
   const [showMessage, setShowMessage] = useState(false);
   useEffect(() => {
@@ -73,8 +75,10 @@ const Modal: React.FC<ModalProps> = ({
               <div className="p-6 flex-grow overflow-y-auto">
                 <p className="my-4 text-blueGray-500 text-lg leading-relaxed">{content}</p>
                 {/* Display save message */}
-                {postSaveMessage && (
+                {postSaveMessage && !error ? (
                   <div className="text-green-500 text-sm">{postSaveMessage}</div>
+                ):(
+                  <div className="text-[#F87171] text-sm">{postSaveMessage}</div>
                 )}
               </div>
               {/* footer */}
