@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import DateTimePicker from '../../components/Forms/DatePicker/DateTimePickery';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { addChallenge } from '../../services/challengeService';
 import CheckboxR from '../../components/Checkboxes/CheckboxR';
 import { TiTick } from 'react-icons/ti';
 import { ErrorToast, successfullToast } from '../../components/Toast';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const AddChallenge = () => {
   const [step, setStep] = useState(1);
@@ -134,18 +135,41 @@ const AddChallenge = () => {
     setStep(step - 1);
   };
 
+  const [captchaToken, setCaptchaToken] = useState('');
+
+  const handleCaptchaChange = (token: any) => {
+    console.log('Captcha token:', token);
+    setCaptchaToken(token);
+  };
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Fonction pour décocher le reCAPTCHA
+  const resetRecaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+  };
+
   const isFirstPageValid = () => {
     return (
       title !== '' &&
-      (price !== '' || award !== '') &&
       description !== '' &&
       endDate != '' &&
       titleError === '' &&
-      priceError === '' &&
       descriptionError === '' &&
       endDateError === ''
     );
   };
+
+
+  const isSecondPageValid = () => {
+    return (
+      (price !== '' || award !== '') &&
+      priceError === '' 
+    );
+  };
+
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -185,7 +209,13 @@ const AddChallenge = () => {
   };
   const handleSubmit = (e: any) => {
     setSubmitted(true);
+    if(captchaToken == ''){
+      setAlert({
+        type: 'error',
+        message: "Please make sure to check the captcha checkbox",
+      });
 
+    }else{
     e.preventDefault();
     console.log('file' + DataSetFile);
     console.log('image' + Image);
@@ -204,7 +234,7 @@ const AddChallenge = () => {
       },
       file: DataSetFile,
       image: Image,
-    })
+    },captchaToken)
       .then((response) => {
         console.log('Challenge added successfully:', response);
         setAlert({
@@ -216,12 +246,13 @@ const AddChallenge = () => {
         }, 3000);
       })
       .catch((error) => {
+        resetRecaptcha();
         console.error('Error adding challenge:', error);
         setAlert({
           type: 'error',
           message: 'Error adding challenge',
         });
-      });
+      });}
   };
 
   return (
@@ -551,13 +582,22 @@ const AddChallenge = () => {
               ) : (
                 <button
                   className="rounded ml-auto bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90"
-                  onClick={nextStep} /*disabled={!isFirstPageValid()}*/
+                  onClick={nextStep} disabled={step === 1 ? !isFirstPageValid() : !isSecondPageValid()}
                 >
                   Next
                 </button>
               )}
             </div>
-          </div>
+            {step === 3 && (
+                 <div className="flex justify-center mt-5 mb-5">
+                 <ReCAPTCHA
+                   sitekey="6LenUIgpAAAAAFvWhgy4KRWwmLoQmThvaM5nrupd"
+                   onChange={handleCaptchaChange}
+                   ref={recaptchaRef}
+                 />
+               </div>
+            )}
+            </div>
         </div>
       </div>
     </ConnectedClientLayout>

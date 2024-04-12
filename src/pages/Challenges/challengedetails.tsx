@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   format,
   differenceInMonths,
@@ -465,6 +465,7 @@ const ChallengeDetails: React.FC = () => {
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
   );
+
   const fetchChallengeDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/challenge/${id}`);
@@ -482,27 +483,6 @@ const ChallengeDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const getStatusColor = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'bg-blue-400';
-      case 'completed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getStatusText = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'Open';
-      case 'completed':
-        return 'Completed';
-      default:
-        return 'Unknown';
-    }
-  };
 
   const formattedStartDate = format(
     new Date(challengeDetails.startDate),
@@ -578,6 +558,9 @@ const ChallengeDetails: React.FC = () => {
     try {
       const responseData = await addSoloParticipationRequest(id, userAuth?._id);
       setConfirmationMessage('Participation request Added succesfully');
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error: any) {
       const errorMessage = error.response.data.message;
       setConfirmationMessage(errorMessage);
@@ -751,7 +734,7 @@ const ChallengeDetails: React.FC = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mt-2">
                   Description
                 </h2>
-                <p className="text-gray-600 mt-4 break-words text-black break-words	">
+                <p className="text-gray-600 mt-4 break-words text-black	">
                   {challengeDetails.description}
                 </p>
                 <h2 className="text-2xl font-bold text-gray-900 mt-8">

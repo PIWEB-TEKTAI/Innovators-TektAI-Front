@@ -7,6 +7,8 @@ import { getProfile } from '../services/user.service';
 import Footer from '../pages/landing/footer';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/Auth/AuthProvider';
+import { useSocket } from '../SocketContext';
+import { NotifToast } from '../components/Toast';
 
 const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,6 +17,14 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
   const isAuthPath = pathname.includes('/auth');
   const [authenticated, setAuthenticated] = useState(false);
   const [connectedUser, setConnectedUser]= useState<any>(null);
+  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
+    null,
+  );
+  const toTitleCase = (str:string) => {
+    return str.toLowerCase().split(' ').map(word => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+  };
   const { userAuth } = useAuth(); 
 
 
@@ -22,6 +32,37 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
   useEffect(() => {
     setConnectedUser(userAuth);
   }, [userAuth]);
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.onAny((eventName, eventData) => {
+        console.log(`Received event: ${eventName}`);
+        if (eventName === "newParticipationRequest" && userAuth?._id === eventData.idCompany) {
+            console.log('New participation request created:', eventData.firstname);
+            let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+            setAlert({
+                type: "info",
+                message: msg
+            });
+        } 
+    });
+
+    return () => {
+        socket.offAny(); 
+    };
+}, [socket]);
+
+  useEffect(() => {
+    if (alert && alert.type === 'info') {
+      const timer = setTimeout(() => {
+        setAlert(null);
+      }, 8000); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
@@ -84,6 +125,9 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
 
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
+          <div>
+             {alert?.type == 'info' && NotifToast(alert.message)}
+          </div>
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
               {children}
             </div>

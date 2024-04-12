@@ -267,7 +267,7 @@ const Competitions: React.FC = () => {
   return (
     <ConnectedClientLayout>
       <div className="flex flex-col gap-9 border-full">
-        <div className="rounded-sm rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
             <h2 className="font-bold text-black text-title-xl mb-8">
               Competitions

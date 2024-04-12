@@ -11,5 +11,9 @@ export type challenge = {
       name: string,
       description: string,
       fileUrl:string,
-    }
+    },
+    participations: {
+      soloParticipants: Array<Number>
+      soloParticipationRequests: Array<Number>
+    } 
 }
