@@ -312,7 +312,6 @@ function ResetPassword() {
             Password Strength
           </label>
           <div className="relative">
-            {/* Render password strength bar */}
             {renderPasswordStrengthBar()}
           </div>
         </div>

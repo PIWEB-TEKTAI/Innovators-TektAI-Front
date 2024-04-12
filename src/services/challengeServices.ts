@@ -34,3 +34,36 @@ export const getChallengeById = (id:any): Promise<challenge>=> {
         throw error;
       });
   };
+  export const getDiscussionsByChallengeId = async (challengeId: any) => {
+    try {
+      const response = await axios.get(`${API_URL}/${challengeId}/discussions`, {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error getting discussions by challenge ID:', error);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  };
+  export const likeDiscussion = async (discussionId: any) => {
+    try {
+      const response = await axios.post(`${API_URL}/${discussionId}/like`,{}, {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error getting discussions by challenge ID:', error);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  };
+  export const unlikeDiscussion = async (discussionId: any) => {
+    try {
+      const response = await axios.post(`${API_URL}/${discussionId}/unlike`,{}, {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error getting discussions by challenge ID:', error);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  };

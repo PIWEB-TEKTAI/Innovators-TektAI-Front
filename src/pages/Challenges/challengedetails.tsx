@@ -11,8 +11,8 @@ import {
   differenceInMinutes,
   differenceInSeconds,
 } from 'date-fns';
-import CompanyModal from './companydetailsmodal'; 
-import SubmissionDetailsModal from './submissiondetailsmodal '; 
+import CompanyModal from './companydetailsmodal';
+import SubmissionDetailsModal from './submissiondetailsmodal ';
 
 import {
   addSubmission,
@@ -21,7 +21,8 @@ import {
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
 import { useAuth } from '../../components/Auth/AuthProvider';
-
+import { getDiscussionsByChallengeId, likeDiscussion, unlikeDiscussion } from '../../services/challengeServices';
+import Discussion from "../Challenges/discussion";
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
 
@@ -196,45 +197,24 @@ const AddSubmissionForm: React.FC = () => {
 };
 
 const ChallengeDetails: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { userAuth } = useAuth();
+
   const [challengeDetails, setChallengeDetails] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<string>('overview'); // Default active tab
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<any>(null);
-  const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+  const [showModal, setShowModal] = useState(false);
   const [showModalsub, setShowModalsub] = useState(false);
-const [selectedSubmission, setSelectedSubmission] = useState(null);
-
-
-
-  const openModal = () => {
-    setShowModal(true);
-  };
-  const { userAuth } = useAuth();
-  const closeModal = () => {
-    setShowModal(false);
-  };
-  const openModalsub = () => {
-    setShowModalsub(true);
-  };
-  const closeModalsub = () => {
-    setShowModalsub(false);
-  };
-  const handleCompanyNameClick = (companyDetails: any) => {
-    console.log('Company details:', companyDetails);
-    setSelectedCompany(companyDetails);
-    setIsModalOpen(true);
-  };
-  const handleSubmissionClick = (submission : any) => {
-    setSelectedSubmission(submission);
-    setShowModalsub(true);
-  };
-  
-  useEffect(() => {
-    console.log('isModalOpen:', isModalOpen); // Check if this log updates when the modal state changes
-  }, [isModalOpen]);
-
-  const { id } = useParams();
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [discussions, setDiscussions] = useState<any[]>([]);
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [content, setContent] = useState('');
+  const [SelectedDiscussion, setSelectedDiscussion] = useState(null);
+  const [isLiked, setIsLiked] = useState<boolean[]>([]); // State to track whether each discussion is liked
+  const [replyContent, setReplyContent] = useState('');
+
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -248,6 +228,57 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
 
     fetchSubmissions();
   }, [id]);
+
+  useEffect(() => {
+    const fetchChallengeDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/challenge/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setChallengeDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching challenge details:', error);
+      }
+    };
+
+    fetchChallengeDetails();
+  }, [id]);
+
+  useEffect(() => {
+    console.log('isModalOpen:', isModalOpen);
+  }, [isModalOpen]);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const openModalsub = () => {
+    setShowModalsub(true);
+  };
+
+  const closeModalsub = () => {
+    setShowModalsub(false);
+  };
+
+  const handleCompanyNameClick = (companyDetails: any) => {
+    console.log('Company details:', companyDetails);
+    setSelectedCompany(companyDetails);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmissionClick = (submission: any) => {
+    setSelectedSubmission(submission);
+    setShowModalsub(true);
+  };
+
+
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -275,27 +306,7 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
     return <div>Loading...</div>;
   }
 
-  const getStatusColor = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'bg-blue-400';
-      case 'completed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
 
-  const getStatusText = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'Open';
-      case 'completed':
-        return 'Completed';
-      default:
-        return 'Unknown';
-    }
-  };
 
   const formattedStartDate = format(
     new Date(challengeDetails.startDate),
@@ -320,6 +331,7 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+
 
   return (
     <ClientLayout>
@@ -448,15 +460,14 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
               </>
             )}
             {activeTab === 'leaderboard' && (
-              <div>
-                <h2>Leaderboard</h2>
-              </div>
+            <div> Leader</div>
+
             )}
             {activeTab === 'discussion' && (
-              <div>
-                <h2>Discussion</h2>
-              </div>
+                          <Discussion />
             )}
+
+
             {activeTab === 'submission' && (
               <div>
                 <div className="flex justify-end mb-4">
@@ -475,30 +486,30 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
                     title="Add Submission"
                     content={<AddSubmissionForm />}
                     onClose={closeModal}
-                    onSave={() => {}}
+                    onSave={() => { }}
                   />
                 </div>
                 <ul>
-  {currentItems.map((submission) => (
-    <li
-      className="border-b border-gray-300 justify-between flex p-2"
-      key={submission.id}
-      onClick={() => handleSubmissionClick(submission)} // Handle click event
-    >
-      <div className="flex-col">
-        <p className="break-words text-black font-semibold">
-          {submission.title}
-        </p>
-        <p className="break-words text-black">
-          {submission.description.substring(0, 60)}
-        </p>
-      </div>
-      <p className="break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-        {submission.files[0].name.substring(0, 15)}...
-      </p>
-    </li>
-  ))}
-</ul>
+                  {currentItems.map((submission) => (
+                    <li
+                      className="border-b border-gray-300 justify-between flex p-2"
+                      key={submission.id}
+                      onClick={() => handleSubmissionClick(submission)} // Handle click event
+                    >
+                      <div className="flex-col">
+                        <p className="break-words text-black font-semibold">
+                          {submission.title}
+                        </p>
+                        <p className="break-words text-black">
+                          {submission.description.substring(0, 60)}
+                        </p>
+                      </div>
+                      <p className="break-words cursor-pointer p-2 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
+                        {submission.files[0].name.substring(0, 15)}...
+                      </p>
+                    </li>
+                  ))}
+                </ul>
 
                 {/* Pagination */}
                 <nav>
@@ -523,18 +534,12 @@ const [selectedSubmission, setSelectedSubmission] = useState(null);
           </div>
         </div>
       </div>
-      {showModalsub && (
-        <SubmissionDetailsModal
-          submission={selectedSubmission}
-          onClose={closeModalsub} // Pass the close function here
-          
-        />
-      )}
+
 
     </ClientLayout>
-    
+
   );
-  
+
 };
 
 export default ChallengeDetails;
