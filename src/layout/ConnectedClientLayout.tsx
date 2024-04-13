@@ -38,14 +38,21 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
   useEffect(() => {
     socket.onAny((eventName, eventData) => {
         console.log(`Received event: ${eventName}`);
-        if (eventName === "newParticipationRequest" && userAuth?._id === eventData.idCompany) {
+        if (eventName === "newParticipationRequest" && userAuth?._id === eventData.idUser) {
             console.log('New participation request created:', eventData.firstname);
             let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
             setAlert({
                 type: "info",
                 message: msg
             });
-        } 
+        } else if (eventName === "AcceptParticipationRequest" && userAuth?._id === eventData.idUser) {
+          console.log('New accept participation request created:', eventData.firstname);
+          let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+          setAlert({
+              type: "info",
+              message: msg
+          });
+      } 
     });
 
     return () => {

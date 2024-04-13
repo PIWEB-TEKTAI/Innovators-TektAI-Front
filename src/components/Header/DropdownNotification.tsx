@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,18 +24,20 @@ const DropdownNotification = () => {
       year: 'numeric',
       month: 'short',
       day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
     };
     const date = new Date(dateString);
     return date.toLocaleString('en-US', options);
-  };
+};
 
   const url = "http://localhost:3000/notif"  
 
   useEffect(() => {
       const fetchNotifications = async () => {
         try {
-          const response = await fetch(`${url}/list`); 
-          const data = await response.json();
+          const response = await axios.get(`${url}/list` , { withCredentials: true}); 
+          const data = await response.data;
           if (data.notifications) { 
               setData(data.notifications); 
           }
@@ -122,21 +125,30 @@ const DropdownNotification = () => {
         <ul className="flex h-auto flex-col overflow-y-auto">
         {Data!==null && Data.map((item:any, index:any) => (   
           <li key={index}>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
+          <Link
+            className="flex gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+            to="#"
+          >
+            <img
+              src={item.UserConcernedId.imageUrl}
+              alt="profile"
+              className="rounded-full max-h-36 w-8 h-8 mt-2"
+            />
+            <div className="flex flex-col">
               <p className="text-sm">
-                 <span className='font-semibold'>{toTitleCase(item.createdAccountUserId.FirstName)}  {toTitleCase(item.createdAccountUserId.LastName)} </span> {item.content}
-              </p> 
+                <span className="font-semibold">
+                  {toTitleCase(item.UserConcernedId.FirstName)}{' '}
+                  {toTitleCase(item.UserConcernedId.LastName)}{' '}
+                </span>{' '}
+                {item.content}
+              </p>
 
-             
-
-              
-
-              <p className="text-xs text-primary font-medium"  >{formatDate(item.createdAt)}</p>
-            </Link>
-          </li>
+              <p className="text-xs text-primary font-medium">
+                {formatDate(item.createdAt)}
+              </p>
+            </div>
+          </Link>
+        </li>
         ))}
           
         </ul>

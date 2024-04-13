@@ -156,7 +156,7 @@ const handleAcceptRequest = async (userId: string) => {
               
               }
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end items-center">
               {participation.type =="Request"&&
               <>
                 <div> {userAuth?.role === 'challenger' && challenge.status =="open" && challenge.participations.soloParticipationRequests.includes(userAuth?._id) &&

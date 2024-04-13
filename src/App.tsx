@@ -50,6 +50,7 @@ import ChallengeDetailsCompany from './pages/Challenges/challengedetailscompany'
 import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
+import NotificationUser from './pages/Profile/notificationsUser';
 
 
 
@@ -218,6 +219,20 @@ function App() {
             </>
           }
         />
+
+
+        <Route
+          path="/notifications"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["challenger","company"]} component={
+
+                <NotificationUser/>
+              }/>
+            </>
+          }
+        />
+
 
 
         <Route
