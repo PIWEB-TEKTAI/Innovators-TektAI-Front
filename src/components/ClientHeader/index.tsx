@@ -45,6 +45,7 @@ const ClientHeader = (props: {
       setIsLoading(false);
     }
   };
+
   return (
     <header className="sticky top-0 z-999999">
       <nav className="sticky bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -185,7 +186,7 @@ const ClientHeader = (props: {
               </li>
               {props.connectedUser != null && (
                 <div className="flex px-4">
-                  {props.connectedUser?.AlreadyCompany ? (
+                  {props.connectedUser.AlreadyCompany ?(
                     <>
                       <a
                         onClick={handleSwitchAccount}
@@ -200,9 +201,7 @@ const ClientHeader = (props: {
                     </>
                   ) : (
                     <Link to="/SwitchToCompany">
-                      <a
-                        onClick={handleSwitchAccount}
-                        className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      <a  className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                       >
                         {props.connectedUser?.role === 'challenger' ? (
                           <>Switch to company</>

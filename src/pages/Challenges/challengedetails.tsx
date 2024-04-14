@@ -585,7 +585,7 @@ const ChallengeDetails: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-        <div className="bg-white px-[2rem] py-8 shadow-lg rounded-lg overflow-hidden">
+        <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
           <div className="flex justify-end">
             {userAuth?.role === 'challenger' &&
               !challengeDetails.participations.soloParticipants.includes(
