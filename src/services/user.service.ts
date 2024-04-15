@@ -134,3 +134,12 @@ export const getUserById = async (userId:any) => {
     throw error;
   }
 };
+export const getAllChallengers = async () => {
+  try {
+    const response = await axios.get(`${API_URL}user/challengers`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching challengers:', error);
+    throw error;
+  }
+};

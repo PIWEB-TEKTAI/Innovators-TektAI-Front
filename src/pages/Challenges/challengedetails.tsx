@@ -28,6 +28,7 @@ import Swal from 'sweetalert2';
 import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
+import TeamSelectionModal from './teamSelectionModal';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -401,6 +402,8 @@ const ChallengeDetails: React.FC = () => {
   const [openDropdowns, setOpenDropdowns] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [confiramtionMessage, setConfirmationMessage] = useState('');
+  const [showTeamModal, setShowTeamModal] = useState(false);
+
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
   const { userAuth } = useAuth();
@@ -417,6 +420,13 @@ const ChallengeDetails: React.FC = () => {
     }
   };
 
+  const handleJoinTeamClick = () => {
+    setShowTeamModal(true);
+  };
+
+  const handleTeamModalClose = () => {
+    setShowTeamModal(false);
+  };
   const openModal = () => {
     setShowModal(true);
   };
@@ -572,9 +582,13 @@ const ChallengeDetails: React.FC = () => {
     }
   };
 
+
   return (
     <ClientLayout>
-      <Modal
+    {showTeamModal && (
+        <TeamSelectionModal onClose={handleTeamModalClose} />
+      )}    
+        <Modal
         showModal={showConfirmationModal}
         setShowModal={setShowConfirmationModal}
         title="Add Paticipation Request"
@@ -606,7 +620,8 @@ const ChallengeDetails: React.FC = () => {
                     </button>
                   </div>
                   <div className="flex-col my-1">
-                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group">
+                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
+                     onClick={handleJoinTeamClick}>
                       <span className="group-hover:ease-in duration-300">
                         Join a Team
                       </span>

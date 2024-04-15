@@ -5,10 +5,18 @@ const BASE_URL = 'http://localhost:3000'; // Replace this with your backend URL
 const teamService = {
   createTeam: async (teamData:any) => {
     try {
-      const response = await axios.post(`${BASE_URL}/teams`, teamData);
+      const response = await axios.post(`${BASE_URL}/teams`, teamData,{withCredentials:true});
       return response.data;
     } catch (error) {
       throw error;
+    }
+  },
+ getAllTeams : async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/all`);
+      return response.data;
+    } catch (error) {
+      throw error; // Throw the error to handle it in the component
     }
   },
 
