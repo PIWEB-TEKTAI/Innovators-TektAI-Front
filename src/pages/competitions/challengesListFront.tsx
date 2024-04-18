@@ -36,6 +36,7 @@ interface User {
   role: 'super admin' | 'admin' | 'challenger' | 'company' | 'archive';
 }
 interface Challenge {
+  [x: string]: any;
   _id: string;
   title: string;
   description: string;
@@ -107,6 +108,7 @@ interface ChallengeModalProps {
 
 const Card: React.FC<Challenge & { onClick: () => void }> = ({
   onClick,
+  _id,
   title,
   image,
   description,
@@ -250,7 +252,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
 
   const [showDetails, setShowDetails] = useState(false);
   
-  const calculateTimeRemaining = (endDate: string) => {
+  const calculateTimeRemaining = (endDate: string , challengeId:any) => {
     const endDateTime = new Date(endDate).getTime();
     const currentTime = new Date().getTime();
     const timeRemaining = endDateTime - currentTime;
@@ -263,8 +265,42 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
     );
 
+    if(daysRemaining <=0 && minutesRemaining <= 0 && hoursRemaining <=0){
+      selectedChallenge?.status ==='completed'
+    }
+
+    
+    if(daysRemaining <=0 && minutesRemaining <= 0 && hoursRemaining <=0){
+      handleCompleted(challengeId);
+    }
    
     return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
+  };
+
+
+   // Fonction pour marquer un challenge comme terminé
+   const handleCompleted = async (challengeId: string) => {
+    try {
+      console.log(selectedChallenge)
+      await axios.put(
+        `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
+        { status: 'completed' },
+        { withCredentials: true },
+      );
+
+      console.log('PUT request successful for challenge ID:', challengeId);
+
+      const updatedChallenges = selectedChallenge && selectedChallenge.map((challenge:any) => {
+        if (challenge._id === challengeId) {
+          return { ...challenge, status: 'completed' };
+        }
+        return challenge;
+      });
+
+      setSelectedChallenge(updatedChallenges);
+    } catch (error) {
+      console.error('Error completing challenge:', error);
+    }
   };
 
   
@@ -292,7 +328,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
           </h3>
           <div className='font-medium mt-2'>
             {status == 'open' && <p className=' text-red-600'>Time Left </p>}
-            {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString())}</span> : null }       
+            {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString() , _id )}</span> : null }       
           </div>
         </div>
       </div>

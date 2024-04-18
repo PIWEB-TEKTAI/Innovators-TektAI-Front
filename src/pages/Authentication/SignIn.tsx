@@ -548,7 +548,6 @@ async function getUserData() {
                   </span>
                   Sign in with Google
                 </button>
-                <button onClick={signInWithGitHub}>Sign in with GitHub</button>
 
                 <div className="flex justify-center mt-5 mb-5">
                   <ReCAPTCHA

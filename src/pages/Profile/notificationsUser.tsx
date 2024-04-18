@@ -52,8 +52,8 @@ const NotificationUser = () => {
   return (
     <ConnectedClientLayout>
       <div className="mx-auto max-w-270">
-        <div className="grid grid-cols-5 gap-8">
-          <div className="col-span-5 xl:col-span-3">
+       
+            
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
@@ -66,7 +66,7 @@ const NotificationUser = () => {
                     Data.map((item: any, index: any) => (
                       <li key={index}>
                         <Link
-                          className="flex gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                          className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
                           to="#"
                         >
                           <img
@@ -94,8 +94,6 @@ const NotificationUser = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </ConnectedClientLayout>
   );
 };

@@ -1,21 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTasks, faCheckCircle, faArchive , faLightbulb , faUnlockAlt , faBrain ,faBullseye,faClock   } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faUsers, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 const ChallengeStatistics: React.FC = () => {
-    const [statistics, setStatistics] = useState<any>(null);
+    const [fetchedStatistics, setFetchedStatistics] = useState<any>({
+        totalChallenges: 0,
+        nbchallengers: 0,
+        nbcompanies: 0
+    });
+
+    const [displayedStatistics, setDisplayedStatistics] = useState<any>({
+        totalChallenges: 0,
+        nbchallengers: 0,
+        nbcompanies: 0
+    });
+
+    const incrementPercentage = 0.1;
+    const animationDuration = 800; // milliseconds
+    const pauseDuration = 7000; // milliseconds
+
+    const animateStatistics = () => {
+        setDisplayedStatistics((prevDisplayedStatistics: any) => ({
+            totalChallenges: Math.ceil(prevDisplayedStatistics.totalChallenges + (fetchedStatistics.totalChallenges - prevDisplayedStatistics.totalChallenges) * incrementPercentage),
+            nbchallengers: Math.ceil(prevDisplayedStatistics.nbchallengers + (fetchedStatistics.nbchallengers - prevDisplayedStatistics.nbchallengers) * incrementPercentage),
+            nbcompanies: Math.ceil(prevDisplayedStatistics.nbcompanies + (fetchedStatistics.nbcompanies - prevDisplayedStatistics.nbcompanies) * incrementPercentage)
+        }));
+    };
 
     useEffect(() => {
+        console.log('Fetching challenge statistics...');
         const fetchChallengeStatistics = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/challenge/statistics`,{
-                    headers: {
-                      'Content-Type': 'multipart/form-data',
-                    },
-                    withCredentials: true
-                  });
-                setStatistics(response.data.statistics);
+                const response = await axios.get(`http://localhost:3000/challenge/statistics`, {
+                    withCredentials: true,
+                });
+                console.log('Fetched statistics:', response.data.statistics);
+                setFetchedStatistics(response.data.statistics);
             } catch (error) {
                 console.error('Error fetching challenge statistics:', error);
             }
@@ -24,47 +46,63 @@ const ChallengeStatistics: React.FC = () => {
         fetchChallengeStatistics();
     }, []);
 
-    if (!statistics) {
+    useEffect(() => {
+        if (fetchedStatistics && fetchedStatistics.totalChallenges !== 0) {
+            console.log('Starting animation...');
+            const animationTimer = setInterval(() => {
+                animateStatistics();
+                if (
+                    displayedStatistics.totalChallenges === fetchedStatistics.totalChallenges &&
+                    displayedStatistics.nbchallengers === fetchedStatistics.nbchallengers &&
+                    displayedStatistics.nbcompanies === fetchedStatistics.nbcompanies
+                ) {
+                    clearInterval(animationTimer);
+                    setTimeout(() => {
+                        setDisplayedStatistics({
+                            totalChallenges: 0,
+                            nbchallengers: 0,
+                            nbcompanies: 0
+                        });
+                    }, pauseDuration);
+                }
+            }, animationDuration);
+            return () => clearInterval(animationTimer);
+        }
+    }, [fetchedStatistics]);
+
+   
+
+    if (!fetchedStatistics.totalChallenges) {
         return <div>Loading...</div>;
     }
 
+    const {userAuth} = useAuth();
+
     return (
-<div className="flex flex-wrap justify-center space-x-4">
-
-<div className="cursor-pointer w-[17rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faBullseye} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-red-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-xl font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">All Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.totalChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[17rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faUnlockAlt} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-yellow-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-xl font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">Open Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.openChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[17rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faCheckCircle} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-green-500 text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Completed Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.completedChallenges}</p>
-</div>
-
-<div className="cursor-pointer w-[17rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
-    <FontAwesomeIcon icon={faArchive} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-black text-3xl mr-4" />
-    <a href="#" className="text-gray-500 group-hover:text-white">
-        <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Archived Challenges</h5>
-    </a>
-    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.archivedChallenges}</p>
-</div>
-
-</div>
-);
+        <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-2 text-primary">Empower Your Community</h2>
+                <p className="text-xl text-gray-600">Meet your developers where they already are.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                <div className={userAuth?.role === 'challenger' ? "bg-white p-8 rounded-lg shadow-lg text-center" : "bg-gray p-8 rounded-lg shadow-lg text-center"}>
+                    <FontAwesomeIcon icon={faTrophy} className="text-6xl text-primary mb-4" />
+                    <h3 className="text-2xl font-semibold mb-4">Competitions</h3>
+                    <p className="text-5xl font-semibold mb-2">{displayedStatistics.totalChallenges}</p>
+                </div>
+                <div className={userAuth?.role === 'challenger' ? "bg-white p-8 rounded-lg shadow-lg text-center" : "bg-gray p-8 rounded-lg shadow-lg text-center"}>
+                    <FontAwesomeIcon icon={faUsers} className="text-6xl text-primary mb-4" />
+                    <h3 className="text-2xl font-semibold mb-4">Challengers</h3>
+                    <p className="text-5xl font-semibold mb-2">{displayedStatistics.nbchallengers}</p>
+                </div>
+                <div className={userAuth?.role === 'challenger' ? "bg-white p-8 rounded-lg shadow-lg text-center" : "bg-gray p-8 rounded-lg shadow-lg text-center"}>
+                    <FontAwesomeIcon icon={faBuilding} className="text-6xl text-primary mb-4" />
+                    <h3 className="text-2xl font-semibold mb-4">Companies</h3>
+                    <p className="text-5xl font-semibold mb-2">{displayedStatistics.nbcompanies}</p>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default ChallengeStatistics;
