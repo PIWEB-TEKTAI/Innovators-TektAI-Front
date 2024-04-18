@@ -407,7 +407,7 @@ const ChallengeDetails: React.FC = () => {
 
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
-  const { userAuth } = useAuth();
+  let { userAuth } = useAuth();
 
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);

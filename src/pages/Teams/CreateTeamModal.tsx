@@ -33,7 +33,6 @@ const CreateTeamModal: React.FC<Props> = ({ onClose }) => {
                 </h3>
                 <div className="mt-2">
                     <CreateTeamForm onCreateTeamSuccess={handleCreateTeamSuccess}></CreateTeamForm>
-                 
                 </div>
               </div>
             </div>

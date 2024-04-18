@@ -6,14 +6,16 @@ import CreateTeamForm from './createTeamForm';
 interface Props {
   onClose?: () => void;
 }
-
-
 const TeamSelectionModal: React.FC<Props> = ({ onClose }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const handleCreateTeamSuccess = () => {
-    setShowCreateForm(false); 
+    setShowCreateForm(false);
   };
-  
+
+  const handleReturnToTeamSelection = () => {
+    setShowCreateForm(false); // Close the create team form if it's open
+  };
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -31,10 +33,10 @@ const TeamSelectionModal: React.FC<Props> = ({ onClose }) => {
                   Select or Create Team
                 </h3>
                 <div className="mt-2">
-                  {!showCreateForm && (<TeamsList /> )}{/* Display the list of teams */}
+                  {!showCreateForm && (<TeamsList />)} {/* Display the list of teams */}
                   {/* Conditionally render the team creation form */}
                   {showCreateForm ? (
-                    <CreateTeamForm onCreateTeamSuccess={handleCreateTeamSuccess}></CreateTeamForm>
+                    <CreateTeamForm onCreateTeamSuccess={handleCreateTeamSuccess} onReturn={handleReturnToTeamSelection}></CreateTeamForm>
                   ) : (
                     <button onClick={() => setShowCreateForm(true)} className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
                       Create New Team

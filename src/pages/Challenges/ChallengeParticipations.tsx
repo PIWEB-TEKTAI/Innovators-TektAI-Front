@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getUserById } from '../../services/user.service';
 import { acceptParticipation, declineParticipation } from '../../services/challengeService';
 import Modal from '../../components/modal';
+import teamService from '../../services/teamsService';
 
 interface Props {
   challenge?: any;
@@ -17,7 +18,7 @@ const ChallengeParticipations: React.FC<Props> = ({ challenge,userAuth}) => {
   const [confiramtionMessage,setConfirmationMessage] = useState('');
   const [errorConfirmationMesage,setErrorConfirmationMessage]=useState(false);
   const  [showDeclineModal, setShowDeclineModal] = useState(false);
-  
+  const [ParticipationType, setParticipationType] =useState('');
 
   useEffect(() => {
     const fetchParticipantDetails = async () => {
@@ -25,6 +26,8 @@ const ChallengeParticipations: React.FC<Props> = ({ challenge,userAuth}) => {
 
       const participants = challenge?.participations.soloParticipants || [];
       const requests = challenge?.participations.soloParticipationRequests || [];
+      const teamParticipants = challenge?.participations.TeamParticipants || [];
+      const teamRequests = challenge?.participations.TeamParticipationRequests || [];
 
       const details = await Promise.all([
         ...participants.map(async (participant: any) => {
@@ -34,6 +37,14 @@ const ChallengeParticipations: React.FC<Props> = ({ challenge,userAuth}) => {
         ...requests.map(async (participant: any) => {
           const user = await getUserById(participant);
           return { ...user, type: 'Request' }; // Add type property
+        }),
+        ...teamParticipants.map(async (participant: any) => {
+          const team = await teamService.getTeamById(participant._id);
+          return { ...team, type: 'TeamParticipant' }; // Add type property
+        }),
+        ...teamRequests.map(async (participant: any) => {
+          const team = await teamService.getTeamById(participant._id);
+          return { ...team, type: 'TeamRequest' }; // Add type property
         })
       ]);
 
@@ -44,8 +55,9 @@ const ChallengeParticipations: React.FC<Props> = ({ challenge,userAuth}) => {
   }, [challenge?.participations]);
 
 
-  const handleConfirmationModalAppearance =(id:any)=>{
+  const handleConfirmationModalAppearance =(id:any,type:string)=>{
     setParticipationId(id);
+    setParticipationType(type)
     setShowConfirmationModal(true);
   }
 
@@ -56,9 +68,9 @@ const ChallengeParticipations: React.FC<Props> = ({ challenge,userAuth}) => {
   }
 
 
-const handleAcceptRequest = async (userId: string) => {
+const handleAcceptRequest = async (userId: string,type:string) => {
     try {
-      await acceptParticipation(challenge._id, userId);
+      await acceptParticipation(challenge._id, userId,type);
       setConfirmationMessage("Participation request accepted succesfully");
       setTimeout(() => {
         window.location.reload();
@@ -112,7 +124,7 @@ const handleAcceptRequest = async (userId: string) => {
         title="Accept Paticipation Request"
         content="Are you sure you want to accept this participation request?"
         onClose={closeModal}
-        onSave={()=>handleAcceptRequest(participationId)}
+        onSave={()=>handleAcceptRequest(participationId,ParticipationType)}
         postSaveMessage={confiramtionMessage}
         error = {errorConfirmationMesage}
       />
@@ -131,18 +143,32 @@ const handleAcceptRequest = async (userId: string) => {
           <li key={index} className='mb-5'>
             <div className="flex justify-between">
              <div className="flex">
-             <img className="w-15 h-15 p-4" src={participation.imageUrl} alt="userImage" />
-              <div className="flex-col">
-                <div className="capitalize">{participation.FirstName} {participation.LastName}</div>
-                <div>{participation.email}</div>
+             <img className="w-18 h-18 p-4" src={participation.imageUrl} alt="userImage" />
+                {(participation.type == "Participant" || participation.type =="Request") && (      
+                  <>              
+                  <div className="flex-col">
+
+                       <div className="capitalize mt-3">{participation.FirstName} {participation.LastName} </div>
+                       <div>{participation.email}</div>
+                  </div>
+
+                  </>
+
+                )}
+
+                {(     
+                  (participation.type == "TeamParticipant" || participation.type =="TeamRequest") && (
+
+                    <div className="capitalize mt-4 text-lg">{participation.name} </div>
+
+                 ))}
 
               </div>
-             </div>
               <div className="flex justify-end items-center">
-              {participation.type =="Request"&&
+              { (participation.type =="Request" || participation.type == "TeamRequest") &&
               <>
                 <div> {userAuth?._id == challenge.createdBy._id && challenge.status =="open" && challenge.createdBy.role=="company" &&
-                (<button onClick={() => handleConfirmationModalAppearance(participation._id)} className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Accept</button>)}</div>
+                (<button onClick={() => handleConfirmationModalAppearance(participation._id,participation.type )} className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Accept</button>)}</div>
 
               </>
               
@@ -157,7 +183,7 @@ const handleAcceptRequest = async (userId: string) => {
               }
               </div>
               <div className="flex justify-end items-center">
-              {participation.type =="Request"&&
+              {participation.type =="Request" || participation.type == "TeamRequest"&&
               <>
                 <div> {userAuth?.role === 'challenger' && challenge.status =="open" && challenge.participations.soloParticipationRequests.includes(userAuth?._id) &&
                 (<span className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Request sent</span>)}</div>
@@ -186,4 +212,3 @@ const handleAcceptRequest = async (userId: string) => {
 };
 
 export default ChallengeParticipations;
-

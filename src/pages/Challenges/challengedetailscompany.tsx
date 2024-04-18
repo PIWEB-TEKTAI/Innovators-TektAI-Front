@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
@@ -606,7 +607,7 @@ const ChallengeDetailsCompany: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="rounded-sm ">
-        <div className="bg-white px-[2rem] py-[4rem] shadow-lg rounded-sm overflow-hidden">
+        <div className="bg-white px-[2rem] py-[2rem] shadow-lg rounded-sm overflow-hidden">
                
           <div className="flex justify-end">
             {userAuth?.role === 'challenger' &&

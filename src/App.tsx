@@ -53,6 +53,9 @@ import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
 import TeamList from './pages/Teams/TeamList';
 import Preferences from './pages/Profile/Preferences';
+import MyInvitations from './pages/Teams/MyInvitations';
+import TeamDetails from './pages/Teams/teamDetails';
+import MyTeams from './pages/Teams/MyTeams';
 
 
 
@@ -230,7 +233,39 @@ function App() {
             </>
           }
         />
+           <Route
+          path="/teams/myInvitations"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["challenger"]} component={
 
+                <MyInvitations/>
+              }/>
+            </>
+          }
+        />
+           <Route
+          path="/teams/teamDetails/:teamId"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["challenger","company","admin","superAdmin"]} component={
+
+                <TeamDetails/>
+              }/>
+            </>
+          }
+        />
+    <Route
+          path="/teams/myTeams"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["challenger"]} component={
+
+                <MyTeams/>
+              }/>
+            </>
+          }
+        />
 
         <Route
           path="/preferences"

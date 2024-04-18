@@ -112,8 +112,8 @@ const Card: React.FC<any & { onClick: () => void }> = ({
     >
       <div className="flex flex-col items-center mb-4">
         <img
-          src="src/images/landing/team.jpg"
-          className="card-img-top mt-3 w-20"
+          src="src/images/auth/teamUser.jpg"
+          className="card-img-top mt-3 w-15"
           alt="Card image"
         />
         <h3 className="text-xl mt-4 font-bold text-black dark:text-white capitalize">
