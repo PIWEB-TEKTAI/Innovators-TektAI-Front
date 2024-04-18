@@ -51,6 +51,9 @@ import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
+import ListSub from './pages/SuperAdmin/ListSubmissions';
+import DetailSubmission from './pages/SuperAdmin/DetailsSubmissions';
+import ChallengesParticiption from './pages/SuperAdmin/Participations'
 
 
 
@@ -252,6 +255,33 @@ function App() {
 
                 <EditChallenge/>
               }/>
+            </>
+          }
+        />
+          <Route
+          path="/submissions/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < ListSub />
+            </>
+          }
+        />
+         <Route
+          path="/Participtions/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < ChallengesParticiption />
+            </>
+          }
+        />
+         <Route
+          path="/submission-details/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < DetailSubmission />
             </>
           }
         />

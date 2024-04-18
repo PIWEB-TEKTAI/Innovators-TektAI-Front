@@ -72,6 +72,7 @@ export const useAuth = () => {
 };*/}
 
 interface AuthContextProps {
+  
   authenticated: boolean;
   loginAuth: (user: any) => void;
   logoutAuth: () => void;
@@ -117,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ authenticated, loginAuth, logoutAuth, userAuth, roleAuth }}>
+    <AuthContext.Provider value={{  authenticated, loginAuth, logoutAuth, userAuth, roleAuth }}>
       {children}
     </AuthContext.Provider>
   );
