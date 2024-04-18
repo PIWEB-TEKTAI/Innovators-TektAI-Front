@@ -244,8 +244,8 @@ const handleSignIn = async () => {
       } else {
         setshowWelcome(false);
       }
-      
-      // Navigate to the profile page after 5 seconds
+      loginAuth(responseData);
+
       setTimeout(() => {
         if(responseData.role == "challenger" || responseData.role=="company"){
           console.log("role"+responseData.role);
@@ -256,7 +256,6 @@ const handleSignIn = async () => {
           navigate("/companylist");
         }
       }, 3000);
-      loginAuth(responseData);
       console.log('Login successful:', responseData);
     }
   } catch (error: any) {

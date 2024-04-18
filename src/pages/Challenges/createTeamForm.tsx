@@ -1,12 +1,14 @@
+// CreateTeamForm.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import teamService from '../../services/teamsService';
 import { getAllChallengers } from '../../services/user.service';
 
 interface Props {
   onCreateTeamSuccess: () => void;
+  onReturn: () => void;
 }
 
-const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess }) => {
+const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
   const [newTeamData, setNewTeamData] = useState({
     name: '',
     selectedChallengers: [] as any[],
@@ -87,7 +89,7 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess }) => {
         value={newTeamData.name}
         onChange={handleInputChange}
         placeholder="Team Name"
-        className="w-full border rounded py-2 px-3 mb-3"
+        className="w-full border border-gray-300 rounded py-2 px-3 mb-3"
       />
       <div className="relative" ref={dropdownRef}>
         <input
@@ -96,14 +98,17 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={handleToggleDropdown}
           placeholder="Search challengers..."
-          className="w-full border rounded py-2 px-3 mb-3"
+          className="w-full border border-gray-300 rounded py-2 px-3 mb-3"
         />
         {isOpen && (
           <div className="absolute bg-white shadow-md w-full mt-1 rounded-md overflow-y-auto max-h-40">
             <ul>
               {filteredChallengers.map(challenger => (
                 <li key={challenger._id}>
-                  <button onClick={() => handleChallengerSelect(challenger)} className="w-full text-left py-2 px-3 hover:bg-gray-200">
+
+                  <button onClick={() => handleChallengerSelect(challenger)} className="w-full flex text-left py-2 px-3 hover:bg-gray-200">
+                  <img src={challenger.imageUrl } alt="profile" className="rounded-full max-h-8 w-8 mr-2" />
+
                     {challenger.FirstName} {challenger.LastName}
                   </button>
                 </li>
@@ -112,18 +117,25 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess }) => {
           </div>
         )}
       </div>
-      <div className="border rounded p-3 mt-4 max-h-40 overflow-y-auto">
+      <div className=" rounded p-3 mt-4 max-h-40 overflow-y-auto">
         <h2 className="text-lg font-semibold mb-2">Selected Challengers:</h2>
         <ul>
           {newTeamData.selectedChallengers.map(challenger => (
-            <li key={challenger._id} className="flex items-center justify-between border-b py-2">
+            <li key={challenger._id} className="flex items-center justify-between border-b py-2 border-gray-300">
+             <div className="flex">
+             <img src={challenger.imageUrl } alt="profile" className="rounded-full mr-2 max-h-8 w-8 " />
               <span>{challenger.FirstName} {challenger.LastName}</span>
-              <button onClick={() => handleChallengerDeselect(challenger._id)} className="text-red-500">Remove</button>
+             </div>
+              <button onClick={() => handleChallengerDeselect(challenger._id)} className="text-white text-xs font-semibold p-2 rounded-full bg-red-500">Deselct</button>
             </li>
           ))}
         </ul>
       </div>
-      <button onClick={handleCreateTeam} className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Create Team</button>
+      <div className="flex justify-between mt-4">
+      <button onClick={handleCreateTeam} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Create Team</button>
+
+        <button onClick={onReturn} className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">Return</button>
+      </div>
     </div>
   );
 };

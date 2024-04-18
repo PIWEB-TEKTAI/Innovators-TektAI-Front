@@ -402,10 +402,9 @@ const ChallengeDetailsCompany: React.FC = () => {
   const [openDropdowns, setOpenDropdowns] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [confiramtionMessage, setConfirmationMessage] = useState('');
-  const [errorConfirmationMesage, setErrorConfirmationMessage] =
-    useState(false);
-  const { userAuth } = useAuth();
-
+  const [isNotRequested,setisNotRequested] = useState(false);
+  const [errorConfirmationMesage, setErrorConfirmationMessage] =useState(false);
+  let { userAuth } = useAuth();
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);
   };
@@ -434,11 +433,12 @@ const ChallengeDetailsCompany: React.FC = () => {
     setShowModal(false);
   };
   const handleCompanyNameClick = (companyDetails: any) => {
-    console.log('Company details:', companyDetails);
     setSelectedCompany(companyDetails);
     setIsModalOpen(true);
   };
   useEffect(() => {
+    console.log("userAuth",userAuth)
+
     console.log('isModalOpen:', isModalOpen); // Check if this log updates when the modal state changes
   }, [isModalOpen]);
 
@@ -592,7 +592,16 @@ const ChallengeDetailsCompany: React.FC = () => {
       }, 2000);
     }
   };
-
+  useEffect(() => {
+    const updatedIsNotRequested = challengeDetails.participations.TeamParticipationRequests.map((request: { _id: any; leader: { _id: any; }; members: { _id: any; }[]; }) => {
+      const isLeader = request.leader._id === userAuth?._id;
+      const isMember = request.members.some((member: { _id: any; }) => member._id === userAuth?._id);
+      return !isLeader && !isMember;
+    });
+    setisNotRequested(updatedIsNotRequested);
+    console.log(isNotRequested)
+  }, [challengeDetails, userAuth]);
+  
   return (
     <ConnectedClientLayout>
       <Modal
@@ -615,7 +624,14 @@ const ChallengeDetailsCompany: React.FC = () => {
               ) &&
               !challengeDetails.participations.soloParticipationRequests.includes(
                 userAuth._id,
-              ) && (
+              ) &&
+              challengeDetails.participations.TeamParticipationRequests.map((request: { leader: { _id: any }; members: { _id: any }[] }) => {
+                const isLeader = request.leader._id === userAuth?._id;
+                const isMember = request.members.some((member: { _id: any }) => member._id === userAuth?._id);
+                return !isLeader && !isMember;
+              }) &&
+
+               (
                 <div className="flex ">
                   <div className="flex-col m-1">
                     <button

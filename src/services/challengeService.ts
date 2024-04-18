@@ -32,6 +32,16 @@ export const addSoloParticipationRequest = async (challengeId:any, userId:any) =
     throw error; // Handle the error in your component
   }
 };
+export const addTeamParticipationRequest = async (challengeId:any, teamId:any) => {
+  try {
+    const response = await axios.post(`${API_URL}/${challengeId}/addTeamParticipationRequest/${teamId}`,{},
+{  withCredentials: true}  );
+    return response.data; 
+  } catch (error) {
+    console.error('Error adding participation request:', error);
+    throw error; // Handle the error in your component
+  }
+};
 export const participationService = {
   getAllParticipations: async (challengeId:any) => {
     try {
@@ -42,9 +52,9 @@ export const participationService = {
     }
   }
 };
-export const acceptParticipation = async (challengeId:any, userId:any) => {
+export const acceptParticipation = async (challengeId:any, userId:any,type:string) => {
   try {
-    const response = await axios.put(`${API_URL}/${challengeId}/accept-participation/${userId}`,{},{  withCredentials: true} );
+    const response = await axios.put(`${API_URL}/${challengeId}/accept-participation/${userId}`,{type},{  withCredentials: true} );
     return response.data; // Return the response data
   } catch (error) {
     throw error; // Throw error if request fails

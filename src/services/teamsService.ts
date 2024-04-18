@@ -19,7 +19,22 @@ const teamService = {
       throw error; // Throw the error to handle it in the component
     }
   },
-
+  getMyTeams : async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/myTeams`,{withCredentials:true});
+      return response.data;
+    } catch (error) {
+      throw error; // Throw the error to handle it in the component
+    }
+  },
+  getTeamById: async (id:any) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error; // Handle error in component
+    }
+  },
   joinTeamRequest: async (teamId:any, userId:any) => {
     try {
       const response = await axios.post(`${BASE_URL}/teams/${teamId}/join`, { userId });
