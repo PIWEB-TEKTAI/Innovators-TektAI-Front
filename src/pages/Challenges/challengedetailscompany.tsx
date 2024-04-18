@@ -29,6 +29,8 @@ import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useParams } from 'react-router-dom';
+import Discussion from './discussion';
+
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -405,6 +407,7 @@ const ChallengeDetailsCompany: React.FC = () => {
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
   const { userAuth } = useAuth();
+  
 
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);
@@ -778,7 +781,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                 <h2>Leaderboard</h2>
               </div>
             )}
-            {activeTab === 'discussion' && (
+               {activeTab === 'discussion' && (
                 <Discussion/>
             )}
             {activeTab == 'participations' && (

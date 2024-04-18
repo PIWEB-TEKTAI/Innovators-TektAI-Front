@@ -2,32 +2,55 @@ import React, { useState, useEffect } from 'react';
 import Switch from 'react-switch';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import axios from 'axios';
+import { User } from '../../types/User';
 
 const Preferences = () => {
-  const [autoAcceptRequests, setAutoAcceptRequests] = useState(false);
-
+  const [autoAcceptRequests, setAutoAcceptRequests] = useState(() => {
+    // Retrieve the initial state from localStorage, default to false if not found
+    return JSON.parse(localStorage.getItem('autoAcceptRequests') || 'false');
+  });
+  const [error, setError] = useState<string | null>(null); // Provide null as the default value
+  const [Data, setData] = useState<User[] | null>(null);
   useEffect(() => {
-    // Fetch company preferences when the component mounts
-    fetchCompanyPreferences();
-  }, []);
-
-  const fetchCompanyPreferences = async () => {
-    try {
-      const response = await axios.get('/api/company/preferences');
-      if (response.data) {
-        setAutoAcceptRequests(response.data.autoAcceptRequests);
+    const fetchUserPreferences = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/user/getpreferences', {
+          withCredentials: true,
+        });
+        
+        console.log(response.data); // Log the response data to the console
+  
+        // Check if the response contains the expected structure
+        if (response.data && response.data.user && response.data.user.company) {
+          const fetchedAutoAcceptRequests = response.data.user.company.autoAcceptRequests;
+          setAutoAcceptRequests(fetchedAutoAcceptRequests);
+          localStorage.setItem('autoAcceptRequests', JSON.stringify(fetchedAutoAcceptRequests));
+        } else {
+          setError('Heeeeeeeeeeey');
+        }
+      } catch (error) {
+        setError('Error fetching user preferences. Please try again later.');
+        console.error('Error fetching user preferences:', error);
       }
-    } catch (error) {
-      console.error('Error fetching company preferences:', error);
-    }
-  };
+    };
+  
+    fetchUserPreferences();
+  }, []);
+  
+  
 
-  const handleAutoAcceptRequestsChange = async (checked:any) => {
+  const handleAutoAcceptRequestsChange = async (checked: boolean) => {
     setAutoAcceptRequests(checked);
     try {
-      await axios.post('/api/company/preferences', { autoAcceptRequests: checked });
+      // Update the server with the new preference
+      await axios.put('http://localhost:3000/user/preferences', { autoAcceptRequests: checked }, {
+        withCredentials: true,
+      });
+      // Update localStorage with the new preference
+      localStorage.setItem('autoAcceptRequests', JSON.stringify(checked));
     } catch (error) {
-      console.error('Error updating company preferences:', error);
+      setError('Error updating user preferences. Please try again later.');
+      console.error('Error updating user preferences:', error);
     }
   };
 
@@ -53,6 +76,7 @@ const Preferences = () => {
               className="react-switch"
               id="auto-accept-requests-switch"
             />
+            {error && <p className="text-red-500">{error}</p>}
           </div>
         </div>
       </div>
