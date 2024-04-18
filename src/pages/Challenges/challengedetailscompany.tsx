@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { getSubmissionsByChallengeId } from '../../services/submissionService';
+import Discussion from "../Challenges/discussion";
 
 
 const ChallengeDetailsCompany: React.FC = () => {
@@ -175,10 +176,8 @@ const ChallengeDetailsCompany: React.FC = () => {
                                 </div>
                             )}
                             {activeTab === 'discussion' && (
-                                <div>
-                                    <h2>Discussion</h2>
-                                </div>
-                            )}
+                          <Discussion />
+            )}
                             {activeTab === 'submission' && (
                         <div>
                <div className="flex justify-end">

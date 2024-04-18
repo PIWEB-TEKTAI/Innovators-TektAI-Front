@@ -232,46 +232,53 @@ const Discussion: React.FC = () => {
                 {discussions.map((discussion, index) => (
                     <li key={discussion.id} className="border-b border-gray-300 p-4">
                         <div className="flex justify-between items-center mb-2">
-                            <div>
+                        <div className="flex items-center"> {/* Wrap image and name in a flex container */}
                                 <img
                                     src={`${discussion.sentBy.imageUrl}`}
                                     className="card-img-top mt-3"
                                     alt="image"
                                     style={{ width: '50px', height: '50px' }} // Adjust width and height as needed
                                 />
-                                <p className="font-semibold">{discussion.sentBy.FirstName} {discussion.sentBy.LastName} - {discussion.sentBy.company.name} </p>
+                                  <div>
+                                  <p className="font-semibold">{discussion.sentBy.FirstName} {discussion.sentBy.LastName}</p>
+                                <p className="font-semibold text-gray-500">{discussion.sentBy.company.name}</p>
                                 <p className="text-sm text-gray-500">{format(new Date(discussion.sendingDate), 'dd-MM-yyyy HH:mm')}</p>
-
-                            </div>
-                            <div>
-                                <div className="flex items-center"> {/* Wrap heart and likes count in a flex container */}
-                                    <button
-                                        className="mr-2"
-                                        onClick={() => handleHeartClick(discussion._id, index)}
-                                        disabled={isLiked[index]}
-                                    >
-                                        {isLiked[index] ? (
-                                            <svg width="20px" height="20px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#fe3434">
-                                                <path d="M4.03553 1C1.80677 1 0 2.80677 0 5.03553C0 6.10582 0.42517 7.13228 1.18198 7.88909L7.14645 13.8536C7.34171 14.0488 7.65829 14.0488 7.85355 13.8536L13.818 7.88909C14.5748 7.13228 15 6.10582 15 5.03553C15 2.80677 13.1932 1 10.9645 1C9.89418 1 8.86772 1.42517 8.11091 2.18198L7.5 2.79289L6.88909 2.18198C6.13228 1.42517 5.10582 1 4.03553 1Z" fill="#fe3434"></path>
-                                            </svg>
-                                        ) : (
-                                            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ff0000">
-                                                <path d="M4.03553 1C1.80677 1 0 2.80677 0 5.03553C0 6.10582 0.42517 7.13228 1.18198 7.88909L7.14645 13.8536C7.34171 14.0488 7.65829 14.0488 7.85355 13.8536L13.818 7.88909C14.5748 7.13228 15 6.10582 15 5.03553C15 2.80677 13.1932 1 10.9645 1C9.89418 1 8.86772 1.42517 8.11091 2.18198L7.5 2.79289L6.88909 2.18198C6.13228 1.42517 5.10582 1 4.03553 1Z" fill="#fe3434"></path>
-                                            </svg>
-                                        )}
-                                    </button>
-                                    <p className="break-words text-black font-semibold mr-2">{discussion.likes}</p> {/* Likes count */}
                                 </div>
-                                <button onClick={() => handleDiscussionClick(discussion)}>
-                                    {discussion.showReplies ? 'Hide Replies' : `Show ${discussion.answers.length} Replies`}
-                                </button>
-                                {discussion.sentBy._id === userAuth?._id && (
-                                    <button onClick={() => handleDeleteDiscussion(discussion._id, index)} className="text-red-500">
-                                        <FaTimes />
-                                    </button>
-                                )}
                             </div>
-                        </div>
+
+                            <div className="relative"> {/* Add relative positioning to create a positioning context */}
+                            <div className="flex items-center ml-2"> {/* Wrap heart and likes count in a flex container */}
+            <button
+                className="mr-2"
+                onClick={() => handleHeartClick(discussion._id, index)}
+                disabled={isLiked[index]}
+            >
+                {isLiked[index] ? (
+                    <svg width="20px" height="20px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#fe3434">
+                        <path d="M4.03553 1C1.80677 1 0 2.80677 0 5.03553C0 6.10582 0.42517 7.13228 1.18198 7.88909L7.14645 13.8536C7.34171 14.0488 7.65829 14.0488 7.85355 13.8536L13.818 7.88909C14.5748 7.13228 15 6.10582 15 5.03553C15 2.80677 13.1932 1 10.9645 1C9.89418 1 8.86772 1.42517 8.11091 2.18198L7.5 2.79289L6.88909 2.18198C6.13228 1.42517 5.10582 1 4.03553 1Z" fill="#fe3434"></path>
+                    </svg>
+                ) : (
+                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ff0000">
+                        <path d="M4.03553 1C1.80677 1 0 2.80677 0 5.03553C0 6.10582 0.42517 7.13228 1.18198 7.88909L7.14645 13.8536C7.34171 14.0488 7.65829 14.0488 7.85355 13.8536L13.818 7.88909C14.5748 7.13228 15 6.10582 15 5.03553C15 2.80677 13.1932 1 10.9645 1C9.89418 1 8.86772 1.42517 8.11091 2.18198L7.5 2.79289L6.88909 2.18198C6.13228 1.42517 5.10582 1 4.03553 1Z" fill="#fe3434"></path>
+                    </svg>
+                )}
+            </button>
+            <p className="break-words text-black font-semibold mr-2">{discussion.likes}</p> {/* Likes count */}
+        </div>
+        <div className="mr-6">
+        <button onClick={() => handleDiscussionClick(discussion)}>
+            {discussion.showReplies ? 'Hide Replies' : `Show ${discussion.answers.length} Replies`}
+        </button>
+        </div>
+    
+    {discussion.sentBy._id === userAuth?._id && (
+        <button onClick={() => handleDeleteDiscussion(discussion._id, index)} className="absolute top-0 right-0 text-red-500">
+            <FaTimes />
+        </button>
+    )}
+</div>
+</div>
+
                         <p className="mb-4">{discussion.content}</p>
                         {/* Show replies if 'showReplies' is true */}
                         {discussion.showReplies && (
@@ -279,15 +286,31 @@ const Discussion: React.FC = () => {
                                 {discussion.answers.map((reply, replyIndex) => (
                                     <li key={replyIndex} className="border-b border-gray-300 p-2">
                                         <div>
-                                            <p className="font-semibold">{reply.repliedBy.FirstName} {reply.repliedBy.LastName}</p>
-                                            <p className="text-sm text-gray-500">{format(new Date(reply.replyDate), 'dd-MM-yyyy HH:mm')}</p>
-                                            <p className="mt-2">{reply.content}</p>
-                                            {reply.repliedBy._id === userAuth?._id && (
+                                        <div className="flex items-center"> {/* Wrap image and name in a flex container */}
+                                <img
+                                    src={`${reply.repliedBy.imageUrl}`}
+                                    className="card-img-top mt-3"
+                                    alt="image"
+                                    style={{ width: '50px', height: '50px' }} // Adjust width and height as needed
+                                />
+                                  <div>
+                                  <p className="font-semibold">{reply.repliedBy.FirstName} {reply.repliedBy.LastName}   {reply.repliedBy._id === userAuth?._id && (
                                                 <button onClick={() => handleDeleteReply(discussion._id, reply._id, replyIndex)} className="text-red-500">
                                                     <FaTimes />
                                                 </button>
 
-                                            )}
+                                            )}</p>
+                                
+                                <p className="text-sm text-gray-500">{reply.repliedBy.company.name}</p>
+                                <p className="text-sm text-gray-500">{format(new Date(reply.replyDate), 'dd-MM-yyyy HH:mm')}</p>
+                                </div>
+                                
+                              
+                                          
+                            </div>
+
+                                            <p className="mt-2">{reply.content}</p>
+                                          
                                         </div>
                                     </li>
                                 ))}
