@@ -169,6 +169,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { User } from '../../types/User';
 import { Link } from 'react-router-dom';
 import { FaLine } from 'react-icons/fa';
+import ChallengeStatistics from '../Challenges/challengesstatics';
+
 const Landing: React.FC = () => {
 
 
@@ -474,6 +476,17 @@ const Landing: React.FC = () => {
 
         </div>
      </section>
+     <section className="bg-white bg-opacity-85  dark:bg-gray-800">
+        <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
+        <RevealOnScroll delay=''>
+          <ChallengeStatistics />
+
+       </RevealOnScroll>
+
+        </div>
+</section>
+
+
 
 
 <section className="bg-gray-200">

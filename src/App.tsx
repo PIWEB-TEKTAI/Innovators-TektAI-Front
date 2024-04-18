@@ -51,6 +51,7 @@ import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
+import Preferences from './pages/Profile/Preferences';
 
 
 
@@ -492,6 +493,15 @@ function App() {
             <>
               <PageTitle title="Edit Challenge Admin | TektAi" />
               <EditChallengeAdmin/>
+            </>
+          }
+        />
+         <Route
+          path="/preferences"
+          element={
+            <>
+              <PageTitle title="Preferences| TektAi" />
+              <Preferences/>
             </>
           }
         />

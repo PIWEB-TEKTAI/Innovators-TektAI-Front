@@ -779,9 +779,7 @@ const ChallengeDetailsCompany: React.FC = () => {
               </div>
             )}
             {activeTab === 'discussion' && (
-              <div>
-                <h2>Discussion</h2>
-              </div>
+                <Discussion/>
             )}
             {activeTab == 'participations' && (
               <div>
