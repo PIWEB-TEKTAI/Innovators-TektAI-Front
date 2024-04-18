@@ -5,6 +5,11 @@ import Layout from '../../layout/DefaultLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus, FaStop, FaStopCircle, FaHands, FaHandPointUp, FaStopwatch, FaBullseye, FaEye } from 'react-icons/fa'; // Importation des icônes
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTasks, faCheckCircle, faArchive , faLightbulb , faUnlockAlt , faBrain ,faBullseye,faClock   } from '@fortawesome/free-solid-svg-icons';
+
+
+
 
 // Définissez le type des données attendues
 interface User {
@@ -44,6 +49,7 @@ interface Challenge {
 }
 
 
+
 const toTitleCase = (str:string) => {
   return str.toLowerCase().split(' ').map(word => {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -58,6 +64,10 @@ export default function FetchData() {
   const [usersPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
+  const [statistics, setStatistics] = useState<any>(null);
+
+
+
 
 
   useEffect(() => {
@@ -65,8 +75,9 @@ export default function FetchData() {
     console.log(data); // Vérifiez les données après chaque mise à jour
   }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
   
+  
   const fetchData = () => {
-axios.get<Challenge[]>(`http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`)
+axios.get<Challenge[]>(`http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`,{withCredentials:true})
   .then(response => {
     const filteredUsers = response.data.filter(challenge =>
       (challenge.title.toLowerCase().startsWith(searchTerm) ||
@@ -104,6 +115,7 @@ const filteredData = data.filter(user =>
   user.description.startsWith(searchTerm))
 );
 console.log(filteredData); // Ajoutez cette ligne
+
 
 
 
@@ -283,9 +295,69 @@ var completed = (id: string) => {
   
   };
 
+  useEffect(() => {
+    const fetchChallengeStatistics = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/challenge/statistics`,{
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true
+              });
+            setStatistics(response.data.statistics);
+        } catch (error) {
+            console.error('Error fetching challenge statistics:', error);
+        }
+    };
+
+    fetchChallengeStatistics();
+}, []);
+
+if (!statistics) {
+    return <div>Loading...</div>;
+}
+
+
  
   return (
     <Layout>
+      <div className="flex flex-wrap justify-center space-x-4">
+
+<div className="cursor-pointer w-[16rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
+    <FontAwesomeIcon icon={faBullseye} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-red-500 text-3xl mr-4" />
+    <a href="#" className="text-gray-500 group-hover:text-white">
+        <h5 className="mb-2 text-xl font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">All Challenges</h5>
+    </a>
+    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.totalChallenges}</p>
+</div>
+
+<div className="cursor-pointer w-[16rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
+    <FontAwesomeIcon icon={faUnlockAlt} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-yellow-500 text-3xl mr-4" />
+    <a href="#" className="text-gray-500 group-hover:text-white">
+        <h5 className="mb-2 text-xl font-semibold text-gray-900 tracking-tight dark:text-white hover:scale-75">Open Challenges</h5>
+    </a>
+    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.openChallenges}</p>
+</div>
+
+<div className="cursor-pointer w-[16rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
+    <FontAwesomeIcon icon={faCheckCircle} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-green-500 text-3xl mr-4" />
+    <a href="#" className="text-gray-500 group-hover:text-white">
+        <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Completed Challenges</h5>
+    </a>
+    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.completedChallenges}</p>
+</div>
+
+<div className="cursor-pointer w-[16rem] m-2 group p-6 bg-white hover:bg-black hover:bg-opacity-80 hover:text-white border border-gray rounded-lg shadow dark:bg-gray-800 hover:shadow-md transition-transform transform hover:scale-[1.10] flex flex-col items-center">
+    <FontAwesomeIcon icon={faArchive} className="h-10 w-full group-hover:text-white rounded mb-2 hover:scale-[1.15] text-black text-3xl mr-4" />
+    <a href="#" className="text-gray-500 group-hover:text-white">
+        <h5 className="mb-2 text-xl font-semibold tracking-tight text-gray-900 dark:text-white hover:scale-75">Archived Challenges</h5>
+    </a>
+    <p className="mb-1 font-semibold text-gray-500 group-hover:text-black group-hover:font-semibold dark:text-gray-400 hover:scale-105 text-center">{statistics.archivedChallenges}</p>
+</div>
+
+</div>
+
+
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">List</h2>

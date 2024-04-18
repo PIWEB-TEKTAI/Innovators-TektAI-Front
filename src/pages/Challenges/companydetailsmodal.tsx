@@ -58,9 +58,9 @@ const CompanyModal: React.FC<CompanyModalProps> = ({ company, onClose }) => {
              src="/src/images/challenge/icons8-company-100.png"
               className="card-img-top mt-3 w-50"
               alt="Card image"
-
             />
           </div>
+          
           <div>
            
             <span className="font-semibold">Location</span>

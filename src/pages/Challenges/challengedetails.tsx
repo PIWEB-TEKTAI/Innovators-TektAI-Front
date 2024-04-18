@@ -29,6 +29,7 @@ import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import TeamSelectionModal from './teamSelectionModal';
+import Discussion from './discussion';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -772,9 +773,7 @@ const ChallengeDetails: React.FC = () => {
               </div>
             )}
             {activeTab === 'discussion' && (
-              <div>
-                <h2>Discussion</h2>
-              </div>
+                <Discussion/>
             )}
             {activeTab == 'participations' && (
               <div>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   format,
   differenceInMonths,
@@ -29,6 +28,7 @@ import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
+import { useParams } from 'react-router-dom';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
