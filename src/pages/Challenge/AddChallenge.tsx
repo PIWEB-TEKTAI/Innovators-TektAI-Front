@@ -472,7 +472,7 @@ const AddChallenge = () => {
                 {numberInputVisible && (
                   <div className="mb-4.5">
                     <label className="mb-2.5 font-medium block text-black dark:text-white">
-                      Price
+                      Amount
                     </label>
                     <input
                       type="number"

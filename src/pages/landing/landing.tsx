@@ -689,61 +689,74 @@ const Landing: React.FC = () => {
       </section>
 
 
-      <section className="bg-gray-200">
-        <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
-          <div className="text-center">
-            <h2 className="text-4xl font-extrabold text-black dark:text-white">
-              Why Choose Us
-            </h2>
-            <div
-              className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}
-            >
-              {whyUsContent &&
-                whyUsContent.map((content, index) => (
-                  <div
-                    key={index}
-                    className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
-                  >
-                    <div className="px-6 py-8">
-                      <h3 className="text-xl font-semibold text-white mb-2">
-                        {content.title}
-                      </h3>
-                      <p className="text-white">{content.contentwhy}</p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <RevealOnScroll additionalProp={false} delay="">
-        <section>
-          <div
-            id="aboutUs"
-            className="sm:flex items-center max-w-screen bg-white"
-          >
-            <div className="sm:w-1/2 p-10">
-              <div className="image object-center text-center hover:scale-[1.05]">
-                <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
+     { userAuth?.role !== 'company' && userAuth?.role!=='challenger' &&(
+           <section className="bg-gray-200">
+           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+             <div className="text-center">
+               <h2 className="text-4xl font-extrabold text-black dark:text-white">
+                 Why Choose Us
+               </h2>
+               <div
+                 className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}
+               >
+                 {whyUsContent &&
+                   whyUsContent.map((content, index) => (
+                     <div
+                       key={index}
+                       className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
+                     >
+                       <div className="px-6 py-8">
+                         <h3 className="text-xl font-semibold text-white mb-2">
+                           {content.title}
+                         </h3>
+                         <p className="text-white">{content.contentwhy}</p>
+                       </div>
+                     </div>
+                   ))}
+               </div>
+             </div>
+           </div>
+         </section>
+     )}
+      
+
+
+      { userAuth?.role !== 'company' && userAuth?.role!=='challenger' &&(
+
+        <RevealOnScroll additionalProp={false} delay="">
+          <section>
+            <div
+              id="aboutUs"
+              className="sm:flex items-center max-w-screen bg-white"
+            >
+              <div className="sm:w-1/2 p-10">
+                <div className="image object-center text-center hover:scale-[1.05]">
+                  <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
+                </div>
+              </div>
+              <div className="sm:w-1/2 p-5">
+                <div className="text group cursor-pointer">
+                  <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">
+                    About us
+                  </span>
+                  <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">
+                    About <span className="text-indigo-600">TektAI</span>
+                  </h2>
+                  <p className="text-gray-700  group-hover:scale-[1.05]">
+                    {aboutUsContent}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="sm:w-1/2 p-5">
-              <div className="text group cursor-pointer">
-                <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">
-                  About us
-                </span>
-                <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">
-                  About <span className="text-indigo-600">TektAI</span>
-                </h2>
-                <p className="text-gray-700  group-hover:scale-[1.05]">
-                  {aboutUsContent}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-      </RevealOnScroll>
+          </section>
+        </RevealOnScroll>
+    
+    )}
+
+
+
+
 
       <RevealOnScroll additionalProp={false} delay="">
         <section

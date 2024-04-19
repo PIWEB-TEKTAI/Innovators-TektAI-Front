@@ -459,7 +459,7 @@ const ListChallengerFront: React.FC = () => {
             {userAuth?.role !== 'challenger'  && (
               <a href={userAuth?.role === 'company' ? "/challenge/add" : "/auth/signin"}
               className="inline-flex items-center justify-center bg-transparent px-5 py-3 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
-                Host a competition
+                Host a new competition
               </a> 
             )}
             </div>
