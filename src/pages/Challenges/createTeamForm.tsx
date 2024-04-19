@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamService from '../../services/teamsService';
 import { getAllChallengers } from '../../services/user.service';
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 interface Props {
   onCreateTeamSuccess: () => void;
@@ -19,7 +20,7 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const {userAuth} = useAuth();
   useEffect(() => {
     // Fetch list of challengers when component mounts
     fetchChallengers();
@@ -34,7 +35,8 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
   const fetchChallengers = async () => {
     try {
       const response = await getAllChallengers();
-      setChallengers(response);
+     
+      setChallengers( response.filter((challenger:any) => challenger._id !== userAuth?._id));
     } catch (error) {
       console.error('Error fetching challengers:', error);
       setErrorMessage('Error fetching challengers. Please try again later.');
@@ -134,7 +136,7 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
       <div className="flex justify-between mt-4">
       <button onClick={handleCreateTeam} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Create Team</button>
 
-        <button onClick={onReturn} className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">Return</button>
+        <button onClick={onReturn}  className="text-blue-500 hover:underline">Return</button>
       </div>
     </div>
   );
