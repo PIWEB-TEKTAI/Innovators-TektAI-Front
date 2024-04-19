@@ -337,7 +337,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       <hr className="my-2 border-gray-300" />
       <span className="font-semibold">Description </span>
 
-      <p className="text-gray-700 dark:text-gray-300">{description.substring(0,70)}... </p>
+      <p className="text-gray-700 dark:text-gray-300 break-words:::">{description.substring(0,70)}... </p>
       <hr className="my-2 border-gray-300" />
    
       <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
