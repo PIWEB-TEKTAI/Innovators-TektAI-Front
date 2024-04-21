@@ -40,7 +40,7 @@ interface Challenge {
   _id: string;
   title: string;
   description: string;
-  price: string;
+  amount: string;
   image: string;
   status: 'open' | 'completed' | 'archived';
   startDate: Date;
@@ -112,7 +112,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   title,
   image,
   description,
-  price,
+  amount,
   status,
   startDate,
   endDate,
@@ -202,7 +202,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
             </div>
             <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
               <FontAwesomeIcon icon={faEuro} className="text-green-500" />
-              <span className="font-semibold">Price: {price} DT</span>
+              <span className="font-semibold">Price: {amount} DT</span>
             </div>
             <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
               <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />
@@ -236,7 +236,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       title,
       image,
       description,
-      price,
+      amount,
       status,
       startDate,
       endDate,
@@ -342,7 +342,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
    
       <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
         <FontAwesomeIcon icon={faEuro} className="text-green-500" />
-        <span className="font-semibold">Price: {price} DT</span>
+        <span className="font-semibold">Price: {amount} DT</span>
       </div>
 
       <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
@@ -414,7 +414,7 @@ const ListChallengerFront: React.FC = () => {
         const filteredUsers = response.data.filter(
           (user) =>
             user.title.toLowerCase().startsWith(searchTerm) ||
-            user.price.toLowerCase().startsWith(searchTerm) ||
+            user.amount.toLowerCase().startsWith(searchTerm) ||
             user.description.startsWith(searchTerm),
         );
         setCardsData(filteredUsers);

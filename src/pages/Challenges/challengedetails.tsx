@@ -757,7 +757,7 @@ const ChallengeDetails: React.FC = () => {
                   Prizes
                 </h2>
                 <p className="text-gray-600 mt-4 text-black">
-                  {challengeDetails.price}Dt
+                  {challengeDetails.amount}Dt
                 </p>
                 <h2 className="text-2xl font-bold text-gray-900 mt-8 ">
                   Submission Guidelines

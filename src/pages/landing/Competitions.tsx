@@ -14,7 +14,7 @@ interface Challenge {
   title: string;
   description: string;
   image: string;
-  price: string;
+  amount: string;
   status: string;
   startDate: string;
   endDate: string;
@@ -253,7 +253,7 @@ const Competitions: React.FC = () => {
 
      filteredChallenges = currentChallenges.filter((challenge) => {
         const titleMatch = challenge.title.toLowerCase().includes(searchTerm);
-        const priceMatch = challenge.price.toString().toLowerCase().includes(searchTerm);
+        const priceMatch = challenge.amount.toString().toLowerCase().includes(searchTerm);
         return titleMatch || priceMatch;
     });
   };
@@ -420,7 +420,7 @@ const Competitions: React.FC = () => {
                     </div>
                     <div className="card-footer">
                       <div className={`price ${challenge.status !== 'open' && 'mt-8'}`}>
-                        <strong>{challenge.price} DT</strong>
+                        <strong>{challenge.amount} DT</strong>
                       </div>
                       <div className="date text-md font-medium flex flex-col">
                         {challenge.status == 'open' && <p className='ml-12 text-red-600'>Time Left </p>}
