@@ -21,6 +21,12 @@ const EditChallenge = () => {
   const [amountError, setAmountError] = useState('');
   const [amount, setAmount] = useState('');
 
+  const [soloError, setSoloError] = useState('');
+  const [solo, setSolo] = useState("");
+
+  const [teamError, setTeamError] = useState('');
+  const [team, setTeam] = useState("");
+
   const [durationError, setDurationError] = useState('');
   const [duration, setDuration] = useState('');
 
@@ -89,6 +95,9 @@ const EditChallenge = () => {
     useState<boolean>(false);
   const [isFreelanceChecked, setIsFreelanceChecked] = useState<boolean>(false);
   const [isInternChecked, setIsInternChecked] = useState<boolean>(false);
+
+  const [isAutomatedChecked, setIsAutomatedChecked] = useState<boolean>(true);
+  const [isExpertChecked, setIsExpertChecked] = useState<boolean>(true);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -210,6 +219,26 @@ const EditChallenge = () => {
     }
   };
 
+
+  const checkAutomated = (value:boolean) => {
+    if(value === true){
+      setIsAutomatedChecked(true)
+    }else{
+      setIsAutomatedChecked(false)
+    }
+  };
+
+
+  const checkExpert = (value:boolean) => {
+    if(value === true){
+      setIsExpertChecked(true)
+    }else{
+      setIsExpertChecked(false)
+    }
+  };
+
+
+
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
@@ -237,7 +266,14 @@ const EditChallenge = () => {
         setInternTitle(data?.internship.internshipTitle || '');
         setInternDescription(data?.internship.internshipDescription || '');
         setDuration(data?.internship.duration || '');
+        setTeam(data?.numberParticipants.nbrTeam);
+        setSolo(data?.numberParticipants.nbrSolo);
+        //rankingMode
+        checkAutomated(data?.rankingMode.automated);
+        checkExpert(data?.rankingMode.expert);
 
+
+        //bareme
         checkOutput(data?.bareme.output);
         checkPresentation(data?.bareme.presentation);
         checkDataset(data?.bareme.dataSet);
@@ -357,6 +393,25 @@ const EditChallenge = () => {
     }
   };
 
+
+  const handleRankingModeChange = (name: any, e: any) => {
+
+    const { checked } = e.target;
+    if (name == 'automated') {
+      if (checked) {
+        setIsAutomatedChecked(true);
+      } else {
+        setIsAutomatedChecked(false);
+      }
+    } else if (name == 'expert') {
+      if (checked) {
+        setIsExpertChecked(true);
+      } else {
+        setIsExpertChecked(false);
+      }
+    } 
+  };
+
   const checkValidity = (name: any, value: any) => {
     if (name == 'title') {
       setTitle(value);
@@ -462,6 +517,20 @@ const EditChallenge = () => {
         setDurationError('Duration is required');
       } else {
         setDurationError('');
+      }
+    }else if (name == 'solo') {
+      setSolo(value);
+      if (!value.trim()) {
+        setSoloError('Number of solo is required');
+      } else {
+        setSoloError('');
+      }
+    }else if (name == 'team') {
+      setTeam(value);
+      if (!value.trim()) {
+        setTeamError('Number of team is required');
+      } else {
+        setTeamError('');
       }
     }
   };
@@ -583,7 +652,15 @@ const EditChallenge = () => {
           visibility:visibility,
           startDate:startDate,
           endDate: endDate,
-          file:DataSetFile,        
+          file:DataSetFile,      
+          numberParticipants:{
+            nbrTeam:team,
+            nbrSolo:solo
+          },
+          rankingMode: {
+            automated: isAutomatedChecked ? true : false,
+            expert: isExpertChecked ? true : false,
+          },  
           bareme: {
             output:isOutputChecked ? true : false,
             presentation:isPresentationChecked ? true:false,
@@ -687,7 +764,7 @@ const EditChallenge = () => {
             </ol>
 
             <ol className="flex justify-center items-cente w-full">
-              <li className={`mr-30`}>
+              <li className={`ml-56 w-full`}>
                 <span
                   className={`font-medium text-md ${step === 1 ? 'text-gray-700 font-bold' : step > 1 ? 'text-green-700 font-semibold' : ''}`}
                 >
@@ -695,15 +772,15 @@ const EditChallenge = () => {
                 </span>
               </li>
 
-              <li className={`mr-28`}>
+              <li className={` mr-8 w-full`}>
                 <span
                   className={`font-medium text-md ${step === 2 || step === 1 ? 'text-gray-700 font-bold' : step > 2 ? 'text-green-700 font-semibold' : ''}`}
                 >
-                  Evaluation metrics
+                  Evaluation Metrics
                 </span>
               </li>
 
-              <li className="mr-3">
+              <li className=" mr-19 w-full">
                 <span
                   className={`font-medium text-md text-gray-700 ${submitted ? 'text-green-700 font-semibold' : ''}`}
                 >
@@ -885,6 +962,100 @@ const EditChallenge = () => {
                     </div>
                   )}
                 </div>
+
+                <div className="mb-4.5">
+                  <label className="mb-3 block font-medium text-black dark:text-white">
+                    Number of participants
+                  </label>
+                  <div className="flex w-full">
+                    <div className="w-1/2 mr-5">
+                      <label className="mb-3 block font-medium text-sm text-black dark:text-white">
+                        Team
+                      </label>
+                      <input
+                        type="number"
+                        name="team"
+                        value={team}
+                        placeholder="Enter the number of participants team"
+                        onChange={(e) => checkValidity('team', e.target.value)}
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                      {teamError && (
+                        <div className="flex">
+                          <p className="text-red-500 text-sm mt-1">
+                            {teamError}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-1/2">
+                      <label className="mb-3 block font-medium text-sm text-black dark:text-white">
+                        Solo
+                      </label>
+                      <input
+                        type="text"
+                        name="solo"
+                        value={solo}
+                        placeholder="Enter the number of participants solo"
+                        onChange={(e) => checkValidity('solo', e.target.value)}
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                        {soloError && (
+                        <div className="flex">
+                          <p className="text-red-500 text-sm mt-1">
+                            {soloError}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+
+
+                <div className="mb-4.5">
+                  <label className="mb-3 block font-medium text-black dark:text-white">
+                    Ranking Mode
+                  </label>
+                  <div className="flex items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <input
+                      id="bordered-checkbox-1"
+                      type="checkbox"
+                      value=""
+                      onChange={(e) => handleRankingModeChange('automated', e)}
+                      checked={isAutomatedChecked}
+                      name="automated"
+                      className="w-10 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor="automated"
+                      className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Automated Ranking
+                    </label>
+                  </div>
+
+                  <div className="flex items-center mt-8  ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <input
+                      id="bordered-checkbox-2"
+                      type="checkbox"
+                      value=""
+                      onChange={(e) =>
+                        handleRankingModeChange('expert', e)
+                      }
+                      checked={isExpertChecked}
+                      name="expert"
+                      className="w-10 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                      htmlFor="expert"
+                      className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                      Expert Ranking
+                    </label>
+                  </div>
+                </div>
+              
 
                 <div className="mb-4.5">
                   <label className="mb-3 block font-medium text-black dark:text-white">

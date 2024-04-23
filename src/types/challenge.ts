@@ -10,6 +10,14 @@ export type challenge = {
   targetedSkills: Array<string>;
   image: string;
   fileUrl: string;
+  rankingMode: {
+    automated:boolean,
+    expert:boolean,
+  };
+  numberParticipants:{
+    nbrTeam:string,
+    nbrSolo:string
+  },
   bareme: {
     output: boolean;
     presentation: boolean;

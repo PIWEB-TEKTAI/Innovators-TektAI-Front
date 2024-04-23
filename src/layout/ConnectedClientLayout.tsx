@@ -52,7 +52,35 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
               type: "info",
               message: msg
           });
-      } 
+      } else if (eventName === "newSubmission" && userAuth?._id === eventData.idUser) {
+        console.log('New submission created:', eventData.firstname);
+        let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
+      } else if (eventName === "editSubmission" && userAuth?._id === eventData.idUser) {
+        console.log('edit submission:', eventData.firstname);
+        let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
+      }else if (eventName === "addInvitationRequest" && userAuth?._id === eventData.idUser) {
+        console.log('add Invitation Request:', eventData.firstname);
+        let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
+      }else if (eventName === "acceptInvitationRequest" && userAuth?._id === eventData.idUser) {
+        console.log('accept Invitation Request:', eventData.firstname);
+        let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
+      }
     });
 
     return () => {
