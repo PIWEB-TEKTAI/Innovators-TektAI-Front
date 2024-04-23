@@ -85,6 +85,70 @@ function App() {
   ) : (
     <>
       <Routes>
+        {/* Auth Routes */}
+        <Route
+          path="/auth/signin"
+          element={
+            <>
+              <PageTitle title="Signin | TektAi" />
+              <AuthRoutes component={<SignIn/>}/>
+            </>
+          }
+        />
+        <Route
+          path="/auth/signup"
+          element={
+            <>
+              <PageTitle title="Signup | TektAi" />
+              <AuthRoutes component={<SignUp/>}/>
+            </>
+          }
+        /> 
+
+         <Route
+          path="/auth/forgotPassword"
+          element={
+            <>
+              <PageTitle title="Signup | TektAi" />
+              <AuthRoutes component={<ForgotPassword/>}/>
+
+            </>
+          }
+        />
+  
+
+        <Route
+          path="/auth/ResendVerifEmail"
+          element={
+            <>
+              <PageTitle title="Signup | TektAi" />
+              <AuthRoutes component={<ResendEmailVerification/>}/>
+
+            </>
+          }
+        />
+
+        <Route
+          path="/auth/verifyEmail/:id"
+          element={
+            <>
+              <PageTitle title="Signup | TektAi" />
+              <AuthRoutes component={<EmailVerification/>}/>
+
+            </>
+          }
+        />
+
+        <Route
+          path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
+          element={
+            <>
+              <PageTitle title="Reset Password | TektAi" />
+              <AuthRoutes component={<ResetPassword/>}/>
+            </>
+          }
+        />
+        {/*Admin Routes*/}
         <Route
           index
           element={
@@ -109,8 +173,11 @@ function App() {
           element={
             <>
               <PageTitle title="Archive | TektAi" />
-              < ListArchivee />
-            </>
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+            < ListArchivee />
+            }/>
+            </>           
           }
         />
         <Route
@@ -119,7 +186,10 @@ function App() {
           element={
             <>
               <PageTitle title="Edit Admin | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
               <Modifier1/>
+              }/>
             </>
           }
         />
@@ -129,17 +199,22 @@ function App() {
           element={
             <>
               <PageTitle title="Admin List | TektAi" />
-              <ListesAdmin/>
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+                <ListesAdmin/>
+              }/>   
             </>
           }
         />
 
-<Route
+    <Route
           path="/ListChallenge"
           element={
             <>
               <PageTitle title="Admin List | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
               <ChallengeList/>
+              }/>        
             </>
           }
         />         <Route
@@ -147,13 +222,143 @@ function App() {
           element={
             <>
               <PageTitle title="Add Admin | TektAi" />
-              <AddAdmin1/>
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+                < AddAdmin1 />
+                }/>
+             
+            </>
+          }
+        />
+         <Route
+          path="/Addchallenger"
+          element={
+            <>
+              <PageTitle title="Add Challenger | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+                < AddChallengerByAdmin />
+                }/>
+            </>
+          }
+        />
+        <Route
+          path="/companylist"
+          element={
+            <>
+              <PageTitle title="Company List| TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              < ListCompany />
+              }/>
+            </>
+          }
+        />
+        <Route
+          path="/switchToCompany/:email" Component={A}
+          element={
+            <>
+              <PageTitle title="Switch to company | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+            < A />
+            }/> 
+          </>
+          }
+        />
+        <Route
+          path="/Addcompany"
+          element={
+            <>
+              <PageTitle title="Add Company | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              < AddCompany />
+              }/> 
+            </>
+          }
+        /> 
+          <Route
+          path="/accountSwitchRequests"
+          element={
+            <>
+              <PageTitle title="Account Switch Requests | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              <ListAccountSwitchRequest/>
+              }/>
+            </>
+          }
+        />
+        <Route
+            path="/admin/addChallenge"
+            element={
+            <>
+              <PageTitle title="Admin : Add Challeng | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              <AddChallengeAdmin/>
+              }/>
+            </>
+          }
+        />
+        <Route
+          path="/updateTermsConditions"
+          element={
+            <>
+              <PageTitle title="Terms conditions | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              <AddTermsConditions />
+              }/>
             </>
           }
         />
 
 
-<Route
+        <Route
+          path="/termsConditions"
+          element={
+            <>
+              <PageTitle title="Terms conditions | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              <TermsConditions/>
+              }/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="/Editaboutus"
+          element={
+            <>
+              <PageTitle title="About Us | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+            <AboutUs/>
+            }/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="/EditChallengeAdmin/:id"
+          element={
+            <>
+              <PageTitle title="Edit Challenge Admin | TektAi" />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+
+              <EditChallengeAdmin/>
+              }/>
+            </>
+          }
+        />
+
+    {/* user routes */}
+    <Route
           path="/LCFront"
           element={
             <>
@@ -162,59 +367,13 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/Addchallenger"
-          element={
-            <>
-              <PageTitle title="Add Challenger | TektAi" />
-              <AddChallengerByAdmin />
-            </>
-          }
-        />
-        
-        <Route
-          path="/Addchallenger"
-          element={
-            <>
-              <PageTitle title="Challengers List | TektAi" />
-             
-            </>
-          }
-        />
-         <Route
-          path="/companylist"
-          element={
-            <>
-              <PageTitle title="Company List| TektAi" />
-              <ListCompany />
-            </>
-          }
-        />
-         <Route
-          path="/switchToCompany/:email" Component={A}
-          element={
-            <>
-              <PageTitle title="Switch to company | TektAi" />
-              <A />
-            </>
-          }
-        />
-
-        <Route
-          path="/Addcompany"
-          element={
-            <>
-              <PageTitle title="Add Company | TektAi" />
-              <AddCompany />
-            </>
-          }
-        /> 
-
 
         <Route
           path="/profile"
           element={
             <>
+              <PageTitle title="Profile| TektAi" />
+
               <PrivateRoute requiredRoles={["challenger","company"]} component={
 
                 <Profile/>
@@ -226,6 +385,8 @@ function App() {
           path="/teams/myInvitations"
           element={
             <>
+               <PageTitle title="My Invitations | TektAi" />
+
               <PrivateRoute requiredRoles={["challenger"]} component={
 
                 <MyInvitations/>
@@ -237,6 +398,7 @@ function App() {
           path="/teams/teamDetails/:teamId"
           element={
             <>
+              <PageTitle title="Team Details| TektAi" />
               <PrivateRoute requiredRoles={["challenger","company","admin","superAdmin"]} component={
 
                 <TeamDetails/>
@@ -244,10 +406,11 @@ function App() {
             </>
           }
         />
-    <Route
+       <Route
           path="/teams/myTeams"
           element={
             <>
+              <PageTitle title="My Teams | TektAi" />
               <PrivateRoute requiredRoles={["challenger"]} component={
 
                 <MyTeams/>
@@ -260,6 +423,7 @@ function App() {
           path="/notifications"
           element={
             <>
+              <PageTitle title="My Notifications | TektAi" />
               <PrivateRoute requiredRoles={["challenger","company"]} component={
 
                 <NotificationUser/>
@@ -274,6 +438,7 @@ function App() {
           path="/challenge/edit/:id"
           element={
             <>
+              <PageTitle title="Edit Challenge | TektAi" />
               <PrivateRoute requiredRoles={["company"]} component={
 
                 <EditChallenge/>
@@ -286,6 +451,7 @@ function App() {
           path="/challenge/add"
           element={
             <>
+              <PageTitle title="Add Challenge | TektAi" />
               <PrivateRoute requiredRoles={["company"]} component={
 
                 <AddChallenge/>
@@ -300,8 +466,11 @@ function App() {
           element={
             <>
               <PageTitle title="SwitchToCompany | TektAi" />
-              <SwitchToCompany />
-            </>
+              <PrivateRoute requiredRoles={["company","challenger"]} component={
+            <SwitchToCompany/>
+            }/>   
+            
+           </>
           }
         />
         
@@ -316,15 +485,7 @@ function App() {
           }
         />
         
-          <Route
-          path="/accountSwitchRequests"
-          element={
-            <>
-              <PageTitle title="Account Switch Requests | TektAi" />
-              <ListAccountSwitchRequest />
-            </>
-          }
-        />
+
         <Route
           path="/chart"
           element={
@@ -352,65 +513,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/auth/signin"
-          element={
-            <>
-              <PageTitle title="Signin | TektAi" />
-              <AuthRoutes component={<SignIn/>}/>
-            </>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={
-            <>
-              <PageTitle title="Signup | TektAi" />
-              <SignUp />
-            </>
-          }
-        /> 
 
-         <Route
-          path="/auth/forgotPassword"
-          element={
-            <>
-              <PageTitle title="Signup | TektAi" />
-              <ForgotPassword />
-            </>
-          }
-        />
-  
-
-        <Route
-          path="/auth/ResendVerifEmail"
-          element={
-            <>
-              <PageTitle title="Signup | TektAi" />
-              <ResendEmailVerification />
-            </>
-          }
-        />
-
-        <Route
-          path="/auth/verifyEmail/:id"
-          element={
-            <>
-              <PageTitle title="Signup | TektAi" />
-              <EmailVerification />
-            </>
-          }
-        />
-
-        <Route
-          path="/auth/resetPassword/:id/:token" // Include id and token as route parameters
-          element={
-            <>
-              <PageTitle title="Reset Password | TektAi" />
-              <ResetPassword />
-            </>
-          }
-        />
            <Route
             path="/landing"
             element={
@@ -429,15 +532,7 @@ function App() {
             </>
           }
         />
-           <Route
-            path="/admin/addChallenge"
-            element={
-            <>
-              <PageTitle title="Admin : Add Challeng | TektAi" />
-              <AddChallengeAdmin />
-            </>
-          }
-        />
+         
          <Route
             path="/challenge/statistics"
             element={
@@ -452,7 +547,10 @@ function App() {
             element={
             <>
               <PageTitle title="Challenge | TektAi" />
-              <ChallengeDetailsCompany />
+              <PrivateRoute requiredRoles={["company","challenger"]} component={
+
+              <ChallengeDetailsCompany/>
+              }/>
             </>
           }
         />
@@ -476,48 +574,6 @@ function App() {
 
               <Competitions/>
               }/>
-            </>
-          }
-        />
-        <Route
-          path="/updateTermsConditions"
-          element={
-            <>
-              <PageTitle title="Terms conditions | TektAi" />
-              <AddTermsConditions />
-            </>
-          }
-        />
-
-
-        <Route
-          path="/termsConditions"
-          element={
-            <>
-              <PageTitle title="Terms conditions | TektAi" />
-              <TermsConditions />
-            </>
-          }
-        />
-
-
-        <Route
-          path="/Editaboutus"
-          element={
-            <>
-              <PageTitle title="About Us | TektAi" />
-              <AboutUs/>
-            </>
-          }
-        />
-
-
-        <Route
-          path="/EditChallengeAdmin/:id"
-          element={
-            <>
-              <PageTitle title="Edit Challenge Admin | TektAi" />
-              <EditChallengeAdmin/>
             </>
           }
         />

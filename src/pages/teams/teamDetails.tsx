@@ -34,9 +34,31 @@ const handleTabChange = (tab: string) => {
   return (
     <ConnectedClientLayout>
     <div className='bg-white  rounded-lg p-4'>
-        <div className="z-20 h-15 md:h-35 bg-gray-200 text-black text-xl items-center flex justify-center font-semibold">
-            <span className='text-primary'>Welcome To</span> <span className=' ml-1'> {team.name}</span>
-        </div>
+    <div className="z-20 flex flex-col md:flex-row md:h-35 bg-gray-100 text-black text-2xl items-center justify-center font-semibold">
+  <div className="text-primary">
+    {"Welcome To ".split("").map((char, index) => (
+      <span
+        key={index}
+        className={`text-black animated-text drop-shadow-2 animate-pulse`}
+        style={{ animationDelay: `${index * 0.1}s` }}
+      >
+        {char}
+      </span>
+    ))}
+  </div>
+  <div className="ml-1 text-primary">
+    {team.name.split("").map((char:any, index:any) => (
+      <span
+        key={index}
+        className={`animated-text drop-shadow-[0_1px_4px_rgba(60,80,224,1)] animate-pulse ${index === 0 ? "uppercase" : ""}`}
+        style={{ animationDelay: `${(index + "Welcome To ").length * 0.1}s` }}
+      >
+        {char}
+      </span>
+    ))}
+  </div>
+</div>
+
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
          
         </div>
@@ -45,7 +67,7 @@ const handleTabChange = (tab: string) => {
    
         <img src={team.leader.imageUrl} alt="profile" className="rounded-full mr-2 max-h-16 w-16 mr-2" />
         <p className='text-lg  font-semibold capitalize' > {team.leader.FirstName} {team.leader.LastName}</p>
-        <p className='text-sm text-black font-semibold bg-gray-50 rounded-full py-1 px-2 sm:ml-8'>
+        <p className='text-sm text-white font-semibold bg-primary rounded-full py-1 px-2 sm:ml-8'>
         Leader 
       </p>
 
@@ -56,13 +78,17 @@ const handleTabChange = (tab: string) => {
         Members: 
       </p>     
   
-       </div>
+    </div>
        <div >
-       <ul className="flex justify-center">
+       <ul className="flex sm:px-24 justify-around">
         {team.members.map((member:any) => (
-          <li key={member._id} className="flex mx-2 px-2 py-1 rounded-full bg-gray-100">
-        <img src={member.imageUrl} alt="profile" className="rounded-full mr-2 max-h-8 w-8 mr-2" />
-          <p className='text-md font-semibold capitalize' > {member.FirstName} {member.LastName}</p></li>
+          <li key={member._id} className=" mx-2 px-2 py-1 text-center ">
+            <div className="flex justify-center">
+            <img src={member.imageUrl} alt="profile" className="rounded-full mr-2 max-h-16 w-16 mr-2" />
+
+            </div>
+          <p className='text-md font-semibold text-center capitalize' > {member.FirstName} {member.LastName}</p>
+          </li>
         ))}
       </ul>
     </div>

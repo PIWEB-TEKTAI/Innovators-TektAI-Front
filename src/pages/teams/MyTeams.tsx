@@ -28,12 +28,12 @@ const MyTeams = () => {
     <ConnectedClientLayout>
       <div className='bg-white rounded-lg p-4'>
         <h2>My Teams</h2>
-        <div className="grid sm:grid-cols-2 gap-4 grid-cols-1">
+        <div className="grid sm:grid-cols-3 sm:gap-4 grid-cols-1">
           {teams.map(team => (
             <div key={team._id} className="cursor-pointer" onClick={() => navigateToTeamDetails(team._id)}>
               <div className="flex flex-col items-center my-4 rounded-lg bg-gray-50 p-4 ">
-                <img src={team.imageUrl} alt="profile" className="rounded-full mr-2 my-2 max-h-8 w-8 mr-2" />
-                <h3 className='text-black font-semibold'>{team.name}</h3>
+                <img src={team.imageUrl} alt="profile" className="rounded-full mr-2 my-2 max-h-16 w-16 mr-2" />
+                <h3 className='text-black font-semibold capitalize'>{team.name}</h3>
               </div>
               <ul>
                 {team.members.map((member: any) => (

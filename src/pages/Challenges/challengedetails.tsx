@@ -599,37 +599,9 @@ const ChallengeDetails: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
+   
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-          <div className="flex justify-end">
-            {userAuth?.role === 'challenger' &&
-              !challengeDetails.participations.soloParticipants.includes(
-                userAuth._id,
-              ) &&
-              !challengeDetails.participations.soloParticipationRequests.includes(
-                userAuth._id,
-              ) && (
-                <div className="flex ">
-                  <div className="flex-col m-1">
-                    <button
-                      onClick={handleConfirmationModalAppearance}
-                      className="text-sm p-2 border  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
-                    >
-                      <span className="group-hover:ease-in duration-300">
-                        Solo Join
-                      </span>
-                    </button>
-                  </div>
-                  <div className="flex-col my-1">
-                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
-                     onClick={handleJoinTeamClick}>
-                      <span className="group-hover:ease-in duration-300">
-                        Join a Team
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-          </div>
+         
 
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
@@ -690,7 +662,36 @@ const ChallengeDetails: React.FC = () => {
             </div>
           </div>
         </div>
-
+        {userAuth?.role === 'challenger' &&
+              !challengeDetails.participations.soloParticipants.includes(
+                userAuth._id,
+              ) &&
+              !challengeDetails.participations.soloParticipationRequests.includes(
+                userAuth._id,
+              ) && ( <div className="my-4 py-4 flex bg-white pt-2 rounded-lg justify-center">
+            
+                <div className="flex ">
+                  <div className="flex-col m-1">
+                    <button
+                      onClick={handleConfirmationModalAppearance}
+                      className="text-lg p-2 border mr-2  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
+                    >
+                      <span className="group-hover:ease-in duration-300">
+                        Solo Join
+                      </span>
+                    </button>
+                  </div>
+                  <div className="flex-col my-1">
+                    <button className="text-lg p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
+                     onClick={handleJoinTeamClick}>
+                      <span className="group-hover:ease-in duration-300">
+                        Join a Team
+                      </span>
+                    </button>
+                  </div>
+                </div>
+            
+          </div>  )}
         {isModalOpen && (
           <CompanyModal
             company={selectedCompany}
