@@ -30,6 +30,7 @@ import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import TeamSelectionModal from './teamSelectionModal';
 import Discussion from './discussion';
+import Overview from './overview';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -689,6 +690,18 @@ const ChallengeDetails: React.FC = () => {
                 </p>
               )}
             </div>
+            <div>
+    <h2 className="text-md font-bold text-gray-900 mt-2">
+        Number of Participants Required
+    </h2>
+    <p className="text-gray-600 mt-4 break-words text-black break-words">
+        Teams: {challengeDetails.numberParticipants.nbrTeam}
+    </p>
+    <p className="text-gray-600 mt-4 break-words text-black break-words">
+        Solo: {challengeDetails.numberParticipants.nbrSolo}
+    </p>
+</div>
+
           </div>
         </div>
 
@@ -746,28 +759,11 @@ const ChallengeDetails: React.FC = () => {
 
           <div className="p-8">
             {activeTab === 'overview' && (
-              <>
-                <h2 className="text-2xl font-bold text-gray-900 mt-2">
-                  Description
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black	">
-                  {challengeDetails.description}
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8">
-                  Prizes
-                </h2>
-                <p className="text-gray-600 mt-4 text-black">
-                  {challengeDetails.price}Dt
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 ">
-                  Submission Guidelines
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black">
-                  {challengeDetails.description}
-                </p>
-              </>
+                              <Overview/>
+
             )}
-            {activeTab === 'leaderboard' && (
+          
+              {activeTab === 'leaderboard' && (
               <div>
                 <h2>Leaderboard</h2>
               </div>

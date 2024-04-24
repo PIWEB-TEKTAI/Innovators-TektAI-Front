@@ -505,7 +505,7 @@ const ListChallengerFront: React.FC = () => {
                   {userAuth?.role === "company" && ( <option value="MyChallenge">My challenges</option>)}
                   <option value="OpenedChallenge">Open challenges</option>
                   <option value="completedChallenge">
-                    completed challenges
+                    Completed challenges
                   </option>
                 </select>
               </div>

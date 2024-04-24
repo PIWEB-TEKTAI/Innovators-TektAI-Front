@@ -457,6 +457,7 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
 ) : null}
 
 
+
   </div>
         {/* <!-- Sidebar Menu --> */}
       </div>

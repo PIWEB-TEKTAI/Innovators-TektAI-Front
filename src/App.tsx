@@ -40,9 +40,7 @@ import Teams from './pages/landing/teams';
 import NotFound from './pages/NotFound';
 import EditChallenge from './pages/Challenge/EditChallenge';
 import ChallengeList from "./pages/SuperAdmin/ListesChallenge";
-
 import ChallengeListFront from "./pages/competitions/challengesListFront";
-
 import Competitions from './pages/landing/Competitions';
 import AddChallenge from './pages/Challenge/AddChallenge';
 import ChallengeDetails from './pages/Challenges/challengedetails';
@@ -50,6 +48,8 @@ import ChallengeDetailsCompany from './pages/Challenges/challengedetailscompany'
 import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
+import TeamsAdmin from './pages/SuperAdmin/TeamsAdmin';
+import TeamDetailsAdmin from './pages/SuperAdmin/TeamDetailsAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
 import TeamList from './pages/Teams/TeamList';
 import Preferences from './pages/Profile/Preferences';
@@ -347,6 +347,28 @@ function App() {
             </>
           }
         />
+        
+        <Route
+          path="/TeamsAdmin" 
+          element={
+            <>
+              <PageTitle title="Teams | TektAi" />
+              <TeamsAdmin />
+            </>
+          }
+        />
+        <Route
+          path="/TeamsAdmin/teamDetails/:teamId"
+          element={
+            <>
+              <PrivateRoute requiredRoles={["admin","superAdmin"]} component={
+
+                <TeamDetailsAdmin/>
+              }/>
+            </>
+          }
+        />
+
         <Route
           path="/chart"
           element={

@@ -27,6 +27,7 @@ const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isStyleTemporaryActive, setIsTemporaryStyleActive] = useState(false);
 
+
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -338,6 +339,13 @@ const Landing: React.FC = () => {
   const [message, setMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredCardsData, setFilteredCardsData] = useState(cardsData);
+
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -546,6 +554,8 @@ const Landing: React.FC = () => {
                 potential of real-world problem-solving by connecting with a
                 global community of data science developers.
               </p>
+              {userAuth?.role!== 'challenger' && userAuth?.role!== 'company' &&(
+
               <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
                 <a
                   href="/auth/signup"
@@ -560,6 +570,30 @@ const Landing: React.FC = () => {
                   Explore
                 </a>
               </div>
+              )}
+              {userAuth?.role === 'challenger' && (
+  <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+  <a
+    href="/LCFront"
+    className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+  >
+    Compete Now
+  </a>
+
+</div>
+              )}
+      {userAuth?.role === 'company' && (
+  <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+    <a
+      href="/challenge/add"
+      className="inline-flex items-center justify-center bg-primary px-6 py-4 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+      style={{ fontSize: '1rem' }} // Adjust font size as needed
+    >
+      Host New Competition
+    </a>
+  </div>
+)}
+
             </div>
             <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2] animate__animated animate__fadeInRight">
               <img src="/src/images/landing/ai3.jpg" alt="mockup" />
@@ -568,53 +602,63 @@ const Landing: React.FC = () => {
         </section>
       </RevealOnScroll>
 
-      <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
-        <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
-          <RevealOnScroll delay="">
-            <div className="flex justify-between mb-8">
-              <h2 className="text-4xl font-extrabold text-black dark:text-white">
-                Competitions
-              </h2>
+     
 
-              <div>
-                <Link to="/LCFront">
-                  <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
-                    <img
-                      src="/src/images/landing/arrow.png"
-                      alt="arrow"
-                      className="mr-2 w-3"
-                    />
-                    View all
-                  </a>
-                </Link>
-              </div>
-            </div>
-            <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-              Build your skills in our competitions, co-hosted by world-class
-              research organizations & companies
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
-              {cardsData.map((card, index) => (
-                <Link key={index} to={`/challenge/details/${card._id}`}>
-                  <CardCompetition key={index} {...card} />
-                </Link>
-              ))}
-            </div>
-          </RevealOnScroll>
-
-          <RevealOnScroll delay="">
-            <h2 className="text-4xl mt-15 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">
-              Datasets
-            </h2>
-            <div className="grid md:grid-cols-3 gap-2 justify-center lg:grid-cols-4 sm:grid-cols-2">
-              {backwardCards.map((card, index) => (
-                <Card2 key={index} {...card} />
-              ))}
-            </div>
-          </RevealOnScroll>
+      <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
+  <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
+    <RevealOnScroll delay="">
+      <div className="flex justify-between mb-8">
+        <h2 className="text-4xl font-extrabold text-black dark:text-white">
+          Competitions
+        </h2>
+        <div>
+          <div className="flex items-center">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:border-primary-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+              />
+            <Link to="/LCFront">
+              <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+                <img
+                  src="/src/images/landing/arrow.png"
+                  alt="arrow"
+                  className="mr-2 w-3"
+                />
+                View all
+              </a>
+            </Link>
+          </div>
         </div>
-      </section>
+      </div>
+      <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+        Build your skills in our competitions, co-hosted by world-class research organizations & companies
+      </p>
+
+      <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
+        {cardsData.map((card, index) => (
+          <Link key={index} to={`/challenge/details/${card._id}`}>
+            <CardCompetition key={index} {...card} />
+          </Link>
+        ))}
+      </div>
+    </RevealOnScroll>
+
+    <RevealOnScroll delay="">
+      <h2 className="text-4xl mt-15 font-extrabold text-black text-opacity-[1.5] dark:text-white py-4 ">
+        Datasets
+      </h2>
+      <div className="grid md:grid-cols-3 gap-2 justify-center lg:grid-cols-4 sm:grid-cols-2">
+        {backwardCards.map((card, index) => (
+          <Card2 key={index} {...card} />
+        ))}
+      </div>
+    </RevealOnScroll>
+  </div>
+</section>
+
 
     
 

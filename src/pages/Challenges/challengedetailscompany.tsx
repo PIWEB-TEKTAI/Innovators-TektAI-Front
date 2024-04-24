@@ -1,23 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {
-  format,
-  differenceInMonths,
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInSeconds,
+import { format,differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds,
 } from 'date-fns';
 import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
-import {
-  addSubmission,
-  editSubmission,
-  getSubmissionById,
-  getSubmissionsByChallengeId,
-  deleteSubmission,
+import { addSubmission,editSubmission, getSubmissionById, getSubmissionsByChallengeId,deleteSubmission,
 } from '../../services/submissionService';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
@@ -30,6 +18,7 @@ import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useParams } from 'react-router-dom';
+import Overview from './overview';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -696,6 +685,17 @@ const ChallengeDetailsCompany: React.FC = () => {
                 </p>
               )}
             </div>
+            <div>
+    <h2 className="text-md font-bold text-gray-900 mt-2">
+        Number of Participants Required
+    </h2>
+    <p className="text-gray-600 mt-4 break-words text-black break-words">
+        Teams: {challengeDetails.numberParticipants.nbrTeam}
+    </p>
+    <p className="text-gray-600 mt-4 break-words text-black break-words">
+        Solo: {challengeDetails.numberParticipants.nbrSolo}
+    </p>
+</div>
           </div>
         </div>
 
@@ -752,29 +752,10 @@ const ChallengeDetailsCompany: React.FC = () => {
           </ul>
 
           <div className="p-8">
-            {activeTab === 'overview' && (
-              <>
-                <h2 className="text-2xl font-bold text-gray-900 mt-2">
-                  Description
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black break-words	">
-                  {challengeDetails.description}
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8">
-                  Prizes
-                </h2>
-                <p className="text-gray-600 mt-4 text-black">
-                  {challengeDetails.price}Dt
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 ">
-                  Submission Guidelines
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black">
-                  {challengeDetails.description}
-                </p>
-              </>
-            )}
-            {activeTab === 'leaderboard' && (
+          {activeTab === 'overview' && (
+                              <Overview/>
+
+            )}            {activeTab === 'leaderboard' && (
               <div>
                 <h2>Leaderboard</h2>
               </div>
