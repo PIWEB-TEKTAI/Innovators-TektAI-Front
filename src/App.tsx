@@ -53,8 +53,7 @@ import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
 import PreferencesPage from './components/SidebarClient/PreferencesPage';
 import ParticipantChallangeCompany from './pages/Challenges/ParticipantsChallangeCompany';
-
-
+import Statistique  from './components/Charts/statistique';
 
 
 function App() {
@@ -476,7 +475,19 @@ function App() {
               }/>
             </>
           }
+
+          
         />
+  <Route
+          path="/statistique"
+element={
+            <>
+              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Statistique/>
+            </>
+          }
+        />
+
         <Route
           path="/updateTermsConditions"
           element={
