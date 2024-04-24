@@ -593,6 +593,10 @@ const ChallengeDetailsCompany: React.FC = () => {
     }
   };
 
+
+
+
+  
   return (
     <ConnectedClientLayout>
       <Modal

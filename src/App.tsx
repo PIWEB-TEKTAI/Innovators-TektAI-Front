@@ -51,6 +51,8 @@ import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
+import PreferencesPage from './components/SidebarClient/PreferencesPage';
+import ParticipantChallangeCompany from './pages/Challenges/ParticipantsChallangeCompany';
 
 
 
@@ -268,6 +270,28 @@ function App() {
           }
         />
         
+
+          <Route path="/preferences" Component={PreferencesPage}
+          element={
+            <>
+
+
+            </>
+          }
+        
+          />
+
+<Route path="/Participants" 
+          element={
+            <>
+              <PrivateRoute requiredRoles={["company"]} component={
+
+                <ParticipantChallangeCompany/>
+              }/>
+            </>
+          }
+        
+          />
 
         <Route
           path="/switchToCompany"
