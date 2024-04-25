@@ -11,6 +11,20 @@ const TeamsDetails = () => {
   const [team, setTeam] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('overview'); // State to manage active tab
 
+  function truncateDescription(description:any) {
+    // Trouver l'index de la deuxième occurrence de '\n' (pour la deuxième ligne)
+    const secondNewLineIndex = description.indexOf('\n', description.indexOf('\n') + 1);
+  
+    // Si la deuxième occurrence de '\n' est trouvée
+    if (secondNewLineIndex !== -1) {
+      // Retourner la sous-chaîne de caractères jusqu'à la deuxième occurrence de '\n'
+      return description.substring(0, secondNewLineIndex);
+    } else {
+      // Sinon, retourner la description complète
+      return description;
+    }
+  }
+
   useEffect(() => {
     const fetchTeamDetails = async () => {
       try {
@@ -32,7 +46,47 @@ const TeamsDetails = () => {
 
   return (
     <ClientLayout>
-    <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
+        <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
+            <div className="z-20 h-15 md:h-35 bg-white rounded-lg text-black text-xl items-center flex justify-center font-semibold">
+                <span>Welcome To</span> <span className=' text-primary ml-1'> {team.name}</span>
+            </div>
+            
+            <div className="z-20 h-15 md:h-35 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
+                <span>Team Members</span>
+            </div>
+            <div>
+            <ul className="flex  flex-wrap">
+                {team.members.map((member: any) => (
+                <div className='card-design2 ml-5 bg-white' key={member._id}>
+                    <img
+                    src={member.imageUrl}
+                    alt="profile"
+                    className="rounded-full max-h-15 w-15 mr-2"
+                    />
+
+                    <p className="text-md mt-5 text-primary font-semibold capitalize">
+                    {' '}
+                    {member.FirstName} {member.LastName}
+                    </p>
+
+                    <p className="text-md mt-2 font-semibold capitalize">
+                    {' '}
+                    {member.address} 
+                    </p>
+
+                    <p className="text-md w-55 mt-2 font-medium capitalize ">
+                    {' '}
+                    { member.Description && member.Description.substring(0,70) }...{' '}
+                    </p>
+                </div>
+               
+                ))}
+            </ul>
+        </div>
+        </div>
+
+        
+    {/*<div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
         <div className="z-20 h-15 md:h-35 bg-gray-200 text-black text-xl items-center flex justify-center font-semibold">
           <span className="text-primary">Welcome To</span>{' '}
@@ -79,8 +133,8 @@ const TeamsDetails = () => {
             ))}
           </ul>
         </div>
-        {/* Add more team details rendering as needed */}
       </div>
+
       <div className="bg-white rounded-lg my-6">
         <ul className="p-8 flex cursor-pointer flex-wrap sm:flex-nowrap border-gray-200 border-b py-4">
           <li className="-mb-px mr-1">
@@ -91,7 +145,6 @@ const TeamsDetails = () => {
               Overview
             </a>
           </li>
-          {/* Add other tabs similarly */}
         </ul>
 
         <div className="p-8">
@@ -100,13 +153,11 @@ const TeamsDetails = () => {
               <h2 className="text-2xl font-bold text-gray-900 mt-2">
                 Description
               </h2>
-              {/* Add description content */}
             </>
           )}
-          {/* Add content for other tabs */}
         </div>
       </div>
-   </div>   
+        </div>   */}
     </ClientLayout>
   );
 };

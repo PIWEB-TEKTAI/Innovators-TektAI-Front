@@ -64,31 +64,60 @@ const NotificationUser = () => {
                 <ul className="flex h-auto flex-col overflow-y-auto">
                   {Data !== null &&
                     Data.map((item: any, index: any) => (
-                      <li key={index}>
-                        <Link
-                          className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                          to="#"
-                        >
-                          <img
-                            src={item.UserConcernedId.imageUrl}
-                            alt="profile"
-                            className="rounded-full max-h-36 w-10"
-                          />
-                          <div className="flex flex-col">
-                            <p className="text-sm">
-                              <span className="font-semibold">
-                                {toTitleCase(item.UserConcernedId.FirstName)}{' '}
-                                {toTitleCase(item.UserConcernedId.LastName)}{' '}
-                              </span>{' '}
-                              {item.content}
-                            </p>
+                    
+                  <li key={index}>
+                    {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName ? (
+                            <Link
+                            className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                            to="#"
+                          >
+                            <img
+                              src={item.UserConcernedId.imageUrl}
+                              alt="profile"
+                              className="rounded-full max-h-36 w-10"
+                            />
+                            <div className="flex flex-col">
+                              <p className="text-sm">
+                                <span className="font-semibold">
+                                  {toTitleCase(item.UserConcernedId.FirstName)}{' '}
+                                  {toTitleCase(item.UserConcernedId.LastName)}{' '}
+                                </span>{' '}
+                                {item.content}
+                              </p>
+    
+                              <p className="text-xs text-primary font-medium">
+                                {formatDate(item.createdAt)}
+                              </p>
+                            </div>
+                          </Link>
+                    ) : (
+                      <Link
+                      className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      to="#"
+                    >
+                      <img
+                              src={item.TeamConcernedId.imageUrl}
+                              alt="profile"
+                              className="rounded-full max-h-36 w-10"
+                            />
+                     
+                      <div className="flex flex-col">
+                        <p className="text-sm">
+                          <span className="font-semibold">
+                            {toTitleCase(item.TeamConcernedId.name)}{' '}
+                          </span>{' '}
+                          {item.content}
+                        </p>
 
-                            <p className="text-xs text-primary font-medium">
-                              {formatDate(item.createdAt)}
-                            </p>
-                          </div>
-                        </Link>
-                      </li>
+                        <p className="text-xs text-primary font-medium">
+                          {formatDate(item.createdAt)}
+                        </p>
+                      </div>
+                    </Link>
+                    )}
+                  
+                    </li>
+                   
                     ))}
                 </ul>
               </div>

@@ -4,3 +4,11 @@
     box-shadow: 2px 2px 2px 2px rgb(189, 189, 189) ;
     padding: 3%;
 }
+
+
+
+.card-design2{
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5%;
+}

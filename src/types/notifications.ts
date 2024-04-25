@@ -3,5 +3,6 @@ export type Notification = {
     title: string,
     content:string,
     UserConcernedId:string,
+    TeamConcernedId:string,
     createdAt:Date
 }

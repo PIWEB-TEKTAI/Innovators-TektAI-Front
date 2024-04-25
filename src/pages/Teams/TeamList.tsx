@@ -197,7 +197,9 @@ const TeamList: React.FC = () => {
   const fetchData = () => {
   
     axios
-      .get<any[]>('http://localhost:3000/teams/front/all')
+      .get<any[]>('http://localhost:3000/teams/front/all' ,{
+        withCredentials: true,
+      } )
       .then((response) => {
         console.log(response.data);
         const filteredUsers = response.data.filter((user) =>
