@@ -57,6 +57,7 @@ import MyInvitations from './pages/Teams/MyInvitations';
 import TeamDetails from './pages/Teams/teamDetails';
 import MyTeams from './pages/Teams/MyTeams';
 import TeamsDetails from './pages/Teams/teamsDetails';
+import OtherUserProfile from './pages/Profile/otherUserProfile';
 
 
 
@@ -402,6 +403,19 @@ function App() {
               <PrivateRoute requiredRoles={["challenger"]} component={
 
                 <MyInvitations/>
+              }/>
+            </>
+          }
+        />
+            <Route
+          path="/visit/user/:userId"
+          element={
+            <>
+               <PageTitle title="User Profile | TektAi" />
+
+              <PrivateRoute requiredRoles={["challenger","company","admin","superAdmin"]} component={
+
+                <OtherUserProfile/>
               }/>
             </>
           }

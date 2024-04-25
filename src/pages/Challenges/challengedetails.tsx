@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { createPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   format,
   differenceInMonths,
@@ -81,7 +81,7 @@ const AddSubmissionForm: React.FC = () => {
 
   const [challengeData,setChallengeData] = useState<challenge>();
 
-
+  const {userAuth} = useAuth();
   const [FileName, setFileName] = useState('');
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
@@ -222,36 +222,84 @@ const AddSubmissionForm: React.FC = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log('file' + DataSetFile);
-
-    addSubmission(
+    let teamId = '';
+    let type = "solo";
+     challengeData?.participations.TeamParticipants.some((team:any) => 
       {
-        title: title,
-        description: description,
-        output:Output,
-        datasetFile:DataSetFile,
-        presentationFile:presentationFile,
-        codeSourceFile: codeSourceFile,
-        reportFile:reportFile,
-        demoFile:demoFile,
-        readMeFile:readMeFile,
-      },
-      id,
-    )
-      .then((response) => {
-        setAlert({
-          type: 'success',
-          message: 'submission added successfully',
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      })
-      .catch((error) => {
-        setAlert({
-          type: 'error',
-          message: 'Error adding submission',
-        });
-      });
+        if( team.leader._id == userAuth?._id){
+          teamId = team._id;
+          type = "team";
+        }
+
+      }
+      )
+      if(teamId !='' && type=="team"){
+        addSubmission(
+          {
+            title: title,
+            description: description,
+            output:Output,
+            datasetFile:DataSetFile,
+            presentationFile:presentationFile,
+            codeSourceFile: codeSourceFile,
+            reportFile:reportFile,
+            demoFile:demoFile,
+            readMeFile:readMeFile,
+            teamId:teamId,
+            type:type
+          },
+          id,
+        )
+          .then((response) => {
+            setAlert({
+              type: 'success',
+              message: 'submission added successfully',
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            setAlert({
+              type: 'error',
+              message: 'Error adding submission',
+            });
+          });
+      }else{
+        addSubmission(
+          {
+            title: title,
+            description: description,
+            output:Output,
+            datasetFile:DataSetFile,
+            presentationFile:presentationFile,
+            codeSourceFile: codeSourceFile,
+            reportFile:reportFile,
+            demoFile:demoFile,
+            readMeFile:readMeFile,
+            type:type
+          },
+          id,
+        )
+          .then((response) => {
+            setAlert({
+              type: 'success',
+              message: 'submission added successfully',
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            setAlert({
+              type: 'error',
+              message: 'Error adding submission',
+            });
+          });
+      }
+     
+    
+   
   };
   return (
     <div>
@@ -1476,7 +1524,7 @@ const ChallengeDetails: React.FC = () => {
 
                         <div className="flex">
                           <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                            {submission.datasetFile.name.substring(0, 20)}...
+                            {submission.codeSourceFile.name.substring(0, 20)}...
                           </p>
 
                           {userAuth?._id === submission.submittedBy ? (
