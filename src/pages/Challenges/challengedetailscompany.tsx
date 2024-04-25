@@ -1,8 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
-import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   format,
   differenceInMonths,
@@ -29,6 +29,7 @@ import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
+import { useParams } from 'react-router-dom';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -402,9 +403,10 @@ const ChallengeDetailsCompany: React.FC = () => {
   const [openDropdowns, setOpenDropdowns] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [confiramtionMessage, setConfirmationMessage] = useState('');
-  const [isNotRequested,setisNotRequested] = useState(false);
-  const [errorConfirmationMesage, setErrorConfirmationMessage] =useState(false);
-  let { userAuth } = useAuth();
+  const [errorConfirmationMesage, setErrorConfirmationMessage] =
+    useState(false);
+  const { userAuth } = useAuth();
+
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);
   };
@@ -433,12 +435,11 @@ const ChallengeDetailsCompany: React.FC = () => {
     setShowModal(false);
   };
   const handleCompanyNameClick = (companyDetails: any) => {
+    console.log('Company details:', companyDetails);
     setSelectedCompany(companyDetails);
     setIsModalOpen(true);
   };
   useEffect(() => {
-    console.log("userAuth",userAuth)
-
     console.log('isModalOpen:', isModalOpen); // Check if this log updates when the modal state changes
   }, [isModalOpen]);
 
@@ -592,16 +593,7 @@ const ChallengeDetailsCompany: React.FC = () => {
       }, 2000);
     }
   };
-  useEffect(() => {
-    const updatedIsNotRequested = challengeDetails.participations.TeamParticipationRequests.map((request: { _id: any; leader: { _id: any; }; members: { _id: any; }[]; }) => {
-      const isLeader = request.leader._id === userAuth?._id;
-      const isMember = request.members.some((member: { _id: any; }) => member._id === userAuth?._id);
-      return !isLeader && !isMember;
-    });
-    setisNotRequested(updatedIsNotRequested);
-    console.log(isNotRequested)
-  }, [challengeDetails, userAuth]);
-  
+
   return (
     <ConnectedClientLayout>
       <Modal
@@ -615,7 +607,7 @@ const ChallengeDetailsCompany: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="rounded-sm ">
-        <div className="bg-white px-[2rem] py-[4rem] shadow-lg rounded-sm overflow-hidden">
+        <div className="bg-white px-[2rem] py-[2rem] shadow-lg rounded-sm overflow-hidden">
                
           <div className="flex justify-end">
             {userAuth?.role === 'challenger' &&
@@ -624,14 +616,7 @@ const ChallengeDetailsCompany: React.FC = () => {
               ) &&
               !challengeDetails.participations.soloParticipationRequests.includes(
                 userAuth._id,
-              ) &&
-              challengeDetails.participations.TeamParticipationRequests.map((request: { leader: { _id: any }; members: { _id: any }[] }) => {
-                const isLeader = request.leader._id === userAuth?._id;
-                const isMember = request.members.some((member: { _id: any }) => member._id === userAuth?._id);
-                return !isLeader && !isMember;
-              }) &&
-
-               (
+              ) && (
                 <div className="flex ">
                   <div className="flex-col m-1">
                     <button

@@ -50,10 +50,10 @@ const handleTabChange = (tab: string) => {
     {team.name.split("").map((char:any, index:any) => (
       <span
         key={index}
-        className={`animated-text drop-shadow-[0_1px_4px_rgba(60,80,224,1)] animate-pulse ${index === 0 ? "uppercase" : ""}`}
+        className={`animated-text drop-shadow-[0_1px_4px_rgba(60,80,224,1)] animate-pulse ${index === 0 ? "uppercase" : ""}${char === " " ? "capitalize" : ""}`}
         style={{ animationDelay: `${(index + "Welcome To ").length * 0.1}s` }}
       >
-        {char}
+      {char === " " ? "\u00A0" : char}
       </span>
     ))}
   </div>

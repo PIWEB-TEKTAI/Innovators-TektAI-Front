@@ -13,9 +13,51 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { ModalTermsConditions } from '../../components/ModalTermsCondition';
 import ReactFlagsSelect from "react-flags-select";
 import PhoneInputWithCountrySelect, { isValidPhoneNumber } from 'react-phone-number-input';
+import zxcvbn from 'zxcvbn'; 
 
 
 const StepperForm = () => {
+  const getPasswordStrength = (PasswordValue: string) => {
+    const result = zxcvbn(PasswordValue);
+    return result.score;
+  };
+
+  // Function to render the password strength bar
+  const renderPasswordStrengthBar = () => {
+    if (PasswordValue === '') {
+      return null; // Don't render anything if the password is empty
+    }
+  
+    const strength = getPasswordStrength(PasswordValue);
+    let color = '';
+    let width = '0%';
+
+    switch (strength) {
+      case 0:
+        color = 'red';
+        width = '20%';
+
+        break;
+      case 1:
+      case 2:
+        color = 'orange';
+        width = '50%';
+
+        break;
+      case 3:
+      case 4:
+        color = 'green';
+        width = '100%';
+
+        break;
+      default:
+        break;
+    }
+    return (
+      <div style={{ backgroundColor: color, width: width, height: '8px', borderRadius: '4px', marginTop: '5px' }}></div>
+    );
+};
+
   const steps = ['Basic Info', 'Contact Info', 'Account Info', 'Company Info'];
  
   const [currentStep, setCurrentStep] = useState(1);
@@ -1235,8 +1277,17 @@ const StepperForm = () => {
                       </div>
                     )}
                   </div>
+  
                 </div>
 
+                <div className="mb-6">
+          <label className="mb-2.5 block font-medium text-black dark:text-white">
+            Password Strength
+          </label>
+          <div className="relative">
+            {renderPasswordStrengthBar()}
+          </div>
+        </div>
                 <div className="flex justify-between">
                   <button
                     className="w-30 cursor-pointer rounded-lg border border-[#808080] bg-[#808080] p-3 text-white transition hover:bg-opacity-90"

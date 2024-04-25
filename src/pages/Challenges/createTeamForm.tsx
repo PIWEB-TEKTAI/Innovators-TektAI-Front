@@ -6,7 +6,7 @@ import { useAuth } from '../../components/Auth/AuthProvider';
 
 interface Props {
   onCreateTeamSuccess: () => void;
-  onReturn: () => void;
+  onReturn?: () => void;
 }
 
 const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {

@@ -51,9 +51,11 @@ import ChallengeStatistics from './pages/Challenges/challengesstatics';
 import EditChallengeAdmin from './pages/SuperAdmin/EditChallenge';
 import AddChallengeAdmin from './pages/SuperAdmin/AddChallengeAdmin';
 import NotificationUser from './pages/Profile/notificationsUser';
+import TeamList from './pages/Teams/TeamList';
+import Preferences from './pages/Profile/Preferences';
 import MyInvitations from './pages/Teams/MyInvitations';
 import TeamDetails from './pages/Teams/teamDetails';
-import MyTeams from './pages/teams/myTeams';
+import MyTeams from './pages/Teams/MyTeams';
 
 
 
@@ -190,6 +192,15 @@ function App() {
 
               <Modifier1/>
               }/>
+            </>
+          }
+        />
+          <Route
+          path="/statistics" 
+          element={
+            <>
+              <PageTitle title="Statistics| TektAi" />
+              <ChallengeStatistics/>
             </>
           }
         />
@@ -420,6 +431,17 @@ function App() {
         />
 
         <Route
+          path="/preferences"
+          element={
+            <>
+              <PageTitle title="Preferences| TektAi" />
+              <Preferences/>
+            </>
+          }
+        />
+
+
+        <Route
           path="/notifications"
           element={
             <>
@@ -574,6 +596,17 @@ function App() {
 
               <Competitions/>
               }/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="/teamList"
+          element={
+            <>
+              <PageTitle title=" Team List | TektAi" />
+              <TeamList/>
             </>
           }
         />

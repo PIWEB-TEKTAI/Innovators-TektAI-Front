@@ -29,6 +29,7 @@ import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import TeamSelectionModal from './teamSelectionModal';
+import Discussion from './discussion';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -663,12 +664,20 @@ const ChallengeDetails: React.FC = () => {
           </div>
         </div>
         {userAuth?.role === 'challenger' &&
+              challengeDetails.status=="open"&&
               !challengeDetails.participations.soloParticipants.includes(
                 userAuth._id,
               ) &&
               !challengeDetails.participations.soloParticipationRequests.includes(
                 userAuth._id,
-              ) && ( <div className="my-4 py-4 flex bg-white pt-2 rounded-lg justify-center">
+              ) &&
+              !challengeDetails.participations.TeamParticipants.some((team:any) => 
+                 team?.leader._id == userAuth._id || team.members.some((member:any)=>{member == userAuth._id})
+              )&&
+              !challengeDetails.participations.TeamParticipationRequests.some((team:any) => 
+                team?.leader._id == userAuth._id || team.members.some((member:any)=>{member == userAuth._id})
+              )
+              && ( <div className="my-4 py-4 flex bg-white pt-2 rounded-lg justify-center">
             
                 <div className="flex ">
                   <div className="flex-col m-1">
@@ -773,9 +782,7 @@ const ChallengeDetails: React.FC = () => {
               </div>
             )}
             {activeTab === 'discussion' && (
-              <div>
-                <h2>Discussion</h2>
-              </div>
+                <Discussion/>
             )}
             {activeTab == 'participations' && (
               <div>
@@ -790,9 +797,10 @@ const ChallengeDetails: React.FC = () => {
               <div>
                 <div className="flex justify-end mb-4">
                   {userAuth?.role === 'challenger' &&
-                    challengeDetails.participations.soloParticipants.includes(
-                      userAuth._id,
-                    ) &&
+                    (challengeDetails.participations.soloParticipants.includes(userAuth._id) ||
+                    challengeDetails.participations.TeamParticipants.some((team:any) => 
+                      team.leader && team.leader._id && team.leader._id == userAuth._id
+                  )) &&
                     challengeDetails.status == 'open' && (
                       <button
                         onClick={openModal}

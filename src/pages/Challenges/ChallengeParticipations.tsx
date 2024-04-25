@@ -143,24 +143,30 @@ const handleAcceptRequest = async (userId: string,type:string) => {
           <li key={index} className='mb-5'>
             <div className="flex justify-between">
              <div className="flex">
-             <img className="w-15 h-15 p-4" src={participation.imageUrl} alt="userImage" />
-                {participation.type == "participant" || participation.type =="Request"?(      
+             <img className="w-18 h-18 p-4" src={participation.imageUrl} alt="userImage" />
+                {(participation.type == "Participant" || participation.type =="Request") && (      
                   <>              
                   <div className="flex-col">
 
-                       <div className="capitalize">{participation.FirstName} {participation.LastName} </div>
+                       <div className="capitalize mt-3">{participation.FirstName} {participation.LastName} </div>
                        <div>{participation.email}</div>
                   </div>
 
                   </>
 
-                ):(                    
-                    <div className="capitalize">{participation.name} </div>
-              )}
+                )}
+
+                {(     
+                  (participation.type == "TeamParticipant" || participation.type =="TeamRequest") && (
+
+                    <div className="capitalize mt-4 text-lg">{participation.name} </div>
+
+                 ))}
 
               </div>
+         
               <div className="flex justify-end items-center">
-              {participation.type =="Request" || participation.type == "TeamRequest" &&
+              { (participation.type =="Request" || participation.type == "TeamRequest") &&
               <>
                 <div> {userAuth?._id == challenge.createdBy._id && challenge.status =="open" && challenge.createdBy.role=="company" &&
                 (<button onClick={() => handleConfirmationModalAppearance(participation._id,participation.type )} className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Accept</button>)}</div>
@@ -176,8 +182,6 @@ const handleAcceptRequest = async (userId: string,type:string) => {
               </>
               
               }
-              </div>
-              <div className="flex justify-end items-center">
               {participation.type =="Request" || participation.type == "TeamRequest"&&
               <>
                 <div> {userAuth?.role === 'challenger' && challenge.status =="open" && challenge.participations.soloParticipationRequests.includes(userAuth?._id) &&
@@ -207,4 +211,3 @@ const handleAcceptRequest = async (userId: string,type:string) => {
 };
 
 export default ChallengeParticipations;
-
