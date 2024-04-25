@@ -8,13 +8,32 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
 
-
 interface Challenge {
   _id: string;
   title: string;
   description: string;
   image: string;
   amount: string;
+  prizes: {
+    prizeName: string;
+    prizeDescription: string;
+  };
+
+  recruitement: {
+    positionTitle: string;
+    jobDescription: string;
+  };
+
+  freelance: {
+    projectTitle: string;
+    projectDescription: string;
+  };
+
+  internship: {
+    internshipTitle: string;
+    internshipDescription: string;
+    duration: string;
+  };
   status: string;
   startDate: string;
   endDate: string;
@@ -33,27 +52,23 @@ const Competitions: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all'); // État pour le statut sélectionné
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [challengesPerPage, setChallengesPerPage] = useState<number>(8); // Nombre de challenges par page
-    
-  const { userAuth } = useAuth();
 
+  const { userAuth } = useAuth();
 
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-
         console.log('Fetching challenges...');
         let url;
         if (userAuth?.role === 'company') {
-           url =  'http://localhost:3000/challenges/get';
-
+          url = 'http://localhost:3000/challenges/get';
         } else {
           url = 'http://localhost:3000/submissions/get/all/submission';
         }
 
-        const response = await axios.get<Challenge[]>(
-          url,
-          { withCredentials: true },
-        );
+        const response = await axios.get<Challenge[]>(url, {
+          withCredentials: true,
+        });
         console.log('Challenges response:', response);
         setChallenges(response.data);
         console.log(challenges);
@@ -83,7 +98,7 @@ const Competitions: React.FC = () => {
   }, [searchTerm]);
 
   // Fonction pour calculer le temps restant jusqu'à la fin du défi
-  const calculateTimeRemaining = (endDate: string , challengeId:any) => {
+  const calculateTimeRemaining = (endDate: string, challengeId: any) => {
     const endDateTime = new Date(endDate).getTime();
     const currentTime = new Date().getTime();
     const timeRemaining = endDateTime - currentTime;
@@ -96,8 +111,8 @@ const Competitions: React.FC = () => {
       (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
     );
 
-    if(daysRemaining <=0 && minutesRemaining <= 0 && hoursRemaining <=0){
-        handleCompleted(challengeId);
+    if (daysRemaining <= 0 && minutesRemaining <= 0 && hoursRemaining <= 0) {
+      handleCompleted(challengeId);
     }
 
     return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
@@ -144,9 +159,9 @@ const Competitions: React.FC = () => {
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStatus(e.target.value);
   };
-  const navigateToDetails = (challengeId:any) => {
+  const navigateToDetails = (challengeId: any) => {
     navigate(`/challengeDetail/${challengeId}`);
-    };
+  };
   const handleArchive = async (challengeId: string) => {
     try {
       console.log(
@@ -234,15 +249,9 @@ const Competitions: React.FC = () => {
     }
   };
 
-
-
   const handleEdit = async (challengeId: string) => {
-      navigate(`/challenge/edit/${challengeId}`)
+    navigate(`/challenge/edit/${challengeId}`);
   };
-
-
-
-
 
   // Fonction pour changer le terme de recherche
   const handleSearchTermChange = (
@@ -251,10 +260,13 @@ const Competitions: React.FC = () => {
     const searchTerm = event.target.value.toLowerCase();
     setSearchTerm(searchTerm);
 
-     filteredChallenges = currentChallenges.filter((challenge) => {
-        const titleMatch = challenge.title.toLowerCase().includes(searchTerm);
-        const priceMatch = challenge.amount.toString().toLowerCase().includes(searchTerm);
-        return titleMatch || priceMatch;
+    filteredChallenges = currentChallenges.filter((challenge) => {
+      const titleMatch = challenge.title.toLowerCase().includes(searchTerm);
+      const priceMatch = challenge.amount
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm);
+      return titleMatch || priceMatch;
     });
   };
 
@@ -285,16 +297,14 @@ const Competitions: React.FC = () => {
             {/* Liste déroulante pour sélectionner le statut */}
             <div className="flex justify-end">
               <div>
-
                 {userAuth?.role === 'company' && (
                   <button
-                  onClick={add}
-                  className="inline-flex items-center justify-center bg-transparent px-5 py-2 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                >
-                  Host a competition
-                </button>
-                ) }
-                
+                    onClick={add}
+                    className="inline-flex items-center justify-center bg-transparent px-5 py-2 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                  >
+                    Host a competition
+                  </button>
+                )}
               </div>
               <div className="col-md-2  text-end">
                 <div className="status-dropdown">
@@ -316,9 +326,8 @@ const Competitions: React.FC = () => {
             {/* Affichage des challenges filtrés */}
             <div className="row row-cols-1 row-cols-md-3 g-4  lg:justify-start sm:justify-center">
               {filteredChallenges.map((challenge, index) => (
-
                 <div className="col" key={challenge._id}>
-                  <div className="card p-3 h-100 card-hover">
+                  <div className="card p-3 h-100 card-hover cursor-pointer">
                     <div className="status-and-actions-container">
                       <div
                         className={`status inline-flex rounded-full py-1 px-3 text-sm font-medium ${
@@ -334,79 +343,77 @@ const Competitions: React.FC = () => {
                         {challenge.status}
                       </div>
 
-                      {userAuth?.role === "company" && (
-                             <div className="relative" key={challenge._id}>
-                             <button
-                               id={`dropdownMenuIconButton_${challenge._id}`}
-                               onClick={() => toggleDropdown(index)}
-                               className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                               type="button"
-                             >
-                               <svg
-                                 className="w-5 h-5"
-                                 aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor"
-                                 viewBox="0 0 16 3"
-                               >
-                                 <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                               </svg>
-                             </button>
-     
-                             {/* Dropdown menu */}
-                             <div
-                               id={`dropdownDots${challenge._id}`}
-                               className={`${openDropdowns[index] ? 'block' : 'hidden'} z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
-                             >
-                               <ul
-                                 className="py-2 text-sm text-gray-700 dark:text-gray-200 font-semibold"
-                                 aria-labelledby={`dropdownMenuIconButton_${challenge._id}`}
-                               >
-                                 <li>
-                                   <button
-                                     onClick={() => handleEdit(challenge._id)}
-                                     className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
-                                   >
-                                     Edit
-                                   </button>
-                                 </li>
-                                 <li>
-                                   <button
-                                     onClick={() => handleOpen(challenge._id)}
-                                     className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
-                                   >
-                                     Open
-                                   </button>
-                                 </li>
-                                 <li>
-                                   <button
-                                     onClick={() => handleCompleted(challenge._id)}
-                                     className="w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
-                                   >
-                                     Complete
-                                   </button>
-                                 </li>
-                               </ul>
-                               <div className="py-2">
-                                 <button
-                                  onClick={() => handleArchive(challenge._id)}
-                                   className="w-full flex justify-start px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white font-semibold"
-                                 >
-                                   Archive
-                                 </button>
-                               </div>
-                             </div>
-                           </div>
-                      )}
-                    
-                    </div>
-                    <Link to={`/challengecompany/details/${challenge._id}`} >
+                      {userAuth?.role === 'company' && (
+                        <div className="relative" key={challenge._id}>
+                          <button
+                            id={`dropdownMenuIconButton_${challenge._id}`}
+                            onClick={() => toggleDropdown(index)}
+                            className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                            type="button"
+                          >
+                            <svg
+                              className="w-5 h-5"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 16 3"
+                            >
+                              <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                            </svg>
+                          </button>
 
-                    <img
-                      src={`http://localhost:3000/images/${challenge.image}`}
-                      className="card-img-top mt-3"
-                      alt="Card image"
-                    />
+                          {/* Dropdown menu */}
+                          <div
+                            id={`dropdownDots${challenge._id}`}
+                            className={`${openDropdowns[index] ? 'block' : 'hidden'} z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600`}
+                          >
+                            <ul
+                              className="py-2 text-sm text-gray-700 dark:text-gray-200 font-semibold"
+                              aria-labelledby={`dropdownMenuIconButton_${challenge._id}`}
+                            >
+                              <li>
+                                <button
+                                  onClick={() => handleEdit(challenge._id)}
+                                  className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                >
+                                  Edit
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() => handleOpen(challenge._id)}
+                                  className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                >
+                                  Open
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() => handleCompleted(challenge._id)}
+                                  className="w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white font-semibold"
+                                >
+                                  Complete
+                                </button>
+                              </li>
+                            </ul>
+                            <div className="py-2">
+                              <button
+                                onClick={() => handleArchive(challenge._id)}
+                                className="w-full flex justify-start px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white font-semibold"
+                              >
+                                Archive
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <Link to={`/challengecompany/details/${challenge._id}`}>
+                      <img
+                        src={`http://localhost:3000/images/${challenge.image}`}
+                        className="card-img-top mt-3"
+                        alt="Card image"
+                      />
                     </Link>
 
                     <div className="card-body">
@@ -416,16 +423,34 @@ const Competitions: React.FC = () => {
                       >
                         {addEmptyLineIfNeeded(challenge.title, 40)}
                       </h5>
-                    
                     </div>
                     <div className="card-footer">
-                      <div className={`price ${challenge.status !== 'open' && 'mt-8'}`}>
-                        <strong>{challenge.amount} DT</strong>
+                      <div
+                        className={`price ${challenge.status !== 'open' && 'mt-8'}`}
+                      >
+                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.amount && 'DT'}</span>
+                        <strong className="font-semibold text-base ">
+                          {challenge.prizes.prizeName && 'Award'}
+                          {challenge.recruitement.positionTitle &&
+                            'Job Opportunity'}
+                          {challenge.freelance.projectTitle && 'Freelance Work'}
+                          {challenge.internship.internshipTitle &&
+                            'Internship Opportunity'}
+                        </strong>
+
                       </div>
                       <div className="date text-md font-medium flex flex-col">
-                        {challenge.status == 'open' && <p className='ml-12 text-red-600'>Time Left </p>}
-                        {challenge.status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(challenge.endDate , challenge._id)}</span> : null }
-                      
+                        {challenge.status == 'open' && (
+                          <p className="ml-12 text-red-600">Time Left </p>
+                        )}
+                        {challenge.status == 'open' ? (
+                          <span className="text-sm">
+                            {calculateTimeRemaining(
+                              challenge.endDate,
+                              challenge._id,
+                            )}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                   </div>

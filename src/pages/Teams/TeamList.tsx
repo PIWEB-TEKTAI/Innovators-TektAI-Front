@@ -171,10 +171,8 @@ import ClientLayout from '../../layout/clientLayout';
 
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
-import CreateTeamForm from '../Challenges/createTeamForm';
-import TeamSelectionModal from '../Challenges/teamSelectionModal';
+
 import CreateTeamModal from './CreateTeamModal';
-import { challenge } from '../../types/challenge';
 const TeamList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -197,10 +195,7 @@ const TeamList: React.FC = () => {
   }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
 
   const fetchData = () => {
-    const requestOptions =
-      selectedRole === 'MyChallenge' && userAuth?.role === 'company'
-        ? { withCredentials: true }
-        : {};
+  
     axios
       .get<any[]>('http://localhost:3000/teams/front/all')
       .then((response) => {
@@ -319,7 +314,7 @@ const TeamList: React.FC = () => {
 
             <div className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {filteredCards.map((card, index) => (
-                <Link key={index} to={`/challenge/details/${card._id}`}>
+                <Link key={index} to={`/teamDetails/${card._id}`}>
                   <Card key={index} {...card} />
                 </Link>
               ))}

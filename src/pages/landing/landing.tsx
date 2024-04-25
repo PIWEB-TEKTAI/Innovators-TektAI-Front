@@ -2,12 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
-import {
-  faChartLine,
-  faEuro,
-  faLineChart,
-  faTimeline,
-} from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faTrophy } from '@fortawesome/free-solid-svg-icons';
 interface CardProps {
   title: string;
   imageSrc: string;
@@ -166,6 +161,26 @@ interface Challenge {
   title: string;
   description: string;
   amount: string;
+  prizes: {
+    prizeName: string;
+    prizeDescription: string;
+  };
+
+  recruitement: {
+    positionTitle: string;
+    jobDescription: string;
+  };
+
+  freelance: {
+    projectTitle: string;
+    projectDescription: string;
+  };
+
+  internship: {
+    internshipTitle: string;
+    internshipDescription: string;
+    duration: string;
+  };
   image: string;
   status: 'open' | 'completed' | 'archived';
   startDate: Date;
@@ -196,12 +211,15 @@ const Landing: React.FC = () => {
     image,
     description,
     amount,
+    prizes,
+    recruitement,
+    freelance,
+    internship,
     status,
     startDate,
     endDate,
     createdBy,
     targetedSkills,
-    
   }) => {
     const [selectedChallenge, setSelectedChallenge] =
       useState<Challenge | null>(null);
@@ -278,11 +296,19 @@ const Landing: React.FC = () => {
         <hr className="my-2 border-gray-300" />
 
         <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
-          <FontAwesomeIcon icon={faEuro} className="text-green-500" />
-          <span className="font-semibold">Price: {amount} DT</span>
+          <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
+          <span className='font-semibold'>Prize : </span>
+          <span className="font-semibold ">
+              {amount} {amount && 'DT'}
+              {prizes.prizeName && 'Award'}
+              {recruitement.positionTitle && 'Job Opportunity'}
+              {freelance.projectTitle && 'Freelance Work'}
+              {internship.internshipTitle && 'Internship Opportunity'}
+          </span>
+          
         </div>
 
-        <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
+        <div className="flex items-center mt-3 space-x-4 text-gray-700 dark:text-gray-300">
           <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />{' '}
           <span className="font-semibold">Status : </span>
           <span
@@ -616,8 +642,6 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-    
-
       {userAuth?.role === 'challenger' && (
         <section className="bg-white dark:bg-gray-900">
           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
@@ -635,26 +659,25 @@ const Landing: React.FC = () => {
             </div>
 
             <div className="flex flex-col mt-12 lg:flex-row lg:justify-around cursor-pointer">
-
-            <Link to={'/TeamList'}>
-              <div className="card-design rounded-lg p-5 bg-gray-100 flex flex-col items-center mb-8 lg:mb-0">
-                <img
-                  src="/src/images/landing/TeamBlue2.png"
-                  alt="joinTeam"
-                  className="w-20"
-                />
-                <h2 className="mt-4 text-2xl font-semibold text-primary">
-                  Join or Create a Team
-                </h2>
-                <p className="mt-2 text-center text-gray-500 lg:mx-auto lg:max-w-sm lg:text-lg dark:text-gray-400">
-                  Joining or creating a team is your chance to connect with others and
-                  tackle challenges together. Join a team now and start your
-                  journey of collaboration and success.
-                </p>
-              </div>
+              <Link to={'/TeamList'}>
+                <div className="card-design rounded-lg p-5 bg-gray-100 flex flex-col items-center mb-8 lg:mb-0">
+                  <img
+                    src="/src/images/landing/TeamBlue2.png"
+                    alt="joinTeam"
+                    className="w-20"
+                  />
+                  <h2 className="mt-4 text-2xl font-semibold text-primary">
+                    Join or create a Team
+                  </h2>
+                  <p className="mt-2 text-center text-gray-500 lg:mx-auto lg:max-w-sm lg:text-lg dark:text-gray-400">
+                    Joining or creating a team is your chance to connect with
+                    others and tackle challenges together. Join a team now and
+                    start your journey of collaboration and success.
+                  </p>
+                </div>
               </Link>
 
-            {/* <Link to={'/TeamList'}>
+              {/* <Link to={'/TeamList'}>
               <div className="card-design p-5 bg-gray-200 flex flex-col items-center cursor-pointer">
                 <img
                   src="/src/images/landing/createTeam.png"
@@ -671,23 +694,24 @@ const Landing: React.FC = () => {
                 </p>
               </div>
       </Link>*/}
-      </div>
-
-
+            </div>
           </div>
         </section>
       )}
 
-      <section className={userAuth?.role === 'challenger' ? "bg-gray-100 bg-opacity-85 dark:bg-gray-800" : "bg-white bg-opacity-85 dark:bg-gray-800"}>
+      <section
+        className={
+          userAuth?.role === 'challenger'
+            ? 'bg-gray-100 bg-opacity-85 dark:bg-gray-800'
+            : 'bg-white bg-opacity-85 dark:bg-gray-800'
+        }
+      >
         <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
-        <RevealOnScroll delay=''>
-          <ChallengeStatistics />
-
-       </RevealOnScroll>
-
+          <RevealOnScroll delay="">
+            <ChallengeStatistics />
+          </RevealOnScroll>
         </div>
       </section>
-
 
       <section className="bg-gray-200">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">

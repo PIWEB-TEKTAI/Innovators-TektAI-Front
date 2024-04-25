@@ -56,6 +56,7 @@ import Preferences from './pages/Profile/Preferences';
 import MyInvitations from './pages/Teams/MyInvitations';
 import TeamDetails from './pages/Teams/teamDetails';
 import MyTeams from './pages/Teams/MyTeams';
+import TeamsDetails from './pages/Teams/teamsDetails';
 
 
 
@@ -551,6 +552,17 @@ function App() {
             <>
               <PageTitle title=" Team List | TektAi" />
               <TeamList/>
+            </>
+          }
+        />
+
+
+        <Route
+          path="/teamDetails/:id"
+          element={
+            <>
+              <PageTitle title=" Team Details | TektAi" />
+              <TeamsDetails/>
             </>
           }
         />

@@ -80,6 +80,13 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
             type: "info",
             message: msg
         });
+      }else if (eventName === "newParticipationRequestTeam" && userAuth?._id === eventData.idUser) {
+        console.log('new Participation Request Team:', eventData.name);
+        let msg = `${toTitleCase(eventData.name)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
       }
     });
 

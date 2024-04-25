@@ -3,9 +3,7 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
-import {
-  faEuro,
-} from '@fortawesome/free-solid-svg-icons';
+import { faEuro, faTrophy } from '@fortawesome/free-solid-svg-icons';
 interface CardProps {
   title: string;
   imageSrc: string;
@@ -41,6 +39,26 @@ interface Challenge {
   title: string;
   description: string;
   amount: string;
+  prizes: {
+    prizeName: string;
+    prizeDescription: string;
+  };
+
+  recruitement: {
+    positionTitle: string;
+    jobDescription: string;
+  };
+
+  freelance: {
+    projectTitle: string;
+    projectDescription: string;
+  };
+
+  internship: {
+    internshipTitle: string;
+    internshipDescription: string;
+    duration: string;
+  };
   image: string;
   status: 'open' | 'completed' | 'archived';
   startDate: Date;
@@ -100,7 +118,6 @@ const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
   );
 };
 
-
 interface ChallengeModalProps {
   challenge: Challenge;
   onClose: () => void;
@@ -113,6 +130,10 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   image,
   description,
   amount,
+  prizes,
+  recruitement,
+  freelance,
+  internship,
   status,
   startDate,
   endDate,
@@ -177,7 +198,6 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
             />
           </div>
           <div>
-           
             <hr className="my-2 border-gray-300" />
             <span className="font-semibold">Description</span>
             <p className="text-gray-700 dark:text-gray-300">{description}</p>
@@ -201,8 +221,16 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
               ))}
             </div>
             <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
-              <FontAwesomeIcon icon={faEuro} className="text-green-500" />
-              <span className="font-semibold">Price: {amount} DT</span>
+              <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
+              <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
+              <span className="font-semibold">Prize : </span>
+              <span className="font-semibold ">
+                {amount} {amount && 'DT'}
+                {prizes.prizeName && 'Award'}
+                {recruitement.positionTitle && 'Job Opportunity'}
+                {freelance.projectTitle && 'Freelance Work'}
+                {internship.internshipTitle && 'Internship Opportunity'}
+              </span>
             </div>
             <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
               <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />
@@ -251,8 +279,8 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   };
 
   const [showDetails, setShowDetails] = useState(false);
-  
-  const calculateTimeRemaining = (endDate: string , challengeId:any) => {
+
+  const calculateTimeRemaining = (endDate: string, challengeId: any) => {
     const endDateTime = new Date(endDate).getTime();
     const currentTime = new Date().getTime();
     const timeRemaining = endDateTime - currentTime;
@@ -265,23 +293,21 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
     );
 
-    if(daysRemaining <=0 && minutesRemaining <= 0 && hoursRemaining <=0){
-      selectedChallenge?.status ==='completed'
+    if (daysRemaining <= 0 && minutesRemaining <= 0 && hoursRemaining <= 0) {
+      selectedChallenge?.status === 'completed';
     }
 
-    
-    if(daysRemaining <=0 && minutesRemaining <= 0 && hoursRemaining <=0){
+    if (daysRemaining <= 0 && minutesRemaining <= 0 && hoursRemaining <= 0) {
       handleCompleted(challengeId);
     }
-   
+
     return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
   };
 
-
-   // Fonction pour marquer un challenge comme terminé
-   const handleCompleted = async (challengeId: string) => {
+  // Fonction pour marquer un challenge comme terminé
+  const handleCompleted = async (challengeId: string) => {
     try {
-      console.log(selectedChallenge)
+      console.log(selectedChallenge);
       await axios.put(
         `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
         { status: 'completed' },
@@ -290,20 +316,20 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
 
       console.log('PUT request successful for challenge ID:', challengeId);
 
-      const updatedChallenges = selectedChallenge && selectedChallenge.map((challenge:any) => {
-        if (challenge._id === challengeId) {
-          return { ...challenge, status: 'completed' };
-        }
-        return challenge;
-      });
+      const updatedChallenges =
+        selectedChallenge &&
+        selectedChallenge.map((challenge: any) => {
+          if (challenge._id === challengeId) {
+            return { ...challenge, status: 'completed' };
+          }
+          return challenge;
+        });
 
       setSelectedChallenge(updatedChallenges);
     } catch (error) {
       console.error('Error completing challenge:', error);
     }
   };
-
-  
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -313,8 +339,6 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       className="bg-white  rounded-lg shadow-lg p-6 flex flex-col items-start h-full"
       onClick={toggleDetails}
     >
-
-      
       <div className="flex items-center justify-between gap-8 mb-4 ">
         <img
           src={`http://localhost:3000/images/${image}`}
@@ -326,26 +350,38 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
           <h3 className="text-xl font-bold text-black dark:text-white capitalize">
             {title}
           </h3>
-          <div className='font-medium mt-2'>
-            {status == 'open' && <p className=' text-red-600'>Time Left </p>}
-            {status == 'open' ?  <span className='text-sm'>{calculateTimeRemaining(endDate.toString() , _id )}</span> : null }       
+          <div className="font-medium mt-2">
+            {status == 'open' && <p className=" text-red-600">Time Left </p>}
+            {status == 'open' ? (
+              <span className="text-sm">
+                {calculateTimeRemaining(endDate.toString(), _id)}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
 
-    
       <hr className="my-2 border-gray-300" />
       <span className="font-semibold">Description </span>
 
-      <p className="text-gray-700 dark:text-gray-300 break-words:::">{description.substring(0,70)}... </p>
+      <p className="text-gray-700 dark:text-gray-300 break-words:::">
+        {description.substring(0, 70)}...{' '}
+      </p>
       <hr className="my-2 border-gray-300" />
-   
+
       <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
-        <FontAwesomeIcon icon={faEuro} className="text-green-500" />
-        <span className="font-semibold">Price: {amount} DT</span>
+        <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
+        <span className="font-semibold">Prize : </span>
+              <span className="font-semibold ">
+                {amount} {amount && 'DT'}
+                {prizes.prizeName && 'Award'}
+                {recruitement.positionTitle && 'Job Opportunity'}
+                {freelance.projectTitle && 'Freelance Work'}
+                {internship.internshipTitle && 'Internship Opportunity'}
+              </span>
       </div>
 
-      <div className="flex items-center mt-2 space-x-4 text-gray-700 dark:text-gray-300">
+      <div className="flex items-center mt-3 space-x-4 text-gray-700 dark:text-gray-300">
         <FontAwesomeIcon icon={faChartLine} className="text-blue-500" />{' '}
         <span className="font-semibold">Status : </span>
         <span
@@ -381,6 +417,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
+import { FaTrophy } from 'react-icons/fa';
 const ListChallengerFront: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -397,17 +434,20 @@ const ListChallengerFront: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
 
-
   useEffect(() => {
     fetchData();
     console.log(cardsData); // Vérifiez les données après chaque mise à jour
   }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
 
   const fetchData = () => {
-    const requestOptions = selectedRole === 'MyChallenge' && userAuth?.role === 'company'  ? { withCredentials: true } : {};
+    const requestOptions =
+      selectedRole === 'MyChallenge' && userAuth?.role === 'company'
+        ? { withCredentials: true }
+        : {};
     axios
       .get<Challenge[]>(
-        `http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`, requestOptions
+        `http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`,
+        requestOptions,
       )
       .then((response) => {
         console.log(response.data);
@@ -425,94 +465,151 @@ const ListChallengerFront: React.FC = () => {
     card.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-
   const { userAuth } = useAuth();
 
   return (
     <ClientLayout>
-       <RevealOnScroll additionalProp={false} delay="">
-      <section className="bg-white dark:bg-gray-900">
-        <div className="grid max-w-screen-xl h-80 px-4 py-3 mx-auto lg:gap-8 xl:gap-0 lg:py-8 lg:grid-cols-12">
-          <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
-            <h1 className="max-w-2xl mb-4 text-black text-3xl font-extrabold tracking-tight leading-none md:text-3xl xl:text-3xl dark:text-white">
-              <span className="animated-text">C</span>
-              <span className="animated-text" style={{animationDelay: '0.1s'}}>o</span>
-              <span className="animated-text" style={{animationDelay: '0.2s'}}>m</span>
-              <span className="animated-text" style={{animationDelay: '0.3s'}}>p</span>
-              <span className="animated-text" style={{animationDelay: '0.4s'}}>e</span>
-              <span className="animated-text" style={{animationDelay: '0.5s'}}>t</span>
-              <span className="animated-text" style={{animationDelay: '0.6s'}}>i</span>
-              <span className="animated-text" style={{animationDelay: '0.7s'}}>t</span>
-              <span className="animated-text" style={{animationDelay: '0.8s'}}>i</span>
-              <span className="animated-text" style={{animationDelay: '0.9s'}}>o</span>
-              <span className="animated-text" style={{animationDelay: '1s'}}>n</span>
-              <span className="animated-text" style={{animationDelay: '1.1s'}}>s</span>
-              <br />
-            
-
-           
-            </h1>
-            <p className="max-w-xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-            Grow your data science skills by competing in our exciting competitions. Find help in the documentation or learn about Community Competitions.
-            </p>
-            <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-            {userAuth?.role !== 'challenger'  && (
-              <a href={userAuth?.role === 'company' ? "/challenge/add" : "/auth/signin"}
-              className="inline-flex items-center justify-center bg-transparent px-5 py-3 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800">
-                Host a competition
-              </a> 
-            )}
+      <RevealOnScroll additionalProp={false} delay="">
+        <section className="bg-white dark:bg-gray-900">
+          <div className="grid max-w-screen-xl h-80 px-4 py-3 mx-auto lg:gap-8 xl:gap-0 lg:py-8 lg:grid-cols-12">
+            <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
+              <h1 className="max-w-2xl mb-4 text-black text-3xl font-extrabold tracking-tight leading-none md:text-3xl xl:text-3xl dark:text-white">
+                <span className="animated-text">C</span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.1s' }}
+                >
+                  o
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.2s' }}
+                >
+                  m
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  p
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  e
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.5s' }}
+                >
+                  t
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.6s' }}
+                >
+                  i
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.7s' }}
+                >
+                  t
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.8s' }}
+                >
+                  i
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '0.9s' }}
+                >
+                  o
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '1s' }}
+                >
+                  n
+                </span>
+                <span
+                  className="animated-text"
+                  style={{ animationDelay: '1.1s' }}
+                >
+                  s
+                </span>
+                <br />
+              </h1>
+              <p className="max-w-xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                Grow your data science skills by competing in our exciting
+                competitions. Find help in the documentation or learn about
+                Community Competitions.
+              </p>
+              <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                {userAuth?.role !== 'challenger' && (
+                  <a
+                    href={
+                      userAuth?.role === 'company'
+                        ? '/challenge/add'
+                        : '/auth/signin'
+                    }
+                    className="inline-flex items-center justify-center bg-transparent px-5 py-3 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                  >
+                    Host a competition
+                  </a>
+                )}
+              </div>
             </div>
-            
+            <div className="hidden ml-auto lg:col-span-5 lg:flex animate__animated animate__fadeInRight">
+              <img
+                src="/src/images/landing/competition.jpg"
+                alt="mockup"
+                className="h-60 w-95"
+              />
+            </div>
           </div>
-          <div className="hidden ml-auto lg:col-span-5 lg:flex animate__animated animate__fadeInRight">
-            <img src="/src/images/landing/competition.jpg" alt="mockup" className='h-60 w-95'/>
-          </div>   
-
-        </div>
-      </section>
-    </RevealOnScroll>
+        </section>
+      </RevealOnScroll>
       <section className=" bg-opacity-85 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
           <RevealOnScroll delay="">
-           
-            
             <div className="flex flex-col sm:flex-row items-center gap-2 bg-white border border-gray-300 rounded-full p-2 focus-within:border-blue-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-400 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.5 2a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15zm8.854 14.146a1 1 0 0 1-1.414 1.414l-3.541-3.541a7 7 0 1 1 1.414-1.414l3.541 3.541zM9.5 14a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Search challenges..."
-                  className="appearance-none bg-transparent border-none focus:outline-none flex-1 text-gray-700 w-full sm:w-auto"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.5 2a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15zm8.854 14.146a1 1 0 0 1-1.414 1.414l-3.541-3.541a7 7 0 1 1 1.414-1.414l3.541 3.541zM9.5 14a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"
                 />
-                <select
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
-                  className="bg-white border-none rounded-lg p-2 focus:outline-none w-full sm:w-auto"
-                >
-                  <option value="">All challenges</option>
-                  {userAuth?.role === "company" && ( <option value="MyChallenge">My challenges</option>)}
-                  <option value="OpenedChallenge">Open challenges</option>
-                  <option value="completedChallenge">
-                    completed challenges
-                  </option>
-                </select>
-              </div>
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search challenges..."
+                className="appearance-none bg-transparent border-none focus:outline-none flex-1 text-gray-700 w-full sm:w-auto"
+              />
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+                className="bg-white border-none rounded-lg p-2 focus:outline-none w-full sm:w-auto"
+              >
+                <option value="">All challenges</option>
+                {userAuth?.role === 'company' && (
+                  <option value="MyChallenge">My challenges</option>
+                )}
+                <option value="OpenedChallenge">Open challenges</option>
+                <option value="completedChallenge">completed challenges</option>
+              </select>
+            </div>
 
             <div className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              
-
               {filteredCards.map((card, index) => (
                 <Link key={index} to={`/challenge/details/${card._id}`}>
                   <Card key={index} {...card} />

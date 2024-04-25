@@ -30,10 +30,12 @@ import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import TeamSelectionModal from './teamSelectionModal';
 import Discussion from './discussion';
+import { challenge } from '../../types/challenge';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
 
+  const [step, setStep] = useState(1);
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
@@ -41,6 +43,44 @@ const AddSubmissionForm: React.FC = () => {
 
   const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
   const [DataSetFileError, setDataSetFileError] = useState('');
+
+
+  const [Output, setOutput] = useState('');
+  const [OutputError, setOutputError] = useState('');
+
+
+  const [presentationFile, setPresentationFile] = useState<string | Blob>('');
+  const [presentationFileError, setPresentationFileError] = useState('');
+
+  const [presentationFileName, setPresentationFileName] = useState('');
+  
+
+  const [codeSourceFile, setCodeSourceFile] = useState<string | Blob>('');
+  const [CodeSourceFileError, setCodeSourceFileError] = useState('');
+  const [codeSourceFileName, setCodeSourceFileName] = useState('');
+
+
+  const [readMeFile, setReadMeFileFile] = useState<string | Blob>('');
+  const [readMeFileError, setReadMeFileFileError] = useState('');
+
+  const [readmeFileName, setReadmeFileName] = useState('');
+
+
+  const [reportFile, setReportFile] = useState<string | Blob>('');
+  const [ReportFileError, setReportFileError] = useState('');
+  const [reportFileName, setReportFileName] = useState('');
+
+
+
+  const [demoFile, setDemoFile] = useState<string | Blob>('');
+  const [DemoError, setDemoError] = useState('');
+  const [demoFileName, setDemoFileName] = useState('');
+
+
+
+
+  const [challengeData,setChallengeData] = useState<challenge>();
+
 
   const [FileName, setFileName] = useState('');
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
@@ -68,6 +108,13 @@ const AddSubmissionForm: React.FC = () => {
       } else {
         setDataSetFileError('');
       }
+    }else if (name == 'output') {
+      setOutput(value);
+      if (!value.trim()) {
+        setOutputError('Output is required');
+      } else {
+        setOutputError('');
+      }
     }
   };
   const isFormValid = () => {
@@ -75,9 +122,8 @@ const AddSubmissionForm: React.FC = () => {
       title !== '' &&
       description !== '' &&
       titleError === '' &&
-      descriptionError === '' &&
-      DataSetFile !== '' &&
-      DataSetFileError === ''
+      descriptionError === '' 
+    
     );
   };
   const handleFileChange = (e: any) => {
@@ -90,7 +136,88 @@ const AddSubmissionForm: React.FC = () => {
       setDataSetFileError('');
     }
   };
-  const navigate = useNavigate();
+
+  const handlePresentationFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setPresentationFile(file);
+    setPresentationFileName(file.name);
+    if (!file) {
+      setPresentationFileError('File is required');
+    } else {
+      setPresentationFileError('');
+    }
+  };
+
+  const handleSourceCodeFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setCodeSourceFile(file);
+    setCodeSourceFileName(file.name);
+    if (!file) {
+      setCodeSourceFileError('File is required');
+    } else {
+      setCodeSourceFileError('');
+    }
+  };
+
+
+  const handleReadMeFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setReadMeFileFile(file);
+    setReadmeFileName(file.name);
+    if (!file) {
+      setReadMeFileFileError('File is required');
+    } else {
+      setReadMeFileFileError('');
+    }
+  };
+
+
+  const handleReportFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setReportFile(file);
+    setReportFileName(file.name);
+    if (!file) {
+      setReportFileError('File is required');
+    } else {
+      setReportFileError('');
+    }
+  };
+
+
+  const handleDemoFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setDemoFile(file);
+    setDemoFileName(file.name);
+    if (!file) {
+      setDemoError('File is required');
+    } else {
+      setDemoError('');
+    }
+  };
+
+  
+  const fetchChallengeDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/challenge/${id}`);
+      setChallengeData(response.data);
+    } catch (error) {
+      console.error('Error fetching challenge details:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChallengeDetails();
+  }, [id]);
+
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -100,7 +227,13 @@ const AddSubmissionForm: React.FC = () => {
       {
         title: title,
         description: description,
-        file: DataSetFile,
+        output:Output,
+        datasetFile:DataSetFile,
+        presentationFile:presentationFile,
+        codeSourceFile: codeSourceFile,
+        reportFile:reportFile,
+        demoFile:demoFile,
+        readMeFile:readMeFile,
       },
       id,
     )
@@ -130,74 +263,256 @@ const AddSubmissionForm: React.FC = () => {
 
       <div className="flex w-full p-1 flex-col  gap-1 border-full">
         {/* Content for Step 1 */}
-        <div className="">
-          <label className="mb-2.5 font-medium block text-black dark:text-white">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            placeholder="Enter the title of your competition"
-            onChange={(e) => checkValidity('title', e.target.value)}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-          />
-          {titleError && (
-            <p className="text-red-500 text-sm mt-1">{titleError}</p>
-          )}
-        </div>
+       {step === 1 ? (
 
-        <div>
-          <label className="mb-2.5 font-medium  block text-black dark:text-white">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={description}
-            rows={1}
-            placeholder="Enter the description of your competition"
-            onChange={(e) => checkValidity('description', e.target.value)}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-          ></textarea>
-          {descriptionError && (
-            <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
-          )}
-        </div>
-
-        <div>
           <div>
-            <label className="mb-3 block font-medium text-black dark:text-white">
-              Attach submission file
-            </label>
-            <div className="relative overflow-hidden">
-              <input
-                type="file"
-                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                id="customFile"
-                name="file"
-                onChange={handleFileChange}
-              />
-              <label
-                className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                htmlFor="customFile"
-              >
-                {FileName ? FileName : 'Upload submission file'}
+             <div>
+               <label className="mb-2.5 font-medium block text-black dark:text-white">
+                 Title
+               </label>
+               <input
+                 type="text"
+                 name="title"
+                 value={title}
+                 placeholder="Enter the title of your submission"
+                 onChange={(e) => checkValidity('title', e.target.value)}
+                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+               />
+               {titleError && (
+                 <p className="text-red-500 text-sm mt-1">{titleError}</p>
+               )}
+             </div>
+     
+             <div>
+               <label className="mt-3 mb-2.5 font-medium  block text-black dark:text-white">
+                 Description
+               </label>
+               <textarea
+                 name="description"
+                 value={description}
+                 rows={1}
+                 placeholder="Enter the description of your submittion"
+                 onChange={(e) => checkValidity('description', e.target.value)}
+                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+               ></textarea>
+               {descriptionError && (
+                 <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
+               )}
+             </div>
+
+             {challengeData?.bareme.output && (
+            <div>
+              <label className=" mb-2.5 font-medium  block text-black dark:text-white">
+                Output
               </label>
-              {DataSetFileError && (
-                <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
+              <input
+                type='text'
+                name="output"
+                value={Output}
+                placeholder="Enter the output of your submission"
+                onChange={(e) => checkValidity('output', e.target.value)}
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+              ></input>
+              {OutputError && (
+                <p className="text-red-500 text-sm mt-1">{OutputError}</p>
               )}
             </div>
+          )}
+
+          {challengeData?.bareme.presentation && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach presentation file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handlePresentationFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {presentationFileName ? presentationFileName : 'Upload presentation file'}
+                </label>
+                {presentationFileError && (
+                  <p className="text-red-500 text-sm mt-1">{presentationFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+     
           </div>
-        </div>
+       ) : (
+        <div>          
+          {challengeData?.bareme.codeSource && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach source code file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleSourceCodeFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {codeSourceFileName ? codeSourceFileName : 'Upload source code file'}
+                </label>
+                {CodeSourceFileError && (
+                  <p className="text-red-500 text-sm mt-1">{CodeSourceFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {challengeData?.bareme.dataSet && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach dataset file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {FileName ? FileName : 'Upload dataset file'}
+                </label>
+                {DataSetFileError && (
+                  <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          
+          {challengeData?.bareme.readmeFile && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach README file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleReadMeFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {readmeFileName ? readmeFileName : 'Upload README file'}
+                </label>
+                {readMeFileError && (
+                  <p className="text-red-500 text-sm mt-1">{readMeFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {challengeData?.bareme.rapport && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach detailed report file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleReportFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {reportFileName ? reportFileName : 'Upload detailed report file'}
+                </label>
+                {ReportFileError && (
+                  <p className="text-red-500 text-sm mt-1">{ReportFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+             
+          {challengeData?.bareme.Demo && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach demonstration file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleDemoFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {demoFileName ? demoFileName : 'Upload demonstration report file'}
+                </label>
+                {DemoError && (
+                  <p className="text-red-500 text-sm mt-1">{DemoError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+      </div>
+       )} 
+     
+    
         {/* Navigation buttons */}
-        <div className="flex justify-end">
-          <button
-            className="rounded bg-primary p-3  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+        <div className="flex justify-between">
+          { step === 2 && (
+               <button
+               className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+               onClick={prevStep}
+             >
+               back
+             </button>
+          )}
+        
+          {step === 1 ? (
+               <button
+               className="rounded bg-primary p-2 px-4 ml-auto text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+               onClick={nextStep}
+               disabled={!isFormValid()}
+             >
+               next
+             </button>
+          ): (
+            <button
+            className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
             onClick={handleSubmit}
             disabled={!isFormValid()}
           >
             Submit
           </button>
+          )}
+         
         </div>
       </div>
     </div>
@@ -212,6 +527,42 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
 
   const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
   const [DataSetFileError, setDataSetFileError] = useState('');
+
+  const [step, setStep] = useState(1);
+
+
+  const [Output, setOutput] = useState('');
+  const [OutputError, setOutputError] = useState('');
+
+
+  const [presentationFile, setPresentationFile] = useState<string | Blob>('');
+  const [presentationFileError, setPresentationFileError] = useState('');
+
+  const [presentationFileName, setPresentationFileName] = useState('');
+  
+
+  const [codeSourceFile, setCodeSourceFile] = useState<string | Blob>('');
+  const [CodeSourceFileError, setCodeSourceFileError] = useState('');
+  const [codeSourceFileName, setCodeSourceFileName] = useState('');
+
+
+  const [readMeFile, setReadMeFileFile] = useState<string | Blob>('');
+  const [readMeFileError, setReadMeFileFileError] = useState('');
+
+  const [readmeFileName, setReadmeFileName] = useState('');
+
+
+  const [reportFile, setReportFile] = useState<string | Blob>('');
+  const [ReportFileError, setReportFileError] = useState('');
+  const [reportFileName, setReportFileName] = useState('');
+
+
+
+  const [demoFile, setDemoFile] = useState<string | Blob>('');
+  const [DemoError, setDemoError] = useState('');
+  const [demoFileName, setDemoFileName] = useState('');
+
+  const [challengeDetailsData,setChallengeDetailsData] = useState<challenge>();
 
   const [FileName, setFileName] = useState('');
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
@@ -233,11 +584,13 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       } else {
         setDescriptionError('');
       }
-    } else if (name == 'dataSetFile') {
+    
+    }else if (name == 'output') {
+      setOutput(value);
       if (!value.trim()) {
-        setDataSetFileError('File is required');
+        setOutputError('Output is required');
       } else {
-        setDataSetFileError('');
+        setOutputError('');
       }
     }
   };
@@ -249,7 +602,14 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
         console.log(data);
         setTitle(data?.title || '');
         setDescription(data?.description || '');
-        setFileName(data?.files[0].name);
+        setOutput(data?.output || '')
+        setFileName(data?.datasetFile.name || '');
+        setPresentationFileName(data?.presentationFile.name || '');
+        setReportFileName(data?.reportFile.name);
+        setCodeSourceFileName(data?.codeSourceFile.name);
+        setReadmeFileName(data?.readMeFile.name);
+        setDemoFileName(data?.demoFile.name);
+
       } catch (error) {
         console.error('Error fetching submission data:', error);
       }
@@ -263,9 +623,7 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       title !== '' &&
       description !== '' &&
       titleError === '' &&
-      descriptionError === '' &&
-      DataSetFile !== '' &&
-      DataSetFileError === ''
+      descriptionError === '' 
     );
   };
   const handleFileChange = (e: any) => {
@@ -279,7 +637,91 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setDataSetFileError('');
     }
   };
-  const navigate = useNavigate();
+
+
+  
+
+  const handlePresentationFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setPresentationFile(file);
+    setPresentationFileName(file.name);
+    if (!file) {
+      setPresentationFileError('File is required');
+    } else {
+      setPresentationFileError('');
+    }
+  };
+
+  const handleSourceCodeFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setCodeSourceFile(file);
+    setCodeSourceFileName(file.name);
+    if (!file) {
+      setCodeSourceFileError('File is required');
+    } else {
+      setCodeSourceFileError('');
+    }
+  };
+
+
+  const handleReadMeFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setReadMeFileFile(file);
+    setReadmeFileName(file.name);
+    if (!file) {
+      setReadMeFileFileError('File is required');
+    } else {
+      setReadMeFileFileError('');
+    }
+  };
+
+
+  const handleReportFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setReportFile(file);
+    setReportFileName(file.name);
+    if (!file) {
+      setReportFileError('File is required');
+    } else {
+      setReportFileError('');
+    }
+  };
+
+
+  const handleDemoFileChange = (e: any) => {
+    const file = e.target.files[0];
+    setDemoFile(file);
+    setDemoFileName(file.name);
+    if (!file) {
+      setDemoError('File is required');
+    } else {
+      setDemoError('');
+    }
+  };
+
+
+  const fetchChallengeDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/challenge/${id}`);
+      setChallengeDetailsData(response.data);
+    } catch (error) {
+      console.error('Error fetching challenge details:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChallengeDetails();
+  }, [id]);
+
+
+  const nextStep = () => {
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -289,7 +731,13 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       {
         title: title,
         description: description,
-        file: DataSetFile,
+        output:Output,
+        datasetFile:DataSetFile,
+        presentationFile:presentationFile,
+        codeSourceFile: codeSourceFile,
+        reportFile:reportFile,
+        demoFile:demoFile,
+        readMeFile:readMeFile,
       },
       id,
     )
@@ -320,73 +768,256 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
 
       <div className="flex w-full p-1 flex-col  gap-1 border-full">
         {/* Content for Step 1 */}
-        <div className="">
-          <label className="mb-2.5 font-medium block text-black dark:text-white">
-            Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            placeholder="Enter the title of your competition"
-            onChange={(e) => checkValidity('title', e.target.value)}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-          />
-          {titleError && (
-            <p className="text-red-500 text-sm mt-1">{titleError}</p>
-          )}
-        </div>
+       {step === 1 ? (
 
-        <div>
-          <label className="mb-2.5 font-medium  block text-black dark:text-white">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={description}
-            rows={1}
-            placeholder="Enter the description of your competition"
-            onChange={(e) => checkValidity('description', e.target.value)}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-          ></textarea>
-          {descriptionError && (
-            <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
-          )}
-        </div>
-
-        <div>
           <div>
-            <label className="mb-3 block font-medium text-black dark:text-white">
-              Attach submission file
-            </label>
-            <div className="relative overflow-hidden">
-              <input
-                type="file"
-                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                id="customFile"
-                name="file"
-                onChange={handleFileChange}
-              />
-              <label
-                className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                htmlFor="customFile"
-              >
-                {FileName ? FileName : 'Upload submission file'}
+             <div>
+               <label className="mb-2.5 font-medium block text-black dark:text-white">
+                 Title
+               </label>
+               <input
+                 type="text"
+                 name="title"
+                 value={title}
+                 placeholder="Enter the title of your submission"
+                 onChange={(e) => checkValidity('title', e.target.value)}
+                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+               />
+               {titleError && (
+                 <p className="text-red-500 text-sm mt-1">{titleError}</p>
+               )}
+             </div>
+     
+             <div>
+               <label className="mt-3 mb-2.5 font-medium  block text-black dark:text-white">
+                 Description
+               </label>
+               <textarea
+                 name="description"
+                 value={description}
+                 rows={1}
+                 placeholder="Enter the description of your submittion"
+                 onChange={(e) => checkValidity('description', e.target.value)}
+                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+               ></textarea>
+               {descriptionError && (
+                 <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
+               )}
+             </div>
+
+             {Output && (
+            <div>
+              <label className=" mb-2.5 font-medium  block text-black dark:text-white">
+                Output
               </label>
-              {DataSetFileError && (
-                <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
+              <input
+                type='text'
+                name="output"
+                value={Output}
+                placeholder="Enter the output of your submission"
+                onChange={(e) => checkValidity('output', e.target.value)}
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+              ></input>
+              {OutputError && (
+                <p className="text-red-500 text-sm mt-1">{OutputError}</p>
               )}
             </div>
+          )}
+
+          {presentationFileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach presentation file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handlePresentationFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {presentationFileName ? presentationFileName : 'Upload presentation file'}
+                </label>
+                {presentationFileError && (
+                  <p className="text-red-500 text-sm mt-1">{presentationFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+     
           </div>
-        </div>
+       ) : (
+        <div>          
+          {codeSourceFileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach source code file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleSourceCodeFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {codeSourceFileName ? codeSourceFileName : 'Upload source code file'}
+                </label>
+                {CodeSourceFileError && (
+                  <p className="text-red-500 text-sm mt-1">{CodeSourceFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {FileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach dataset file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {FileName ? FileName : 'Upload dataset file'}
+                </label>
+                {DataSetFileError && (
+                  <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          
+          {readmeFileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach README file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleReadMeFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {readmeFileName ? readmeFileName : 'Upload README file'}
+                </label>
+                {readMeFileError && (
+                  <p className="text-red-500 text-sm mt-1">{readMeFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {reportFileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach detailed report file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleReportFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {reportFileName ? reportFileName : 'Upload detailed report file'}
+                </label>
+                {ReportFileError && (
+                  <p className="text-red-500 text-sm mt-1">{ReportFileError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+             
+          {demoFileName && (
+            <div>
+                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
+                Attach demonstration file
+              </label>
+              <div className="relative overflow-hidden">
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  id="customFile"
+                  name="file"
+                  onChange={handleDemoFileChange}
+                />
+                <label
+                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
+                  htmlFor="customFile"
+                >
+                  {demoFileName ? demoFileName : 'Upload demonstration report file'}
+                </label>
+                {DemoError && (
+                  <p className="text-red-500 text-sm mt-1">{DemoError}</p>
+                )}
+              </div>
+            </div>
+          )}
+          
+      </div>
+       )} 
+     
+    
         {/* Navigation buttons */}
-        <div className="flex justify-end">
-          <button
-            className="rounded bg-primary p-3  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+        <div className="flex justify-between">
+          { step === 2 && (
+               <button
+               className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+               onClick={prevStep}
+             >
+               back
+             </button>
+          )}
+        
+          {step === 1 ? (
+               <button
+               className="rounded bg-primary p-2 px-4 ml-auto text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
+               onClick={nextStep}
+               disabled={!isFormValid()}
+             >
+               next
+             </button>
+          ): (
+            <button
+            className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
             onClick={handleSubmit}
+            disabled={!isFormValid()}
           >
             Submit
           </button>
+          )}
+         
         </div>
       </div>
     </div>
@@ -835,7 +1466,7 @@ const ChallengeDetails: React.FC = () => {
 
                         <div className="flex">
                           <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                            {submission.files[0].name.substring(0, 15)}...
+                            {submission.datasetFile.name.substring(0, 20)}...
                           </p>
 
                           {userAuth?._id === submission.submittedBy ? (
