@@ -1,6 +1,7 @@
 import axios from "axios";
 import { submission } from "../types/submission";
 const API_URL = "http://localhost:3000/submissions";
+const url ="http://localhost:3000/submissions/AllSubmissions";
 
 export const addSubmission= async (formData: any,id:any) => {
     try {
@@ -73,5 +74,18 @@ export const getSubmissionsByChallengeId = async (challengeId: any) => {
   } catch (error) {
     console.error('Error getting submissions by challenge ID:', error);
     throw error; // Re-throw the error to be handled by the caller
+  }
+};
+export const AllSubmissions = async (): Promise<submission[]>=> {
+  try {
+    const response = await axios
+      .get(url, {
+        withCredentials: true,
+      });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching  AllSubmissionsSwitchRequest:", error);
+    throw error;
   }
 };

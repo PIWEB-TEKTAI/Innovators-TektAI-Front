@@ -211,28 +211,8 @@ const Competitions: React.FC = () => {
   };
 
   // Fonction pour marquer un challenge comme terminé
-  const handleCompleted = async (challengeId: string) => {
-    try {
-      await axios.put(
-        `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
-        { status: 'completed' },
-        { withCredentials: true },
-      );
-
-      console.log('PUT request successful for challenge ID:', challengeId);
-
-      const updatedChallenges = challenges.map((challenge) => {
-        if (challenge._id === challengeId) {
-          return { ...challenge, status: 'completed' };
-        }
-        return challenge;
-      });
-
-      setChallenges(updatedChallenges);
-    } catch (error) {
-      console.error('Error completing challenge:', error);
-    }
-  };
+ 
+  
 
 
 

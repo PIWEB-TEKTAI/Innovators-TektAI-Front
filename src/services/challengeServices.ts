@@ -2,6 +2,7 @@ import axios from "axios";
 import { challenge } from "../types/challenge";
 const API_URL = "http://localhost:3000/challenge";
 
+
 export const editChallenge = async (formData: any , id:any , captchaToken:any) => {
     try {
       const captchaResponse = await axios.post("http://localhost:3000/verify-captcha" , { token : captchaToken });

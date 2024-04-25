@@ -333,6 +333,53 @@ const SidebarClient = ({ sidebarOpen, setSidebarOpen,connectedUser }: SidebarPro
                   Settings
                 </NavLink>
               </li>
+
+
+   <li>
+
+              <NavLink
+                  to="/Favories"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium rounded-2 focus:bg-primary focus:text-white focus:font-bold text-black duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-meta-4  ${
+                    pathname.includes('preferences') && 'bg-primary text-white font-bold'
+                  }`}
+                >
+                   <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="fill-current"
+    width="18"
+    height="19"
+    viewBox="0 0 24 24"
+    fill="none"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 21C11.29 21 9.48 20.16 8 19.12C5.12 17.12 2 14.24 2 10.5C2 7.42 4.42 5 7.5 5C9.24 5 10.93 5.81 12 7.04C13.07 5.81 14.76 5 16.5 5C19.58 5 22 7.42 22 10.5C22 14.24 18.88 17.12 16 19.12C14.52 20.16 12.71 21 12 21Z"
+      fill="#000000"
+    />
+  </svg>
+                Favories
+                </NavLink>
+              </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               {/* <!-- Menu Item Settings --> */}
                   {connectedUser?.role == "challenger" &&
                   <>

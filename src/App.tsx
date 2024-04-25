@@ -56,6 +56,11 @@ import Preferences from './pages/Profile/Preferences';
 import MyInvitations from './pages/Teams/MyInvitations';
 import TeamDetails from './pages/Teams/teamDetails';
 import MyTeams from './pages/Teams/MyTeams';
+import ListSub from './pages/SuperAdmin/ListSubmissions';
+import DetailSubmission from './pages/SuperAdmin/DetailsSubmissions';
+import ChallengesParticiption from './pages/SuperAdmin/Participations';
+import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
+import Favories from './pages/competitions/favories'
 
 
 
@@ -102,6 +107,58 @@ function App() {
             <>
               <PageTitle title="Calendar | TektAi" />
               <Calendar />
+            </>
+          }
+        />
+
+<Route
+          path="/Favories"
+          element={
+            <>
+              <PageTitle title="Calendar | TektAi" />
+              <Favories/>
+            </>
+          }
+        />
+
+<Route
+          path="/AllSubmissions"
+          element={
+            <>
+              <PageTitle title="SwitchToCompany | TektAi" />
+              <Allsubmissiions />
+            </>
+          }
+        />
+
+
+
+ <Route
+          path="/submission-details/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < DetailSubmission />
+            </>
+          }
+        />
+
+  <Route
+          path="/submissions/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < ListSub />
+            </>
+          }
+        />
+
+ <Route
+          path="/Participtions/:id"
+          element={
+            <>
+              <PageTitle title="Archive | TektAi" />
+              < ChallengesParticiption />
             </>
           }
         />

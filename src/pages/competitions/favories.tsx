@@ -395,6 +395,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { FaHeart, FaUserPlus } from 'react-icons/fa';
 import { Id } from 'react-flags-select';
+import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 const ListChallengerFront: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -418,32 +419,32 @@ const ListChallengerFront: React.FC = () => {
   }, [selectedRole, searchTerm]); // Fetch data again when selectedRole or searchTerm changes
 
   const fetchData = () => {
-    const requestOptions = selectedRole === 'MyChallenge' && userAuth?.role === 'company'  ? { withCredentials: true } : {};
     axios
-      .get<Challenge[]>(
-        `http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`, requestOptions
-      )
+      .get(`http://localhost:3000/challenges/favorites/${userAuth?._id}`)
       .then((response) => {
         console.log(response.data);
-        const filteredUsers = response.data.filter(
-          (user) =>
-            user.title.toLowerCase().startsWith(searchTerm) ||
-            user.price.toLowerCase().startsWith(searchTerm) ||
-            user.description.startsWith(searchTerm),
-        );
+        let filteredUsers = [];
+        if (Array.isArray(response.data)) {
+          filteredUsers = response.data.filter(
+            (user) =>
+              user.title.toLowerCase().startsWith(searchTerm) ||
+              user.price.toLowerCase().startsWith(searchTerm) ||
+              user.description.startsWith(searchTerm)
+          );
+        }
         setCardsData(filteredUsers);
       })
       .catch((err) => console.log(err));
   };
+  
   const filteredCards = cardsData.filter((card) =>
-    card.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    card.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-
+  
   const { userAuth } = useAuth();
 
   return (
-    <ClientLayout>
+    <ConnectedClientLayout>
        <RevealOnScroll additionalProp={false} delay="">
       <section className="bg-white dark:bg-gray-900">
         <div className="grid max-w-screen-xl h-80 px-4 py-3 mx-auto lg:gap-8 xl:gap-0 lg:py-8 lg:grid-cols-12">
@@ -540,7 +541,7 @@ const ListChallengerFront: React.FC = () => {
       <RevealOnScroll delay="400">
         <Footer />
       </RevealOnScroll>
-    </ClientLayout>
+    </ConnectedClientLayout>
   );
 };
 

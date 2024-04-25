@@ -30,6 +30,7 @@ import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import TeamSelectionModal from './teamSelectionModal';
 import Discussion from './discussion';
+import { FaHeart } from 'react-icons/fa';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -564,6 +565,18 @@ const ChallengeDetails: React.FC = () => {
       }
     });
   };
+  const AddTofavories = async (challengeId:any) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/challenges/Favories/${challengeId}/${userAuth?._id}`);
+     
+      if (response.status !== 200) {
+        throw new Error('Failed to add challenge to favorites');
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSoloParticipationRequest = async () => {
     try {
@@ -618,7 +631,9 @@ const ChallengeDetails: React.FC = () => {
                       <span className="group-hover:ease-in duration-300">
                         Solo Join
                       </span>
+                      
                     </button>
+                    
                   </div>
                   <div className="flex-col my-1">
                     <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
@@ -628,6 +643,15 @@ const ChallengeDetails: React.FC = () => {
                       </span>
                     </button>
                   </div>
+                
+                  <button
+  className="text-red-500 hover:text-red-700 m-3 flex-col my-1"
+  onClick={() => AddTofavories(challengeDetails._id)}
+>
+  <FaHeart style={{ fontSize: '2em',  }} /> {/* Icône de cœur avec une taille de 2em et un espacement à droite */}
+
+</button>
+
                 </div>
               )}
           </div>
@@ -644,10 +668,13 @@ const ChallengeDetails: React.FC = () => {
               alt="Challenge"
               className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"
             />
+             
             <div className="flex flex-col sm:flex-grow">
               <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize break-words">
                 {challengeDetails.title}
+               
               </h2>
+              
               <div className="flex items-center mt-4">
                 <div
                   className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${
