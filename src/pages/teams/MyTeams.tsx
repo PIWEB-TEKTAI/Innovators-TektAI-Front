@@ -68,7 +68,7 @@ const MyTeams = () => {
       <div className='bg-white rounded-lg p-4'>
         <div className="flex justify-between items-center mb-4">
           <h2 className='text-black font-semibold'>My Teams</h2>
-          <button onClick={() => setShowCreateModal(true)} className="text-md p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group">Create A New Team</button>
+          <button onClick={() => setShowCreateModal(true)} className="text-md p-2 bg-primary border border-primary rounded-md text-white  font-semibold group">Create A New Team</button>
         </div>
         <div className="grid sm:grid-cols-3 sm:gap-4 grid-cols-1">
           {teams.map(team => (

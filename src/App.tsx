@@ -58,8 +58,9 @@ import TeamDetails from './pages/Teams/teamDetails';
 import MyTeams from './pages/Teams/MyTeams';
 import TeamsDetails from './pages/Teams/teamsDetails';
 import OtherUserProfile from './pages/Profile/otherUserProfile';
-
-
+import Statistique from './components/Charts/statistique';
+import PreferencesPage from './components/SidebarClient/PreferencesPage';
+import ParticipantChallangeCompany from './pages/Challenges/ParticipantsChallangeCompany';
 
 
 function App() {
@@ -498,6 +499,28 @@ function App() {
         />
         
 
+          <Route path="/preferences" Component={PreferencesPage}
+          element={
+            <>
+
+
+            </>
+          }
+        
+          />
+
+<Route path="/Participants" 
+          element={
+            <>
+              <PrivateRoute requiredRoles={["company"]} component={
+
+                <ParticipantChallangeCompany/>
+              }/>
+            </>
+          }
+        
+          />
+
         <Route
           path="/switchToCompany"
           element={
@@ -613,8 +636,18 @@ function App() {
               }/>
             </>
           }
-        />
 
+          
+        />
+  <Route
+          path="/statistique"
+element={
+            <>
+              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Statistique/>
+            </>
+          }
+        />
 
         <Route
           path="/teamList"

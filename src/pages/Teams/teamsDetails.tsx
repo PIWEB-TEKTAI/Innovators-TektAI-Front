@@ -55,7 +55,7 @@ const TeamsDetails = () => {
                 <span>Team Members</span>
             </div>
             <div>
-            <ul className="flex  flex-wrap">
+            <ul className="flex justify-center  flex-wrap">
                 {team.members.map((member: any) => (
                 <div className='card-design2 ml-5 bg-white' key={member._id}>
                     <img
