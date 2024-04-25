@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import teamService from '../../services/teamsService';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
-import CoverTwo from '../../images/cover/download.jpg';
 
 const TeamDetails = () => {
   const { teamId } = useParams();
