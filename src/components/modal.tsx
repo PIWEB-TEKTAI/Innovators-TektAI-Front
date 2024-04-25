@@ -5,8 +5,8 @@ interface ModalProps {
   setShowModal: Dispatch<SetStateAction<boolean>>;
   title: string;
   content: any;
-  onClose: () => void;
-  onSave: () => void;
+  onClose?: () => void;
+  onSave?: () => void;
   postSaveMessage?: string;
   error?:boolean,
 }

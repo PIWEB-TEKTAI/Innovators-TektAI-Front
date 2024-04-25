@@ -87,6 +87,16 @@ const teamService = {
     } catch (error) {
       throw error;
     }
+  },
+   editTeam : async (teamId:any, name:any, selectedChallengers:any, isprivate:any) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/teams/edit/${teamId}`, { name, selectedChallengers, isprivate });
+      return response.data;
+    } catch (error) {
+      console.error('Error editing team:', error);
+      throw new Error('Error editing team');
+    }
+    
   }
   
 };

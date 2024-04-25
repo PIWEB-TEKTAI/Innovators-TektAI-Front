@@ -58,13 +58,13 @@ const TeamsList: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h3 className="text-lg font-semibold mb-4">Existing Teams</h3>
+      <h3 className="text-lg font-semibold mb-4 text-black">Existing Teams</h3>
       <input
         type="text"
         value={searchQuery}
         onChange={handleSearch}
         placeholder="Search teams..."
-        className="w-full border border-gray-300 rounded py-2 px-3 mb-4"
+        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary mb-2 "
       />
       {successMessage && (
         <div className="text-green-500 mb-4">{successMessage}</div>
@@ -82,10 +82,10 @@ const TeamsList: React.FC = () => {
         </div>
       )}
       <div className='max-h-40 overflow-y-auto'>
-        <ul className="divide-y divide-gray-200">
+        <ul className="flex">
           {filteredTeams.map((team) => (
             <li key={team.id} className="py-2">
-              <button onClick={() => handleTeamSelect(team)} className="mr-2 px-2 py-1 bg-gray-200 text-gray-800 rounded">
+              <button onClick={() => handleTeamSelect(team)} className="mr-2 px-2 py-1 bg-gray-200 text-gray-800 rounded capitalize">
             <div className="flex">
             <img src={team.imageUrl } alt="profile" className="rounded-full mr-2 max-h-8 w-8 mr-2 " />{team.name}
             </div>

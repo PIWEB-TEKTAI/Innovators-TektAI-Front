@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal'; // Make sure you have installed react-modal
+import { Link } from 'react-router-dom';
 
 interface CompanyModalProps {
   company: any;
@@ -30,7 +31,7 @@ const CompanyModal: React.FC<CompanyModalProps> = ({ company, onClose }) => {
       }}
     >
       <div className="modal-header flex items-center justify-between border-b border-gray-200 pb-2 mb-4">
-        <h2 className="text-xl font-bold">{company.name}</h2>
+        <h2 className="text-xl font-bold">{company.company.name}</h2>
         <button
           className="text-gray-500 hover:text-gray-700"
           onClick={onClose}
@@ -64,20 +65,20 @@ const CompanyModal: React.FC<CompanyModalProps> = ({ company, onClose }) => {
           <div>
            
             <span className="font-semibold">Location</span>
-            <p className="text-gray-700 dark:text-gray-300">{company.address}</p>
+            <p className="text-gray-700 dark:text-gray-300">{company.company.address}</p>
             <hr className="my-2 border-gray-300" />
 
             <span className="font-semibold">Email</span>
-            <p className="text-gray-700 dark:text-gray-300">{company.email}</p>
+            <p className="text-gray-700 dark:text-gray-300">{company.company.email}</p>
             <hr className="my-2 border-gray-300" />
 
             <span className="font-semibold">Phone</span>
-            <p className="text-gray-700 dark:text-gray-300">{company.phone}</p>
+            <p className="text-gray-700 dark:text-gray-300">{company.company.phone}</p>
             <hr className="my-2 border-gray-300" />
 
             <span className="font-semibold">Professionnal Fields:</span>
-            <p className="text-gray-700 dark:text-gray-300">{company.professionnalFields}</p>
-
+            <p className="text-gray-700 dark:text-gray-300">{company.company.professionnalFields}</p>
+            <Link to={`/visit/user/${company._id}`} className='text-sm text-primary'>View More</Link>
           </div>
 
         <div>

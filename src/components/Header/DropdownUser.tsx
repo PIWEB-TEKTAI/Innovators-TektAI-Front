@@ -3,6 +3,7 @@ import { Link,Navigate,useNavigate } from 'react-router-dom';
 
 import UserOne from '../../images/user/user-01.png';
 import { signOut } from '../../services/auth.service';
+import { useAuth } from '../Auth/AuthProvider';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -10,6 +11,7 @@ const DropdownUser = () => {
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+  const { logoutAuth } = useAuth();
 
   // close on click outside
   useEffect(() => {
@@ -40,6 +42,8 @@ const DropdownUser = () => {
     const signOutSuccess = await signOut();
 
     if (signOutSuccess) {
+      logoutAuth();
+
       navigate("/auth/signin");
 
     } else {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import axios, { AxiosError } from 'axios';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { createPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   format,
   differenceInMonths,
@@ -81,7 +81,7 @@ const AddSubmissionForm: React.FC = () => {
 
   const [challengeData,setChallengeData] = useState<challenge>();
 
-
+  const {userAuth} = useAuth();
   const [FileName, setFileName] = useState('');
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
@@ -222,36 +222,84 @@ const AddSubmissionForm: React.FC = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log('file' + DataSetFile);
-
-    addSubmission(
+    let teamId = '';
+    let type = "solo";
+     challengeData?.participations.TeamParticipants.some((team:any) => 
       {
-        title: title,
-        description: description,
-        output:Output,
-        datasetFile:DataSetFile,
-        presentationFile:presentationFile,
-        codeSourceFile: codeSourceFile,
-        reportFile:reportFile,
-        demoFile:demoFile,
-        readMeFile:readMeFile,
-      },
-      id,
-    )
-      .then((response) => {
-        setAlert({
-          type: 'success',
-          message: 'submission added successfully',
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      })
-      .catch((error) => {
-        setAlert({
-          type: 'error',
-          message: 'Error adding submission',
-        });
-      });
+        if( team.leader._id == userAuth?._id){
+          teamId = team._id;
+          type = "team";
+        }
+
+      }
+      )
+      if(teamId !='' && type=="team"){
+        addSubmission(
+          {
+            title: title,
+            description: description,
+            output:Output,
+            datasetFile:DataSetFile,
+            presentationFile:presentationFile,
+            codeSourceFile: codeSourceFile,
+            reportFile:reportFile,
+            demoFile:demoFile,
+            readMeFile:readMeFile,
+            teamId:teamId,
+            type:type
+          },
+          id,
+        )
+          .then((response) => {
+            setAlert({
+              type: 'success',
+              message: 'submission added successfully',
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            setAlert({
+              type: 'error',
+              message: 'Error adding submission',
+            });
+          });
+      }else{
+        addSubmission(
+          {
+            title: title,
+            description: description,
+            output:Output,
+            datasetFile:DataSetFile,
+            presentationFile:presentationFile,
+            codeSourceFile: codeSourceFile,
+            reportFile:reportFile,
+            demoFile:demoFile,
+            readMeFile:readMeFile,
+            type:type
+          },
+          id,
+        )
+          .then((response) => {
+            setAlert({
+              type: 'success',
+              message: 'submission added successfully',
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          })
+          .catch((error) => {
+            setAlert({
+              type: 'error',
+              message: 'Error adding submission',
+            });
+          });
+      }
+     
+    
+   
   };
   return (
     <div>
@@ -1231,37 +1279,9 @@ const ChallengeDetails: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
+   
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-          <div className="flex justify-end">
-            {userAuth?.role === 'challenger' &&
-              !challengeDetails.participations.soloParticipants.includes(
-                userAuth._id,
-              ) &&
-              !challengeDetails.participations.soloParticipationRequests.includes(
-                userAuth._id,
-              ) && (
-                <div className="flex ">
-                  <div className="flex-col m-1">
-                    <button
-                      onClick={handleConfirmationModalAppearance}
-                      className="text-sm p-2 border  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
-                    >
-                      <span className="group-hover:ease-in duration-300">
-                        Solo Join
-                      </span>
-                    </button>
-                  </div>
-                  <div className="flex-col my-1">
-                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
-                     onClick={handleJoinTeamClick}>
-                      <span className="group-hover:ease-in duration-300">
-                        Join a Team
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-          </div>
+         
 
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
@@ -1309,7 +1329,7 @@ const ChallengeDetails: React.FC = () => {
               <p
                 className="text-gray-600 font-bold cursor-pointer mt-2"
                 onClick={() =>
-                  handleCompanyNameClick(challengeDetails.createdBy.company)
+                  handleCompanyNameClick(challengeDetails.createdBy)
                 }
               >
                 Hosted by: {challengeDetails.createdBy.company.name}
@@ -1322,7 +1342,44 @@ const ChallengeDetails: React.FC = () => {
             </div>
           </div>
         </div>
-
+        {userAuth?.role === 'challenger' &&
+              challengeDetails.status=="open"&&
+              !challengeDetails.participations.soloParticipants.includes(
+                userAuth._id,
+              ) &&
+              !challengeDetails.participations.soloParticipationRequests.includes(
+                userAuth._id,
+              ) &&
+              !challengeDetails.participations.TeamParticipants.some((team:any) => 
+                 team?.leader._id == userAuth._id || team.members.some((member:any)=>{member == userAuth._id})
+              )&&
+              !challengeDetails.participations.TeamParticipationRequests.some((team:any) => 
+                team?.leader._id == userAuth._id || team.members.some((member:any)=>{member == userAuth._id})
+              )
+              && ( <div className="my-4 py-4 flex bg-white pt-2 rounded-lg justify-center">
+            
+                <div className="flex ">
+                  <div className="flex-col m-1">
+                    <button
+                      onClick={handleConfirmationModalAppearance}
+                      className="text-lg p-2 border mr-2  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
+                    >
+                      <span className="group-hover:ease-in duration-300">
+                        Solo Join
+                      </span>
+                    </button>
+                  </div>
+                  <div className="flex-col my-1">
+                    <button className="text-lg p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
+                     onClick={handleJoinTeamClick}>
+                      <span className="group-hover:ease-in duration-300">
+                        Join a Team
+                      </span>
+                    </button>
+                  </div>
+                </div>
+            
+          </div>  )}
         {isModalOpen && (
           <CompanyModal
             company={selectedCompany}
@@ -1419,9 +1476,10 @@ const ChallengeDetails: React.FC = () => {
               <div>
                 <div className="flex justify-end mb-4">
                   {userAuth?.role === 'challenger' &&
-                    challengeDetails.participations.soloParticipants.includes(
-                      userAuth._id,
-                    ) &&
+                    (challengeDetails.participations.soloParticipants.includes(userAuth._id) ||
+                    challengeDetails.participations.TeamParticipants.some((team:any) => 
+                      team.leader && team.leader._id && team.leader._id == userAuth._id
+                  )) &&
                     challengeDetails.status == 'open' && (
                       <button
                         onClick={openModal}
@@ -1466,7 +1524,7 @@ const ChallengeDetails: React.FC = () => {
 
                         <div className="flex">
                           <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                            {submission.datasetFile.name.substring(0, 20)}...
+                            {submission.codeSourceFile.name.substring(0, 20)}...
                           </p>
 
                           {userAuth?._id === submission.submittedBy ? (

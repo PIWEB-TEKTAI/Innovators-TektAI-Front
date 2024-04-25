@@ -136,7 +136,7 @@ useEffect(
                           loginAuth(data);
 
                     if(data.role == "challenger" || data.role=="company"){
-                      navigate("/profile");
+                      navigate("/landing");
                     }
                     if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/companylist");
                     }
