@@ -1329,7 +1329,7 @@ const ChallengeDetails: React.FC = () => {
               <p
                 className="text-gray-600 font-bold cursor-pointer mt-2"
                 onClick={() =>
-                  handleCompanyNameClick(challengeDetails.createdBy.company)
+                  handleCompanyNameClick(challengeDetails.createdBy)
                 }
               >
                 Hosted by: {challengeDetails.createdBy.company.name}

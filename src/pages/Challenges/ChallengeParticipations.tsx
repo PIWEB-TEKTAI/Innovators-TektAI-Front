@@ -3,6 +3,7 @@ import { getUserById } from '../../services/user.service';
 import { acceptParticipation, declineParticipation } from '../../services/challengeService';
 import Modal from '../../components/modal';
 import teamService from '../../services/teamsService';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   challenge?: any;
@@ -115,6 +116,11 @@ const handleAcceptRequest = async (userId: string,type:string) => {
   const closeDeclineModal = () => {
     setShowDeclineModal(false);
   };
+  const navigate = useNavigate();
+  const navigateToUser =(userId:any) =>{
+    navigate(`/visit/user/${userId}`);
+
+  } 
   return (
     
     <div>
@@ -143,12 +149,13 @@ const handleAcceptRequest = async (userId: string,type:string) => {
           <li key={index} className='mb-5'>
             <div className="flex justify-between">
              <div className="flex">
-             <img className="w-18 h-18 p-4" src={participation.imageUrl} alt="userImage" />
                 {(participation.type == "Participant" || participation.type =="Request") && (      
-                  <>              
-                  <div className="flex-col">
+                  <>       
+                 <img className="w-18 h-18 p-4 cursor-pointer" src={participation.imageUrl} alt="userImage"  onClick={()=>navigateToUser(participation._id)} />
+       
+                  <div className="flex-col cursor-pointer" >
 
-                       <div className="capitalize mt-3">{participation.FirstName} {participation.LastName} </div>
+                       <div className="capitalize mt-3" onClick={()=>navigateToUser(participation._id)} >{participation.FirstName} {participation.LastName} </div>
                        <div>{participation.email}</div>
                   </div>
 
@@ -158,8 +165,11 @@ const handleAcceptRequest = async (userId: string,type:string) => {
 
                 {(     
                   (participation.type == "TeamParticipant" || participation.type =="TeamRequest") && (
+                   <>
+                    <img className="w-18 h-18 p-4 cursor-pointer" src={participation.imageUrl} alt="userImage" />
 
                     <div className="capitalize mt-4 text-lg">{participation.name} </div>
+                   </>
 
                  ))}
 
@@ -168,7 +178,8 @@ const handleAcceptRequest = async (userId: string,type:string) => {
               <div className="flex justify-end items-center">
               { (participation.type =="Request" || participation.type == "TeamRequest") &&
               <>
-                <div> {userAuth?._id == challenge.createdBy._id && challenge.status =="open" && challenge.createdBy.role=="company" &&
+                <div>
+                   {userAuth?._id == challenge.createdBy._id && challenge.status =="open" && challenge.createdBy.role=="company" &&
                 (<button onClick={() => handleConfirmationModalAppearance(participation._id,participation.type )} className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Accept</button>)}</div>
 
               </>
