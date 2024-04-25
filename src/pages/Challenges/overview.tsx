@@ -112,12 +112,12 @@ const Overview: React.FC = () => {
                 )}
 
                 {/* Recruitment */}
-                {challengeDetails.recruitment && challengeDetails.recruitment.positionTitle && (
+                {challengeDetails.recruitement && challengeDetails.recruitement.positionTitle && (
                     <div className="mb-4.5 mt-4.5">
                         <h3 className="font-medium text-sm block text-gray-900">Recruitment</h3>
-                        <p className="text-gray-600 mt-1">Position Title: {challengeDetails.recruitment.positionTitle}</p>
-                        {challengeDetails.recruitment.jobDescription && (
-                            <p className="text-gray-600 mt-1">Job Description: {challengeDetails.recruitment.jobDescription}</p>
+                        <p className="text-gray-600 mt-1">Position Title: {challengeDetails.recruitement.positionTitle}</p>
+                        {challengeDetails.recruitement.jobDescription && (
+                            <p className="text-gray-600 mt-1">Job Description: {challengeDetails.recruitement.jobDescription}</p>
                         )}
                     </div>
                 )}

@@ -56,6 +56,7 @@ import Preferences from './pages/Profile/Preferences';
 import MyInvitations from './pages/Teams/MyInvitations';
 import TeamDetails from './pages/Teams/teamDetails';
 import MyTeams from './pages/Teams/MyTeams';
+import SubmissionDetails from './pages/Challenges/submissiondetails';
 
 
 
@@ -500,6 +501,18 @@ function App() {
             </>
           }
         />
+           <Route
+            path="/submission/details/:id"
+            element={
+            <>
+              <PageTitle title="Challenge | TektAi" />
+              <SubmissionDetails />
+            </>
+          }
+        />
+
+
+
 
           <Route
             path="/teams"
