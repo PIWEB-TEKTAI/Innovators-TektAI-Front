@@ -75,3 +75,16 @@ export const getSubmissionsByChallengeId = async (challengeId: any) => {
     throw error; // Re-throw the error to be handled by the caller
   }
 };
+export const AllSubmissions = async (): Promise<submission[]>=> {
+  try {
+    const response = await axios
+      .get(`${API_URL}/AllSubmissions`, {
+        withCredentials: true,
+      });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching  AllSubmissionsSwitchRequest:", error);
+    throw error;
+  }
+};
