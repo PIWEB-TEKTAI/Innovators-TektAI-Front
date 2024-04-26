@@ -103,32 +103,6 @@ const Card: React.FC<CardProps> = ({ title, imageSrc, description }) => {
     </div>
   );
 };
-const forwardCards = [
-  {
-    imageSrc: '/src/images/landing/flight.jpeg',
-    title: 'Flight Delay Prediction Challenge',
-    description:
-      'Go to this step by step guideline process on how to certify for your weekly benefits.',
-  },
-  {
-    imageSrc: '/src/images/landing/finance.jpg',
-    title: 'Financial Inclusion in Africa',
-    description:
-      'Can you predict who in Africa is most likely to have a bank account?',
-  },
-  {
-    imageSrc: '/src/images/landing/turtle.webp',
-    title: 'Turtle Rescue Forecast Challenge',
-    description:
-      'Can you forecast the number of turtles rescued per site per week in Kenya?',
-  },
-  {
-    imageSrc: '/src/images/landing/animal.webp',
-    title: 'Animal Classification Challenge',
-    description:
-      'Can you create a binary classification algorithm to distinguish animals?',
-  },
-];
 const backwardCards = [
   {
     imageSrc: '/src/images/landing/imdb.jpeg',
@@ -297,15 +271,14 @@ const Landing: React.FC = () => {
 
         <div className="flex items-center mt-4 space-x-4 text-gray-700 dark:text-gray-300">
           <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
-          <span className='font-semibold'>Prize : </span>
+          <span className="font-semibold">Prize : </span>
           <span className="font-semibold ">
-              {amount} {amount && 'DT'}
-              {prizes.prizeName && 'Award'}
-              {recruitement.positionTitle && 'Job Opportunity'}
-              {freelance.projectTitle && 'Freelance Work'}
-              {internship.internshipTitle && 'Internship Opportunity'}
+            {amount} {amount && 'DT'}
+            {prizes.prizeName && 'Award'}
+            {recruitement.positionTitle && 'Job Opportunity'}
+            {freelance.projectTitle && 'Freelance Work'}
+            {internship.internshipTitle && 'Internship Opportunity'}
           </span>
-          
         </div>
 
         <div className="flex items-center mt-3 space-x-4 text-gray-700 dark:text-gray-300">
@@ -364,6 +337,8 @@ const Landing: React.FC = () => {
   const [message, setMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredCardsData, setFilteredCardsData] = useState(cardsData);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -407,6 +382,44 @@ const Landing: React.FC = () => {
   };
 
   const { userAuth } = useAuth();
+  useEffect(() => {
+    setFilteredCardsData(cardsData);
+    fetchChallenges();
+  }, [cardsData]);
+
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    filterCards(searchTerm);
+  };
+
+  const filterCards = (searchTerm: string) => {
+    const filteredData = cardsData.filter((card) => {
+      return card.title.toLowerCase().includes(searchTerm);
+    });
+    setFilteredCardsData(filteredData);
+  };
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const fetchChallenges = async () => {
+    try {
+      console.log('Fetching challenges...');
+      let url;
+      if (userAuth?.role === 'company') {
+        url = 'http://localhost:3000/challenges/get';
+      } else {
+        url = 'http://localhost:3000/submissions/get/all/submission';
+      }
+
+      const response = await axios.get<Challenge[]>(url, {
+        withCredentials: true,
+      });
+      console.log('Challenges response:', response);
+      setChallenges(response.data);
+      console.log(challenges);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des défis:', error);
+    }
+  };
 
   return (
     <ClientLayout>
@@ -414,178 +427,466 @@ const Landing: React.FC = () => {
         <section className="bg-white dark:bg-gray-900">
           <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
             <div className="mr-auto lg:ml-8 place-self-center group lg:col-span-7 cursor-pointer">
-              <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
-                <span className="animated-text">T</span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.1s' }}
-                >
-                  r
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.2s' }}
-                >
-                  a
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.3s' }}
-                >
-                  n
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.4s' }}
-                >
-                  s
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.5s' }}
-                >
-                  f
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.6s' }}
-                >
-                  o
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.7s' }}
-                >
-                  r
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.8s' }}
-                >
-                  m
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '0.9s' }}
-                >
-                  i
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1s' }}
-                >
-                  n
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.1s' }}
-                >
-                  g
-                </span>
-                <br />
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.3s' }}
-                >
-                  C
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.4s' }}
-                >
-                  h
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.5s' }}
-                >
-                  a
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.6s' }}
-                >
-                  l
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.7s' }}
-                >
-                  l
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.8s' }}
-                >
-                  e
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '1.9s' }}
-                >
-                  n
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '2s' }}
-                >
-                  g
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '2.1s' }}
-                >
-                  e
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '2.2s' }}
-                >
-                  s
-                </span>
-                <span
-                  className="animated-text"
-                  style={{ animationDelay: '2.3s' }}
-                >
-                  &nbsp;
-                </span>
+              {userAuth?.role !== 'challenger' &&
+                userAuth?.role !== 'company' && (
+                  <>
+                    <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+                      <span className="animated-text">T</span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.1s' }}
+                      >
+                        r
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.2s' }}
+                      >
+                        a
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.3s' }}
+                      >
+                        n
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.4s' }}
+                      >
+                        s
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.5s' }}
+                      >
+                        f
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.6s' }}
+                      >
+                        o
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.7s' }}
+                      >
+                        r
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.8s' }}
+                      >
+                        m
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '0.9s' }}
+                      >
+                        i
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1s' }}
+                      >
+                        n
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.1s' }}
+                      >
+                        g
+                      </span>
+                      <br />
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.3s' }}
+                      >
+                        C
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.4s' }}
+                      >
+                        h
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.5s' }}
+                      >
+                        a
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.6s' }}
+                      >
+                        l
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.7s' }}
+                      >
+                        l
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.8s' }}
+                      >
+                        e
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '1.9s' }}
+                      >
+                        n
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '2s' }}
+                      >
+                        g
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '2.1s' }}
+                      >
+                        e
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '2.2s' }}
+                      >
+                        s
+                      </span>
+                      <span
+                        className="animated-text"
+                        style={{ animationDelay: '2.3s' }}
+                      >
+                        &nbsp;
+                      </span>
 
-                <span
-                  className="animated-text text-primary"
-                  style={{ animationDelay: '2.3s' }}
-                >
-                  {' '}
-                  Into{' '}
-                </span>
-                <br />
-                <span
-                  className="animated-text text-primary"
-                  style={{ animationDelay: '2.4s' }}
-                >
-                  {' '}
-                  Solutions
-                </span>
-              </h1>
-              <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
-                Welcome to our collaborative data science platform, where
-                industry challenges meet innovative solutions. Unlock the
-                potential of real-world problem-solving by connecting with a
-                global community of data science developers.
-              </p>
-              <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                <a
-                  href="/auth/signup"
-                  className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                >
-                  Join Now
-                </a>
-                <a
-                  href="#"
-                  className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                >
-                  Explore
-                </a>
-              </div>
+                      <span
+                        className="animated-text text-primary"
+                        style={{ animationDelay: '2.3s' }}
+                      >
+                        {' '}
+                        Into{' '}
+                      </span>
+                      <br />
+                      <span
+                        className="animated-text text-primary"
+                        style={{ animationDelay: '2.4s' }}
+                      >
+                        {' '}
+                        Solutions
+                      </span>
+                    </h1>
+                    <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                      Welcome to our collaborative data science platform, where
+                      industry challenges meet innovative solutions. Unlock the
+                      potential of real-world problem-solving by connecting with
+                      a global community of data science developers.
+                    </p>
+                  </>
+                )}
+              {userAuth?.role === 'company' && (
+                <>
+                  <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+                    <span className="animated-text">H</span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.1s' }}
+                    >
+                      o
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.2s' }}
+                    >
+                      s
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.3s' }}
+                    >
+                      t
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.4s' }}
+                    >
+                      &nbsp;
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.5s' }}
+                    ></span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.6s' }}
+                    >
+                      Y
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.7s' }}
+                    >
+                      o
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.8s' }}
+                    >
+                      u
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.9s' }}
+                    >
+                      r
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.0s' }}
+                    >
+                      &nbsp;
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.1s' }}
+                    >
+                      D
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.2s' }}
+                    >
+                      a
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.3s' }}
+                    >
+                      t
+                    </span>
+
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.4s' }}
+                    >
+                      a
+                    </span>
+
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.5s' }}
+                    >
+                      &nbsp;
+                    </span>
+                    <br />
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.6s' }}
+                    >
+                      S
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.7s' }}
+                    >
+                      c
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.8s' }}
+                    >
+                      i
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.9s' }}
+                    >
+                      e
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '2s' }}
+                    >
+                      n
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '2.1s' }}
+                    >
+                      c
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '2.2s' }}
+                    >
+                      e
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '2.3s' }}
+                    >
+                      &nbsp;
+                    </span>
+
+                    <span
+                      className="animated-text text-primary"
+                      style={{ animationDelay: '2.4s' }}
+                    >
+                      {' '}
+                      Competetions{' '}
+                    </span>
+                    <br />
+                  </h1>
+                  <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                    Discover the unparalleled opportunity to elevate your brand,
+                    engage top talent, and foster innovation by partnering with
+                    us to host your own competitions. Start now and unleash the
+                    power of competition to drive growth, creativity, and
+                    lasting impact{' '}
+                  </p>
+                </>
+              )}
+
+              {userAuth?.role === 'challenger' && (
+                <>
+                  <h1 className="max-w-2xl mb-4 group-hover:scale-[1.05] text-black text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+                    <span className="animated-text">C</span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.1s' }}
+                    >
+                      o
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.2s' }}
+                    >
+                      m
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.3s' }}
+                    >
+                      p
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.4s' }}
+                    >
+                      e
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.5s' }}
+                    >
+                      t
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.6s' }}
+                    >
+                      e
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.7s' }}
+                    >
+                      &nbsp;
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.8s' }}
+                    >
+                      N
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '0.9s' }}
+                    >
+                      o
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.0s' }}
+                    >
+                      w
+                    </span>
+                    <br />
+                    <span
+                      className="animated-text text-primary"
+                      style={{ animationDelay: '1.1s' }}
+                    >
+                      {' '}
+                      Claim{' '}
+                    </span>
+                    <span
+                      className="animated-text"
+                      style={{ animationDelay: '1.2s' }}
+                    >
+                      &nbsp;
+                    </span>
+                    <span
+                      className="animated-text text-primary"
+                      style={{ animationDelay: '1.3s' }}
+                    >
+                      {' '}
+                      Victory
+                    </span>
+                  </h1>
+                  <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                    Are you prepared to showcase your exceptional skills, claim
+                    victory, and stand out from the crowd? Join us now and
+                    embark on a journey to prove your mettle, compete against
+                    the best, and emerge triumphant in the pursuit of
+                    excellence!{' '}
+                  </p>
+                </>
+              )}
+
+              {userAuth?.role !== 'challenger' &&
+                userAuth?.role !== 'company' && (
+                  <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                    <a
+                      href="/auth/signup"
+                      className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                    >
+                      Join Now
+                    </a>
+                    <a
+                      href="#"
+                      className="hover:bg-black hover:text-white inline-flex items-center justify-center bg-white px-5 py-3 text-black font-medium text-center  border border-primary-300 rounded-lg  hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                    >
+                      Explore
+                    </a>
+                  </div>
+                )}
+              {userAuth?.role === 'challenger' && (
+                <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                  <a
+                    href="/LCFront"
+                    className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                  >
+                    Compete Now
+                  </a>
+                </div>
+              )}
+              {userAuth?.role === 'company' && (
+                <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                  <a
+                    href="/challenge/add"
+                    className="inline-flex items-center justify-center bg-primary px-6 py-4 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                    style={{ fontSize: '1rem' }} // Adjust font size as needed
+                  >
+                    Host New Competition
+                  </a>
+                </div>
+              )}
             </div>
             <div className="hidden lg:mt-0 lg:col-span-5 lg:flex hover:scale-[1.2] animate__animated animate__fadeInRight">
               <img src="/src/images/landing/ai3.jpg" alt="mockup" />
@@ -594,25 +895,33 @@ const Landing: React.FC = () => {
         </section>
       </RevealOnScroll>
 
-      <section className="bg-gray-100 bg-opacity-85  dark:bg-gray-800">
-        <div className="max-w-screen-xl px-4  py-8 mx-auto lg:py-24 lg:px-6 ">
+      <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
+        <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
           <RevealOnScroll delay="">
             <div className="flex justify-between mb-8">
               <h2 className="text-4xl font-extrabold text-black dark:text-white">
-                Competitions
+                Browse Competitions
               </h2>
-
               <div>
-                <Link to="/LCFront">
-                  <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
-                    <img
-                      src="/src/images/landing/arrow.png"
-                      alt="arrow"
-                      className="mr-2 w-3"
-                    />
-                    View all
-                  </a>
-                </Link>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:border-primary-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+                  />
+                  <Link to="/LCFront">
+                    <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+                      <img
+                        src="/src/images/landing/arrow.png"
+                        alt="arrow"
+                        className="mr-2 w-3"
+                      />
+                      View all
+                    </a>
+                  </Link>
+                </div>
               </div>
             </div>
             <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
@@ -621,7 +930,7 @@ const Landing: React.FC = () => {
             </p>
 
             <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
-              {cardsData.map((card, index) => (
+              {filteredCardsData.map((card, index) => (
                 <Link key={index} to={`/challenge/details/${card._id}`}>
                   <CardCompetition key={index} {...card} />
                 </Link>
@@ -639,6 +948,90 @@ const Landing: React.FC = () => {
               ))}
             </div>
           </RevealOnScroll>
+
+          {userAuth?.role === 'company' && (
+            <RevealOnScroll delay="">
+              <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
+                <div className="flex justify-between mb-8">
+                  <h2 className="text-4xl font-extrabold text-black dark:text-white">
+                    My Competitions
+                  </h2>
+
+                  <div className="flex items-center">
+                    <Link to="/competitions">
+                      <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+                        <img
+                          src="/src/images/landing/arrow.png"
+                          alt="arrow"
+                          className="mr-2 w-3"
+                        />
+                        View all
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+                <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                  Build your skills in our competitions, co-hosted by
+                  world-class research organizations & companies
+                </p>
+
+                <div className="mt-12">
+                  <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
+                    {challenges.map((challenge, index) => (
+                      <Link
+                        key={index}
+                        to={`/challenge/details/${challenge._id}`}
+                      >
+                        <CardCompetition key={index} {...challenge} />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
+          )}
+
+          {userAuth?.role === 'challenger' && (
+            <RevealOnScroll delay="">
+              <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
+                <div className="flex justify-between mb-8">
+                  <h2 className="text-4xl font-extrabold text-black dark:text-white">
+                    My Competitions
+                  </h2>
+
+                  <div className="flex items-center">
+                    <Link to="/competitions">
+                      <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
+                        <img
+                          src="/src/images/landing/arrow.png"
+                          alt="arrow"
+                          className="mr-2 w-3"
+                        />
+                        View all
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+                <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                  Build your skills in our competitions, co-hosted by
+                  world-class research organizations & companies
+                </p>
+
+                <div className="mt-12">
+                  <div className="grid md:grid-cols-2 gap-8 lg:grid-cols-3 justify-center sm:grid-cols-2">
+                    {challenges.map((challenge, index) => (
+                      <Link
+                        key={index}
+                        to={`/challenge/details/${challenge._id}`}
+                      >
+                        <CardCompetition key={index} {...challenge} />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
+          )}
         </div>
       </section>
 
@@ -667,7 +1060,7 @@ const Landing: React.FC = () => {
                     className="w-20"
                   />
                   <h2 className="mt-4 text-2xl font-semibold text-primary">
-                    Join or create a Team
+                    Join or Create a Team
                   </h2>
                   <p className="mt-2 text-center text-gray-500 lg:mx-auto lg:max-w-sm lg:text-lg dark:text-gray-400">
                     Joining or creating a team is your chance to connect with
@@ -713,61 +1106,65 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      <section className="bg-gray-200">
-        <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
-          <div className="text-center">
-            <h2 className="text-4xl font-extrabold text-black dark:text-white">
-              Why Choose Us
-            </h2>
-            <div
-              className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}
-            >
-              {whyUsContent &&
-                whyUsContent.map((content, index) => (
-                  <div
-                    key={index}
-                    className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
-                  >
-                    <div className="px-6 py-8">
-                      <h3 className="text-xl font-semibold text-white mb-2">
-                        {content.title}
-                      </h3>
-                      <p className="text-white">{content.contentwhy}</p>
+      {userAuth?.role !== 'company' && userAuth?.role !== 'challenger' && (
+        <section className="bg-gray-200">
+          <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+            <div className="text-center">
+              <h2 className="text-4xl font-extrabold text-black dark:text-white">
+                Why Choose Us
+              </h2>
+              <div
+                className={`mt-8 grid grid-cols-1 gap-6 md:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 2)} lg:grid-cols-${Math.min(whyUsContent && whyUsContent.length, 4)}`}
+              >
+                {whyUsContent &&
+                  whyUsContent.map((content, index) => (
+                    <div
+                      key={index}
+                      className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
+                    >
+                      <div className="px-6 py-8">
+                        <h3 className="text-xl font-semibold text-white mb-2">
+                          {content.title}
+                        </h3>
+                        <p className="text-white">{content.contentwhy}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <RevealOnScroll additionalProp={false} delay="">
-        <section>
-          <div
-            id="aboutUs"
-            className="sm:flex items-center max-w-screen bg-white"
-          >
-            <div className="sm:w-1/2 p-10">
-              <div className="image object-center text-center hover:scale-[1.05]">
-                <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
-              </div>
-            </div>
-            <div className="sm:w-1/2 p-5">
-              <div className="text group cursor-pointer">
-                <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">
-                  About us
-                </span>
-                <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">
-                  About <span className="text-indigo-600">TektAI</span>
-                </h2>
-                <p className="text-gray-700  group-hover:scale-[1.05]">
-                  {aboutUsContent}
-                </p>
+                  ))}
               </div>
             </div>
           </div>
         </section>
-      </RevealOnScroll>
+      )}
+
+      {userAuth?.role !== 'company' && userAuth?.role !== 'challenger' && (
+        <RevealOnScroll additionalProp={false} delay="">
+          <section>
+            <div
+              id="aboutUs"
+              className="sm:flex items-center max-w-screen bg-white"
+            >
+              <div className="sm:w-1/2 p-10">
+                <div className="image object-center text-center hover:scale-[1.05]">
+                  <img src="https://i.imgur.com/WbQnbas.png" alt="About Us" />
+                </div>
+              </div>
+              <div className="sm:w-1/2 p-5">
+                <div className="text group cursor-pointer">
+                  <span className="text-gray-500 border-b-2 group-hover:translate-x-6 border-indigo-600 uppercase">
+                    About us
+                  </span>
+                  <h2 className="my-4 font-bold text-3xl  sm:text-4xl group-hover:scale-[1.05]">
+                    About <span className="text-indigo-600">TektAI</span>
+                  </h2>
+                  <p className="text-gray-700  group-hover:scale-[1.05]">
+                    {aboutUsContent}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </RevealOnScroll>
+      )}
 
       <RevealOnScroll additionalProp={false} delay="">
         <section

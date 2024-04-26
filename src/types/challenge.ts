@@ -53,4 +53,8 @@ export type challenge = {
     TeamParticipants: Array<Number>;
     TeamParticipationRequests: Array<Number>;
   };
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> ef1ee889dc33e3e5d77357d6d8917a5519e04061

@@ -2,13 +2,13 @@ import flatpickr from 'flatpickr';
 import { useEffect } from 'react';
 
 interface DateTimePickerProps {
-  onChange: (endDate: any) => void;
+  onChange: (startDate: any) => void;
   value: string;
 }
 
-const DateTimePicker: React.FC<DateTimePickerProps> = ({ onChange, value }) => {
+const DateTimePickerStart: React.FC<DateTimePickerProps> = ({ onChange, value }) => {
   useEffect(() => {
-    flatpickr('.form-datepicker-end', {
+    flatpickr('.form-datepicker-start', {
       enableTime: true,
       mode: 'single',
       static: true,
@@ -24,14 +24,14 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onChange, value }) => {
   }, [onChange, value]);
 
   return (
-      <div >
+      <div>
         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-          End Date
+          Start Date
         </label>
         <div className="relative">
           <input
-            name="endDate"
-            className="form-datepicker-end w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+            name="startDate"
+            className="form-datepicker-start w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             placeholder="mm/dd/yyyy hh:mm"
             data-class="flatpickr-right"
             value={value}
@@ -55,4 +55,4 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onChange, value }) => {
   );
 };
 
-export default DateTimePicker;
+export default DateTimePickerStart;

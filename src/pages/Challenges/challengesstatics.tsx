@@ -28,7 +28,6 @@ const ChallengeStatistics: React.FC = () => {
             nbcompanies: Math.ceil(prevDisplayedStatistics.nbcompanies + (fetchedStatistics.nbcompanies - prevDisplayedStatistics.nbcompanies) * incrementPercentage)
         }));
     };
-
     useEffect(() => {
         console.log('Fetching challenge statistics...');
         const fetchChallengeStatistics = async () => {

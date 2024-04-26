@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ClientLayout from '../../layout/clientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import {
-  createPath,
-  useLocation,
-  useNavigate,
   useParams,
 } from 'react-router-dom';
+
+
 import {
   format,
   differenceInMonths,
@@ -37,6 +37,10 @@ import TeamSelectionModal from './teamSelectionModal';
 import Discussion from './discussion';
 import { challenge } from '../../types/challenge';
 import { FaHeart } from 'react-icons/fa';
+import Overview from './overview';
+
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -1283,13 +1287,12 @@ const ChallengeDetails: React.FC = () => {
               
               <div className="flex items-center mt-4">
                 <div
-                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${
-                    challengeDetails.status === 'open'
-                      ? 'bg-blue-400'
-                      : challengeDetails.status === 'archived'
-                        ? 'bg-red-600'
-                        : 'bg-green-500'
-                  } text-white`}
+                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${challengeDetails.status === 'open'
+                    ? 'bg-blue-400'
+                    : challengeDetails.status === 'archived'
+                      ? 'bg-red-600'
+                      : 'bg-green-500'
+                    } text-white`}
                 >
                   {challengeDetails.status === 'open'
                     ? 'Open'
@@ -1322,6 +1325,18 @@ const ChallengeDetails: React.FC = () => {
                 </p>
               )}
             </div>
+            <div>
+              <h2 className="text-md font-bold text-gray-900 mt-2">
+                Number of Participants Required
+              </h2>
+              <p className="text-gray-600 mt-4 break-words text-black break-words">
+                Teams: {challengeDetails.numberParticipants.nbrTeam}
+              </p>
+              <p className="text-gray-600 mt-4 break-words text-black break-words">
+                Solo: {challengeDetails.numberParticipants.nbrSolo}
+              </p>
+            </div>
+
           </div>
         </div>
         {userAuth?.role === 'challenger' &&
@@ -1431,33 +1446,18 @@ const ChallengeDetails: React.FC = () => {
 
           <div className="p-8">
             {activeTab === 'overview' && (
-              <>
-                <h2 className="text-2xl font-bold text-gray-900 mt-2">
-                  Description
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black	">
-                  {challengeDetails.description}
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8">
-                  Prizes
-                </h2>
-                <p className="text-gray-600 mt-4 text-black">
-                  {challengeDetails.amount}Dt
-                </p>
-                <h2 className="text-2xl font-bold text-gray-900 mt-8 ">
-                  Submission Guidelines
-                </h2>
-                <p className="text-gray-600 mt-4 break-words text-black">
-                  {challengeDetails.description}
-                </p>
-              </>
+              <Overview />
+
             )}
+
             {activeTab === 'leaderboard' && (
               <div>
                 <h2>Leaderboard</h2>
               </div>
             )}
-            {activeTab === 'discussion' && <Discussion />}
+            {activeTab === 'discussion' && (
+              <Discussion />
+            )}
             {activeTab == 'participations' && (
               <div>
                 <ChallengeParticipations
@@ -1495,7 +1495,7 @@ const ChallengeDetails: React.FC = () => {
                     title="Add Submission"
                     content={<AddSubmissionForm />}
                     onClose={closeModal}
-                    onSave={() => {}}
+                    onSave={() => { }}
                   />
                 </div>
                 <ul>
@@ -1511,7 +1511,7 @@ const ChallengeDetails: React.FC = () => {
                           title="Edit Submission"
                           content={<EditSubmissionForm id={submission._id} />}
                           onClose={closeEditModal}
-                          onSave={() => {}}
+                          onSave={() => { }}
                         />
                         <div className="flex-col">
                           <p className="break-words text-black font-semibold">
@@ -1526,6 +1526,14 @@ const ChallengeDetails: React.FC = () => {
                           <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
                             {submission.codeSourceFile.name.substring(0, 20)}...
                           </p>
+
+                          {/* View icon */}
+                          <div className="p-2 text-gray text-primary cursor-pointer focus:outline-none">
+                            <Link to={`/submission/details/${submission._id}`}>
+                              <FontAwesomeIcon icon={faEye} />
+                            </Link>
+                          </div>
+
 
                           {userAuth?._id === submission.submittedBy ? (
                             <div className="relative">
@@ -1577,6 +1585,8 @@ const ChallengeDetails: React.FC = () => {
                       </div>
                     </li>
                   ))}
+
+
                 </ul>
                 {/* Pagination */}
                 <nav>

@@ -195,6 +195,30 @@ const Competitions: React.FC = () => {
     }
   };
 
+  const handleCompleted = async (challengeId: string) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
+        { status: 'completed' },
+        { withCredentials: true },
+      );
+
+      console.log('PUT request successful for challenge ID:', challengeId);
+
+      const updatedChallenges = challenges.map((challenge) => {
+        if (challenge._id === challengeId) {
+          return { ...challenge, status: 'completed' };
+        }
+        return challenge;
+      });
+
+      setChallenges(updatedChallenges);
+    } catch (error) {
+      console.error('Error completing challenge:', error);
+    }
+  };
+
+  
   // Fonction pour ouvrir un challenge
   const handleOpen = async (challengeId: string) => {
     try {
@@ -280,12 +304,13 @@ const Competitions: React.FC = () => {
               <div>
                 {userAuth?.role === 'company' && (
                   <button
-                    onClick={add}
-                    className="inline-flex items-center justify-center bg-transparent px-5 py-2 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                  >
-                    Host a competition
-                  </button>
-                )}
+                  onClick={add}
+                  className="inline-flex items-center justify-center bg-transparent px-5 py-2 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
+                >
+                  Host a new competition
+                </button>
+                ) }
+                
               </div>
               <div className="col-md-2  text-end">
                 <div className="status-dropdown">

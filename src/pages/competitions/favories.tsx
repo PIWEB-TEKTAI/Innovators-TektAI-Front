@@ -382,21 +382,15 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   );
 };
 
-import ClientLayout from '../../layout/clientLayout';
-import { WhyChooseUs } from '../../types/whyChooseUs';
 import {
-  faTasks,
   faChartLine,
-  faCalendarAlt,
-  faUser,
+
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
-import { FaHeart, FaUserPlus } from 'react-icons/fa';
-import { Id } from 'react-flags-select';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
-const ListChallengerFront: React.FC = () => {
+const Favories: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -420,7 +414,7 @@ const ListChallengerFront: React.FC = () => {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:3000/challenges/favorites/${userAuth?._id}`)
+      .get(`http://localhost:3000/challenges/favorites/${userAuth?._id}`,{withCredentials:true})
       .then((response) => {
         console.log(response.data);
         let filteredUsers = [];
@@ -545,4 +539,4 @@ const ListChallengerFront: React.FC = () => {
   );
 };
 
-export default ListChallengerFront;
+export default Favories;
