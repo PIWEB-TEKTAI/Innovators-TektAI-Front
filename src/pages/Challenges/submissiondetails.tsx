@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useParams } from 'react-router-dom';
-import { FaFileAlt } from 'react-icons/fa'; // Import file icon from react-icons/fa
+import { FaFilePdf , FaFileAlt ,FaFileExcel , FaFileCsv , FaFileVideo , FaFileWord} from 'react-icons/fa'; // Import file icon from react-icons/fa
 import { format} from 'date-fns';
 import { Link } from 'react-router-dom';
 
@@ -65,13 +65,13 @@ const SubmissionDetails: React.FC = () => {
         <div className="border-t border-gray-200 pt-4">
             {submission.datasetFile && (
                 <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
+                    <FaFileExcel className="text-green-500 mr-2" />
                     <p className="text-gray-700">DataSetFile: {submission.datasetFile.name}</p>
                 </div>
             )}
             {submission.presentationFile && (
                 <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
+                    <FaFilePdf className="text-red-500 mr-2" />
                     <p className="text-gray-700">Presentation File: {submission.presentationFile.name}</p>
                 </div>
             )}
@@ -83,19 +83,19 @@ const SubmissionDetails: React.FC = () => {
             )}
             {submission.readMeFile && (
                 <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
+                    <FaFileWord className="text-blue-500 mr-2" />
                     <p className="text-gray-700">ReadMe File: {submission.readMeFile.name}</p>
                 </div>
             )}
             {submission.reportFile && (
                 <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
+                    <FaFilePdf className="text-red-500 mr-2" />
                     <p className="text-gray-700">Report File: {submission.reportFile.name}</p>
                 </div>
             )}
             {submission.demoFile && (
                 <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
+                    <FaFileVideo className="text-gray-500 mr-2" />
                     <p className="text-gray-700">Demo File: {submission.demoFile.name}</p>
                 </div>
             )}
