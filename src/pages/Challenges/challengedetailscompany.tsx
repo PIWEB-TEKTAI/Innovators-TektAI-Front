@@ -21,6 +21,7 @@ import { useParams } from 'react-router-dom';
 import Overview from './overview';
 import { Link } from 'react-router-dom';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
+import Discussion from './discussion';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -1440,10 +1441,8 @@ const ChallengeDetailsCompany: React.FC = () => {
                 <h2>Leaderboard</h2>
               </div>
             )}
-            {activeTab === 'discussion' && (
-              <div>
-                <h2>Discussion</h2>
-              </div>
+          {activeTab === 'discussion' && (
+              <Discussion />
             )}
             {activeTab == 'participations' && (
               <div>

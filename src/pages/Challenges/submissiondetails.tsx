@@ -48,6 +48,16 @@ const SubmissionDetails: React.FC = () => {
     return (
         <ConnectedClientLayout>
 <div className="bg-white rounded-lg shadow-md p-6 mb-4 flex flex-col sm:flex-row justify-between">
+<div className="flex-none w-full sm:w-1/2 sm:ml-4">
+        <div className="text-gray-700 mb-4">
+            <p className="font-semibold">Challenge: {submission.challengeId.title}</p>
+
+            <img src={submission.submittedBy.imageUrl } alt="profile"className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"/>
+
+            <p>Submitted By: {submission.submittedBy.FirstName} {submission.submittedBy.LastName}</p>
+            <p>Submitted on: {submission.submissionDate ? format(new Date(submission.submissionDate), 'MM/dd/yyyy') : 'N/A'}</p>
+        </div>
+    </div>
     <div className="flex-none w-full sm:w-1/2 sm:mr-4">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Title: {submission.title}</h2>
         <p className="text-gray-700 mb-2">Description: {submission.description}</p>
@@ -91,13 +101,7 @@ const SubmissionDetails: React.FC = () => {
             )}
         </div>
     </div>
-    <div className="flex-none w-full sm:w-1/2 sm:ml-4">
-        <div className="text-gray-700 mb-4">
-            <p className="font-semibold">Challenge: {submission.challengeId.title}</p>
-            <p>Submitted By: {submission.submittedBy.FirstName} {submission.submittedBy.LastName}</p>
-            <p>Submitted on: {submission.submissionDate ? format(new Date(submission.submissionDate), 'MM/dd/yyyy') : 'N/A'}</p>
-        </div>
-    </div>
+
 </div>
 
 
