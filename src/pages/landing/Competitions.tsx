@@ -465,7 +465,7 @@ const Competitions: React.FC = () => {
             </div>
 
             {/* Pagination */}
-            <div className="pagination">
+            <div className="pagination cursor-pointer">
               <a onClick={() => paginate(currentPage - 1)}>&laquo;</a>
               {Array.from({
                 length: Math.ceil(

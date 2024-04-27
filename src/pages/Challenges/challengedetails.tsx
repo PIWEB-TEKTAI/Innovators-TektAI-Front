@@ -40,6 +40,7 @@ import { FaHeart } from 'react-icons/fa';
 import Overview from './overview';
 
 import { faEye } from '@fortawesome/free-solid-svg-icons';
+import Loader from '../../common/Loader';
 
 
 const AddSubmissionForm: React.FC = () => {
@@ -1148,7 +1149,7 @@ const ChallengeDetails: React.FC = () => {
   }, [id]);
 
   if (!challengeDetails) {
-    return <div>Loading...</div>;
+    return <div>    <Loader />    </div>;
   }
 
   const formattedStartDate = format(

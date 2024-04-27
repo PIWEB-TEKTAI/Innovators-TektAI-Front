@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const NotificationUser = () => {
-  const [Data, setData] = useState<Notification[] | null>(null);
+  const [Data, setData] = useState<Notification[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
+  const [notificationsPerPage, setNotificationsPerPage] = useState<number>(10); // Nombre de challenges par page
+
 
   const toTitleCase = (str: string) => {
     return str
@@ -49,6 +52,19 @@ const NotificationUser = () => {
     fetchNotifications();
   }, []);
 
+  const indexOfLastNotification = currentPage * notificationsPerPage;
+  const indexOfFirstNotification = indexOfLastNotification - notificationsPerPage;
+  const currentNotifications = Data?.slice(
+    indexOfFirstNotification,
+    indexOfLastNotification,
+  );
+
+  const paginate = (pageNumber: number) => {
+    console.log('Page number:', pageNumber);
+    setCurrentPage(pageNumber);
+  };
+
+
   return (
     <ConnectedClientLayout>
       <div className="mx-auto max-w-270">
@@ -62,8 +78,8 @@ const NotificationUser = () => {
               </div>
               <div>
                 <ul className="flex h-auto flex-col overflow-y-auto">
-                  {Data !== null &&
-                    Data.map((item: any, index: any) => (
+                  {currentNotifications !== null &&
+                    currentNotifications.map((item: any, index: any) => (
                     
                   <li key={index}>
                     {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName ? (
@@ -121,6 +137,23 @@ const NotificationUser = () => {
                     ))}
                 </ul>
               </div>
+              <div className="pagination mb-5 cursor-pointer">
+              <a onClick={() => paginate(currentPage - 1)}>&laquo;</a>
+              {Array.from({
+                length: Math.ceil(
+                  Data.length / notificationsPerPage,
+                ),
+              }).map((_, index) => (
+                <a
+                  key={index + 1}
+                  className={currentPage === index + 1 ? 'active' : ''}
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </a>
+              ))}
+              <a onClick={() => paginate(currentPage + 1)}>&raquo;</a>
+            </div>
             </div>
           </div>
     </ConnectedClientLayout>
