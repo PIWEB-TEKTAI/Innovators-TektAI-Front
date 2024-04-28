@@ -69,12 +69,13 @@ const SubmissionDetails: React.FC = () => {
                     <p className="text-gray-700">DataSetFile: {submission.datasetFile.name}</p>
                 </div>
             )}
-            {submission.presentationFile && (
-                <div className="flex items-center mt-2">
-                    <FaFilePdf className="text-red-500 mr-2" />
-                    <p className="text-gray-700">Presentation File: {submission.presentationFile.name}</p>
-                </div>
-            )}
+{submission.presentationFile && (
+    <div className="flex items-center mt-2">
+        <FaFilePdf className="text-red-500 mr-2" />
+        <p className="text-gray-700">Presentation File: <a href={`${submission.presentationFile.url}?${Date.now()}`} download>{submission.presentationFile.name}</a></p>
+    </div>
+)}
+
             {submission.codeSourceFile && (
                 <div className="flex items-center mt-2">
                     <FaFileAlt className="text-gray-500 mr-2" />

@@ -9,6 +9,10 @@ import CreateTeamModal from '../Teams/CreateTeamModal';
 import { FaEye } from 'react-icons/fa'; // Import the eye icon from Font Awesome
 import { FiTrash2 } from 'react-icons/fi';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx'; 
+import jsPDF from 'jspdf'; // Modified import statement
+import html2canvas from 'html2canvas';
+
 
 
 export default function FetchData() {
@@ -95,13 +99,49 @@ export default function FetchData() {
     });
   };
 
+  const exportToExcel = () => {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileName = 'users_list.xlsx';
+    const ws = XLSX.utils.json_to_sheet(cardsData);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataExcel = new Blob([excelBuffer], { type: fileType });
+    const url = URL.createObjectURL(dataExcel);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  };
+
+  const exportToPDF = () => {
+    const input = document.getElementById('pdf-content');
+    if (!input) return;
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save('users_list.pdf');
+    });
+  };
+
 
   return (
 <Layout>
   <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
     <div className="flex justify-between items-center mb-4">
       <h2 className="text-2xl font-semibold">Teams List</h2>
+      
       <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+      <button onClick={exportToExcel} className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+              Export to Excel
+            </button>
+            <button onClick={exportToPDF} className="bg-[#bf2d2d] text-white py-2 px-4 rounded-md">
+              Export to PDF
+            </button>
+
+
           <button
             onClick={handleCreateTeamModal}
             className="inline-flex items-center justify-center bg-transparent px-5 py-3 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
@@ -123,8 +163,8 @@ export default function FetchData() {
       onChange={handleSearchChange}
       className="border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:border-primary-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
     />
-    <div className="max-w-full overflow-x-auto">
-      <table className="w-full table-auto">
+    <div  className="max-w-full overflow-x-auto">
+      <table id="pdf-content" className="w-full table-auto">
         <thead>
           <tr className="bg-gray-2 text-left dark:bg-meta-4">
             <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11"></th>

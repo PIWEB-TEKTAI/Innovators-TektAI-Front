@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
@@ -9,10 +10,38 @@ import TableOne from '../../components/Tables/TableOne';
 import DefaultLayout from '../../layout/DefaultLayout';
 
 const ECommerce: React.FC = () => {
+  const [fetchedStatistics, setFetchedStatistics] = useState<any>({
+    totalChallenges: 0,
+    nbchallengers: 0,
+    nbcompanies: 0,
+    totalUsers:0,
+
+
+});
+useEffect(() => {
+  console.log('Fetching challenge statistics...');
+  const fetchChallengeStatistics = async () => {
+      try {
+          const response = await axios.get(`http://localhost:3000/challenge/statistics`, {
+              withCredentials: true,
+          });
+          console.log('Fetched statistics:', response.data.statistics);
+          setFetchedStatistics(response.data.statistics);
+      } catch (error) {
+          console.error('Error fetching challenge statistics:', error);
+      }
+  };
+
+  fetchChallengeStatistics();
+}, []);
+
+
+
+
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total views" total="$3.456K" rate="0.43%" levelUp>
+      <CardDataStats title="Total Users" total={fetchedStatistics.totalUsers} rate="0.43%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -31,7 +60,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Profit" total="$45,2K" rate="4.35%" levelUp>
+        <CardDataStats title="Total Challengers" total={fetchedStatistics.nbchallengers} rate="4.35%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -54,7 +83,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Product" total="2.450" rate="2.59%" levelUp>
+        <CardDataStats title="Total Companies" total={fetchedStatistics.nbcompanies} rate="2.59%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -73,7 +102,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Users" total="3.456" rate="0.95%" levelDown>
+        <CardDataStats title="Total Challenges" total={fetchedStatistics.totalChallenges} rate="0.43%" levelUp>
           <svg
             className="fill-primary dark:fill-white"
             width="22"

@@ -5,6 +5,9 @@ import Layout from '../../layout/DefaultLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserEdit, FaBan, FaTrashAlt, FaCheck,FaUserPlus } from 'react-icons/fa'; // Importation des icônes
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx'; 
+import jsPDF from 'jspdf'; // Modified import statement
+import html2canvas from 'html2canvas';
 
 // Définissez le type des données attendues
 interface User {
@@ -196,6 +199,33 @@ var debloquer = (email: string) => {
   var changeToCompany = (users: User) => {
     console.log(users)
   }
+  const exportToExcel = () => {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileName = 'users_list.xlsx';
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataExcel = new Blob([excelBuffer], { type: fileType });
+    const url = URL.createObjectURL(dataExcel);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  };
+
+  const exportToPDF = () => {
+    const input = document.getElementById('pdf-content');
+    if (!input) return;
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save('users_list.pdf');
+    });
+  };
+  
 
   return (
     <Layout>
@@ -203,6 +233,14 @@ var debloquer = (email: string) => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold">List</h2>
           <div className="flex items-center space-x-4">
+          <button onClick={exportToExcel} className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+              Export to Excel
+            </button>
+            <button onClick={exportToPDF} className="bg-[#bf2d2d] text-white py-2 px-4 rounded-md">
+              Export to PDF
+            </button>
+
+
           <select
         value={selectedRole}
         onChange={(e) => setSelectedRole(e.target.value)}
@@ -227,7 +265,7 @@ var debloquer = (email: string) => {
       )}
           </div>
         </div>
-        <div className="max-w-full overflow-x-auto">
+        <div  className="max-w-full overflow-x-auto">
             {/* Champ de recherche */}
             <input
             type="text"
@@ -236,7 +274,7 @@ var debloquer = (email: string) => {
             onChange={handleSearch}
             className="mb-4 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
           />
-          <table className="w-full table-auto">
+          <table id="pdf-content" className="w-full table-auto">
             <thead>
               <tr className="bg-gray-200 text-left dark:bg-meta-4">
                 <th className="px-4 py-3">First Name</th>
