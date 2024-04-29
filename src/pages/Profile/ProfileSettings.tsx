@@ -77,6 +77,9 @@ const ProfileSettings = () => {
   const [companyEmailError, setCompanyEmailError] = useState('');
 
 
+  const [companyWebsiteUrlValue, setcompanyWebsiteUrlValue] = useState('');
+  const [companyWebsiteUrlError, setcompanyWebsiteUrlError] = useState('');
+
   const [companyPhoneValue, setCompanyPhoneValue] = useState('');
   const [companyPhoneError, setCompanyPhoneError] = useState('');
 
@@ -232,6 +235,18 @@ const ProfileSettings = () => {
     }
    }
   
+   const checkCompanyWebsiteUrl = (value:any) =>{
+    setcompanyWebsiteUrlValue(value)
+    if (!value.trim()) {
+      setcompanyWebsiteUrlError("Please enter the company website url");
+    } else if (!/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value)) {
+      setcompanyWebsiteUrlError("Please enter a valid website url");
+    }else{
+      setcompanyWebsiteUrlError("");
+    }
+   }
+
+
 
   const checkCompanyAddress = (value:any) =>{
     setCompanyAddressValue(value)
@@ -319,7 +334,9 @@ const ProfileSettings = () => {
         email: companyEmailValue,
         address:companyAddessValue,
         professionnalFields:companyProfessionnalFieldsValue,
+        websiteUrl:companyWebsiteUrlValue,
         description:companyDescription
+
       });
 
       if(updatedCompany){
@@ -366,7 +383,7 @@ const ProfileSettings = () => {
     );
   };
   const isForm2Valid = () => {
-    return  CompanyNameValue !== '' && companyAddessValue !== '' && companyEmailValue !== '' && companyPhoneValue !== '' && companyProfessionnalFieldsValue !== 'Choose company professional fields';
+    return  CompanyNameValue !== '' && CompanyNameError === '' && companyAddessValue !== ''  && companyAddessError === '' && companyEmailValue !== '' && companyEmailError === '' && companyPhoneValue !== '' && companyPhoneError === '' && companyProfessionnalFieldsValue !== 'Choose company professional fields' && companyProfessionnalFieldsError === '' && companyWebsiteUrlValue !== '' && companyWebsiteUrlError === '';
    };
   
   useEffect(() => {
@@ -385,10 +402,12 @@ const ProfileSettings = () => {
         setSkills(data?.skills || []);     
       setCompanyNameValue(data?.company.name || '')
       setCompanyEmailValue(data?.company.email || '')
-      setCompanyAddressValue(data?.company.address)
-      setCompanyPhoneValue(data?.company.phone);
-      setCompanyProfessionnalFieldsValue(data?.company.professionnalFields)
-      setCompanyDescription(data?.company.description);
+      setCompanyAddressValue(data?.company.address || '')
+      setCompanyPhoneValue(data?.company.phone || '');
+      setcompanyWebsiteUrlValue(data?.company.websiteUrl || '')
+      setCompanyProfessionnalFieldsValue(data?.company.professionnalFields || '')
+      setCompanyDescription(data?.company.description || '');
+
        } catch (error) {
         console.error('Error fetching profile:', error);
       }
@@ -1021,25 +1040,46 @@ const ProfileSettings = () => {
                       </div>
                   </div>
                   
-                  <div className="mb-4">
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Professional fields
-                    </label>
-                    <select id="professionnalFields"  value={companyProfessionnalFieldsValue}   onChange={(e)=> checkProfesionnalFieldsValue(e.target.value)} className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary">
-                        <option value="Choose company professional fields">Choose company professional fields</option>
-                        {
-                          professionalFields.map((item,index)=>(
-                            <option key={index} value={item}>{item}</option>
-                          ))
-                        }
-                    </select>
 
-                    { companyProfessionnalFieldsError &&
+                  <div className="mb-4">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Company website url
+                      </label>
+                      <div className="relative">
+                        <input
+                          value={companyWebsiteUrlValue}
+                          onChange={(e)=> checkCompanyWebsiteUrl(e.target.value)}
+                          type="text"
+                          placeholder="Enter the company website url"
+                          className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        />
+                        { companyWebsiteUrlError &&
                         <div className="flex">
-                        <p className="text-red-500 text-sm mt-1">{ companyProfessionnalFieldsError }</p>
+                        <p className="text-red-500 text-sm mt-1">{ companyWebsiteUrlError }</p>
                         </div> 
                         }
+                        <span className="absolute left-4.5 top-4">
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      </div>
                   </div>
+
+
+                 
                   <div className="mb-4">
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                       Company address
@@ -1091,6 +1131,27 @@ const ProfileSettings = () => {
                           <img src="/src/images/icon/tel.png" alt="tel" width="45%"/>
                       </span>  
                     </div>
+
+                    <div className="mb-4 mt-4">
+                    <label className="mb-4 block text-sm font-medium text-black dark:text-white">
+                      Professional fields
+                    </label>
+                    <select id="professionnalFields"  value={companyProfessionnalFieldsValue}   onChange={(e)=> checkProfesionnalFieldsValue(e.target.value)} className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary">
+                        <option value="Choose company professional fields">Choose company professional fields</option>
+                        {
+                          professionalFields.map((item,index)=>(
+                            <option key={index} value={item}>{item}</option>
+                          ))
+                        }
+                    </select>
+
+                    { companyProfessionnalFieldsError &&
+                        <div className="flex">
+                        <p className="text-red-500 text-sm mt-1">{ companyProfessionnalFieldsError }</p>
+                        </div> 
+                        }
+                  </div>
+
                     <div className="mb-4">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"

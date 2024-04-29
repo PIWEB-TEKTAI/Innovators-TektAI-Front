@@ -163,11 +163,14 @@ function App() {
         />
         {/*Admin Routes*/}
         <Route
-          index
+          path='dashboard'
           element={
             <>
               <PageTitle title="eCommerce Dashboard | TektAi" />
-              <ECommerce />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+                      <ECommerce />
+
+                    }/>
             </>
           }
         />
@@ -665,7 +668,8 @@ function App() {
         />
 
            <Route
-            path="/landing"
+            index
+            path='/landing'
             element={
             <>
               <PageTitle title="Landing | TektAi" />

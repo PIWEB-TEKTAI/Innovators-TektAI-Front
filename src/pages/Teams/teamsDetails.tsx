@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import teamService from '../../services/teamsService';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import ClientLayout from '../../layout/clientLayout';
+import Loader from '../../common/Loader';
 
 const TeamsDetails = () => {
   const { id } = useParams();
@@ -41,23 +42,31 @@ const TeamsDetails = () => {
     setActiveTab(tab);
   };
   if (!team) {
-    return <div>Loading...</div>;
+    return <div><Loader/></div>;
   }
 
   return (
     <ClientLayout>
         <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-            <div className="z-20 h-15 md:h-35 bg-white rounded-lg text-black text-xl items-center flex justify-center font-semibold">
-                <span>Welcome To</span> <span className=' text-primary ml-1'> {team.name}</span>
+            <div className=" h-15 md:h-35 bg-white rounded-lg text-black text-2xl shadow-md  items-center flex flex-col justify-around font-semibold">
+                 <img src={team.imageUrl} alt="profile" className="rounded-full my-2 max-h-12 w-12 ml-5" />
+
+                <span className='mb-5'>Welcome To <span className=' text-primary ml-1'> {team.name}</span></span> 
+
+                
             </div>
             
-            <div className="z-20 h-15 md:h-35 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
-                <span>Team Members</span>
+            <div className=" h-10 md:h-30 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
+             
+
             </div>
+
+
+
             <div>
-            <ul className="flex justify-center  flex-wrap">
+            <ul className="flex justify-between  flex-wrap">
                 {team.members.map((member: any) => (
-                <div className='card-design2 ml-5 bg-white' key={member._id}>
+                <div className='card-design2 ml-5 bg-white shadow-lg' key={member._id}>
                     <img
                     src={member.imageUrl}
                     alt="profile"
@@ -78,6 +87,18 @@ const TeamsDetails = () => {
                     {' '}
                     { member.Description && member.Description.substring(0,70) }...{' '}
                     </p>
+
+                  {team.leader._id === member._id ? (
+                    <p className='mt-5 w-18 text-sm text-white font-semibold bg-primary rounded-full py-1 px-3 sm:ml-15'>
+                         Leader
+                    </p>
+                  ) : (
+                    <p className='mt-5 w-18 text-sm text-white font-semibold bg-orange-500 rounded-full py-1 px-2 sm:ml-15'>
+                      Member
+                    </p>
+                  ) }
+                    
+                  
                 </div>
                
                 ))}
