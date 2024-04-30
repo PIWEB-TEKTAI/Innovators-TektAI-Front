@@ -562,26 +562,48 @@ const EditChallenge = () => {
   };
 
 
+ 
   const isFirstPageValid = () => {
     return (
       title !== '' &&
       description !== '' &&
+      problematic !== '' &&
+      startDate !== '' &&
       endDate != '' &&
+      Image !== '' &&
+      ImageError === '' &&
       titleError === '' &&
       descriptionError === '' &&
-      endDateError === ''
+      endDateError === '' &&
+      startDateError === '' &&
+      problematicError === '' && DataSetFileError === ''
     );
   };
 
-
-  /*const isSecondPageValid = () => {
-    return (
-      (price !== '' || award !== '') &&
-      priceError === '' 
-    );
+   const isSecondPageValid = () => {
+    return(
+    visibility !== '' &&
+    team !== '' &&
+    solo !== '' &&
+    visibilityError === '' &&
+    teamError === '' &&
+    soloError === '' &&
+    (isAutomatedChecked || isExpertChecked) &&
+    (isOutputChecked || isPresentationChecked || isCodeSourceChecked || isDatasetChecked || isDemoChecked || isReadMeFileChecked || isRapportChecked)
+  )
   };
-*/
 
+  const isThirdPageValid = () => {
+    return(
+      (isMonetaryChecked && amount !== '' && amountError === '') ||
+      (isPrizesChecked && 
+      (isPrizeChecked && prizeName !== '' && prizeNameError === '' && prizeDescription !== '' && prizeDescriptionError === '') ||
+      (isRecruitementChecked && positionTitle !== '' && positionTitleError === '' && jobDescription !== '' && jobDescriptionError === '') ||
+      (isFreelanceChecked && projectTitle !== '' && projectTitleError === '' && projectDescription !== '' && projectDescriptionError === '') ||
+      (isInternChecked && InternTitle !== '' && InternTitleError === '' && InternDescription !== '' && InternDescriptionError === '' && duration !== '' && durationError === '')
+    )
+  )
+  };
   
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -1560,6 +1582,7 @@ const EditChallenge = () => {
                 <button
                   className="rounded bg-primary p-3  text-gray hover:bg-opacity-90"
                   onClick={handleSubmit}
+                  disabled={!isThirdPageValid()}
                 >
                   Submit
                 </button>
@@ -1567,6 +1590,7 @@ const EditChallenge = () => {
                 <button
                   className="rounded ml-auto bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90"
                   onClick={nextStep}
+                  disabled={step === 1 ? !isFirstPageValid() : !isSecondPageValid()}
                 >
                   Next
                 </button>

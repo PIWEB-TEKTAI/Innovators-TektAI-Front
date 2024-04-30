@@ -82,16 +82,16 @@ const NotificationUser = () => {
                     currentNotifications.map((item: any, index: any) => (
                     
                   <li key={index}>
-                    {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName ? (
+                    {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName && (
                             <Link
                             className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                            to="#"
-                          >
+                            to={item.ChallengeConcernedId ? `/challenge/details/${item.ChallengeConcernedId}` : (item.SubmittionConcernedId ? `/submission/details/${item.SubmittionConcernedId}` : (item.TeamInvitation ? `/teams/myInvitations` : ''))  }>
+
                             <img
                               src={item.UserConcernedId.imageUrl}
                               alt="profile"
                               className="rounded-full max-h-36 w-10"
-                            />
+                    />
                             <div className="flex flex-col">
                               <p className="text-sm">
                                 <span className="font-semibold">
@@ -106,16 +106,18 @@ const NotificationUser = () => {
                               </p>
                             </div>
                           </Link>
-                    ) : (
+                    ) }
+
+                    {  item.TeamConcernedId &&  item.TeamConcernedId.imageUrl && item.TeamConcernedId.name && (
+
                       <Link
                       className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                      to="#"
-                    >
+                      to={item.ChallengeConcernedId ? `/challenge/details/${item.ChallengeConcernedId}` : (item.SubmittionConcernedId ? `/submission/details/${item.SubmittionConcernedId}` : '')}>
                       <img
-                              src={item.TeamConcernedId.imageUrl}
-                              alt="profile"
-                              className="rounded-full max-h-36 w-10"
-                            />
+                        src={item.TeamConcernedId.imageUrl}
+                        alt="profile"
+                        className="rounded-full max-h-36 w-10"
+                    />
                      
                       <div className="flex flex-col">
                         <p className="text-sm">
@@ -126,7 +128,7 @@ const NotificationUser = () => {
                         </p>
 
                         <p className="text-xs text-primary font-medium">
-                          {formatDate(item.createdAt)}
+                         { formatDate(item.createdAt)}
                         </p>
                       </div>
                     </Link>

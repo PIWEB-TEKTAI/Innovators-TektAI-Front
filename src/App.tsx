@@ -669,7 +669,7 @@ function App() {
 
            <Route
             index
-            path='/landing'
+            path='/'
             element={
             <>
               <PageTitle title="Landing | TektAi" />

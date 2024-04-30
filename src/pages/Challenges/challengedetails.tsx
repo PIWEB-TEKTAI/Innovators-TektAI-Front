@@ -54,6 +54,7 @@ const ChallengeDetails: React.FC = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [confiramtionMessage, setConfirmationMessage] = useState('');
   const [showTeamModal, setShowTeamModal] = useState(false);
+  const [clicked , setClicked] = useState(false);
 
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
@@ -320,11 +321,25 @@ const ChallengeDetails: React.FC = () => {
             </div>
          
             <div>
-            <button
-              className="text-red-500 hover:text-red-700  flex-col mb-28"
-              onClick={() => AddTofavories(challengeDetails._id)}>
-              <FaHeart style={{ fontSize: '2em',  }} /> {/* Icône de cœur avec une taille de 2em et un espacement à droite */}
-            </button>
+
+             {!clicked ? (
+              <button
+                  className="flex-col mb-35"
+                  onClick={() => {
+                  AddTofavories(challengeDetails._id),
+                  setClicked(true)}
+                  }>
+                  <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }} /> 
+              </button>
+                   
+             ) : (
+              <button
+              className="text-red-500 hover:text-red-700 flex-col mb-35"
+              onClick={() => setClicked(false)}>
+              <FaHeart style={{ fontSize: '2em', fill:'red' }} /> 
+              </button>
+             )}
+           
               {/*<h2 className="text-md font-bold text-gray-900 mt-2">
                 Number of Participants Required
               </h2>
@@ -523,7 +538,7 @@ const ChallengeDetails: React.FC = () => {
                           </p>
 
                           {/* View icon */}
-                          <div className="p-2 text-gray text-primary cursor-pointer focus:outline-none">
+                          <div className="p-2 mt-2  text-primary cursor-pointer focus:outline-none">
                             <Link to={`/submission/details/${submission._id}`}>
                               <FontAwesomeIcon icon={faEye} />
                             </Link>

@@ -249,7 +249,7 @@ const handleSignIn = async () => {
       setTimeout(() => {
         if(responseData.role == "challenger" || responseData.role=="company"){
           console.log("role"+responseData.role);
-          navigate("/landing");
+          navigate("/");
         }
         if(responseData.role == "admin" || responseData.role=="superAdmin"){
           console.log("role"+responseData.role);

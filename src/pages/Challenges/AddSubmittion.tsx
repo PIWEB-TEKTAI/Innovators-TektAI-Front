@@ -99,17 +99,17 @@ const AddSubmissionForm: React.FC = () => {
         description !== '' &&
         titleError === '' &&
         descriptionError === '' &&
-        ((challengeData?.bareme.output ? (Output !== '' && OutputError === '') : '') &&  (challengeData?.bareme.presentation ? (presentationFile !== '' && presentationFileError === '') : ''))
+        ((challengeData?.bareme.output ? (Output !== '' && OutputError === '') : true) &&  (challengeData?.bareme.presentation ? (presentationFile !== '' && presentationFileError === '') : true))
     )};
 
     const isForm1Valid = () => {
         return (
           (
-            (challengeData?.bareme.dataSet ? (DataSetFile !== '' && DataSetFileError === '') : '') &&  
-          (challengeData?.bareme.codeSource ? (codeSourceFile !== '' && CodeSourceFileError === '') : '' ) &&
-          (challengeData?.bareme.readmeFile  ? (readMeFile !== '' && readMeFileError === '')  : '') &&
-          (challengeData?.bareme.Demo ? (demoFile !== '' && DemoError === '') : '' ) &&
-          (challengeData?.bareme.rapport ? (reportFile !== '' && ReportFileError === '') : '' ) 
+            (challengeData?.bareme.dataSet ? (DataSetFile !== '' && DataSetFileError === '') : true) &&  
+          (challengeData?.bareme.codeSource ? (codeSourceFile !== '' && CodeSourceFileError === '') : true ) &&
+          (challengeData?.bareme.readmeFile  ? (readMeFile !== '' && readMeFileError === '')  : true) &&
+          (challengeData?.bareme.Demo ? (demoFile !== '' && DemoError === '') : true ) &&
+          (challengeData?.bareme.rapport ? (reportFile !== '' && ReportFileError === '') : true ) 
         )
     )};
 
@@ -311,7 +311,7 @@ const AddSubmissionForm: React.FC = () => {
           {alert?.type == 'error' && ErrorToast(alert.message)}
         </div>
   
-        <div className="flex w-full p-1 flex-col  gap-1 border-full">
+        <div className="flex w-full p-1 flex-col overflow-y-auto max-h-115 gap-1 border-full">
           {/* Content for Step 1 */}
           {step === 1 ? (
             <div>
@@ -389,6 +389,8 @@ const AddSubmissionForm: React.FC = () => {
                         ? presentationFileName
                         : 'Upload presentation file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only PDF files. </p>
+
                     {presentationFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {presentationFileError}
@@ -421,6 +423,8 @@ const AddSubmissionForm: React.FC = () => {
                         ? codeSourceFileName
                         : 'Upload source code file'}
                     </label>
+                    <p className="mt-1 text-xs  text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only ZIP files. </p>
+
                     {CodeSourceFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {CodeSourceFileError}
@@ -449,6 +453,8 @@ const AddSubmissionForm: React.FC = () => {
                     >
                       {FileName ? FileName : 'Upload dataset file'}
                     </label>
+                    <p className="mt-1 text-xs  text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only EXCEL files. </p>
+
                     {DataSetFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {DataSetFileError}
@@ -477,6 +483,8 @@ const AddSubmissionForm: React.FC = () => {
                     >
                       {readmeFileName ? readmeFileName : 'Upload README file'}
                     </label>
+                    <p className="mt-1 text-xs  text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only TXT files. </p>
+
                     {readMeFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {readMeFileError}
@@ -507,6 +515,7 @@ const AddSubmissionForm: React.FC = () => {
                         ? reportFileName
                         : 'Upload detailed report file'}
                     </label>
+                    <p className="mt-1 text-xs  text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only PDF files. </p>
                     {ReportFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {ReportFileError}
@@ -537,6 +546,7 @@ const AddSubmissionForm: React.FC = () => {
                         ? demoFileName
                         : 'Upload demonstration report file'}
                     </label>
+                    <p className="mt-1 text-xs  text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only MP4 files. </p>
                     {DemoError && (
                       <p className="text-red-500 text-sm mt-1">{DemoError}</p>
                     )}

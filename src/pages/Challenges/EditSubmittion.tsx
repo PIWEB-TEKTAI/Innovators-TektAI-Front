@@ -106,16 +106,33 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
         title !== '' &&
         description !== '' &&
         titleError === '' &&
-        descriptionError === ''
-      );
-    };
+        descriptionError === '' &&
+        ((Output ? (Output !== '' && OutputError === '') : true) &&  (presentationFileName ? (presentationFileName !== '' && presentationFileError === '') : true))
+    )};
+
+    const isForm1Valid = () => {
+        return (
+          (
+            (FileName ? (FileName !== '' && DataSetFileError === '') : true) &&  
+          (codeSourceFileName ? (codeSourceFileName !== '' && CodeSourceFileError === '') : true ) &&
+          (readmeFileName  ? (readmeFileName !== '' && readMeFileError === '')  : true) &&
+          (demoFileName ? (demoFileName !== '' && DemoError === '') : true ) &&
+          (reportFileName ? (reportFileName !== '' && ReportFileError === '') : true ) 
+        )
+    )};
+
     const handleFileChange = (e: any) => {
       const file = e.target.files[0];
-  
       setDataSetFile(file);
       setFileName(file.name);
       if (!file) {
-        setDataSetFileError('File is required');
+        setDataSetFileError('Dataset file is required');
+      }else if (
+        file.type != 'application/vnd.ms-excel' &&
+        file.type !=
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      ) {
+        setDataSetFileError('You should provide an xsl file')
       } else {
         setDataSetFileError('');
       }
@@ -126,7 +143,10 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setPresentationFile(file);
       setPresentationFileName(file.name);
       if (!file) {
-        setPresentationFileError('File is required');
+        setPresentationFileError('Presentation file is required');
+      } else if (file.type !== 'application/pdf') {
+
+        setPresentationFileError('You should provide an PDF file');
       } else {
         setPresentationFileError('');
       }
@@ -137,7 +157,12 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setCodeSourceFile(file);
       setCodeSourceFileName(file.name);
       if (!file) {
-        setCodeSourceFileError('File is required');
+        setCodeSourceFileError('Source Code file is required');
+      }else if (
+           !file.name.toLowerCase().endsWith('.zip') &&
+           !file.name.toLowerCase().endsWith('.war'))
+      {
+        setCodeSourceFileError('You should provide a ZIP or WAR file');
       } else {
         setCodeSourceFileError('');
       }
@@ -148,7 +173,12 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setReadMeFileFile(file);
       setReadmeFileName(file.name);
       if (!file) {
-        setReadMeFileFileError('File is required');
+        setReadMeFileFileError('Source Code file is required');
+      }else if (
+        file.type !== 'text/plain' || !file.name.toLowerCase().endsWith('.txt')
+      )
+      {
+        setReadMeFileFileError('You should provide a txt file');
       } else {
         setReadMeFileFileError('');
       }
@@ -159,7 +189,11 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setReportFile(file);
       setReportFileName(file.name);
       if (!file) {
-        setReportFileError('File is required');
+        setReportFileError('Report file is required');
+
+      } else if (file.type !== 'application/pdf') {
+
+        setReportFileError('You should provide an PDF file');
       } else {
         setReportFileError('');
       }
@@ -171,9 +205,13 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
       setDemoFileName(file.name);
       if (!file) {
         setDemoError('File is required');
-      } else {
+    } else if (
+            !file.name.toLowerCase().endsWith('.mp4') )
+       {
+         setDemoError('You should provide a mp4 file');
+       } else {
         setDemoError('');
-      }
+       }  
     };
   
     const nextStep = () => {
@@ -227,7 +265,7 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
           {alert?.type == 'error' && ErrorToast(alert.message)}
         </div>
   
-        <div className="flex w-full p-1 flex-col  gap-1 border-full">
+        <div className="flex w-full p-1 flex-col overflow-y-auto max-h-115  gap-1 border-full">
           {/* Content for Step 1 */}
           {step === 1 ? (
             <div>
@@ -305,6 +343,8 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                         ? presentationFileName
                         : 'Upload presentation file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only PDF files. </p>
+
                     {presentationFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {presentationFileError}
@@ -337,6 +377,8 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                         ? codeSourceFileName
                         : 'Upload source code file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only ZIP files. </p>
+
                     {CodeSourceFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {CodeSourceFileError}
@@ -365,6 +407,8 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                     >
                       {FileName ? FileName : 'Upload dataset file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only EXCEL files. </p>
+
                     {DataSetFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {DataSetFileError}
@@ -393,6 +437,8 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                     >
                       {readmeFileName ? readmeFileName : 'Upload README file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only TXT files. </p>
+
                     {readMeFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {readMeFileError}
@@ -423,6 +469,8 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                         ? reportFileName
                         : 'Upload detailed report file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only PDF files. </p>
+
                     {ReportFileError && (
                       <p className="text-red-500 text-sm mt-1">
                         {ReportFileError}
@@ -449,10 +497,13 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                       className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded border-[1.5px] border-stroke cursor-pointer"
                       htmlFor="customFile"
                     >
+
                       {demoFileName
                         ? demoFileName
                         : 'Upload demonstration report file'}
                     </label>
+                    <p className="mt-1 text-xs text-primary font-medium dark:text-gray-300" id="file_input_help">  This field requires only MP4 files. </p>
+
                     {DemoError && (
                       <p className="text-red-500 text-sm mt-1">{DemoError}</p>
                     )}
@@ -485,7 +536,7 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
               <button
                 className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
                 onClick={handleSubmit}
-                disabled={!isFormValid()}
+                disabled={!isForm1Valid()}
               >
                 Submit
               </button>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import { useAuth } from '../Auth/AuthProvider';
+import axios from 'axios';
 
 const DropdownUser =(props: {
   userName: String  | undefined;
@@ -10,6 +11,9 @@ const DropdownUser =(props: {
 
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [Data, setData] = useState<Notification[]>([]);
+
+
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -46,12 +50,37 @@ const DropdownUser =(props: {
 
     if (signOutSuccess) {
       logoutAuth();
-      navigate("/landing");
+      navigate("/");
 
     } else {
       // Handle sign-out failure, if needed
     }
   }
+
+
+  
+  const url = 'http://localhost:3000/notif';
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(`${url}/list/user`, {
+          withCredentials: true,
+        });
+        const data = await response.data;
+        if (data.notifications) {
+          setData(data.notifications);
+        }
+        console.log(Data);
+      } catch (error) {
+        console.error('Error fetching data notif:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, [dropdownOpen]);
+
+
   
   return (
     <div className="relative">
@@ -142,6 +171,11 @@ const DropdownUser =(props: {
             fill=""
           />
         </svg>
+        {Data !== null && (
+          <span className="bg-primary w-5 h-5 text-white text-center rounded-full px-1  py-1 text-xs absolute top-22 left-8 -mt-1 ">{Data.length}</span>
+
+        )}
+
               My Notifications
             </Link>
           </li>

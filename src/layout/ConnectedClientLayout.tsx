@@ -59,6 +59,13 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
             type: "info",
             message: msg
         });
+      }else if (eventName === "newTeamSubmission" && userAuth?._id === eventData.idUser) {
+        console.log('new Team Submittion Request Team:', eventData.name);
+        let msg = `${toTitleCase(eventData.name)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });  
       } else if (eventName === "editSubmission" && userAuth?._id === eventData.idUser) {
         console.log('edit submission:', eventData.firstname);
         let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;

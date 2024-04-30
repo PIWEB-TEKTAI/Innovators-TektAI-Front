@@ -50,7 +50,7 @@ const ClientHeader = (props: {
     <header className="sticky top-0 z-999999">
       <nav className="sticky bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <NavLink to="/landing">
+          <NavLink to="/">
             <a href="" className="flex items-center">
               <img
                 src="/src/images/landing/logo-transparent.png"

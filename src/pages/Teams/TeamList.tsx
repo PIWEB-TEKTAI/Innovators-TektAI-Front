@@ -169,10 +169,9 @@ const Card: React.FC<any & { onClick: () => void }> = ({
 
 import ClientLayout from '../../layout/clientLayout';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
 
-import CreateTeamModal from './CreateTeamModal';
 const TeamList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -188,6 +187,8 @@ const TeamList: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -213,15 +214,12 @@ const TeamList: React.FC = () => {
     card.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const [showModalCreateTeam, setshowModalCreateTeam] = useState(false);
 
   const handleCreateTeamModal = () => {
-    setshowModalCreateTeam(true); 
+    navigate('/teams/myTeams') 
   };
   
-  const handleTeamModalClose = () => {
-    setshowModalCreateTeam(false);
-  };
+
 
 
   const { userAuth } = useAuth();
@@ -274,10 +272,7 @@ const TeamList: React.FC = () => {
                   </button>
                 )}
 
-                { showModalCreateTeam && (
-                  <CreateTeamModal onClose={handleTeamModalClose}></CreateTeamModal>
-                   )
-                }
+               
               </div>
             </div>
             <div className="hidden ml-auto lg:col-span-5 lg:flex animate__animated animate__fadeInRight">

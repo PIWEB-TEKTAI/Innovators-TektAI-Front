@@ -423,7 +423,7 @@ const Landing: React.FC = () => {
         withCredentials: true,
       });
       console.log('Challenges response:', response);
-      setChallenges(response.data);
+      setChallenges(response.data.slice(0,3));
       console.log(challenges);
     } catch (error) {
       console.error('Erreur lors de la récupération des défis:', error);

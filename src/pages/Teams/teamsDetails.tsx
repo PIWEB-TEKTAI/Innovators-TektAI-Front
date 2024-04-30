@@ -52,15 +52,12 @@ const TeamsDetails = () => {
                  <img src={team.imageUrl} alt="profile" className="rounded-full my-2 max-h-12 w-12 ml-5" />
 
                 <span className='mb-5'>Welcome To <span className=' text-primary ml-1'> {team.name}</span></span> 
-
-                
             </div>
             
-            <div className=" h-10 md:h-30 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
+            <div className=" h-8 md:h-25 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
              
 
             </div>
-
 
 
             <div>
