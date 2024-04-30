@@ -8,6 +8,7 @@ import ChatCard from '../../components/Chat/ChatCard';
 import MapOne from '../../components/Maps/MapOne';
 import TableOne from '../../components/Tables/TableOne';
 import DefaultLayout from '../../layout/DefaultLayout';
+import StatsBarChart from '../../components/Charts/statistique';
 
 const ECommerce: React.FC = () => {
   const [fetchedStatistics, setFetchedStatistics] = useState<any>({
@@ -39,7 +40,9 @@ useEffect(() => {
 
 
   return (
+    
     <DefaultLayout>
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
       <CardDataStats title="Total Users" total={fetchedStatistics.totalUsers} rate="0.43%" levelUp>
           <svg
@@ -132,9 +135,17 @@ useEffect(() => {
         <ChartTwo />
         <ChartThree />
         <MapOne />
-        
+
         <ChatCard />
+
       </div>
+
+      <div >
+
+      <StatsBarChart />
+      </div>
+
+
     </DefaultLayout>
   );
 };

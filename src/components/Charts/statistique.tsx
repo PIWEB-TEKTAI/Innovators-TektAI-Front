@@ -54,7 +54,7 @@ const StatsBarChart = () => {
             labels: ['Challenger', 'Company', 'Admin'],
             datasets: [
               {
-                label: 'Nombre dutilisateurs',
+                label: 'number ',
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.5)',
                   'rgba(54, 162, 235, 0.5)',

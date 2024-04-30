@@ -44,70 +44,78 @@ const SubmissionDetails: React.FC = () => {
     if (!submission) {
         return <div>Loading...</div>;
     }
-
     return (
         <ConnectedClientLayout>
-<div className="bg-white rounded-lg shadow-md p-6 mb-4 flex flex-col sm:flex-row justify-between">
-<div className="flex-none w-full sm:w-1/2 sm:ml-4">
-        <div className="text-gray-700 mb-4">
-            <p className="font-semibold">Challenge: {submission.challengeId.title}</p>
-
-            <img src={submission.submittedBy.imageUrl } alt="profile"className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"/>
-
-            <p>Submitted By: {submission.submittedBy.FirstName} {submission.submittedBy.LastName}</p>
-            <p>Submitted on: {submission.submissionDate ? format(new Date(submission.submissionDate), 'MM/dd/yyyy') : 'N/A'}</p>
-        </div>
-    </div>
-    <div className="flex-none w-full sm:w-1/2 sm:mr-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Title: {submission.title}</h2>
-        <p className="text-gray-700 mb-2">Description: {submission.description}</p>
-        <p className="text-gray-700 mb-2">Output: {submission.output}</p>
-        <div className="border-t border-gray-200 pt-4">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-4 flex flex-col sm:flex-row justify-between">
+      
+            <div className="flex-none w-full sm:w-1/2 sm:ml-4">
+              <div className="text-gray-700 mb-4">
+                <p className="font-semibold">Challenge: {submission.challengeId.title}</p>
+                <img src={submission.submittedBy.imageUrl} alt="profile" className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg" />
+                <p>Submitted By: {submission.submittedBy.FirstName} {submission.submittedBy.LastName}</p>
+                <p>Submitted on: {submission.submissionDate ? format(new Date(submission.submissionDate), 'MM/dd/yyyy') : 'N/A'}</p>
+              </div>
+            </div>
+      
+            <div className="flex-none w-full sm:w-1/2 sm:mr-4">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Title: {submission.title}</h2>
+              <p className="text-gray-700 mb-2">Description: {submission.description}</p>
+              <p className="text-gray-700 mb-2">Output: {submission.output}</p>
+            </div>
+      
+          </div>
+      
+          <div className="flex flex-wrap justify-between">
             {submission.datasetFile && (
-                <div className="flex items-center mt-2">
-                    <FaFileExcel className="text-green-500 mr-2" />
-                    <p className="text-gray-700">DataSetFile: {submission.datasetFile.name}</p>
-                </div>
+              <div className="file-card mb-4">
+                <FaFileExcel className="text-green-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.datasetFile.name.substring(0, 20)}...</p>
+              </div>
             )}
-{submission.presentationFile && (
-    <div className="flex items-center mt-2">
-        <FaFilePdf className="text-red-500 mr-2" />
-        <p className="text-gray-700">Presentation File: <a href={`${submission.presentationFile.url}?${Date.now()}`} download>{submission.presentationFile.name}</a></p>
-    </div>
-)}
+      
+            {submission.presentationFile && (
+              <div className="file-card mb-4">
+                <FaFilePdf className="text-red-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.presentationFile.name.substring(0, 20)}...</p>
+                <a href={submission.presentationFile.url} download className="block text-center mt-2 underline text-blue-500">Download</a>
 
+              </div>
+            )}
+      
             {submission.codeSourceFile && (
-                <div className="flex items-center mt-2">
-                    <FaFileAlt className="text-gray-500 mr-2" />
-                    <p className="text-gray-700">Code Source File: {submission.codeSourceFile.name}</p>
-                </div>
+              <div className="file-card mb-4">
+                <FaFileAlt className="text-gray-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.codeSourceFile.name.substring(0, 20)}...</p>
+              </div>
             )}
+      
             {submission.readMeFile && (
-                <div className="flex items-center mt-2">
-                    <FaFileWord className="text-blue-500 mr-2" />
-                    <p className="text-gray-700">ReadMe File: {submission.readMeFile.name}</p>
-                </div>
+              <div className="file-card mb-4">
+                <FaFileWord className="text-blue-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.readMeFile.name.substring(0, 20)}...</p>
+              </div>
             )}
+      
             {submission.reportFile && (
-                <div className="flex items-center mt-2">
-                    <FaFilePdf className="text-red-500 mr-2" />
-                    <p className="text-gray-700">Report File: {submission.reportFile.name}</p>
-                </div>
+              <div className="file-card mb-4">
+                <FaFilePdf className="text-red-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.reportFile.name.substring(0, 20)}...</p>
+              </div>
             )}
+      
             {submission.demoFile && (
-                <div className="flex items-center mt-2">
-                    <FaFileVideo className="text-gray-500 mr-2" />
-                    <p className="text-gray-700">Demo File: {submission.demoFile.name}</p>
-                </div>
+              <div className="file-card mb-4">
+                <FaFileVideo className="text-gray-500 text-5xl mx-auto mb-8" />
+                <p className="text-gray-700 text-center">{submission.demoFile.name.substring(0, 20)}...</p>
+              </div>
             )}
-        </div>
-    </div>
-
-</div>
-
-
+          </div>
+      
         </ConnectedClientLayout>
-    );
+      );
+      
+      
+      
 };
 
 export default SubmissionDetails;

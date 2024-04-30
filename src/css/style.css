@@ -347,6 +347,30 @@ span.flatpickr-weekday,
   color: rgb(168, 140, 174); /* Change the color on hover as desired */
 }
 
+
+.rank-circle {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #f4f3f3;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.rank-circle-medalgold {
+  background-color: gold; /* Change to gold for 1st place */
+}
+
+.rank-circle-medalsilver  {
+  background-color: silver; /* Change to silver for 2nd place */
+}
+
+.rank-circle-medalbronze  {
+  background-color: #cd7f32; /* Change to bronze for 3rd place */
+}
 @media screen and (min-width: 768px) {
   section-t {
     padding: 1em 7em;
