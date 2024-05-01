@@ -38,6 +38,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../../common/Loader';
 import AddSubmissionForm from './AddSubmittion';
 import EditSubmissionForm from './EditSubmittion';
+import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
 
 
  
@@ -52,9 +53,11 @@ const ChallengeDetails: React.FC = () => {
   const [EditShowModal, setShowEditModal] = useState(false); // State to manage modal visibility
   const [openDropdowns, setOpenDropdowns] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const [confiramtionMessage, setConfirmationMessage] = useState('');
   const [showTeamModal, setShowTeamModal] = useState(false);
   const [clicked , setClicked] = useState(false);
+
 
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
@@ -63,6 +66,7 @@ const ChallengeDetails: React.FC = () => {
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);
   };
+
 
   const toggleDropdown = () => {
     if (openDropdowns === false) {
@@ -140,6 +144,9 @@ const ChallengeDetails: React.FC = () => {
   useEffect(() => {
     fetchChallengeDetails();
   }, [id]);
+
+
+
 
   if (!challengeDetails) {
     return <div>    <Loader />    </div>;
@@ -227,6 +234,20 @@ const ChallengeDetails: React.FC = () => {
     }
   };
 
+
+  const Removefavories = async (challengeId:any) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/challenges/Unfavorite/${challengeId}/${userAuth?._id}`);
+     
+      if (response.status !== 200) {
+        throw new Error('Failed to remove challenge to favorites');
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSoloParticipationRequest = async () => {
     try {
       const responseData = await addSoloParticipationRequest(id, userAuth?._id);
@@ -245,6 +266,8 @@ const ChallengeDetails: React.FC = () => {
     }
   };
 
+ 
+
   return (
     <ClientLayout>
       {showTeamModal && <TeamSelectionModal onClose={handleTeamModalClose} />}
@@ -258,6 +281,7 @@ const ChallengeDetails: React.FC = () => {
         postSaveMessage={confiramtionMessage}
         error={errorConfirmationMesage}
       />
+    
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
           <div className={`${alert && `mt-8`}`}>
@@ -322,24 +346,30 @@ const ChallengeDetails: React.FC = () => {
          
             <div>
 
-             {!clicked ? (
-              <button
-                  className="flex-col mb-35"
-                  onClick={() => {
-                  AddTofavories(challengeDetails._id),
-                  setClicked(true)}
-                  }>
-                  <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }} /> 
-              </button>
-                   
-             ) : (
+            {challengeDetails.createdBy.favories.includes(challengeDetails._id) || clicked  ? (
               <button
               className="text-red-500 hover:text-red-700 flex-col mb-35"
-              onClick={() => setClicked(false)}>
-              <FaHeart style={{ fontSize: '2em', fill:'red' }} /> 
+              onClick={() => 
+              {
+              Removefavories(challengeDetails._id)
+              setClicked(false)}}>
+              <FaHeart style={{ fontSize: '2em', fill:'red' }} data-tooltip-id="my-tooltip" data-tooltip-content="Remove from favorites" /> 
+              <Tooltip id="my-tooltip" />
+
               </button>
+             ) : (
+              <button
+              className="flex-col mb-35"
+              onClick={() => {
+              AddTofavories(challengeDetails._id),
+              setClicked(true)}
+              }>
+              <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }}  data-tooltip-id="my-tooltip" data-tooltip-content="Add to favorites"/> 
+              <Tooltip id="my-tooltip" />
+            </button>
              )}
-           
+             
+            
               {/*<h2 className="text-md font-bold text-gray-900 mt-2">
                 Number of Participants Required
               </h2>

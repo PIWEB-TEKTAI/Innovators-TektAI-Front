@@ -22,6 +22,7 @@ export type User = {
       professionnalFields: string,
       websiteUrl:string
     },
+    Favories:Array<number>;
 
 
   };/*   email:string;

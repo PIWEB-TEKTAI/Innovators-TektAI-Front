@@ -570,7 +570,7 @@ const EditChallenge = () => {
       problematic !== '' &&
       startDate !== '' &&
       endDate != '' &&
-      Image !== '' &&
+      ImageName !== '' &&
       ImageError === '' &&
       titleError === '' &&
       descriptionError === '' &&

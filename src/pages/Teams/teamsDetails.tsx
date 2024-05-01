@@ -48,10 +48,10 @@ const TeamsDetails = () => {
   return (
     <ClientLayout>
         <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-            <div className=" h-15 md:h-35 bg-white rounded-lg text-black text-2xl shadow-md  items-center flex flex-col justify-around font-semibold">
+            <div className=" h-15 md:h-35 bg-gradient-to-br from-primary to-blue-100 rounded-lg text-black text-2xl shadow-md  items-center flex flex-col justify-around font-semibold">
                  <img src={team.imageUrl} alt="profile" className="rounded-full my-2 max-h-12 w-12 ml-5" />
 
-                <span className='mb-5'>Welcome To <span className=' text-primary ml-1'> {team.name}</span></span> 
+                <span className='mb-5 text-white'>Welcome To <span className='  ml-1'> {team.name}</span></span> 
             </div>
             
             <div className=" h-8 md:h-25 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
@@ -61,7 +61,7 @@ const TeamsDetails = () => {
 
 
             <div>
-            <ul className="flex justify-between  flex-wrap">
+            <ul className="flex justify-around  flex-wrap">
                 {team.members.map((member: any) => (
                 <div className='card-design2 ml-5 bg-white shadow-lg' key={member._id}>
                     <img

@@ -213,17 +213,7 @@ const Favories: React.FC = () => {
 
             {/* Liste déroulante pour sélectionner le statut */}
             <div className="flex justify-end">
-              <div>
-                {userAuth?.role === 'company' && (
-                  <button
-                  onClick={add}
-                  className="inline-flex items-center justify-center bg-transparent px-5 py-2 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                >
-                  Host a new competition
-                </button>
-                ) }
-                
-              </div>
+             
               <div className="col-md-2  text-end">
                 <div className="status-dropdown">
                   <label htmlFor="status-select"> </label>

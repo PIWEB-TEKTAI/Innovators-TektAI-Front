@@ -125,32 +125,83 @@ const CardSubmission: React.FC<{ submission: Submission }> = ({ submission }) =>
                         <div className="text-sm text-gray-800 dark:text-gray-300 mb-4">
                             <h6 className="font-semibold text-gray-800 mb-2">Upload Submission</h6>
                             <ul className="space-y-2">
-                                {/*{submission.files.map(file => (
-                                    <li key={file.name}>
-                                        {file.url.toLowerCase().endsWith('.pdf') ? (
-                                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
-                                                <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
-                                                    <FaFilePdf className="text-red-500" />
-                                                </div>
-                                                <span>{file.name}</span>
-                                            </a>
-                                        ) : (
-                                            <span>{file.name}</span>
-                                        )}
-                                    </li>
-                                ))}*/}
-                                 <li>
-                                    {submission.presentationFile.url.toLowerCase().endsWith('.pdf') ? (
+                               
+                             
+                                    {submission?.presentationFile?.url && (
+                                      <li>  
                                         <a href={submission.presentationFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
                                             <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
                                                 <FaFilePdf className="text-red-500" />
                                             </div>
                                             <span>{submission.presentationFile.name}</span>
                                         </a>
-                                    ) : (
-                                        <span>{submission.presentationFile.name}</span>
-                                    )}
-                                </li>
+                                        </li>
+                                    ) }
+
+
+                                      {submission?.datasetFile?.url && (
+                                      <li>  
+                                        <a href={submission.datasetFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{submission.datasetFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {submission?.reportFile?.url && (
+                                      <li>  
+                                        <a href={submission.reportFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{submission.reportFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {submission?.demoFile?.url && (
+                                      <li>  
+                                        <a href={submission.demoFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{submission.demoFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {submission?.readMeFile?.url && (
+                                      <li>  
+                                        <a href={submission.readMeFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{submission.readMeFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+                                    {submission?.codeSourceFile?.url && (
+                                      <li>  
+                                        <a href={submission.codeSourceFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{submission.codeSourceFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+                                    
+
+
+
+                               
+                               
                             </ul>
 
 
