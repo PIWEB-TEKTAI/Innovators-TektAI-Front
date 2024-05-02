@@ -371,6 +371,45 @@ span.flatpickr-weekday,
 .rank-circle-medalbronze  {
   background-color: #cd7f32; /* Change to bronze for 3rd place */
 }
+.chat-container {
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  max-height: 300px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+.message {
+  margin: 5px 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.user {
+  background-color: #e5f4f9;
+}
+
+.agent {
+  background-color: #f0f0f0;
+}
+
+.input-container {
+  display: flex;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.input-container input {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+}
+
 @media screen and (min-width: 768px) {
   section-t {
     padding: 1em 7em;

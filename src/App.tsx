@@ -67,6 +67,8 @@ import ChallengesParticiption from './pages/SuperAdmin/Participations';
 import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
 import Favories from './pages/competitions/favories'
 import SubmissionDetails from './pages/Challenges/submissiondetails';
+import Chatbot from './pages/landing/chatbot';
+
 
 
 
@@ -177,6 +179,15 @@ function App() {
             <>
               <PageTitle title="Calendar | TektAi" />
               <Calendar />
+            </>
+          }
+        />
+          <Route
+          path="/chatbot"
+          element={
+            <>
+              <PageTitle title="Calendar | TektAi" />
+              <Chatbot />
             </>
           }
         />

@@ -739,7 +739,7 @@ const Landing: React.FC = () => {
                       style={{ animationDelay: '2.4s' }}
                     >
                       {' '}
-                      Competetions{' '}
+                      competitions{' '}
                     </span>
                     <br />
                   </h1>
