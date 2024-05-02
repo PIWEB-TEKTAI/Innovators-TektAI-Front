@@ -67,8 +67,7 @@ import ChallengesParticiption from './pages/SuperAdmin/Participations';
 import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
 import Favories from './pages/competitions/favories'
 import SubmissionDetails from './pages/Challenges/submissiondetails';
-
-
+import Chat from './pages/chat/chat';
 
 
 function App() {
@@ -105,6 +104,17 @@ function App() {
             <>
               <PageTitle title="Signin | TektAi" />
               <AuthRoutes component={<SignIn/>}/>
+            </>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <>
+              <PageTitle title="Signin | TektAi" />
+              <div className='bg-[#eledff] h-screen flex justify-center items-start'>
+              <Chat />
+              </div>
             </>
           }
         />
