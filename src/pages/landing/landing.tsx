@@ -739,7 +739,7 @@ const Landing: React.FC = () => {
                       style={{ animationDelay: '2.4s' }}
                     >
                       {' '}
-                      Competetions{' '}
+                      competitions{' '}
                     </span>
                     <br />
                   </h1>
@@ -871,7 +871,9 @@ const Landing: React.FC = () => {
                   <a
                     href="/LCFront"
                     className="inline-flex items-center justify-center bg-primary px-5 py-3 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1]  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                  >
+                    style={{ fontSize: '1.6rem' }} // Adjust font size as needed
+
+                >
                     Compete Now
                   </a>
                 </div>
@@ -881,7 +883,7 @@ const Landing: React.FC = () => {
                   <a
                     href="/challenge/add"
                     className="inline-flex items-center justify-center bg-primary px-6 py-4 mr-3 text-white font-medium text-center text-white-900 border border-primary-300 rounded-lg hover:bg-opacity-90 hover:scale-[1.1] focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
-                    style={{ fontSize: '1rem' }} // Adjust font size as needed
+                    style={{ fontSize: '1.6rem' }} // Adjust font size as needed
                   >
                     Host New Competition
                   </a>
@@ -898,19 +900,28 @@ const Landing: React.FC = () => {
       <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
           <RevealOnScroll delay="">
-            <div className="flex justify-between mb-8">
-              <h2 className="text-4xl font-extrabold text-black dark:text-white">
-                Browse Competitions
-              </h2>
-              <div>
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:border-primary-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
-                  />
+          <div className="flex flex-col sm:flex-row items-center gap-2 bg-white border border-gray-300 rounded-full p-2 focus-within:border-blue-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.5 2a7.5 7.5 0 1 1 0 15 7.5 7.5 0 0 1 0-15zm8.854 14.146a1 1 0 0 1-1.414 1.414l-3.541-3.541a7 7 0 1 1 1.414-1.414l3.541 3.541zM9.5 14a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"
+                />
+              </svg>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search challenges..."
+                className="appearance-none bg-transparent border-none focus:outline-none flex-1 text-gray-700 w-full sm:w-auto"
+              />
+           
+          
+               
                   <Link to="/LCFront">
                     <a className="flex items-center text-black dark:text-white hover:bg-gray-300 hover:font-semibold focus:ring-4 focus:ring-gray-300 font-semibold rounded-lg text-md px-4 lg:px-5 lg:py-2.5 dark:hover:bg-gray-500 focus:outline-none dark:focus:ring-gray-800">
                       <img
@@ -922,8 +933,17 @@ const Landing: React.FC = () => {
                     </a>
                   </Link>
                 </div>
+                <br />
+            <div className="flex justify-between mb-8">
+              <h2 className="text-4xl font-extrabold text-black dark:text-white">
+                Browse Competitions
+              </h2>
+              <div>
+            
               </div>
+              
             </div>
+            
             <p className="max-w-2xl mb-6 text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
               Build your skills in our competitions, co-hosted by world-class
               research organizations & companies

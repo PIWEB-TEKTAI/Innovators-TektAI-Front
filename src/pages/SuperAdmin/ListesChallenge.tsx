@@ -7,6 +7,10 @@ import { FaUserEdit, FaBan, FaTrashAlt, FaCheck, FaUserPlus, FaStop, FaStopCircl
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTasks, faCheckCircle, faArchive, faLightbulb, faUnlockAlt, faBrain, faBullseye, faClock } from '@fortawesome/free-solid-svg-icons';
+import * as XLSX from 'xlsx'; 
+import jsPDF from 'jspdf'; // Modified import statement
+import html2canvas from 'html2canvas';
+
 
 
 import 'animate.css';
@@ -386,6 +390,32 @@ export default function FetchData() {
     navigate(`/Participtions/${id}`);
   };
 
+  const exportToExcel = () => {
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileName = 'users_list.xlsx';
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const dataExcel = new Blob([excelBuffer], { type: fileType });
+    const url = URL.createObjectURL(dataExcel);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  };
+
+  const exportToPDF = () => {
+    const input = document.getElementById('pdf-content');
+    if (!input) return;
+    html2canvas(input).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save('users_list.pdf');
+    });
+  };
 
 
   return (
@@ -428,9 +458,19 @@ export default function FetchData() {
 
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="flex justify-between items-center mb-4">
+        <div className=" flex justify-between items-center mb-4">
+          
           <h2 className="text-2xl font-semibold">List</h2>
+          
           <div className="flex items-center space-x-4">
+          <button onClick={exportToExcel} className="bg-[#1C6F55] text-white py-2 px-4 rounded-md">
+              Export to Excel
+            </button>
+            <button onClick={exportToPDF} className="bg-[#bf2d2d] text-white py-2 px-4 rounded-md">
+              Export to PDF
+            </button>
+
+
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
@@ -466,7 +506,7 @@ export default function FetchData() {
     />
           <button style={buttonStyle} onClick={()=>{navigate("/AllSubmissions")}}>All Submissions</button>
           <button style={buttonStyleAllParticiption}>All Participtions</button>
-          <table className="w-full table-auto">
+          <table  id="pdf-content" className="w-full table-auto">
             <thead>
               <tr className="bg-gray-200 text-left dark:bg-meta-4">
                 <th className="px-4 py-3">Title</th>

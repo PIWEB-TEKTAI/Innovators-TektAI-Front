@@ -38,6 +38,8 @@ import Discussion from './discussion';
 import { challenge } from '../../types/challenge';
 import { FaHeart } from 'react-icons/fa';
 import Overview from './overview';
+import Leaderboard from './leaderboard';
+
 
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 
@@ -1463,9 +1465,7 @@ const ChallengeDetails: React.FC = () => {
             )}
 
             {activeTab === 'leaderboard' && (
-              <div>
-                <h2>Leaderboard</h2>
-              </div>
+              <Leaderboard />
             )}
             {activeTab === 'discussion' && (
               <Discussion />

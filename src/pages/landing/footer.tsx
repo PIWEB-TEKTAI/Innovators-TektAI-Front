@@ -1,8 +1,23 @@
 import React from 'react';
+import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api';
 
 const Footer: React.FC = () => {
+    const GOOGLE_MAPS_API_KEY = 'AIzaSyCIqrUVgK6hJ52GpcRs5C2LO9c5Xt2mPr4';
+
+    // Define the center coordinates for the map
+    const center = {
+        lat: 36.8991051,
+        lng: 10.1892737,
+    };
+
+    // Style for the map container
+    const mapContainerStyle = {
+        width: '100%',
+        height: '200px',
+    };
+
+
         // Define your Google Maps API Key
-        const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
 
         // Generate Google Maps Static API URL
         const staticMapUrl = `https://www.google.com/maps/place/ESPRIT+Ecole+Sup%C3%A9rieure+Priv%C3%A9e+d'Ing%C3%A9nierie+et+de+Technologies/@36.8991051,10.1892737,15z/data=!4m6!3m5!1s0x12e2cb75abbb1733:0x557a99cdf6c13b7b!8m2!3d36.8991051!4d10.1892737!16s%2Fg%2F11dybgg6rl?entry=ttu${GOOGLE_MAPS_API_KEY}`;
@@ -67,7 +82,20 @@ const Footer: React.FC = () => {
                                 Email: <a href="#">Tektai@gmail.com</a>
                             </li>
                             <li className="mb-4">
-                                Address: Esprit , El ghazela , Ariana
+                                
+                            <LoadScript
+                    googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+                >
+                    <div className="map-container" style={mapContainerStyle}>
+                        <GoogleMap
+                            mapContainerStyle={mapContainerStyle}
+                            center={center}
+                            zoom={15}
+                        >
+                            <Marker position={center} />
+                        </GoogleMap>
+                    </div>
+                </LoadScript>
                             </li>
                         </ul>
                     </div>
@@ -111,6 +139,8 @@ const Footer: React.FC = () => {
               </ul>
           </div>
       </div>
+    
+
   </footer>
 
     );

@@ -29,7 +29,7 @@ const teamService = {
   },
   getTeamById: async (id:any) => {
     try {
-      const response = await axios.get(`${BASE_URL}/teams/${id}`);
+      const response = await axios.get(`${BASE_URL}/teams/${id}`,{withCredentials:true});
       return response.data;
     } catch (error) {
       throw error;

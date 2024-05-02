@@ -1,5 +1,4 @@
 export type submission = {
-<<<<<<< HEAD
     title: string,
     description:string,
     output:string,
@@ -27,18 +26,6 @@ export type submission = {
       name:string,
       url:string
     },
+    status: 'pending' | 'approved' | 'rejected';
+    score: number;
 }
-=======
-  _id: string;
-  challengeId:string;
-  title: string,
-  description: string,
-  files: [{
-    name: string,
-    url: string
-  }]
-  status: 'pending' | 'approved' | 'rejected';
-  score: number;
-  submissionDate: Date;
-}
->>>>>>> 571c05c09396e445f1f79e1bec3ea64a5b8d6a57

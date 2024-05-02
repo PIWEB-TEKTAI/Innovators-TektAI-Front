@@ -1,13 +1,13 @@
 import jsVectorMap from 'jsvectormap';
 import 'jsvectormap/dist/css/jsvectormap.css';
 import { useEffect } from 'react';
-import '../../js/us-aea-en';
+import 'jsvectormap/dist/maps/world.js'
 
 const MapOne = () => {
   useEffect(() => {
     const mapOne = new jsVectorMap({
       selector: '#mapOne',
-      map: 'us_aea_en',
+      map: 'world',
       zoomButtons: true,
 
       regionStyle: {
@@ -33,13 +33,13 @@ const MapOne = () => {
       labels: {
         regions: {
           render(code: string) {
-            return code.split('-')[1];
+            // You can customize label rendering if needed
+            return code;
           },
         },
       },
     });
-    mapOne;
-  });
+  }, []); // Ensure useEffect runs only once
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-7">

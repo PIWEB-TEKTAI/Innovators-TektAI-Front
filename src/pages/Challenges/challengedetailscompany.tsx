@@ -22,6 +22,7 @@ import Overview from './overview';
 import { Link } from 'react-router-dom';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import Discussion from './discussion';
+import Leaderboard from './leaderboard';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -1441,9 +1442,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                               <Overview/>
 
             )}            {activeTab === 'leaderboard' && (
-              <div>
-                <h2>Leaderboard</h2>
-              </div>
+            <Leaderboard />
             )}
           {activeTab === 'discussion' && (
               <Discussion />
