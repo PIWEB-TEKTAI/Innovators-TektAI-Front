@@ -287,14 +287,35 @@ const ChallengeDetails: React.FC = () => {
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-        <div className="flex bg-white justify-end">
-                        <button
-            className="text-red-500 hover:text-red-700 text-xs"
-            onClick={() => AddTofavories(challengeDetails._id)}>
-            <FaHeart style={{ fontSize: '2em',  }} /> {/* Icône de cœur avec une taille de 2em et un espacement à droite */}
+        {userAuth?.favories?.includes(challengeDetails._id) || clicked  ? (
+          <div className="flex bg-white justify-end">
 
-          </button>
-              </div>
+              <button
+              className="text-red-500 hover:text-red-700 flex-col"
+              onClick={() => 
+              {
+              Removefavories(challengeDetails._id)
+              setClicked(false)}}>
+              <FaHeart style={{ fontSize: '2em', fill:'red' }} data-tooltip-id="my-tooltip" data-tooltip-content="Remove from favorites" /> 
+              <Tooltip id="my-tooltip" />
+
+              </button>
+          </div>
+             ) : (
+              <div className="flex bg-white justify-end">
+
+              <button
+              className="flex-col"
+              onClick={() => {
+              AddTofavories(challengeDetails._id),
+              setClicked(true)}
+              }>
+              <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }}  data-tooltip-id="my-tooltip" data-tooltip-content="Add to favorites"/> 
+              <Tooltip id="my-tooltip" />
+            </button>
+            </div>
+             )}
+
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
 
@@ -354,6 +375,7 @@ const ChallengeDetails: React.FC = () => {
                 </p>
               )}
             </div>
+
             <div className='flex-col'>
               <h2 className="text-md font-bold text-gray-900 mt-2">
                 Number of Participants Required

@@ -100,18 +100,34 @@ const SidebarClient = ({
       <div className="no-scrollbar flex flex-col overflow-y-hidden duration-300 ease-linear pr-5 pl-10 py-2">
         <div className="w-full max-w-sm bg-white  rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-9">
           <div className="flex flex-col items-center pb-10">
-            <img
+           {connectedUser?.role=="company"? (
+            <>
+             <img
               className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg shadow-primary"
-              src={connectedUser?.imageUrl}
+              src="/src/images/user/4760012.jpg"
               alt="Bonnie image"
             />
             <h5 className="mb-1 text-xl font-medium  text-black dark:text-white hover:scale-[1.05] cursor-pointer capitalize">
-              {connectedUser?.FirstName} {connectedUser?.LastName}{' '}
+              {connectedUser?.company.name}{' '}
             </h5>
-            <span className="text-sm text-black-500 dark:text-gray-400 hover:scale-[1.05] cursor-pointer">
-              {' '}
-              {connectedUser?.occupation}
-            </span>
+           
+            </>
+           ):(
+           <>
+           <img
+           className="w-24 h-24 mb-3 hover:scale-[1.05] cursor-pointer rounded-full m-3 shadow-lg shadow-primary"
+           src={connectedUser?.imageUrl}
+           alt="Bonnie image"
+         />
+         <h5 className="mb-1 text-xl font-medium  text-black dark:text-white hover:scale-[1.05] cursor-pointer capitalize">
+           {connectedUser?.FirstName} {connectedUser?.LastName}{' '}
+         </h5>
+         <span className="text-sm text-black-500 dark:text-gray-400 hover:scale-[1.05] cursor-pointer">
+           {' '}
+           {connectedUser?.occupation}
+         </span>
+           </>
+           )}
             <div className="flex mt-4 md:mt-6">
               {connectedUser?.AlreadyCompany ? (
                 <>

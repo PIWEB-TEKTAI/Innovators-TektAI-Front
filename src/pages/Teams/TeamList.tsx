@@ -3,36 +3,14 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { faEuro } from '@fortawesome/free-solid-svg-icons';
-interface CardProps {
-  title: string;
-  imageSrc: string;
-  description: string;
-}
+
 
 interface RevealOnScrollProps {
   children: React.ReactNode;
   additionalProp?: boolean;
   delay: string;
 }
-interface User {
-  _id: string;
-  email: string;
-  FirstName: string;
-  LastName: string;
-  password: string;
-  imageUrl: string;
-  phone: string;
-  address: string;
-  birthDate: Date | null;
-  occupation: string;
-  Description: string;
-  Education: string;
-  Skills: string;
-  isEmailVerified: boolean;
-  state: 'validated' | 'not validated' | 'blocked';
-  role: 'super admin' | 'admin' | 'challenger' | 'company' | 'archive';
-}
+
 
 const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
   children,
@@ -82,23 +60,11 @@ const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
 const Card: React.FC<any & { onClick: () => void }> = ({
   onClick,
   name,
-  image,
+  imageUrl,
   invitations,
   members,
 }) => {
-  const [selectedTeam, setSelectedTeam] = useState<any | null>(null);
-
-  const handleCardClick = () => {
-    const newTeam: any = {
-      _id: 'temp-id', // Remplacez 'temp-id' par un ID approprié ou généré dynamiquement
-      onClick: () => {}, // Ajoutez une fonction onClick vide ou définissez-la selon vos besoins
-      name,
-    };
-    setSelectedTeam(newTeam);
-  };
-  const handleCloseModal = () => {
-    setSelectedTeam(null);
-  };
+ 
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -112,7 +78,7 @@ const Card: React.FC<any & { onClick: () => void }> = ({
     >
       <div className="flex flex-col items-center mb-4">
         <img
-          src="src/images/auth/teamUser.jpg"
+          src={imageUrl}
           className="card-img-top mt-3 w-15"
           alt="Card image"
         />

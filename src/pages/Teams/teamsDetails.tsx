@@ -70,38 +70,69 @@ const TeamsDetails = () => {
         postSaveMessage={joinMessage}
       />
         <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-            <div className="z-20 py-8 bg-white rounded-lg ">
+            <div className="z-20 py-8 bg-white rounded-lg  ">
        
              
               <div className="text-black text-xl items-center flex justify-center font-semibold  py-2">
               <span>Welcome To</span> <span className=' text-primary ml-1'> {team.name}</span>
 
               </div>
-              {userAuth?.role === "challenger" && !team.requests?.some((request:any) => request._id === userAuth?._id) && !team.members?.some((member:any) => member._id === userAuth?._id)&&!team.invitations?.some((invitation:any) => invitation._id === userAuth?._id)  && (
               <div className="flex items-center justify-center">
                 <img src="/src/images/team/5346323.jpg" className="hidden sm:block w-[13rem] h-[13rem]" alt="mockup" />
 
                 <span className='break-words flex-col p-8 hover:text-black hover:bg-gray-100 hover:font-semibold rounded-full m-4 cursor-pointer max-w-[32rem]'>
                   Ready to dive into an epic adventure? Join our team and become part of a thrilling journey filled with camaraderie, innovation, and endless possibilities!
                 </span>
+              {userAuth?.role === "challenger" && !team.requests?.some((request:any) => request._id === userAuth?._id) && !team.members?.some((member:any) => member._id === userAuth?._id)&&!team.invitations?.some((invitation:any) => invitation._id === userAuth?._id)  && (
+
                 <button onClick={() => setShowModal(true)} className='max-h-16 text-white bg-primary font-semibold rounded-lg py-1 hover:bg-opacity-80 hover:scale-[1.05] p-4 text-lg'>
                   Join Us
                 </button>
+                            )}
+
               </div>
-            )}
 
 
             </div>
             
             <div className="z-20 h-15 md:h-35 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
-                <span className='rounded-full bg-white px-4 py-2'>Team Members</span>
+                <span className='rounded-full bg-white px-4 py-2 cursor-pointer'>Team Members</span>
             </div>
 
 
             <div>
             <ul className="flex justify-around  flex-wrap">
+            <div className='card-design2 ml-5 bg-white shadow-lg cursor-pointer' key={team.leader._id}>
+                    <img
+                    src={team.leader.imageUrl}
+                    alt="profile"
+                    className="rounded-full max-h-15 w-15 mr-2 cursor-pointer"
+                    />
+
+                    <p className="text-md mt-5 text-primary font-semibold capitalize cursor-pointer">
+                    {' '}
+                    {team.leader.FirstName} {team.leader.LastName}
+                    </p>
+
+                    <p className="text-md mt-2 font-semibold capitalize cursor-pointer">
+                    {' '}
+                    {team.leader.address} 
+                    </p>
+
+                    <p className="text-md w-55 mt-2 font-medium capitalize cursor-pointer">
+                    {' '}
+                    { team.leader.Description && team.leader.Description.substring(0,70) }...{' '}
+                    </p>
+
+                    <p className='mt-5 w-18 text-sm text-white font-semibold bg-primary rounded-full py-1 px-3 sm:ml-15 cursor-pointer'>
+                         Leader
+                    </p>
+                
+                    
+                  
+                </div>
                 {team.members.map((member: any) => (
-                <div className='card-design2 ml-5 bg-white shadow-lg' key={member._id}>
+                <div className='card-design2 ml-5 bg-white shadow-lg cursor-pointer' key={member._id}>
                     <img
                     src={member.imageUrl}
                     alt="profile"
