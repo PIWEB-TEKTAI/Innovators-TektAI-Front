@@ -67,6 +67,8 @@ import ChallengesParticiption from './pages/SuperAdmin/Participations';
 import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
 import Favories from './pages/competitions/favories'
 import SubmissionDetails from './pages/Challenges/submissiondetails';
+import DiscussionList from './components/Chat/DiscussionList';
+import DiscussionDetails from './components/Chat/DiscussionDetails';
 
 
 
@@ -686,6 +688,19 @@ function App() {
             </>
           }
         />
+
+          <Route
+            path="/DiscussionList"
+            element={
+            <>
+              <PageTitle title="Discussion | TektAi" />
+              <DiscussionList />
+            </>
+          }
+        />
+
+
+         
          
          <Route
             path="/challenge/statistics"
