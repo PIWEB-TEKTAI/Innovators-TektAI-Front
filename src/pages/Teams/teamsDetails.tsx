@@ -6,6 +6,7 @@ import teamService from '../../services/teamsService';
 import ClientLayout from '../../layout/clientLayout';
 import Modal from '../../components/modal';
 import { useAuth } from '../../components/Auth/AuthProvider';
+import Loader from '../../common/Loader';
 
 const TeamsDetails = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const TeamsDetails = () => {
     setActiveTab(tab);
   };
   if (!team) {
-    return <div>Loading...</div>;
+    return <div><Loader/></div>;
   }
   const closeModal = () => {
     setShowModal(false);
@@ -95,10 +96,12 @@ const TeamsDetails = () => {
             <div className="z-20 h-15 md:h-35 rounded-lg text-black text-xl items-center flex justify-start font-semibold">
                 <span className='rounded-full bg-white px-4 py-2'>Team Members</span>
             </div>
+
+
             <div>
-            <ul className="flex justify-center  flex-wrap">
+            <ul className="flex justify-around  flex-wrap">
                 {team.members.map((member: any) => (
-                <div className='card-design2 ml-5 bg-white' key={member._id}>
+                <div className='card-design2 ml-5 bg-white shadow-lg' key={member._id}>
                     <img
                     src={member.imageUrl}
                     alt="profile"
@@ -119,6 +122,18 @@ const TeamsDetails = () => {
                     {' '}
                     { member.Description && member.Description.substring(0,70) }...{' '}
                     </p>
+
+                  {team.leader._id === member._id ? (
+                    <p className='mt-5 w-18 text-sm text-white font-semibold bg-primary rounded-full py-1 px-3 sm:ml-15'>
+                         Leader
+                    </p>
+                  ) : (
+                    <p className='mt-5 w-18 text-sm text-white font-semibold bg-orange-500 rounded-full py-1 px-2 sm:ml-15'>
+                      Member
+                    </p>
+                  ) }
+                    
+                  
                 </div>
                
                 ))}

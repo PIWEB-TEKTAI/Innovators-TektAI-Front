@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const NotificationUser = () => {
-  const [Data, setData] = useState<Notification[] | null>(null);
+  const [Data, setData] = useState<Notification[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
+  const [notificationsPerPage, setNotificationsPerPage] = useState<number>(10); // Nombre de challenges par page
+
 
   const toTitleCase = (str: string) => {
     return str
@@ -49,6 +52,19 @@ const NotificationUser = () => {
     fetchNotifications();
   }, []);
 
+  const indexOfLastNotification = currentPage * notificationsPerPage;
+  const indexOfFirstNotification = indexOfLastNotification - notificationsPerPage;
+  const currentNotifications = Data?.slice(
+    indexOfFirstNotification,
+    indexOfLastNotification,
+  );
+
+  const paginate = (pageNumber: number) => {
+    console.log('Page number:', pageNumber);
+    setCurrentPage(pageNumber);
+  };
+
+
   return (
     <ConnectedClientLayout>
       <div className="mx-auto max-w-270">
@@ -62,20 +78,20 @@ const NotificationUser = () => {
               </div>
               <div>
                 <ul className="flex h-auto flex-col overflow-y-auto">
-                  {Data !== null &&
-                    Data.map((item: any, index: any) => (
+                  {currentNotifications !== null &&
+                    currentNotifications.map((item: any, index: any) => (
                     
                   <li key={index}>
-                    {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName ? (
+                    {item.UserConcernedId && item.UserConcernedId.FirstName && item.UserConcernedId.LastName && (
                             <Link
                             className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                            to="#"
-                          >
+                            to={item.ChallengeConcernedId ? `/challenge/details/${item.ChallengeConcernedId}` : (item.SubmittionConcernedId ? `/submission/details/${item.SubmittionConcernedId}` : (item.TeamInvitation ? `/teams/myInvitations` : ''))  }>
+
                             <img
                               src={item.UserConcernedId.imageUrl}
                               alt="profile"
                               className="rounded-full max-h-36 w-10"
-                            />
+                    />
                             <div className="flex flex-col">
                               <p className="text-sm">
                                 <span className="font-semibold">
@@ -90,16 +106,18 @@ const NotificationUser = () => {
                               </p>
                             </div>
                           </Link>
-                    ) : (
+                    ) }
+
+                    {  item.TeamConcernedId &&  item.TeamConcernedId.imageUrl && item.TeamConcernedId.name && (
+
                       <Link
                       className="flex gap-3 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-                      to="#"
-                    >
+                      to={item.ChallengeConcernedId ? `/challenge/details/${item.ChallengeConcernedId}` : (item.SubmittionConcernedId ? `/submission/details/${item.SubmittionConcernedId}` : '')}>
                       <img
-                              src={item.TeamConcernedId.imageUrl}
-                              alt="profile"
-                              className="rounded-full max-h-36 w-10"
-                            />
+                        src={item.TeamConcernedId.imageUrl}
+                        alt="profile"
+                        className="rounded-full max-h-36 w-10"
+                    />
                      
                       <div className="flex flex-col">
                         <p className="text-sm">
@@ -110,7 +128,7 @@ const NotificationUser = () => {
                         </p>
 
                         <p className="text-xs text-primary font-medium">
-                          {formatDate(item.createdAt)}
+                         { formatDate(item.createdAt)}
                         </p>
                       </div>
                     </Link>
@@ -121,6 +139,23 @@ const NotificationUser = () => {
                     ))}
                 </ul>
               </div>
+              <div className="pagination mb-5 cursor-pointer">
+              <a onClick={() => paginate(currentPage - 1)}>&laquo;</a>
+              {Array.from({
+                length: Math.ceil(
+                  Data.length / notificationsPerPage,
+                ),
+              }).map((_, index) => (
+                <a
+                  key={index + 1}
+                  className={currentPage === index + 1 ? 'active' : ''}
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </a>
+              ))}
+              <a onClick={() => paginate(currentPage + 1)}>&raquo;</a>
+            </div>
             </div>
           </div>
     </ConnectedClientLayout>

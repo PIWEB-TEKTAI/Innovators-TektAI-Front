@@ -247,8 +247,8 @@ const handleSignIn = async () => {
       loginAuth(responseData);
 
       setTimeout(() => {
-        if(responseData.role == "challenger" || responseData.role=="company" && responseData.redirect==null){
-          navigate("/landing");
+        if(responseData.role == "challenger" || responseData.role=="company"){
+          navigate("/");
         }
         if(responseData.role == "challenger"  && responseData.redirect=="/teams/myInvitations"){
           navigate("/teams/myInvitations");

@@ -333,6 +333,15 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
     }
   };
 
+   // Fonction pour ajouter une ligne vide si le titre n'est pas dans deux lignes
+   const addEmptyLineIfNeeded = (title: string, maxLength: number) => {
+    if (title.length > maxLength) {
+      return title.slice(0, maxLength) + '...'; // Limiter la longueur du titre à maxLength
+    }
+    return title;
+  };
+
+
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -352,7 +361,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
 
         <div className="flex flex-col items-start mb-4">
           <h3 className="text-xl font-bold text-black dark:text-white capitalize">
-            {title}
+            {addEmptyLineIfNeeded(title, 28)}
           </h3>
           <div className="font-medium mt-2">
             {status == 'open' && <p className=" text-red-600">Time Left </p>}

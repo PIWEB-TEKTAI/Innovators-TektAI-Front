@@ -19,8 +19,10 @@ export type User = {
       email: string,
       description:string,
       phone: string,
-      professionnalFields: string
+      professionnalFields: string,
+      websiteUrl:string
     },
+    Favories:Array<number>;
 
 
   };/*   email:string;

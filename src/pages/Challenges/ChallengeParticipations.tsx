@@ -195,7 +195,7 @@ const handleAcceptRequest = async (userId: string,type:string) => {
               }
               {participation.type =="Request" || participation.type == "TeamRequest"&&
               <>
-                <div> {userAuth?.role === 'challenger' && challenge.status =="open" && challenge.participations.soloParticipationRequests.includes(userAuth?._id) &&
+                <div> {userAuth?.role === 'challenger' && challenge.status === "open" && challenge?.participations.soloParticipationRequests.includes(userAuth?._id) &&
                 (<span className='rounded-full py-1 px-3 text-sm font-semibold mr-4 bg-green-500 text-white'>Request sent</span>)}</div>
 
               </>

@@ -23,6 +23,7 @@ import { Link } from 'react-router-dom';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import Discussion from './discussion';
 import Leaderboard from './leaderboard';
+import Loader from '../../common/Loader';
 
 const AddSubmissionForm: React.FC = () => {
   const { id } = useParams();
@@ -1152,7 +1153,7 @@ const ChallengeDetailsCompany: React.FC = () => {
   }, [id]);
 
   if (!challengeDetails) {
-    return <div>Loading...</div>;
+    return <div><Loader/></div>;
   }
 
   const getStatusColor = () => {

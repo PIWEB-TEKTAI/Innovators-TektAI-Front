@@ -225,6 +225,10 @@ const AddChallenge = () => {
       setDescription(value);
       if (!value.trim()) {
         setDescriptionError('Description is required');
+      }
+      else if (value.length < 200 || value.length > 800) {
+        setDescriptionError("Desciption must be between 200 and 800 digits");  
+
       } else {
         setDescriptionError('');
       }
@@ -232,6 +236,8 @@ const AddChallenge = () => {
       setProblematic(value);
       if (!value.trim()) {
         setProblematicError('Problematic is required');
+      }else if (value.length < 100 || value.length > 800) {
+        setProblematicError("Problematic must be between 100 and 800 digits");
       } else {
         setProblematicError('');
       }
@@ -368,20 +374,40 @@ const AddChallenge = () => {
       startDate !== '' &&
       endDate != '' &&
       Image !== '' &&
-      DataSetFile !== '' &&
       ImageError === '' &&
       titleError === '' &&
       descriptionError === '' &&
       endDateError === '' &&
       startDateError === '' &&
-      problematicError === '' &&
-      DataSetFile === ''
+      problematicError === '' && DataSetFileError === ''
     );
   };
 
-  /* const isSecondPageValid = () => {
-    return (price !== '' || award !== '') && priceError === '';
-  };*/
+   const isSecondPageValid = () => {
+    return(
+    visibility !== '' &&
+    team !== '' &&
+    solo !== '' &&
+    visibilityError === '' &&
+    teamError === '' &&
+    soloError === '' &&
+    (isAutomatedChecked || isExpertChecked) &&
+    (isOutputChecked || isPresentationChecked || isCodeSourceChecked || isDatasetChecked || isDemoChecked || isReadMeFileChecked || isRapportChecked)
+  )
+  };
+
+
+  const isThirdPageValid = () => {
+    return(
+      (isMonetaryChecked && amount !== '' && amountError === '') ||
+      (isPrizesChecked && 
+      (isPrizeChecked && prizeName !== '' && prizeNameError === '' && prizeDescription !== '' && prizeDescriptionError === '') ||
+      (isRecruitementChecked && positionTitle !== '' && positionTitleError === '' && jobDescription !== '' && jobDescriptionError === '') ||
+      (isFreelanceChecked && projectTitle !== '' && projectTitleError === '' && projectDescription !== '' && projectDescriptionError === '') ||
+      (isInternChecked && InternTitle !== '' && InternTitleError === '' && InternDescription !== '' && InternDescriptionError === '' && duration !== '' && durationError === '')
+    )
+  )
+  };
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -1353,8 +1379,9 @@ const AddChallenge = () => {
 
               {step !== 1 && step !== 2 ? (
                 <button
-                  className="rounded bg-primary p-3  text-gray hover:bg-opacity-90"
+                  className="rounded bg-primary p-3 disabled:opacity-60  text-gray hover:bg-opacity-90"
                   onClick={handleSubmit}
+                  disabled={!isThirdPageValid()}
                 >
                   Submit
                 </button>
@@ -1362,10 +1389,11 @@ const AddChallenge = () => {
                 <button
                   className="rounded ml-auto bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90"
                   onClick={nextStep}
+                  disabled={step === 1 ? !isFirstPageValid() : !isSecondPageValid()}
+
                 >
                   Next
                 </button>
-                /*disabled={step === 1 ? !isFirstPageValid() : !isSecondPageValid()}*/
               )}
             </div>
             {step === 3 && (

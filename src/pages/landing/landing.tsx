@@ -237,6 +237,15 @@ const Landing: React.FC = () => {
       return `${daysRemaining} days  ${hoursRemaining} hours ${minutesRemaining} minutes`;
     };
 
+      // Fonction pour ajouter une ligne vide si le titre n'est pas dans deux lignes
+   const addEmptyLineIfNeeded = (title: string, maxLength: number) => {
+    if (title.length > maxLength) {
+      return title.slice(0, maxLength) + '...'; // Limiter la longueur du titre à maxLength
+    }
+    return title;
+  };
+
+
     return (
       <div className="bg-white shadow-lg  rounded-lg p-6 flex flex-col items-start hover:shadow-6 h-full">
         <div className="flex items-center justify-between gap-8 mb-4 ">
@@ -248,7 +257,7 @@ const Landing: React.FC = () => {
 
           <div className="flex flex-col items-start mb-4">
             <h3 className="text-xl font-bold text-black dark:text-white capitalize">
-              {title}
+              {addEmptyLineIfNeeded(title, 26)}
             </h3>
             <div className="font-medium mt-2">
               {status == 'open' && <p className=" text-red-600">Time Left </p>}
@@ -414,7 +423,7 @@ const Landing: React.FC = () => {
         withCredentials: true,
       });
       console.log('Challenges response:', response);
-      setChallenges(response.data);
+      setChallenges(response.data.slice(0,3));
       console.log(challenges);
     } catch (error) {
       console.error('Erreur lors de la récupération des défis:', error);
@@ -1140,7 +1149,7 @@ const Landing: React.FC = () => {
                   whyUsContent.map((content, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl"
+                      className="bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-[1.2] hover:shadow-xl cursor-pointer"
                     >
                       <div className="px-6 py-8">
                         <h3 className="text-xl font-semibold text-white mb-2">

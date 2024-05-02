@@ -70,6 +70,8 @@ import SubmissionDetails from './pages/Challenges/submissiondetails';
 import JoinRequestsPage from './pages/Teams/JoinRequestsPage';
 import Chatbot from './pages/landing/chatbot';
 
+import DiscussionList from './components/Chat/DiscussionList';
+import DiscussionDetails from './components/Chat/DiscussionDetails';
 
 
 
@@ -166,11 +168,14 @@ function App() {
         />
         {/*Admin Routes*/}
         <Route
-          index
+          path='dashboard'
           element={
             <>
               <PageTitle title="eCommerce Dashboard | TektAi" />
-              <ECommerce />
+              <PrivateRoute requiredRoles={["superAdmin","admin"]} component={
+                      <ECommerce />
+
+                    }/>
             </>
           }
         />
@@ -677,7 +682,8 @@ function App() {
         />
 
            <Route
-            path="/landing"
+            index
+            path='/'
             element={
             <>
               <PageTitle title="Landing | TektAi" />
@@ -694,6 +700,19 @@ function App() {
             </>
           }
         />
+
+          <Route
+            path="/DiscussionList"
+            element={
+            <>
+              <PageTitle title="Discussion | TektAi" />
+              <DiscussionList />
+            </>
+          }
+        />
+
+
+         
          
          <Route
             path="/challenge/statistics"

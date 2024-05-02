@@ -111,34 +111,23 @@ export default function FetchData() {
                 <div className={`inline-flex rounded-full text-sm font-medium px-4 py-2 mb-4 ${submission.status === 'pending' ? 'bg-green-400 text-white' : submission.status === 'rejected' ? 'bg-black text-white' : 'bg-red-400 text-white'}`}>
                         {toTitleCase(submission.status)}
                     </div>
-                    <div className="px-4 py-3">
+                    <div className="px-8 py-4">
                         <ul>
-                            {/*{submission.files.map(file => (
-                                <li key={file.name}>
-                                    {file.url.toLowerCase().endsWith('.pdf') ? (
-                                        <a href={file.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
-                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
-                                                <FaFilePdf className="text-red-500" />
-                                            </div>
-                                            <span>{file.name}</span>
-                                        </a>
-                                    ) : (
-                                        <span>{file.name}</span>
-                                    )}
-                                </li>
-                            ))}*/}
-                             <li>
-                                    {submission.presentationFile.url.toLowerCase().endsWith('.pdf') ? (
+                           
+                                    {submission?.presentationFile?.url && (
+                                      <li>  
                                         <a href={submission.presentationFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
-                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                            <div className="w-10 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
                                                 <FaFilePdf className="text-red-500" />
                                             </div>
-                                            <span>{submission.presentationFile.name}</span>
+                                            <span>{submission.presentationFile.name.substring(0,50)}</span>
                                         </a>
-                                    ) : (
-                                        <span>{submission.presentationFile.name}</span>
-                                    )}
-                                </li>
+                                        </li>
+                                    ) }
+
+            
+
+                                   
                         </ul>
                     </div>
                   

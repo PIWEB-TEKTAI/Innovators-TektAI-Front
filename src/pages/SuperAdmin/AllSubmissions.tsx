@@ -129,32 +129,76 @@ export default function FetchData() {
 
                                     <td className="px-4 py-3">
                                         <ul>
-                                            {/*{sub.files.map(file => (
-                                                <li key={file.name}>
-                                                    {file.url.toLowerCase().endsWith('.pdf') ? (
-                                                        <a href={file.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
-                                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
-                                                                <FaFilePdf className="text-red-500" />
-                                                            </div>
-                                                            <span>{file.name}</span>
-                                                        </a>
-                                                    ) : (
-                                                        <span>{file.name}</span>
-                                                    )}
-                                                </li>
-                                            ))}*/}
-                                            <li>
-                                    {sub.presentationFile.url.toLowerCase().endsWith('.pdf') ? (
+                                        {sub?.presentationFile?.url && (
+                                      <li>  
                                         <a href={sub.presentationFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
                                             <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
                                                 <FaFilePdf className="text-red-500" />
                                             </div>
                                             <span>{sub.presentationFile.name}</span>
                                         </a>
-                                    ) : (
-                                        <span>{sub.presentationFile.name}</span>
-                                    )}
-                                </li>
+                                        </li>
+                                    ) }
+
+
+                                      {/*{sub?.datasetFile?.url && (
+                                      <li>  
+                                        <a href={sub.datasetFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{sub.datasetFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {sub?.reportFile?.url && (
+                                      <li>  
+                                        <a href={sub.reportFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{sub.reportFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {sub?.demoFile?.url && (
+                                      <li>  
+                                        <a href={sub.demoFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{sub.demoFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+
+                                    {sub?.readMeFile?.url && (
+                                      <li>  
+                                        <a href={sub.readMeFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{sub.readMeFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+
+                                    {sub?.codeSourceFile?.url && (
+                                      <li>  
+                                        <a href={sub.codeSourceFile.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-blue-600 hover:underline">
+                                            <div className="w-8 h-8 bg-gray-200 flex items-center justify-center rounded-lg">
+                                                <FaFilePdf className="text-red-500" />
+                                            </div>
+                                            <span>{sub.codeSourceFile.name}</span>
+                                        </a>
+                                        </li>
+                                    ) }
+                                */}
                                              
 
                                         </ul>
