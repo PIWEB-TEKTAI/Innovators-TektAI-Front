@@ -228,6 +228,7 @@ const ChallengeDetails: React.FC = () => {
       if (response.status !== 200) {
         throw new Error('Failed to add challenge to favorites');
       }
+      setClicked(true)
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -242,6 +243,7 @@ const ChallengeDetails: React.FC = () => {
       if (response.status !== 200) {
         throw new Error('Failed to remove challenge to favorites');
       }
+      setClicked(false)
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -346,7 +348,7 @@ const ChallengeDetails: React.FC = () => {
          
             <div>
 
-            {challengeDetails.createdBy.favories.includes(challengeDetails._id) || clicked  ? (
+            {userAuth?.favories.includes(challengeDetails._id) || clicked  ? (
               <button
               className="text-red-500 hover:text-red-700 flex-col mb-35"
               onClick={() => 
@@ -368,6 +370,8 @@ const ChallengeDetails: React.FC = () => {
               <Tooltip id="my-tooltip" />
             </button>
              )}
+
+            
              
             
               {/*<h2 className="text-md font-bold text-gray-900 mt-2">
