@@ -6,7 +6,10 @@ import { useParams } from 'react-router-dom';
 import { format, differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import avtar from '../../images/avatar.jpg'
 import { useAuth } from '../../components/Auth/AuthProvider';
-const Chat: React.FC = () => {
+import { io } from 'socket.io-client';
+import { getUsers } from '../../services/auth.service';
+
+const Chat: React.FC= () =>{
     interface User {
         _id: string;
         email: string;
@@ -26,14 +29,20 @@ const Chat: React.FC = () => {
         role: 'super admin' | 'admin' | 'challenger' | 'company' | 'archive';
     }
     const [data, setData] = useState([]);
+    const [datauSER, setdataUser] = useState([]);
     const [messages, setMessage] = useState([]);
-    const [msg, setMsg] = useState();
+    const [msg, setMsg] = useState('');
     const [RecevirUser,setRecevirUser]=useState([]);
     const [chatroom,setChatroomId]=useState();
+    const { userAuth } = useAuth();
     const [AllUsers,setAllUsers]=useState([]);
+    const [socket, setSocket] = useState(null);
+   
+
     useEffect(() => {
         const fetchAllUsers= async () => {
             const res = await fetch(`http://localhost:3000/chatroom/getusers/${userAuth?._id}`, {
+          
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +55,65 @@ const Chat: React.FC = () => {
 
         }
         fetchAllUsers()
-    }, [AllUsers])
+    }, [])
+    useEffect(() => {
+        const fetchAllUsers= async () => {
+            const res = await fetch(`http://localhost:3000/chatroom/getAllUsersCoonected/${userAuth?._id}`, {
+              
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+
+            })
+            const resData = await res.json()
+
+            setdataUser(resData);
+
+        }
+        fetchAllUsers()
+    }, [datauSER])
+
+
+
+   
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:3000');
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect(); // Déconnexion du socket lorsque le composant est démonté
+        };
+    }, []);
+
+    useEffect(() => {
+        if (socket && userAuth) {
+            console.log('Emitting addUser event with userAuth:', userAuth);
+            data.forEach(userId => {
+                socket.emit('addUser', userId);
+            });
+            console.log('Emitting addUser :', data);
+            socket.on('getUsers', (users) => {
+                console.log('Users received:', users);
+                //setUsers(users);
+            });
+            socket?.on('getMessage', dataM => {
+                console.log(dataM);
+                setMessage(prev => ({
+                    ...prev,
+                    messages: [...prev.messages, { data, msg: dataM.msg }]
+                }));
+            });
+        
+            return () => {
+                socket?.off('getMessage'); // Assurez-vous de retirer l'écouteur lorsque le composant est démonté
+            };
+        }
+    }, [socket, userAuth]);
+  
+
+  
 
 
 
@@ -60,10 +127,7 @@ const Chat: React.FC = () => {
 
 
 
-
-
-
-    const { userAuth } = useAuth();
+   
 
     useEffect(() => {
     const fetchConversationId = async () => {
@@ -88,25 +152,6 @@ const Chat: React.FC = () => {
     }
     fetchConversationId()
 }, [])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     useEffect(() => {
@@ -134,9 +179,12 @@ const Chat: React.FC = () => {
 
    const handleSendMessage = async (userId) => {
     try {
-        // Remplacez 'senderId' et 'receiverId' par les valeurs appropriées
+
         const senderId = userAuth?._id; // Vous devez obtenir cela dynamiquement ou à partir de l'état du composant
-        const receiverId = userId; // ID de l'utilisateur auquel vous voulez envoyer le message
+        const receiverId = userId;
+       
+        // Remplacez 'senderId' et 'receiverId' par les valeurs appropriées
+        // ID de l'utilisateur auquel vous voulez envoyer le message
 
         // Envoyer une requête POST pour créer la conversation
         const response = await axios.post('http://localhost:3000/chatroom/addchatroom', {
@@ -145,6 +193,7 @@ const Chat: React.FC = () => {
         });
 
         console.log(response.data); // Affiche la réponse de l'API
+       // setAllUsers(prevUsers => prevUsers.filter(user => user.userId !== receiverId));
         window.location.reload();
         // Affichez un message de confirmation ou mettez à jour l'état de votre composant si nécessaire
     } catch (error) {
@@ -186,25 +235,41 @@ const Chat: React.FC = () => {
         }
     };
 
-    const sendMessage=async(e)=>{
-        const resData = await fetch(`http://localhost:3000/chatroom/addMessage/${userAuth?._id}/${RecevirUser?.id}/${chatroom}/${msg}`,{
-            method:'POST',
-            headers:{
-              'Content-Type':'application/json'
-            },
-         
-        
-            
-        });
-
-        const resDataMsg=await resData.json()
-     console.log(chatroom);
-       setMsg('');
-        //setMessage(resDataMsg)
+    
+    const sendMessage = async (e) => {
+        console.log('Sending message:', msg);
       
+       
+         //fetchMessage(userAuth?.id,RecevirUser?.id)
+         setMsg('');
+        try {
+            const resData = await fetch(`http://localhost:3000/chatroom/addMessage/${userAuth?._id}/${RecevirUser?.id}/${chatroom}/${msg}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: msg }) // Ajoutez le corps de la requête avec le message à envoyer
+            });
+    
+            const resDataMsg = await resData.json();
+            console.log(chatroom);
+           
+            //setMessage(resDataMsg)
+        } catch (error) {
+            console.error('Error sending message:', error);
+            // Gérer les erreurs, par exemple en affichant un message à l'utilisateur
+        }
 
-
-    }
+        socket?.emit('sendMessage',{
+            senderId:userAuth?.id,
+            receiverId:RecevirUser?.id,
+            msg,
+            conversationId:chatroom
+ 
+ 
+         })
+    };
+    
     
     /*useEffect(() => {
         fetchData();
