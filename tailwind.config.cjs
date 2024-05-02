@@ -258,6 +258,27 @@ module.exports = {
           '0%, 100%': { transform: 'rotate(360deg)' },
           '50%': { transform: 'rotate(0deg)' },
         },
+        pacman: {
+          "0%, 100%": {
+            "clip-path": "polygon(100% 74%, 44% 48%, 100% 21%)",
+          },
+          "25%, 75%": {
+            "clip-path": "polygon(100% 60%, 44% 48%, 100% 40%)",
+          },
+          "50%": {
+            "clip-path": "polygon(100% 50%, 44% 48%, 100% 50%)",
+          },
+        },
+        "three-bounce": {
+          "0%, 100%": {
+            transform: "scale(0.5)",
+            opacity: 0.5,
+          },
+          "50%": {
+            transform: "scale(2)",
+            opacity: 1,
+          },
+        },
       },
       animation: {
         'ping-once': 'ping 5s cubic-bezier(0, 0, 0.2, 1)',
@@ -265,6 +286,10 @@ module.exports = {
         'spin-1.5': 'spin 1.5s linear infinite',
         'spin-2': 'spin 2s linear infinite',
         'spin-3': 'spin 3s linear infinite',
+        pacman: "pacman 1s ease-out infinite",
+        "three-bounce": "three-bounce 1s ease-in-out infinite",
+
+
       },
     },
   },

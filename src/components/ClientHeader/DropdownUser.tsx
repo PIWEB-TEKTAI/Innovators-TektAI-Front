@@ -61,16 +61,34 @@ const DropdownUser =(props: {
         className="flex items-center gap-4"
         to="#"
       >
-        <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black capitalize dark:text-white">
-            {props.userName}
-          </span>
-          <span className="block text-xs">{props.occupation}</span>
-        </span>
-
-        <span className="h-12 w-12 rounded-full">
-          <img src={props.imageUrl} alt="User" className='rounded-full h-12 w-32' />
-        </span>
+   {
+          userAuth?.role === "company" ? (
+            <>
+              <span className="hidden text-right lg:block">
+                <span className="block text-sm font-medium text-black capitalize dark:text-white">
+                  {userAuth?.company.name}
+                </span>
+             
+              </span>
+              <span className="h-12 w-12 rounded-full">
+                <img src="/src/images/user/4760012.jpg" alt="company" className="rounded-full h-12 w-32" />
+                </span>
+            </>
+          ) : (
+            <>
+              <span className="hidden text-right lg:block">
+                <span className="block text-sm font-medium text-black capitalize dark:text-white">
+                  {props.userName}
+                </span>
+                <span className="block text-xs">{props.occupation}</span>
+              </span>
+              <span className="h-12 w-12 rounded-full">
+                <img src={props.imageUrl} alt="User" className='rounded-full h-12 w-32' />
+              </span>
+            </>
+          )
+        }    
+       
 
         <svg
           className="hidden fill-current sm:block"

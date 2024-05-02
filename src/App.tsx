@@ -67,6 +67,7 @@ import ChallengesParticiption from './pages/SuperAdmin/Participations';
 import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
 import Favories from './pages/competitions/favories'
 import SubmissionDetails from './pages/Challenges/submissiondetails';
+import JoinRequestsPage from './pages/Teams/JoinRequestsPage';
 
 
 
@@ -757,6 +758,15 @@ element={
             <>
               <PageTitle title=" Team List | TektAi" />
               <TeamList/>
+            </>
+          }
+        />
+        <Route
+          path="/team/JoinRequests"
+          element={
+            <>
+              <PageTitle title=" Team Join Requests | TektAi" />
+              <JoinRequestsPage/>
             </>
           }
         />

@@ -15,6 +15,7 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
     name: '',
     selectedChallengers: [] as any[],
     private: false, // Initialize private as false
+    emailInvitation:[] as any[]
   });
 
   const [challengers, setChallengers] = useState<any[]>([]);
@@ -23,12 +24,36 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [titleError, setTitleError] = useState('');
   const [selectMembersError, setSelectMembersError] = useState('');
+  const [emailInvitation, setEmailInvitation] = useState('');
+  const [EmailError, setEmailError] = useState('');
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { userAuth } = useAuth();
+  const [email, setEmail] = useState<string>('');
+  const [emails, setEmails] = useState<string[]>([]);
 
+  const handleAddEmail = () => {
+    if (email.trim() !== '') {
+      setEmails([...emails, email]);
+      setEmail(''); // Clear the input field after adding the email
+    }
+    setNewTeamData({
+      ...newTeamData,
+      emailInvitation:[...emails, email]
+    });
+  };
+
+  const handleDeleteEmail = (index: number) => {
+    const newEmails = [...emails];
+    newEmails.splice(index, 1);
+    setEmails(newEmails);
+    setNewTeamData({
+      ...newTeamData,
+      emailInvitation:newEmails
+    });
+  };
+  
   useEffect(() => {
-    // Fetch list of challengers when component mounts
     fetchChallengers();
     // Add event listener to handle click outside the dropdown
     document.addEventListener('click', handleClickOutside);
@@ -104,6 +129,16 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
   const filteredChallengers = challengers.filter((challenger) =>
     challenger.FirstName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const checkEmail = (value: any) => {
+    setEmail(value);
+    if (!value.trim()) {
+      setEmailError('Please enter your email');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setEmailError('Please enter a valid email');
+    } else {
+      setEmailError('');
+    }
+  };
 
   return (
     <div className="p-4">
@@ -142,6 +177,31 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
             </ul>
           </div>
         )}
+        <div>
+        <div className="sm:flex items-center">
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => checkEmail(e.target.value)}
+            placeholder="Invite members by email"
+            className="flex-grow rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary mb-2"
+          />
+          <button 
+          disabled={EmailError !== "" || email ==''}
+          onClick={handleAddEmail} className='rounded-md disabled:bg-opacity-60 p-3 mb-2 mx-2 bg-primary text-white text-sm font-semibold'>
+            Add Email
+          </button>
+        </div>
+        {EmailError && <p className="error-msg">{EmailError}</p>}
+
+        <ul className='flex flex flex-wrap'>
+          {emails.map((email, index) => (
+            <li key={index} className='flex items-center m-1 bg-gray-200 rounded-full text-primary font-semibold py-1 px-2'>
+              {email} <button className='ml-1 text-red-500' onClick={() => handleDeleteEmail(index)}>x</button>
+            </li>
+          ))}
+        </ul>
+        </div>
         <div className="text-black mt-2">
           Visibility:
           <label
@@ -202,7 +262,7 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
       </div>
 
       <div className="flex justify-between mt-4">
-        <button onClick={handleCreateTeam} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Create Team</button>
+        <button disabled={newTeamData.name==''} onClick={handleCreateTeam} className="bg-primary disabled:bg-opacity-60 hover:bg-blue-600 text-white py-2 px-4 rounded">Create Team</button>
         <button onClick={onReturn} className="text-blue-500 hover:underline">Return</button>
       </div>
     </div>
@@ -210,3 +270,4 @@ const CreateTeamForm: React.FC<Props> = ({ onCreateTeamSuccess, onReturn }) => {
 };
 
 export default CreateTeamForm;
+

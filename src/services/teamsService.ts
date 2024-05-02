@@ -44,9 +44,25 @@ const teamService = {
       throw error;
     }
   },
-  joinTeamRequest: async (teamId:any, userId:any) => {
+  joinTeamRequest: async (teamId:any) => {
     try {
-      const response = await axios.post(`${BASE_URL}/teams/${teamId}/join`, { userId });
+      const response = await axios.post(`${BASE_URL}/teams/${teamId}/join`,{},{withCredentials:true});
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  findTeamByLeader: async (leaderId:any) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/find-by-leader/${leaderId}`);
+      return response.data.team;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getJoinRequests: async (teamId:any) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/${teamId}/requests`,{withCredentials:true});
       return response.data;
     } catch (error) {
       throw error;
@@ -97,7 +113,16 @@ const teamService = {
       throw new Error('Error editing team');
     }
     
+  },
+  inviteMembers :async (teamId:any, userIds:any, emailInvitations:any) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/teams/invite-members`, { teamId, userIds, emailInvitations });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
+  
   
 };
 

@@ -185,6 +185,9 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
         </div>
         {/* <!-- ===== Content Area End ===== --> */}
       </div>
+      <div className="mx-auto">
+        
+      </div>
       <Footer />
     </div>
   );

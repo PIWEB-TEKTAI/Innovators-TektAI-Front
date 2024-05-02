@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import LogoDark from '../../images/logo/logo-tekt-gray2.png';
 import Logo from '../../images/logo/logo.svg';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import { signIn, signInWithGoogle   } from '../../services/auth.service'; // Import signInWithGitHub function
 import { CodeResponse, TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import ClientLayout from '../../layout/clientLayout'
@@ -247,9 +247,11 @@ const handleSignIn = async () => {
       loginAuth(responseData);
 
       setTimeout(() => {
-        if(responseData.role == "challenger" || responseData.role=="company"){
-          console.log("role"+responseData.role);
+        if(responseData.role == "challenger" || responseData.role=="company" && responseData.redirect==null){
           navigate("/landing");
+        }
+        if(responseData.role == "challenger"  && responseData.redirect=="/teams/myInvitations"){
+          navigate("/teams/myInvitations");
         }
         if(responseData.role == "admin" || responseData.role=="superAdmin"){
           console.log("role"+responseData.role);

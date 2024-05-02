@@ -9,8 +9,8 @@ const Footer: React.FC = () => {
     
     return (
       <footer className="bg-white dark:bg-gray-800">
-      <div className="max-w-screen-xl p-4 py-6 mx-auto lg:py-16 md:p-8 lg:p-10">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5">
+      <div className="max-w-screen-xl p-4 py-4 mx-auto lg:py-10 md:p-4 lg:p-6">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
               <div>
                   <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Product</h3>
                   <ul className="text-gray-500 dark:text-gray-400">
@@ -26,23 +26,7 @@ const Footer: React.FC = () => {
                 
                   </ul>
               </div>
-              <div>
-                  <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Help center</h3>
-                  <ul className="text-gray-500 dark:text-gray-400">
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">LinkedIn</a>
-                      </li>
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">Twitter</a>
-                      </li>
-                      <li className="mb-4">
-                       <a href="#" className="hover:underline">Facebook</a>
-                      </li>
-                      <li className="mb-4">
-                          <a href="#contactUs" className="hover:underline">Contact Us</a>
-                      </li>
-                  </ul>
-              </div>
+            
               <div>
                   <h3 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h3>
                   <ul className="text-gray-500 dark:text-gray-400">
@@ -66,9 +50,7 @@ const Footer: React.FC = () => {
                       <li className="mb-4">
                           <a href="#" className="hover:underline">Careers</a>
                       </li>
-                      <li className="mb-4">
-                          <a href="#" className="hover:underline">Brand Center</a>
-                      </li>
+                     
                       <li className="mb-4">
                           <a href="#" className="hover:underline">Blog</a>
                       </li>

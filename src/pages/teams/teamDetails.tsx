@@ -4,12 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import teamService from '../../services/teamsService';
 import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
+import { useAuth } from '../../components/Auth/AuthProvider';
+import InviteMembersForm from './InviteMembersForm';
+import JoinRequests from './JoinRequests';
 
 const TeamDetails = () => {
   const { teamId } = useParams();
   const [team, setTeam] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState('overview'); // State to manage active tab
-
+  const [activeTab, setActiveTab] = useState('joinRequests'); // State to manage active tab
+  const [isInviteMembersModal,setIsInviteMembersModal] = useState(false)
+  const {userAuth } = useAuth();
   useEffect(() => {
     const fetchTeamDetails = async () => {
       try {
@@ -32,6 +36,9 @@ const handleTabChange = (tab: string) => {
 
   return (
     <ConnectedClientLayout>
+      {isInviteMembersModal&&    
+        <InviteMembersForm onClose={()=>{setIsInviteMembersModal(false)}} team={team}></InviteMembersForm>
+}
     <div className='bg-white  rounded-lg p-4'>
     <div className="z-20 flex flex-col md:flex-row md:h-35 bg-gray-100 text-black text-2xl items-center justify-center font-semibold">
   <div className="text-primary">
@@ -59,7 +66,14 @@ const handleTabChange = (tab: string) => {
 </div>
 
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-         
+        {userAuth?._id ==team.leader._id && userAuth?.role == "challenger"&&
+                  <div className="flex justify-end">        
+                  <button 
+                  onClick={()=>setIsInviteMembersModal(true)}
+                  className='bg-primary text-white font-semibold rounded-lg p-2 m-2 hover:scale-[1.1]'>
+                   Invite Members</button>
+               </div>
+        }
         </div>
         <div className="flex justify-center items-center my-2">
 
@@ -98,21 +112,18 @@ const handleTabChange = (tab: string) => {
         <li className="-mb-px mr-1">
           <a
             className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab === 'overview' ? 'bg-blue-100 text-blue-700 border-l border-t border-r' : ''}`}
-            onClick={() => handleTabChange('overview')}
+            onClick={() => handleTabChange('joinRequests')}
           >
-            Overview
+            Join Requests
           </a>
         </li>
         {/* Add other tabs similarly */}
       </ul>
 
       <div className="p-8">
-        {activeTab === 'overview' && (
+        {activeTab === 'joinRequests' && (
           <>
-            <h2 className="text-2xl font-bold text-gray-900 mt-2">
-              Description
-            </h2>
-            {/* Add description content */}
+            <JoinRequests team={team}></JoinRequests>
           </>
         )}
         {/* Add content for other tabs */}

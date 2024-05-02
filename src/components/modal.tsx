@@ -59,8 +59,8 @@ const Modal: React.FC<ModalProps> = ({
             {/* content */}
             <div className="flex flex-col max-h-screen">
               {/* header */}
-              <div className="p-5 bg-gray-100 text-black rounded-t">
-                <h3 className="text-3xl font-semibold">{title}</h3>
+              <div className="p-5 text-center bg-gray-50 text-black rounded-t">
+                <h3 className="text-2xl font-semibold">{title}</h3>
                 <button
                   className="absolute top-0 right-0 p-2 focus:outline-none"
                   onClick={() => {
@@ -82,7 +82,7 @@ const Modal: React.FC<ModalProps> = ({
                 )}
               </div>
               {/* footer */}
-              <div className="p-5 bg-gray-100 rounded-b flex justify-end">
+              <div className="p-5 rounded-b flex justify-end">
                 <button
                   className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm focus:outline-none"
                   onClick={() => {

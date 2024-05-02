@@ -1265,14 +1265,23 @@ const ChallengeDetails: React.FC = () => {
         error={errorConfirmationMesage}
       />
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
+        
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
+        <div className="flex bg-white justify-end">
+                        <button
+            className="text-red-500 hover:text-red-700 text-xs"
+            onClick={() => AddTofavories(challengeDetails._id)}>
+            <FaHeart style={{ fontSize: '2em',  }} /> {/* Icône de cœur avec une taille de 2em et un espacement à droite */}
+
+          </button>
+              </div>
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
 
             {alert?.type == 'error' && ErrorToast(alert.message)}
           </div>
 
-          <div className="flex flex-col py-4 sm:flex-row sm:items-center mt-4 sm:mt-0">
+          <div className="flex flex-col pb-4 pt-2 sm:flex-row sm:items-center mt-2 sm:mt-0">
             <img
               src={`http://localhost:3000/images/${challengeDetails.image}`}
               alt="Challenge"
@@ -1325,7 +1334,7 @@ const ChallengeDetails: React.FC = () => {
                 </p>
               )}
             </div>
-            <div>
+            <div className='flex-col'>
               <h2 className="text-md font-bold text-gray-900 mt-2">
                 Number of Participants Required
               </h2>
@@ -1336,9 +1345,10 @@ const ChallengeDetails: React.FC = () => {
                 Solo: {challengeDetails.numberParticipants.nbrSolo}
               </p>
             </div>
-
+        
           </div>
         </div>
+    
         {userAuth?.role === 'challenger' &&
           challengeDetails.status == 'open' &&
           !challengeDetails.participations.soloParticipants.includes(
@@ -1361,35 +1371,37 @@ const ChallengeDetails: React.FC = () => {
                 member == userAuth._id;
               }),
           ) && (
-            <div className="my-4 py-4 flex bg-white pt-2 rounded-lg justify-center">
-              <div className="flex ">
-                <div className="flex-col m-1">
-                  <button
-                    onClick={handleConfirmationModalAppearance}
-                    className="text-lg p-2 border mr-2  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
-                  >
-                    <span className="group-hover:ease-in duration-300">
-                      Solo Join
-                    </span>
-                  </button>
-                </div>
-                <div className="flex-col my-1">
-                  <button
-                    className="text-lg p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group"
-                    onClick={handleJoinTeamClick}
-                  >
-                    <span className="group-hover:ease-in duration-300">
-                      Join a Team
-                    </span>
-                  </button>
-                </div>
-                <button
-  className="text-red-500 hover:text-red-700 m-3 flex-col my-1"
-  onClick={() => AddTofavories(challengeDetails._id)}>
-  <FaHeart style={{ fontSize: '2em',  }} /> {/* Icône de cœur avec une taille de 2em et un espacement à droite */}
-
-</button>
+            <div className="my-4 py-4  bg-white pt-2 rounded-lg ">
+                  <div className="flex justify-center p-4">
+                  <p className="max-w-[35rem] text-center">
+                      Step into the challenge, either as a solo adventurer or with a team at your side. The choice is yours, and the journey awaits.
+                  </p>
               </div>
+              <div className="flex flex-wrap justify-center">
+    <div className="flex-col m-1">
+        <button
+            onClick={handleConfirmationModalAppearance}
+            className="text-lg p-2 border mr-2 hover:text-primary text-white border-gray-300 bg-black hover:bg-opacity-90 hover:scale-[1.1] rounded-md font-semibold group"
+        >
+            <span className="group-hover:ease-in duration-300">
+                Solo Join
+            </span>
+            <img src="/src/images/user/graphic_designer_man.jpg" alt="solo join" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+        </button>
+    </div>
+    <div className="flex-col my-1 mx-2">
+        <button
+            className="text-lg p-2 bg-primary border border-gray-500 hover:text-black rounded-md text-white hover:scale-[1.1] font-semibold group"
+            onClick={handleJoinTeamClick}
+        >
+            <span className="group-hover:ease-in duration-300">
+                Join a Team
+            </span>
+            <img src="/src/images/team/team.jpg" alt=" join a team" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+        </button>
+    </div>
+</div>
+
             </div>
           )}
         {isModalOpen && (
