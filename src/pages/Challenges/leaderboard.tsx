@@ -12,6 +12,7 @@ const Leaderboard: React.FC = () => {
   const { userAuth } = useAuth();
   const { id } = useParams();
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [sortByScore, setSortByScore] = useState(false);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -60,17 +61,35 @@ const Leaderboard: React.FC = () => {
             challengeDetails.participations.TeamParticipants.some(
               (team: any) => team.leader && team.leader._id && team.leader._id === userAuth._id
             ))}
-      </div>
-      <ul>
-        {submissions
-          .slice()
-          .sort((a, b) => parseInt(b.output) - parseInt(a.output))
-          .map((submission, index) => {
-            if (submission.output !== previousOutput) {
-              rank = index + 1;
-            }
-            previousOutput = submission.output;
 
+<button
+          onClick={() => setSortByScore((prev) => !prev)}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4 focus:outline-none"
+        >
+          {sortByScore ? 'Sort by Score' : 'Sort by Output'}
+        </button>
+
+      </div>
+      <h2 className="text-2xl font-semibold mb-4">
+      {sortByScore ? 'Expert Ranking' : 'Automatic Ranking'}
+    </h2>
+
+      <ul>
+      {submissions
+  .slice()
+  .sort((a, b) => {
+    if (sortByScore) {
+      // Sort by score in descending order
+      return parseInt(b.score) - parseInt(a.score);
+    } else {
+      // Sort by output in descending order
+      return parseInt(b.output) - parseInt(a.output);
+    }
+  })
+  .map((submission, index, sortedSubmissions) => {
+    if (index === 0 || submission.score !== sortedSubmissions[index - 1].score) {
+      rank = index + 1;
+    }
            
 
             return (
@@ -97,7 +116,7 @@ const Leaderboard: React.FC = () => {
                   </div>
                   <div className="flex">
                     <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
-                      {submission.output}
+                    {sortByScore ?  submission.score :submission.output}
                     </p>
                     {/* View icon */}
                     <div className="p-2 text-gray text-primary cursor-pointer focus:outline-none">
