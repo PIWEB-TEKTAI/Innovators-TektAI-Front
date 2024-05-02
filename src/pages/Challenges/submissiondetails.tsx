@@ -86,7 +86,7 @@ const SubmissionDetails: React.FC = () => {
               <p className="text-gray-700 mb-4">Description: {submission.description}</p>
               <p className="text-gray-700 mb-4">Output: {submission.output}</p>
               <div className="mt-4">
-                {userAuth?.role === 'company' && (
+                {userAuth?.role === 'company' && userAuth?._id === submission.challengeId.createdBy &&  (
                   <div>
                     <form onSubmit={handleSubmit} className="flex items-center">
                       <label className="mr-4">New Score:</label>
