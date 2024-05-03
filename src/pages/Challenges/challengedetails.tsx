@@ -587,7 +587,7 @@ const ChallengeDetails: React.FC = () => {
                           </div>
 
 
-                          {userAuth?._id === submission.submittedBy ? (
+                          {userAuth?._id === submission.submittedBy._id ? (
                             <div className="relative">
                               <button
                                 id={`dropdownMenuIconButton_${submission.id}`}
