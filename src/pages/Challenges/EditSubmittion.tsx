@@ -24,6 +24,7 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
   
     const [Output, setOutput] = useState('');
     const [OutputError, setOutputError] = useState('');
+    const [IsOutput, setIsOutput] = useState(false);
   
     const [presentationFile, setPresentationFile] = useState<string | Blob>('');
     const [presentationFileError, setPresentationFileError] = useState('');
@@ -87,12 +88,20 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
           setTitle(data?.title || '');
           setDescription(data?.description || '');
           setOutput(data?.output || '');
+
+          if(data?.output){
+            setIsOutput(true);
+         }else{
+           setIsOutput(false);
+         }
+
           setPresentationFileName(data?.presentationFile?.name || '');
           setCodeSourceFileName(data?.codeSourceFile?.name || '');
           setFileName(data?.datasetFile?.name || '');
           setReadmeFileName(data?.readMeFile?.name || '');
           setReportFileName(data?.reportFile?.name || '');
           setDemoFileName(data?.demoFile?.name || '');
+          
         } catch (error) {
           console.error('Error fetching submission data:', error);
         }
@@ -303,7 +312,7 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
                 )}
               </div>
   
-              {Output && (
+              {IsOutput && (
                 <div>
                   <label className=" mb-2.5 font-medium  block text-black dark:text-white">
                     Output
