@@ -43,7 +43,7 @@ import EditSubmissionForm from './EditSubmittion';
 import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
 
 
- 
+
 
 
 const ChallengeDetails: React.FC = () => {
@@ -58,7 +58,7 @@ const ChallengeDetails: React.FC = () => {
 
   const [confiramtionMessage, setConfirmationMessage] = useState('');
   const [showTeamModal, setShowTeamModal] = useState(false);
-  const [clicked , setClicked] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
 
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
@@ -223,10 +223,10 @@ const ChallengeDetails: React.FC = () => {
       }
     });
   };
-  const AddTofavories = async (challengeId:any) => {
+  const AddTofavories = async (challengeId: any) => {
     try {
       const response = await axios.put(`http://localhost:3000/challenges/Favories/${challengeId}/${userAuth?._id}`);
-     
+
       if (response.status !== 200) {
         throw new Error('Failed to add challenge to favorites');
       }
@@ -237,10 +237,10 @@ const ChallengeDetails: React.FC = () => {
   };
 
 
-  const Removefavories = async (challengeId:any) => {
+  const Removefavories = async (challengeId: any) => {
     try {
       const response = await axios.put(`http://localhost:3000/challenges/Unfavorite/${challengeId}/${userAuth?._id}`);
-     
+
       if (response.status !== 200) {
         throw new Error('Failed to remove challenge to favorites');
       }
@@ -268,7 +268,7 @@ const ChallengeDetails: React.FC = () => {
     }
   };
 
- 
+
 
   return (
     <ClientLayout>
@@ -283,38 +283,39 @@ const ChallengeDetails: React.FC = () => {
         postSaveMessage={confiramtionMessage}
         error={errorConfirmationMesage}
       />
-    
+
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
-        
+
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-        {userAuth?.favories?.includes(challengeDetails._id) || clicked  ? (
-          <div className="flex bg-white justify-end">
+          {userAuth?.favories?.includes(challengeDetails._id) || clicked ? (
+            <div className="flex bg-white justify-end">
 
               <button
-              className="text-red-500 hover:text-red-700 flex-col"
-              onClick={() => 
-              {
-              Removefavories(challengeDetails._id)
-              setClicked(false)}}>
-              <FaHeart style={{ fontSize: '2em', fill:'red' }} data-tooltip-id="my-tooltip" data-tooltip-content="Remove from favorites" /> 
-              <Tooltip id="my-tooltip" />
+                className="text-red-500 hover:text-red-700 flex-col"
+                onClick={() => {
+                  Removefavories(challengeDetails._id)
+                  setClicked(false)
+                }}>
+                <FaHeart style={{ fontSize: '2em', fill: 'red' }} data-tooltip-id="my-tooltip" data-tooltip-content="Remove from favorites" />
+                <Tooltip id="my-tooltip" />
 
               </button>
-          </div>
-             ) : (
-              <div className="flex bg-white justify-end">
+            </div>
+          ) : (
+            <div className="flex bg-white justify-end">
 
               <button
-              className="flex-col"
-              onClick={() => {
-              AddTofavories(challengeDetails._id),
-              setClicked(true)}
-              }>
-              <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }}  data-tooltip-id="my-tooltip" data-tooltip-content="Add to favorites"/> 
-              <Tooltip id="my-tooltip" />
-            </button>
+                className="flex-col"
+                onClick={() => {
+                  AddTofavories(challengeDetails._id),
+                    setClicked(true)
+                }
+                }>
+                <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }} data-tooltip-id="my-tooltip" data-tooltip-content="Add to favorites" />
+                <Tooltip id="my-tooltip" />
+              </button>
             </div>
-             )}
+          )}
 
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
@@ -328,13 +329,13 @@ const ChallengeDetails: React.FC = () => {
               alt="Challenge"
               className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"
             />
-             
+
             <div className="flex flex-col sm:flex-grow">
               <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize break-words">
                 {challengeDetails.title}
-               
+
               </h2>
-              
+
               <div className="flex items-center mt-4">
                 <div
                   className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${challengeDetails.status === 'open'
@@ -370,7 +371,7 @@ const ChallengeDetails: React.FC = () => {
                 Hosted by: {challengeDetails.createdBy.company.name}
               </p>
               {challengeDetails.status === 'open' && (
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-red-600  font-bold ">
                   Time Left: {timeLeftString}
                 </p>
               )}
@@ -385,12 +386,12 @@ const ChallengeDetails: React.FC = () => {
               </p>
               <p className="text-gray-600 mt-4 break-words text-black break-words">
                 Solo: {challengeDetails.numberParticipants.nbrSolo}
-            </p>
+              </p>
             </div>
-        
+
           </div>
         </div>
-    
+
         {userAuth?.role === 'challenger' &&
           challengeDetails.status == 'open' &&
           !challengeDetails.participations.soloParticipants.includes(
@@ -414,35 +415,35 @@ const ChallengeDetails: React.FC = () => {
               }),
           ) && (
             <div className="my-4 py-4  bg-white pt-2 rounded-lg ">
-                  <div className="flex justify-center p-4">
-                  <p className="max-w-[35rem] text-center">
-                      Step into the challenge, either as a solo adventurer or with a team at your side. The choice is yours, and the journey awaits.
-                  </p>
+              <div className="flex justify-center p-4">
+                <p className="max-w-[35rem] text-center">
+                  Step into the challenge, either as a solo adventurer or with a team at your side. The choice is yours, and the journey awaits.
+                </p>
               </div>
               <div className="flex flex-wrap justify-center">
-    <div className="flex-col m-1">
-        <button
-            onClick={handleConfirmationModalAppearance}
-            className="text-lg p-2 border mr-2 hover:text-primary text-white border-gray-300 bg-black hover:bg-opacity-90 hover:scale-[1.1] rounded-md font-semibold group"
-        >
-            <span className="group-hover:ease-in duration-300">
-                Solo Join
-            </span>
-            <img src="/src/images/user/graphic_designer_man.jpg" alt="solo join" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
-        </button>
-    </div>
-    <div className="flex-col my-1 mx-2">
-        <button
-            className="text-lg p-2 bg-primary border border-gray-500 hover:text-black rounded-md text-white hover:scale-[1.1] font-semibold group"
-            onClick={handleJoinTeamClick}
-        >
-            <span className="group-hover:ease-in duration-300">
-                Join a Team
-            </span>
-            <img src="/src/images/team/team.jpg" alt=" join a team" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
-        </button>
-    </div>
-</div>
+                <div className="flex-col m-1">
+                  <button
+                    onClick={handleConfirmationModalAppearance}
+                    className="text-lg p-2 border mr-2 hover:text-primary text-white border-gray-300 bg-black hover:bg-opacity-90 hover:scale-[1.1] rounded-md font-semibold group"
+                  >
+                    <span className="group-hover:ease-in duration-300">
+                      Solo Join
+                    </span>
+                    <img src="/src/images/user/graphic_designer_man.jpg" alt="solo join" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+                  </button>
+                </div>
+                <div className="flex-col my-1 mx-2">
+                  <button
+                    className="text-lg p-2 bg-primary border border-gray-500 hover:text-black rounded-md text-white hover:scale-[1.1] font-semibold group"
+                    onClick={handleJoinTeamClick}
+                  >
+                    <span className="group-hover:ease-in duration-300">
+                      Join a Team
+                    </span>
+                    <img src="/src/images/team/team.jpg" alt=" join a team" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+                  </button>
+                </div>
+              </div>
 
             </div>
           )}
