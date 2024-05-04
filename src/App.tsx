@@ -69,11 +69,15 @@ import Favories from './pages/competitions/favories'
 import SubmissionDetails from './pages/Challenges/submissiondetails';
 import JoinRequestsPage from './pages/Teams/JoinRequestsPage';
 import Chatbot from './pages/landing/chatbot';
+import paiment from './pages/Paimenet/Paiment';
 
 import DiscussionList from './components/Chat/DiscussionList';
 import DiscussionDetails from './components/Chat/DiscussionDetails';
+import PaymentPage from './pages/Paimenet/Paiment';
 
-
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import formpaiment from './pages/Paimenet/formpaiment';
 
 
 function App() {
@@ -84,6 +88,7 @@ function App() {
 
   const navigate = useNavigate();
   const { authenticated} = useAuth();
+  const stripePromise = loadStripe('pk_test_51PCMzNHTb56tjMDuH9mlRWNgGo94uv9xBBcqLA67OjhwCn1U3GM6D0hF6xBZ1BixF9Trikzz2pwydkpGyugQFymD00UL9exp8n');
 
 
 
@@ -103,6 +108,18 @@ function App() {
   ) : (
     <>
       <Routes>
+      <Route
+  path="/paiment"
+  element={
+    <Elements stripe={stripePromise}>
+      <>
+        <PageTitle title="Paiement | TektAi" />
+        <PaymentPage />
+      </>
+    </Elements>
+  }
+/>
+     
         {/* Auth Routes */}
         <Route
           path="/auth/signin"

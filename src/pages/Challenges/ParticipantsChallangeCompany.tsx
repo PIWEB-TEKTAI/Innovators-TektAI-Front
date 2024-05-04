@@ -13,6 +13,7 @@ interface LeaderData {
 }
 
 interface ChallengeData {
+  _id: string;
   title: string;
   soloParticipants: { _id: string; FirstName: string; LastName: string; imageUrl: string }[];
   soloParticipationRequests: { _id: string; FirstName: string; LastName: string; imageUrl: string }[];
@@ -79,16 +80,38 @@ const Participations = () => {
     setSelectedOption(e.target.value);
   };
 
+
+
+  const handleAcceptSolo = async (challengeTitle: string, userId: string, type: string) => {
+    try {
+      console.log('Accepting participation:', { challengeTitle, userId, type }); // Ajout du console.log
+      await axios.put(`http://localhost:3000/challenge/${challengeTitle}/acceptParticipationtitle/${userId}`, { type }, { withCredentials: true });
+      // Recharge la page après avoir accepté la participation avec succès
+      window.location.reload();
+    } catch (error) {
+      console.error('Error accepting solo participation request:', error);
+    }
+  };
+  
+  const handleCancelSolo = async  (challengeTitle: string, userId: string, type: string) => {
+    try {
+      await axios.put(`http://localhost:3000/challenge/${challengeTitle}/declineParticipationtitle/${userId}`, { type }, { withCredentials: true });
+      window.location.reload();
+    } catch (error) {
+      console.error('Error canceling solo participation request:', error);
+      // Gérer les erreurs
+    }
+  };
+
+
+
+
+
+  
   return (
     <ConnectedClientLayout>
-      <div className="flex flex-col gap-9 border-full">
-        <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-
-      <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
-
-        <h2 className="font-bold text-black text-title-xl mb-8">
-            List of Participations
-        </h2>
+      <div>
+        <h1 className="text-2xl font-bold mb-4">List of Participations</h1>
         {/* Search bar and dropdown menu */}
         <div className="flex justify-between mb-4">
           {/* Search bar */}
@@ -115,7 +138,7 @@ const Participations = () => {
               <option value="Solo Participation Request">Solo Participation Requests</option>
               <option value="Team Participant">Team Participants</option>
               <option value="Team Participation Request">Team Participation Requests</option>
-            </select>
+            </select> 
           </div>
         </div>
         {/* Table of filtered participations */}
@@ -127,26 +150,45 @@ const Participations = () => {
                 <th className="px-4 py-2">Participant</th>
                 <th className="px-4 py-2">Participation Type</th>
                 <th className="px-4 py-2">Challenge Name</th>
+                <th className="px-4 py-2">Actions</th> {/* Add Actions column */}
               </tr>
             </thead>
             <tbody>
-              {filteredParticipations.map((participant, index) => (
-                <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-                  <td className="border px-4 py-2">
-                    <img src={participant.imageUrl} alt={`${participant.FirstName} ${participant.LastName}`} className="w-10 h-10 rounded-full mr-2" />
-                  </td>
-                  <td className="border px-4 py-2">{`${participant.FirstName} ${participant.LastName}`}</td>
-                  <td className="border px-4 py-2">{participant.type}</td>
-                  <td className="border px-4 py-2">{participant.challengeTitle}</td>
-                </tr>
-              ))}
+            {filteredParticipations.map((participant, index) => (
+  <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
+    <td className="border px-4 py-2">
+      <img src={participant.imageUrl} alt={`${participant.FirstName} ${participant.LastName}`} className="w-10 h-10 rounded-full mr-2" />
+    </td>
+    <td className="border px-4 py-2">{`${participant.FirstName} ${participant.LastName}`}</td>
+    <td className="border px-4 py-2">{participant.type}</td>
+    <td className="border px-4 py-2">{participant.challengeTitle}</td>
+    <td className="border px-4 py-2">
+    {participant.type === 'Solo Participation Request' && (
+  <>
+    <button onClick={() => handleAcceptSolo(participant.challengeTitle, participant._id, 'Request')} className="mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Accept</button>
+    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'Request')} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+  </>
+)}
+{participant.type === 'Team Participation Request' && (
+  <>
+    <button onClick={() => handleAcceptSolo(participant.challengeTitle, participant._id, 'TeamRequest')} className="mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Accept</button>
+    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'TeamRequest' )} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+  </>
+)}
+{participant.type !== 'Solo Participation Request' && participant.type !== 'Team Participation Request' && (
+  <p> Accepted</p>
+  
+)}
+
+
+    </td>
+  </tr>
+))}
+
             </tbody>
           </table>
         </div>
-       </div> 
       </div>
-      </div>
-      
     </ConnectedClientLayout>
   );
 };
