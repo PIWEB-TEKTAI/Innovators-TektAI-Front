@@ -477,7 +477,7 @@ const ChallengeDetails: React.FC = () => {
                 className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussion' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
                 onClick={() => handleTabChange('discussion')}
               >
-                Discussion
+                Q&A
               </a>
             </li>
             <li className="-mb-px mr-1">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -58,6 +57,8 @@ const Competitions: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all'); // État pour le statut sélectionné
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [challengesPerPage, setChallengesPerPage] = useState<number>(8); // Nombre de challenges par page
+  const [completedChallenges, setCompletedChallenges] = useState<Set<string>>(new Set());
+
 
   useEffect(() => {
     const fetchChallenges = async () => {
@@ -210,81 +211,108 @@ const Competitions: React.FC = () => {
     }
   };
 
-  const handleCompleted = async (challengeId: any) => {
-    try {
-      await axios.put(
-        `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
-        { status: 'completed' },
-        { withCredentials: true },
-      );
-  
-      console.log('PUT request successful for challenge ID:', challengeId);
-  
-      // After the challenge status is updated, fetch the updated challenge details
-      const response = await axios.get(`http://localhost:3000/challenge/${challengeId}`);
-      const updatedChallenge = response.data;
-  
-      // Determine the winner and send the email
-      if (updatedChallenge && updatedChallenge.status === 'completed') {
-        const fetchedSubmissions = await getSubmissionsByChallengeId(challengeId);
-        if (fetchedSubmissions.length > 0) {
-          const sortedSubmissions = fetchedSubmissions.slice().sort((a, b) => parseInt(b.score) - parseInt(a.score));
-          const firstWinner = sortedSubmissions[0];
-      
-          let winnerEmail,winnerName,challengetitle,amount,prizes,recruitement,freelance,internship,companyname;
-          if (firstWinner.submittedByTeam) {
+const handleCompleted = async (challengeId: string) => {
+  try {
+    await axios.put(
+      `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
+      { status: 'completed' },
+      { withCredentials: true },
+    );
 
-           winnerEmail  = firstWinner.submittedByTeam.leader.email;
-           winnerName  = firstWinner.submittedByTeam.name;
-           challengetitle  = firstWinner.challengeId.title;
-           amount  = firstWinner.challengeId.amount;
-           prizes  = firstWinner.challengeId.prizes.prizeName;
-           recruitement  = firstWinner.challengeId.recruitement.positionTitle;
-           freelance  = firstWinner.challengeId.freelance.projectTitle;
-           internship  = firstWinner.challengeId.internship.internshipTitle;
-           companyname  = firstWinner.challengeId.createdBy.company.name;
+    // Fetch the updated challenge details
+    const response = await axios.get(`http://localhost:3000/challenge/${challengeId}`);
+    const updatedChallenge = response.data;
 
+    // Check if the challenge status is completed and it's not in the completedChallenges set
+    if (updatedChallenge && updatedChallenge.status === 'completed' && !completedChallenges.has(challengeId)) {
+      // Add the challenge ID to the completedChallenges set
+      setCompletedChallenges(new Set(completedChallenges.add(challengeId)));
 
-       
-
-           console.log('Sending email to:', winnerEmail);
-
-          } else {
-            // Winner is solo
-            winnerEmail = firstWinner.submittedBy.email;
-            winnerName  = firstWinner.submittedBy.FirstName;
-            challengetitle  = firstWinner.challengeId.title;
-
-
-            
-            console.log('Sending email to:', winnerEmail);
-
+      // Fetch submissions for this challenge
+      const fetchedSubmissions = await getSubmissionsByChallengeId(challengeId);
+      if (fetchedSubmissions.length > 0) {
+        // Logic to determine the winner and send email
+        const sortedSubmissions = fetchedSubmissions.slice().sort((a, b) => parseInt(b.score) - parseInt(a.score));
+        sortedSubmissions.forEach(async (submission, index) => {
+          let scoreBonus = 0;
+          switch (index) {
+            case 0:
+              scoreBonus = 30;
+              break;
+            case 1:
+              scoreBonus = 20;
+              break;
+            case 2:
+              scoreBonus = 10;
+              break;
+            default:
+              scoreBonus = 0;
+              break;
           }
-      
-          if (winnerEmail) {
-            console.log('Sending email to:', winnerEmail);
-            console.log('Sending email to:', winnerName);
-            console.log('Sending email to:', challengetitle);
-            console.log('Sending email to:', companyname);
 
-            // Call your sendEmail function here with additional challenge information
-            sendEmail(winnerEmail, winnerName, challengetitle,amount,prizes,recruitement,freelance,internship,companyname);
+          let updatedScore = 0;
+          if (submission.submittedByTeam) {
+            updatedScore = scoreBonus;
+          } else if (submission.submittedBy) {
+            updatedScore = scoreBonus;
           }
+
+          try {
+            if (submission.submittedByTeam) {
+              // Update team score
+              await axios.post(`http://localhost:3000/user/team/updateScore/${submission.submittedByTeam._id}`, { globalScore: updatedScore });
+            } else if (submission.submittedBy) {
+              // Update user score
+              await axios.post(`http://localhost:3000/user/user/updateScore/${submission.submittedBy._id}`, { globalScore: updatedScore });
+            }
+          } catch (error) {
+            console.error('Error updating score:', error);
           }
-      }
-            // Update the challenges state after completing
-      const updatedChallenges = challenges.map((challenge) => {
-        if (challenge._id === challengeId) {
-          return { ...challenge, status: 'completed' };
+        });
+
+        const firstWinner = sortedSubmissions[0];
+        const secondWinner = sortedSubmissions[1];
+        const thirsWinner = sortedSubmissions[2];
+
+        let winnerEmail, winnerName, challengetitle, amount, prizes, recruitement, freelance, internship, companyname;
+        if (firstWinner.submittedByTeam) {
+          winnerEmail = firstWinner.submittedByTeam.leader.email;
+          winnerName = firstWinner.submittedByTeam.name;
+          challengetitle = firstWinner.challengeId.title;
+          amount = firstWinner.challengeId.amount;
+          prizes = firstWinner.challengeId.prizes.prizeName;
+          recruitement = firstWinner.challengeId.recruitement.positionTitle;
+          freelance = firstWinner.challengeId.freelance.projectTitle;
+          internship = firstWinner.challengeId.internship.internshipTitle;
+          companyname = firstWinner.challengeId.createdBy.company.name;
+        } else {
+          // Winner is solo
+          winnerEmail = firstWinner.submittedBy.email;
+          winnerName = firstWinner.submittedBy.FirstName;
+          challengetitle = firstWinner.challengeId.title;
         }
-        return challenge;
-      });
-  
-      setChallenges(updatedChallenges);
-    } catch (error) {
-      console.error('Error completing challenge:', error);
+
+        if (winnerEmail) {
+          // Call your sendEmail function here with additional challenge information
+          sendEmail(winnerEmail, winnerName, challengetitle, amount, prizes, recruitement, freelance, internship, companyname);
+        }
+      }
     }
-  };
+
+    // Update the challenges state after completing
+    const updatedChallenges = challenges.map((challenge) => {
+      if (challenge._id === challengeId) {
+        return { ...challenge, status: 'completed' };
+      }
+      return challenge;
+    });
+
+    setChallenges(updatedChallenges);
+  } catch (error) {
+    console.error('Error completing challenge:', error);
+  }
+};
+
   
     
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ConnectedClientLayout from '../../layout/clientLayout';
+import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
@@ -286,7 +286,6 @@ const ChallengeDetailsCompany: React.FC = () => {
         error={errorConfirmationMesage}
       />
 
-      <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
 
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
           {userAuth?.favories?.includes(challengeDetails._id) || clicked ? (
@@ -665,7 +664,7 @@ const ChallengeDetailsCompany: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+  
     </ConnectedClientLayout>
   );
 };
