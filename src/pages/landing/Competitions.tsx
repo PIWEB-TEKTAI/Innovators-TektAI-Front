@@ -287,7 +287,7 @@ const Competitions: React.FC = () => {
         <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
             <h2 className="font-bold text-black text-title-xl mb-8">
-              Competitions
+             {userAuth?.role === 'company' ?( 'Competitions') :('Submittions')} 
             </h2>
 
             <div className="search">

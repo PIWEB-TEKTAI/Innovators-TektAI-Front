@@ -287,7 +287,7 @@ const ChallengeDetails: React.FC = () => {
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-        {userAuth?.favories?.includes(challengeDetails._id) || clicked  ? (
+        { userAuth?.favories.includes(challengeDetails._id) || clicked  ? (
           <div className="flex bg-white justify-end">
 
               <button
@@ -376,17 +376,7 @@ const ChallengeDetails: React.FC = () => {
               )}
             </div>
 
-            <div className='flex-col'>
-              <h2 className="text-md font-bold text-gray-900 mt-2">
-                Number of Participants Required
-              </h2>
-              <p className="text-gray-600 mt-4 break-words text-black break-words">
-                Teams: {challengeDetails.numberParticipants.nbrTeam}
-              </p>
-              <p className="text-gray-600 mt-4 break-words text-black break-words">
-                Solo: {challengeDetails.numberParticipants.nbrSolo}
-            </p>
-            </div>
+         
         
           </div>
         </div>
@@ -587,7 +577,7 @@ const ChallengeDetails: React.FC = () => {
                           </div>
 
 
-                          {userAuth?._id === submission.submittedBy ? (
+                          {userAuth?._id === submission.submittedBy._id ? (
                             <div className="relative">
                               <button
                                 id={`dropdownMenuIconButton_${submission.id}`}

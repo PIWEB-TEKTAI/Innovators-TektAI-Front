@@ -72,6 +72,7 @@ import Chatbot from './pages/landing/chatbot';
 
 import DiscussionList from './components/Chat/DiscussionList';
 import DiscussionDetails from './components/Chat/DiscussionDetails';
+import DiscussionListTeam from './components/Chat/DiscussionListTeam';
 
 
 
@@ -711,6 +712,16 @@ function App() {
           }
         />
 
+
+          <Route
+            path="/team/discussionList"
+            element={
+            <>
+              <PageTitle title="Discussion | TektAi" />
+              <DiscussionListTeam />
+            </>
+          }
+        />
 
          
          

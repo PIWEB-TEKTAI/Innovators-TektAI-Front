@@ -101,7 +101,20 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
             type: "info",
             message: msg
         });
-      }
+      }else if (eventName === "joinTeamRequest" && userAuth?._id === eventData.idUser) {
+        console.log('join team Request:', eventData.name);
+        let msg = `${toTitleCase(eventData.firstname)} ${toTitleCase(eventData.lastname)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });
+      }else if (eventName === "acceptTeamRequest" && userAuth?._id === eventData.idUser) {
+        console.log('acceptTeamRequest:', eventData.name);
+        let msg = `${toTitleCase(eventData.name)} ${eventData.content}`;
+        setAlert({
+            type: "info",
+            message: msg
+        });}
     });
 
     return () => {

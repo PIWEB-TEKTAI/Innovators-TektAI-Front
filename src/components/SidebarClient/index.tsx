@@ -367,6 +367,17 @@ const SidebarClient = ({
                                   Join Requests
                                 </NavLink>
                               </li>
+                              <li>
+                                <NavLink
+                                  to="/team/discussionList"
+                                  className={({ isActive }) =>
+                                    'group relative flex text-black items-center gap-2.5  px-4 font-medium duration-300 ease-in-out hover:text-primary  ' +
+                                    (isActive ? 'font-semibold' : 'font-medium')
+                                  }
+                                >
+                                  Discussions
+                                </NavLink>
+                              </li>
                             </ul>
                           </div>
                           {/* <!-- Dropdown Menu End --> */}

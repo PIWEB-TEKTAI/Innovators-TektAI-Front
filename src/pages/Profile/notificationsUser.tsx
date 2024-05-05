@@ -90,7 +90,7 @@ const NotificationUser = () => {
                             <img
                               src={item.UserConcernedId.imageUrl}
                               alt="profile"
-                              className="rounded-full max-h-36 w-10"
+                              className="rounded-full h-10 w-10"
                     />
                             <div className="flex flex-col">
                               <p className="text-sm">
