@@ -19,6 +19,8 @@ const DiscussionList = () => {
     null,
   );
 
+  const [conversation, setConversation] = useState<Converstation | null>(null);
+
  
 
 
@@ -74,9 +76,10 @@ const DiscussionList = () => {
     console.log(conversations);
   }, []);
 
-  const handleParticipantClick = (participant: any) => {
+  const handleParticipantClick = (participant: any,conv:any) => {
     setClicked(true);
     setSelectedParticipant(participant);
+    setConversation(conv);
   };
 
 
@@ -101,7 +104,7 @@ const DiscussionList = () => {
                         (participant: any) => (
                           <div
                             className="flex items-center gap-5 py-3  hover:bg-gray-3 dark:hover:bg-meta-4 cursor-pointer"
-                            onClick={() => handleParticipantClick(participant)}
+                            onClick={() => handleParticipantClick(participant,chat)}
                           >
                             <div className="relative h-14 w-14 rounded-full">
                               <div>
@@ -127,7 +130,9 @@ const DiscussionList = () => {
                                       {chat.messages[chat.messages.length - 1]?.content}
                                   </span>
                                   
-                                  <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
+                                  {chat.messages[chat.messages.length - 1]?.timestamp && (
+                                      <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
+                                  )}
                                 </p>
                               </div>
                             </div>
@@ -143,7 +148,7 @@ const DiscussionList = () => {
 
             <div className="w-2/3 p-4">
               {selectedParticipant  ? (
-                <DiscussionDetails participant={selectedParticipant}/>
+                <DiscussionDetails participant={selectedParticipant} converstation={conversation}/>
               ) : (
                 <div>Loading...</div>
               )}

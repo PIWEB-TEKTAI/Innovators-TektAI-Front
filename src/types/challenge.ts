@@ -3,6 +3,7 @@ export type challenge = {
   description: string;
   problematic: string;
   amount: string;
+  currency:string;
   visibility: String;
   startDate: Date;
   endDate: Date;

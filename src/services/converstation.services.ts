@@ -17,4 +17,15 @@ export const createConverstation = async (idUser1: any , idUser2:any) => {
 
 
 
+export const deleteConverstation = async (id:any) => {
+    try {
+        const response = await axios.delete(`${url}/delete/${id}`);
+        console.log('converstation deleted Response:', response.data);
+        return response.data;
+  
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        throw error;
+    }
+  };
 

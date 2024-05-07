@@ -287,7 +287,7 @@ const ChallengeDetails: React.FC = () => {
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
         
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-        { userAuth?.favories.includes(challengeDetails._id) || clicked  ? (
+        { userAuth?.favories?.includes(challengeDetails._id) || clicked  ? (
           <div className="flex bg-white justify-end">
 
               <button
@@ -570,7 +570,7 @@ const ChallengeDetails: React.FC = () => {
                           </p>
 
                           {/* View icon */}
-                          <div className="p-2 mt-2  text-primary cursor-pointer focus:outline-none">
+                          <div className="p-2 mt-1  text-primary cursor-pointer focus:outline-none">
                             <Link to={`/submission/details/${submission._id}`}>
                               <FontAwesomeIcon icon={faEye} />
                             </Link>
@@ -588,7 +588,7 @@ const ChallengeDetails: React.FC = () => {
                                 <FontAwesomeIcon
                                   icon={faEdit}
                                   style={{ color: '#3A8EBA' }}
-                                  className="mt-2 ml-1 w-5 h-5 "
+                                  className="mt-1 ml-1 w-5 h-5 "
                                 />
                               </button>
 

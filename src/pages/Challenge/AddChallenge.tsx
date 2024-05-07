@@ -21,10 +21,10 @@ const AddChallenge = () => {
   const [amount, setAmount] = useState('');
 
   const [soloError, setSoloError] = useState('');
-  const [solo, setSolo] = useState("");
+  const [solo, setSolo] = useState('');
 
   const [teamError, setTeamError] = useState('');
-  const [team, setTeam] = useState("");
+  const [team, setTeam] = useState('');
 
   const [durationError, setDurationError] = useState('');
   const [duration, setDuration] = useState('');
@@ -70,6 +70,9 @@ const AddChallenge = () => {
   const [ImageError, setImageError] = useState('');
   const [Image, SetImage] = useState<string | Blob>('');
 
+  const [selectedCurrency, setSelectedCurrency] = useState('TND');
+
+
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
   );
@@ -99,6 +102,7 @@ const AddChallenge = () => {
   const [isExpertChecked, setIsExpertChecked] = useState<boolean>(true);
 
   const [submitted, setSubmitted] = useState(false);
+
 
   const handleTextCheckboxChange = () => {
     setNumberInputVisible(false);
@@ -225,10 +229,8 @@ const AddChallenge = () => {
       setDescription(value);
       if (!value.trim()) {
         setDescriptionError('Description is required');
-      }
-      else if (value.length < 200 || value.length > 800) {
-        setDescriptionError("Desciption must be between 200 and 800 digits");  
-
+      } else if (value.length < 200 || value.length > 800) {
+        setDescriptionError('Desciption must be between 200 and 800 digits');
       } else {
         setDescriptionError('');
       }
@@ -236,8 +238,8 @@ const AddChallenge = () => {
       setProblematic(value);
       if (!value.trim()) {
         setProblematicError('Problematic is required');
-      }else if (value.length < 100 || value.length > 800) {
-        setProblematicError("Problematic must be between 100 and 800 digits");
+      } else if (value.length < 100 || value.length > 800) {
+        setProblematicError('Problematic must be between 100 and 800 digits');
       } else {
         setProblematicError('');
       }
@@ -325,14 +327,14 @@ const AddChallenge = () => {
       } else {
         setDurationError('');
       }
-    }else if (name == 'solo') {
+    } else if (name == 'solo') {
       setSolo(value);
       if (!value.trim()) {
         setSoloError('Number of solo is required');
       } else {
         setSoloError('');
       }
-    }else if (name == 'team') {
+    } else if (name == 'team') {
       setTeam(value);
       if (!value.trim()) {
         setTeamError('Number of team is required');
@@ -340,6 +342,11 @@ const AddChallenge = () => {
         setTeamError('');
       }
     }
+  };
+
+
+  const handleCurrencyChange = (e:any) => {
+    setSelectedCurrency(e.target.value);
   };
 
   const nextStep = () => {
@@ -379,34 +386,57 @@ const AddChallenge = () => {
       descriptionError === '' &&
       endDateError === '' &&
       startDateError === '' &&
-      problematicError === '' && DataSetFileError === ''
+      problematicError === '' &&
+      DataSetFileError === ''
     );
   };
 
-   const isSecondPageValid = () => {
-    return(
-    visibility !== '' &&
-    team !== '' &&
-    solo !== '' &&
-    visibilityError === '' &&
-    teamError === '' &&
-    soloError === '' &&
-    (isAutomatedChecked || isExpertChecked) &&
-    (isOutputChecked || isPresentationChecked || isCodeSourceChecked || isDatasetChecked || isDemoChecked || isReadMeFileChecked || isRapportChecked)
-  )
+  const isSecondPageValid = () => {
+    return (
+      visibility !== '' &&
+      team !== '' &&
+      solo !== '' &&
+      visibilityError === '' &&
+      teamError === '' &&
+      soloError === '' &&
+      (isAutomatedChecked || isExpertChecked) &&
+      (isOutputChecked ||
+        isPresentationChecked ||
+        isCodeSourceChecked ||
+        isDatasetChecked ||
+        isDemoChecked ||
+        isReadMeFileChecked ||
+        isRapportChecked)
+    );
   };
 
-
   const isThirdPageValid = () => {
-    return(
+    return (
       (isMonetaryChecked && amount !== '' && amountError === '') ||
-      (isPrizesChecked && 
-      (isPrizeChecked && prizeName !== '' && prizeNameError === '' && prizeDescription !== '' && prizeDescriptionError === '') ||
-      (isRecruitementChecked && positionTitle !== '' && positionTitleError === '' && jobDescription !== '' && jobDescriptionError === '') ||
-      (isFreelanceChecked && projectTitle !== '' && projectTitleError === '' && projectDescription !== '' && projectDescriptionError === '') ||
-      (isInternChecked && InternTitle !== '' && InternTitleError === '' && InternDescription !== '' && InternDescriptionError === '' && duration !== '' && durationError === '')
-    )
-  )
+      (isPrizesChecked &&
+        isPrizeChecked &&
+        prizeName !== '' &&
+        prizeNameError === '' &&
+        prizeDescription !== '' &&
+        prizeDescriptionError === '') ||
+      (isRecruitementChecked &&
+        positionTitle !== '' &&
+        positionTitleError === '' &&
+        jobDescription !== '' &&
+        jobDescriptionError === '') ||
+      (isFreelanceChecked &&
+        projectTitle !== '' &&
+        projectTitleError === '' &&
+        projectDescription !== '' &&
+        projectDescriptionError === '') ||
+      (isInternChecked &&
+        InternTitle !== '' &&
+        InternTitleError === '' &&
+        InternDescription !== '' &&
+        InternDescriptionError === '' &&
+        duration !== '' &&
+        durationError === '')
+    );
   };
 
   const handleFileChange = (e: any) => {
@@ -479,14 +509,15 @@ const AddChallenge = () => {
           description: description,
           problematic: problematic,
           amount: amount,
+          currency:selectedCurrency,
           visibility: visibility,
           startDate: startDate,
           endDate: endDate,
           file: DataSetFile,
-          numberParticipants:{
-            nbrTeam:team,
-            nbrSolo:solo
-        },
+          numberParticipants: {
+            nbrTeam: team,
+            nbrSolo: solo,
+          },
           rankingMode: {
             automated: isAutomatedChecked ? true : false,
             expert: isExpertChecked ? true : false,
@@ -825,7 +856,7 @@ const AddChallenge = () => {
                         onChange={(e) => checkValidity('solo', e.target.value)}
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
-                        {soloError && (
+                      {soloError && (
                         <div className="flex">
                           <p className="text-red-500 text-sm mt-1">
                             {soloError}
@@ -833,7 +864,6 @@ const AddChallenge = () => {
                         </div>
                       )}
                     </div>
-
                   </div>
                 </div>
 
@@ -1040,16 +1070,32 @@ const AddChallenge = () => {
                       <label className="mb-2.5 font-medium text-sm block text-black dark:text-white">
                         Amount
                       </label>
-                      <input
-                        type="number"
-                        name="amount"
-                        value={amount}
-                        placeholder="Enter the amount of your competition"
-                        onChange={(e) =>
-                          checkValidity('amount', e.target.value)
-                        }
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
+                      <div className="flex">
+                        <div className="relative w-full">
+                          <input
+                            type="number"
+                            name="amount"
+                            value={amount}
+                            placeholder="Enter the amount of your competition"
+                            onChange={(e) =>
+                              checkValidity('amount', e.target.value)
+                            }
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          />
+                        </div>
+                        <select
+                          id="currency-select"
+                          onChange={handleCurrencyChange}
+                          value={selectedCurrency}
+                          className="inline-flex items-center py-2.5 px-4 text-sm font-medium text-start text-gray-900 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                        >
+                          <option value="TND">TND</option>
+                          <option value="EUR">EUR</option>
+                          <option value="USD">USD</option>
+                          <option value="CAD">CAD</option>
+                         </select>
+                       </div>
+
                       {amountError && (
                         <p className="text-red-500 text-sm mt-1">
                           {amountError}
@@ -1389,8 +1435,9 @@ const AddChallenge = () => {
                 <button
                   className="rounded ml-auto bg-primary p-3  text-gray disabled:opacity-60 hover:bg-opacity-90"
                   onClick={nextStep}
-                  disabled={step === 1 ? !isFirstPageValid() : !isSecondPageValid()}
-
+                  disabled={
+                    step === 1 ? !isFirstPageValid() : !isSecondPageValid()
+                  }
                 >
                   Next
                 </button>

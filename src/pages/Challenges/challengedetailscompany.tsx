@@ -1373,15 +1373,7 @@ const ChallengeDetailsCompany: React.FC = () => {
               )}
             </div>
             <div>
-    <h2 className="text-md font-bold text-gray-900 mt-2">
-        Number of Participants Required
-    </h2>
-    <p className="text-gray-600 mt-4 break-words text-black break-words">
-        Teams: {challengeDetails.numberParticipants.nbrTeam}
-    </p>
-    <p className="text-gray-600 mt-4 break-words text-black break-words">
-        Solo: {challengeDetails.numberParticipants.nbrSolo}
-    </p>
+   
 </div>
           </div>
         </div>

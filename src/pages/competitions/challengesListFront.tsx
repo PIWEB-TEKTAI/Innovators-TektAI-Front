@@ -132,6 +132,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   image,
   description,
   amount,
+  currency,
   prizes,
   recruitement,
   freelance,
@@ -227,7 +228,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
               <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
               <span className="font-semibold">Prize : </span>
               <span className="font-semibold ">
-                {amount} {amount && 'DT'}
+                {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
                 {prizes.prizeName && 'Award'}
                 {recruitement.positionTitle && 'Job Opportunity'}
                 {freelance.projectTitle && 'Freelance Work'}
@@ -267,6 +268,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       image,
       description,
       amount,
+      currency,
       status,
       startDate,
       endDate,
@@ -360,7 +362,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         
 
         <div className="flex flex-col items-start mb-4">
-          <h3 className="text-xl font-bold text-black dark:text-white capitalize">
+          <h3 className="text-lg font-bold text-black dark:text-white capitalize">
             {addEmptyLineIfNeeded(title, 28)}
           </h3>
           <div className="font-medium mt-2">
@@ -385,7 +387,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
         <span className="font-semibold">Prize : </span>
               <span className="font-semibold ">
-                {amount} {amount && 'DT'}
+                {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
                 {prizes.prizeName && 'Award'}
                 {recruitement.positionTitle && 'Job Opportunity'}
                 {freelance.projectTitle && 'Freelance Work'}

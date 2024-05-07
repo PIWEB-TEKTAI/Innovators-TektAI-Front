@@ -19,6 +19,9 @@ const DiscussionListTeam = () => {
     null,
   );
 
+  const [conversation, setConversation] = useState<Converstation | null>(null);
+
+
  
 
 
@@ -73,11 +76,13 @@ const DiscussionListTeam = () => {
     console.log(conversations);
   }, []);
 
-  const handleParticipantClick = (team: any) => {
+  const handleParticipantClick = (team: any , conv:any) => {
     setClicked(true);
     setSelectedTeam(team);
+    setConversation(conv);
     
   };
+
 
 
 
@@ -97,7 +102,7 @@ const DiscussionListTeam = () => {
                     > 
                           <div
                             className="flex items-center gap-5 py-3  hover:bg-gray-3 dark:hover:bg-meta-4 cursor-pointer"
-                            onClick={() => handleParticipantClick(chat.team)}
+                            onClick={() => handleParticipantClick(chat.team,chat)}
                           >
                             <div className="relative h-14 w-14 rounded-full">
                               <div>
@@ -132,7 +137,7 @@ const DiscussionListTeam = () => {
 
             <div className="w-2/3 p-4">
               {selectedTeam  ? (
-                <DiscussionDetailsTeam team={selectedTeam}/>
+                <DiscussionDetailsTeam team={selectedTeam} converstation={conversation}/>
               ) : (
                 <div>Loading...</div>
               )}

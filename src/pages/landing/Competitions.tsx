@@ -15,6 +15,7 @@ interface Challenge {
   description: string;
   image: string;
   amount: string;
+  currency:string;
   prizes: {
     prizeName: string;
     prizeDescription: string;
@@ -434,7 +435,7 @@ const Competitions: React.FC = () => {
                       <div
                         className={`price ${challenge.status !== 'open' && 'mt-8'}`}
                       >
-                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.amount && 'DT'}</span>
+                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.currency === 'EUR' && '€'}{challenge.currency === 'TND' && 'DT'} {(challenge.currency === 'USD' || challenge.currency === 'CAD') && '	$'}</span>
                         <strong className="font-semibold text-base ">
                           {challenge.prizes.prizeName && 'Award'}
                           {challenge.recruitement.positionTitle &&

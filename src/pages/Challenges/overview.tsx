@@ -108,7 +108,7 @@ const Overview: React.FC = () => {
       {challengeDetails.amount && (
         <p className="text-gray-600 mt-4 break-words text-black">
           <span className="font-semibold">Monetary Prize: </span>{' '}
-          {challengeDetails.amount} Dt for each challenger in the Top 1 on the
+          {challengeDetails.amount} {challengeDetails.currency === 'EUR' && '€'}{challengeDetails.currency === 'TND' && 'DT'} {(challengeDetails.currency === 'USD' || challengeDetails.currency === 'CAD') && '	$'} for each challenger in the Top 1 on the
           leaderboard at close of challenge.
         </p>
       )}
