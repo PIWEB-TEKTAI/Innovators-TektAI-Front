@@ -52,7 +52,7 @@ const PaymentPage = () => {
   }, []);
 
   const updateSubscriptionType = (type: string, email: string) => {
-    axios.put(`http://localhost:3000/update-subscription-type/${email}`, { type })
+    axios.put(`http://localhost:3000/update-subscription-type/${email}`, { subscriptionType: type })
       .then(response => {
         console.log('Réponse de mise à jour du type d\'abonnement reçue:', response.data);
       })
@@ -60,6 +60,7 @@ const PaymentPage = () => {
         console.error('Erreur lors de la mise à jour du type d\'abonnement:', error);
       });
   };
+  
   
   const handleSubscriptionSelection = (type: string, price: number, email: string) => {
     updateSubscriptionType(type, email); // Appeler la fonction pour mettre à jour le type d'abonnement
@@ -127,7 +128,7 @@ const PaymentPage = () => {
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
               <div className="bg-white p-8 rounded-lg w-full max-w-lg">
                 <h1 className="text-3xl font-bold mb-4">Payment Form</h1>
-                <PaymentForm price={selectedSubscription.price} />
+                <PaymentForm price={selectedSubscription.price} subscriptionType={selectedSubscription.type} />
                 <button onClick={closeModal} className="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Close</button>
               </div>
             </div>

@@ -6,9 +6,11 @@ import { useAuth } from '../../components/Auth/AuthProvider'; // Importer useAut
 
 interface PaymentFormProps {
     price: number; // Ajoutez le type de la propriété price
+    subscriptionType: string; // Ajouter le type d'abonnement en tant que prop
+
 }
 
-function PaymentForm({ price }: PaymentFormProps) { // Ajoutez les props comme arguments de la fonction
+function PaymentForm({ price, subscriptionType }: PaymentFormProps) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false); // Ajout de l'état pour gérer le succès du paiement
@@ -28,15 +30,13 @@ function PaymentForm({ price }: PaymentFormProps) { // Ajoutez les props comme a
         setLoading(true);
 
         if (!stripe || !elements) {
-            console.error('Stripe.js n\'a pas encore été chargé. Assurez-vous de l\'initialiser correctement dans votre application.');
-            setLoading(false);
+            // Gestion des erreurs
             return;
         }
 
         const cardElement = elements.getElement(CardElement);
         if (!cardElement) {
-            console.error('Le composant CardElement n\'a pas été correctement monté dans le DOM.');
-            setLoading(false);
+            // Gestion des erreurs
             return;
         }
 
@@ -47,19 +47,26 @@ function PaymentForm({ price }: PaymentFormProps) { // Ajoutez les props comme a
             });
 
             if (error) {
-                console.error('Erreur lors de la création de la méthode de paiement:', error);
+                // Gestion des erreurs
             } else {
                 // Envoi des données de paiement au backend
-                const response = await axios.post('http://localhost:3000/paiment/create-subscription', {
+                let planId;
+                if (subscriptionType === 'Freemium') {
+                    planId = 'price_1PDwBCHTb56tjMDuJDINnmcK';
+                } else
+                if (subscriptionType === 'Premium')  {
+                    planId = 'price_1PCj4LHTb56tjMDu8rWQaMWp';
+                }
+                                const response = await axios.post('http://localhost:3000/paiment/create-subscription', {
                     paymentMethodId: paymentMethod.id,
-                    planId: 'price_1PCj4LHTb56tjMDu8rWQaMWp', // Remplacez par l'ID de votre plan Stripe
-                    email: email, // Utilisation de l'e-mail de l'utilisateur connecté
+                    planId: planId,
+                    email: email,
                 });
                 console.log('Réponse du backend:', response.data);
-                setPaymentSuccess(true); // Mettre à jour l'état pour indiquer le succès du paiement
+                setPaymentSuccess(true);
             }
         } catch (error) {
-            console.error('Erreur lors de la création de l\'abonnement:', error);
+            // Gestion des erreurs
         }
 
         setLoading(false);
