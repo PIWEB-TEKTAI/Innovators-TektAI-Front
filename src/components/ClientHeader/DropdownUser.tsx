@@ -8,7 +8,6 @@ const DropdownUser =(props: {
   userName: String  | undefined;
   occupation: String  | undefined;
   imageUrl:string | undefined;
-  name:string | undefined;
 
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -96,7 +95,7 @@ const DropdownUser =(props: {
             <>
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black capitalize dark:text-white">
-                  {props.name}
+                  {userAuth?.company?.name}
                 </span>
              
               </span>

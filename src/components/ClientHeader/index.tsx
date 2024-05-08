@@ -12,7 +12,6 @@ const ClientHeader = (props: {
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const userName = `${props.connectedUser?.FirstName} ${props.connectedUser?.LastName}`;
-  const company = `${props.connectedUser?.company.name}`;
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<any | null>(null);
@@ -73,7 +72,6 @@ const ClientHeader = (props: {
                   userName={userName}
                   occupation={props.connectedUser?.occupation}
                   imageUrl={props.connectedUser?.imageUrl}
-                  name={company}
                 />
               </>
             ) : (
