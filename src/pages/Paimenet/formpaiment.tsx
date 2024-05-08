@@ -16,6 +16,8 @@ function PaymentForm({ price, subscriptionType }: PaymentFormProps) {
     const [paymentSuccess, setPaymentSuccess] = useState(false); // Ajout de l'état pour gérer le succès du paiement
     const [email, setEmail] = useState(''); // Ajout de l'état pour l'adresse e-mail
     const stripe = useStripe();
+    const [errorr, setErrorr] = useState<string | null>(null);
+
     const elements = useElements();
     const { userAuth } = useAuth(); // Récupérer les informations d'authentification de l'utilisateur connecté
 
@@ -74,8 +76,16 @@ function PaymentForm({ price, subscriptionType }: PaymentFormProps) {
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
+    
+        // Vérifier si l'e-mail est renseigné
+        if (!email) {
+            setErrorr("Veuillez renseigner votre adresse e-mail avant de procéder au paiement.");
+            return;
+        }
+    
         await handlePayment();
     };
+    
 
     return (
         <div>

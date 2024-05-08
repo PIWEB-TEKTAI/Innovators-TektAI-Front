@@ -20,7 +20,9 @@ export type User = {
       description:string,
       phone: string,
       professionnalFields: string,
-      websiteUrl:string
+      websiteUrl:string,
+      subscriptionType: string
+
     },
     favories:Array<number>;
 
