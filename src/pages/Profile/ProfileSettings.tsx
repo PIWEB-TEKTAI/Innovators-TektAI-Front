@@ -6,6 +6,7 @@ import CustomAlert from '../UiElements/CostumAlert';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import axios from 'axios';
+import Select from 'react-select';
 import PhoneInputWithCountrySelect, { isValidPhoneNumber } from 'react-phone-number-input';
 import ReactFlagsSelect from "react-flags-select";
 
@@ -15,6 +16,22 @@ interface Country {
   flagPath:any;
   code:any;
 }
+const professionalSkills =
+["Programming Languages: Python, R",
+  "Statistical Analysis and Mathematics",
+  "Machine Learning: TensorFlow, PyTorch",
+  " Data Wrangling: Pandas",
+  "Data Visualization: Matplotlib, Seaborn, Tableau",
+  "Big Data Technologies: Hadoop, Spark",
+  " Database Knowledge: SQL",
+  " Domain Knowledge",
+  " Data Ethics",
+  " Communication Skills",
+  "Problem-Solving Skills",
+  " Version Control: Git",
+  " Collaboration",
+  "  Continuous Learning",
+  "Project Management"]
 
 
 const ProfileSettings = () => {
@@ -89,6 +106,19 @@ const ProfileSettings = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isForm1Submited, setIsForm1Submited] = useState(false);
   const [isForm2Submited, setIsForm2Submited] = useState(false);
+
+
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+
+
+  const options = professionalSkills.map(skill => ({ value: skill, label: skill }));
+  const handleMultiChange1 = (selectedOptions) => {
+    const skills = selectedOptions.map(option => option.value);
+    setSkills(skills);
+  };
+
+
 
   // ... (other state variables)
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
@@ -805,56 +835,21 @@ const ProfileSettings = () => {
         {/* ... (other input fields) */}
 
         {/* Input for single skill */}
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="skills"
-          >
-            Skills
-          </label>
-          <div className="relative">
-            {/* Input for a single skill */}
-            <input
-              className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="skills"
-              value={skillsInput}
-              onChange={(e) => setSkillsInput(e.target.value)}
-              placeholder="Enter a skill"
-            />
-            <button
-              type="button"
-              className="absolute right-4.5 top-4 text-primary hover:underline"
-              onClick={handleAddSkill}
-            >
-              Add
-            </button>
-          </div>
-        </div>
+       
+        <div className="mb-6">
+      <label className="mb-3 block font-medium text-black dark:text-white">
+         Skills
+      </label>
+      <Select
+        options={options}
+        isMulti
+        value={options.filter(option => skills.includes(option.value))}
+        onChange={handleMultiChange1}
+      />
+    </div>
 
         {/* Display the list of skills */}
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="skillsList"
-          >
-            Skills List
-          </label>
-          <div>
-            {skills.map((skill, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <p className="mr-2">{skill}</p>
-                <button
-                  type="button"
-                  className="text-red-500 hover:underline"
-                  onClick={() => handleRemoveSkill(index)}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        
       </div>
       {/* ... (other JSX) */}
                   <div className="mb-5.5">

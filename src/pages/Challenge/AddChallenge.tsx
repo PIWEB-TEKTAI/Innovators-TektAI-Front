@@ -6,9 +6,27 @@ import { addChallenge } from '../../services/challengeService';
 import { TiTick } from 'react-icons/ti';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ReCAPTCHA from 'react-google-recaptcha';
+import Select from 'react-select';
 import DateTimePickerStart from '../../components/Forms/DatePicker/DateTimePickeryStart';
 
 const AddChallenge = () => {
+
+  const professionalSkills =
+    ["Programming Languages: Python, R",
+      "Statistical Analysis and Mathematics",
+      "Machine Learning: TensorFlow, PyTorch",
+      " Data Wrangling: Pandas",
+      "Data Visualization: Matplotlib, Seaborn, Tableau",
+      "Big Data Technologies: Hadoop, Spark",
+      " Database Knowledge: SQL",
+      " Domain Knowledge",
+      " Data Ethics",
+      " Communication Skills",
+      "Problem-Solving Skills",
+      " Version Control: Git",
+      " Collaboration",
+      "  Continuous Learning",
+      "Project Management"]
   const [step, setStep] = useState(1);
   const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState('');
@@ -23,6 +41,7 @@ const AddChallenge = () => {
   const [soloError, setSoloError] = useState('');
   const [solo, setSolo] = useState("");
 
+  const [targetSkills, setTargetSkills] = useState([]);
   const [teamError, setTeamError] = useState('');
   const [team, setTeam] = useState("");
 
@@ -119,6 +138,26 @@ const AddChallenge = () => {
     setTextInputVisible(false);
     setNumberInputVisible(!numberInputVisible);
   };
+
+  /*const handleMultiChange1 = (value: string) => {
+    const updatedSkills = [...targetSkills];
+
+    if (updatedSkills.includes(value)) {
+      updatedSkills.splice(updatedSkills.indexOf(value), 1);
+    } else {
+      updatedSkills.push(value);
+    }
+    console.log('targetSkills:', updatedSkills);
+
+    setTargetSkills(updatedSkills);
+
+  };*/
+  const options = professionalSkills.map(skill => ({ value: skill, label: skill }));
+  const handleMultiChange1 = (selectedOptions) => {
+    const skills = selectedOptions.map(option => option.value);
+    setTargetSkills(skills);
+  };
+
 
   const handleBaremeCheckboxChange = (name: any, e: any) => {
     const { checked } = e.target;
@@ -227,7 +266,7 @@ const AddChallenge = () => {
         setDescriptionError('Description is required');
       }
       else if (value.length < 200 || value.length > 800) {
-        setDescriptionError("Desciption must be between 200 and 800 digits");  
+        setDescriptionError("Desciption must be between 200 and 800 digits");
 
       } else {
         setDescriptionError('');
@@ -236,7 +275,7 @@ const AddChallenge = () => {
       setProblematic(value);
       if (!value.trim()) {
         setProblematicError('Problematic is required');
-      }else if (value.length < 100 || value.length > 800) {
+      } else if (value.length < 100 || value.length > 800) {
         setProblematicError("Problematic must be between 100 and 800 digits");
       } else {
         setProblematicError('');
@@ -325,14 +364,14 @@ const AddChallenge = () => {
       } else {
         setDurationError('');
       }
-    }else if (name == 'solo') {
+    } else if (name == 'solo') {
       setSolo(value);
       if (!value.trim()) {
         setSoloError('Number of solo is required');
       } else {
         setSoloError('');
       }
-    }else if (name == 'team') {
+    } else if (name == 'team') {
       setTeam(value);
       if (!value.trim()) {
         setTeamError('Number of team is required');
@@ -383,30 +422,30 @@ const AddChallenge = () => {
     );
   };
 
-   const isSecondPageValid = () => {
-    return(
-    visibility !== '' &&
-    team !== '' &&
-    solo !== '' &&
-    visibilityError === '' &&
-    teamError === '' &&
-    soloError === '' &&
-    (isAutomatedChecked || isExpertChecked) &&
-    (isOutputChecked || isPresentationChecked || isCodeSourceChecked || isDatasetChecked || isDemoChecked || isReadMeFileChecked || isRapportChecked)
-  )
+  const isSecondPageValid = () => {
+    return (
+      visibility !== '' &&
+      team !== '' &&
+      solo !== '' &&
+      visibilityError === '' &&
+      teamError === '' &&
+      soloError === '' &&
+      (isAutomatedChecked || isExpertChecked) &&
+      (isOutputChecked || isPresentationChecked || isCodeSourceChecked || isDatasetChecked || isDemoChecked || isReadMeFileChecked || isRapportChecked)
+    )
   };
 
 
   const isThirdPageValid = () => {
-    return(
+    return (
       (isMonetaryChecked && amount !== '' && amountError === '') ||
-      (isPrizesChecked && 
-      (isPrizeChecked && prizeName !== '' && prizeNameError === '' && prizeDescription !== '' && prizeDescriptionError === '') ||
-      (isRecruitementChecked && positionTitle !== '' && positionTitleError === '' && jobDescription !== '' && jobDescriptionError === '') ||
-      (isFreelanceChecked && projectTitle !== '' && projectTitleError === '' && projectDescription !== '' && projectDescriptionError === '') ||
-      (isInternChecked && InternTitle !== '' && InternTitleError === '' && InternDescription !== '' && InternDescriptionError === '' && duration !== '' && durationError === '')
+      (isPrizesChecked &&
+        (isPrizeChecked && prizeName !== '' && prizeNameError === '' && prizeDescription !== '' && prizeDescriptionError === '') ||
+        (isRecruitementChecked && positionTitle !== '' && positionTitleError === '' && jobDescription !== '' && jobDescriptionError === '') ||
+        (isFreelanceChecked && projectTitle !== '' && projectTitleError === '' && projectDescription !== '' && projectDescriptionError === '') ||
+        (isInternChecked && InternTitle !== '' && InternTitleError === '' && InternDescription !== '' && InternDescriptionError === '' && duration !== '' && durationError === '')
+      )
     )
-  )
   };
 
   const handleFileChange = (e: any) => {
@@ -414,7 +453,7 @@ const AddChallenge = () => {
     if (
       file.type != 'application/vnd.ms-excel' &&
       file.type !=
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ) {
       setDataSetError('You should provide an xsl file');
     } else {
@@ -483,10 +522,10 @@ const AddChallenge = () => {
           startDate: startDate,
           endDate: endDate,
           file: DataSetFile,
-          numberParticipants:{
-            nbrTeam:team,
-            nbrSolo:solo
-        },
+          numberParticipants: {
+            nbrTeam: team,
+            nbrSolo: solo
+          },
           rankingMode: {
             automated: isAutomatedChecked ? true : false,
             expert: isExpertChecked ? true : false,
@@ -519,6 +558,7 @@ const AddChallenge = () => {
             internshipDescription: InternDescription,
             duration: duration,
           },
+          targetedSkills: targetSkills,
           image: Image,
         },
         captchaToken,
@@ -681,6 +721,22 @@ const AddChallenge = () => {
                 )}
               </div>
 
+
+              <div className="mb-6">
+      <label className="mb-3 block font-medium text-black dark:text-white">
+        Target Skills
+      </label>
+      <Select
+        options={options}
+        isMulti
+        value={options.filter(option => targetSkills.includes(option.value))}
+        onChange={handleMultiChange1}
+      />
+    </div>
+
+
+
+
               <div className="mb-6">
                 <label className="mb-3 block font-medium text-black dark:text-white">
                   Image
@@ -825,7 +881,7 @@ const AddChallenge = () => {
                         onChange={(e) => checkValidity('solo', e.target.value)}
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
-                        {soloError && (
+                      {soloError && (
                         <div className="flex">
                           <p className="text-red-500 text-sm mt-1">
                             {soloError}

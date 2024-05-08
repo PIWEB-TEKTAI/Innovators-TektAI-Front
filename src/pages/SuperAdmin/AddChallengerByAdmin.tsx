@@ -211,7 +211,7 @@ const FormElements = () => {
       setOccupationError("");
     }
   }
- 
+
 
 
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -259,7 +259,7 @@ const FormElements = () => {
   const isFormValid = () => {
     return FirstNameValue !== '' && LastNameValue !== '' && EmailValue !== '' && PasswordValue !== '' && personnalAddressValue !== '' && occupationValue !== '' && EducationValue !== '';
   };
-  
+
 
   const isForm1Valid = () => {
     return DateBirthValue !== '' && personnalAddressValue !== '' && personnalPhoneValue !== '' && occupationValue !== "occupation";
@@ -289,7 +289,7 @@ const FormElements = () => {
   }
 
 
-  
+
 
   const formData = {
     FirstName: FirstNameValue,
@@ -661,21 +661,21 @@ const FormElements = () => {
           </div>
 
           <div>
-      {professionalSkills.map((item, index) => (
-        <div key={index} className="flex items-center mr-4 mb-4">
-          <input
-            type="checkbox"
-            id={`professionalSkillCheckbox_${index}`}
-            value={item}
-            checked={selectedSkills.includes(item)}
-            onChange={() =>handleMultiChange1(item)}
-            className="mr-2"
-          />
-          <label htmlFor={`professionalSkillCheckbox_${index}`}>{item}</label>
-        </div>
-      ))}
-      {SkillsValueError && <p className="text-red-500">{SkillsValueError}</p>}
-    </div>
+            {professionalSkills.map((item, index) => (
+              <div key={index} className="flex items-center mr-4 mb-4">
+                <input
+                  type="checkbox"
+                  id={`professionalSkillCheckbox_${index}`}
+                  value={item}
+                  checked={selectedSkills.includes(item)}
+                  onChange={() => handleMultiChange1(item)}
+                  className="mr-2"
+                />
+                <label htmlFor={`professionalSkillCheckbox_${index}`}>{item}</label>
+              </div>
+            ))}
+            {SkillsValueError && <p className="text-red-500">{SkillsValueError}</p>}
+          </div>
 
           <div className="mb-6">
             <label className="mb-2.5 block font-medium text-black dark:text-white">
