@@ -476,8 +476,7 @@ const ListChallengerFront: React.FC = () => {
         : {};
     axios
       .get<Challenge[]>(
-        `http://localhost:3000/challenges/${selectedRole || `getChallengerSkills/${userAuth?._id}`}`,
-        requestOptions,
+        `http://localhost:3000/challenges/${selectedRole || `getChallengerSkills/${userAuth?._id || '-1' }` }`,        requestOptions,
       )
       .then((response) => {
         console.log(response.data);

@@ -3,6 +3,8 @@ import axios from 'axios';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { faChartLine, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../components/Auth/AuthProvider';
+
 interface CardProps {
   title: string;
   imageSrc: string;
@@ -23,6 +25,7 @@ const RevealOnScroll: React.FC<RevealOnScrollProps> = ({
   const [isStyleTemporaryActive, setIsTemporaryStyleActive] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
+  const {userAuth} = useAuth();
 
   useEffect(() => {
     const scrollObserver = new IntersectionObserver(([entry]) => {
@@ -176,7 +179,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { User } from '../../types/User';
 import { Link } from 'react-router-dom';
 import { FaLine } from 'react-icons/fa';
-import { useAuth } from '../../components/Auth/AuthProvider';
 import ChallengeStatistics from '../Challenges/challengesstatics';
 const Landing: React.FC = () => {
   const CardCompetition: React.FC<challenge & { onClick: () => void }> = ({
@@ -310,7 +312,6 @@ const Landing: React.FC = () => {
   };
 
   const [emailError, setEmailError] = useState('');
-
   const checkEmail = (value: any) => {
     setEmail(value);
     if (!value.trim()) {
@@ -332,7 +333,7 @@ const Landing: React.FC = () => {
 
   const fetchData = () => {
     axios
-      .get<Challenge[]>(`http://localhost:3000/challenges/AllChallengeLanding`)
+      .get<Challenge[]>(`http://localhost:3000/challenges/AllChallengeLanding/${userAuth?._id || '-1' }`)
       .then((response) => {
         console.log(response.data);
         filteredUsers = response.data;
@@ -370,6 +371,7 @@ const Landing: React.FC = () => {
   }, []);
   const [aboutUsContent, setAboutUsContent] = useState('');
   const [whyUsContent, setWhyUsContent] = useState<WhyChooseUs | null>(null);
+  const { userAuth } = useAuth();
 
   const fetchAboutUsContent = async () => {
     try {
@@ -390,7 +392,6 @@ const Landing: React.FC = () => {
     }
   };
 
-  const { userAuth } = useAuth();
   useEffect(() => {
     setFilteredCardsData(cardsData);
     fetchChallenges();
