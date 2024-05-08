@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -8,6 +7,8 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
+import { getSubmissionsByChallengeId } from '../../services/submissionService';
+import { useParams } from 'react-router-dom';
 
 interface Challenge {
   _id: string;
@@ -47,14 +48,17 @@ interface Challenge {
   }[];
 }
 
+
+
 const Competitions: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // État pour le terme de recherche
   const [challenges, setChallenges] = useState<Challenge[]>([]);
+
   const [selectedStatus, setSelectedStatus] = useState<string>('all'); // État pour le statut sélectionné
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [challengesPerPage, setChallengesPerPage] = useState<number>(8); // Nombre de challenges par page
+  const [completedChallenges, setCompletedChallenges] = useState<Set<string>>(new Set());
 
-  const { userAuth } = useAuth();
 
   useEffect(() => {
     const fetchChallenges = async () => {
@@ -81,6 +85,7 @@ const Competitions: React.FC = () => {
     fetchChallenges();
   }, []);
   const [openDropdowns, setOpenDropdowns] = useState<boolean[]>(Array);
+
 
   const toggleDropdown = (index: any) => {
     const newOpenDropdowns = [...openDropdowns];
@@ -195,29 +200,125 @@ const Competitions: React.FC = () => {
     }
   };
 
-  const handleCompleted = async (challengeId: string) => {
+  const { userAuth } = useAuth();
+
+  const sendEmail = async (email:any,name:any,challengetitle:any,amount:any,prizes:any,recruitement:any,freelance:any,internship:any,companyname:any) => {
     try {
-      await axios.put(
-        `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
-        { status: 'completed' },
-        { withCredentials: true },
-      );
-
-      console.log('PUT request successful for challenge ID:', challengeId);
-
-      const updatedChallenges = challenges.map((challenge) => {
-        if (challenge._id === challengeId) {
-          return { ...challenge, status: 'completed' };
-        }
-        return challenge;
-      });
-
-      setChallenges(updatedChallenges);
+      await axios.post(`http://localhost:3000/challenge/sendRewardEmail`, { winnerEmail: email , winnerName:name , challengetitle:challengetitle,amount:amount,prizes:prizes,recruitement:recruitement,freelance:freelance,internship:internship,companyname:companyname });
+      console.log('Email sent successfully!');
     } catch (error) {
-      console.error('Error completing challenge:', error);
+      console.error('Error sending email:', error);
     }
   };
 
+const handleCompleted = async (challengeId: string) => {
+  try {
+    await axios.put(
+      `http://localhost:3000/challenges/completed/${challengeId}/update-status`,
+      { status: 'completed' },
+      { withCredentials: true },
+    );
+
+    // Fetch the updated challenge details
+    const response = await axios.get(`http://localhost:3000/challenge/${challengeId}`);
+    const updatedChallenge = response.data;
+
+    // Check if the challenge status is completed and it's not in the completedChallenges set
+    if (updatedChallenge && updatedChallenge.status === 'completed' && !completedChallenges.has(challengeId)) {
+      // Add the challenge ID to the completedChallenges set
+      setCompletedChallenges(new Set(completedChallenges.add(challengeId)));
+
+      // Fetch submissions for this challenge
+      const fetchedSubmissions = await getSubmissionsByChallengeId(challengeId);
+      if (fetchedSubmissions.length > 0) {
+        // Logic to determine the winner and send email
+        const sortedSubmissions = fetchedSubmissions.slice().sort((a, b) => parseInt(b.score) - parseInt(a.score));
+        sortedSubmissions.forEach(async (submission, index) => {
+          let scoreBonus = 0;
+          switch (index) {
+            case 0:
+              scoreBonus = 30;
+              break;
+            case 1:
+              scoreBonus = 20;
+              break;
+            case 2:
+              scoreBonus = 10;
+              break;
+            default:
+              scoreBonus = 0;
+              break;
+          }
+
+          let updatedScore = 0;
+          if (submission.submittedByTeam) {
+            updatedScore = scoreBonus;
+          } else if (submission.submittedBy) {
+            updatedScore = scoreBonus;
+          }
+
+          try {
+            if (submission.submittedByTeam) {
+              // Update team score
+              await axios.post(`http://localhost:3000/user/team/updateScore/${submission.submittedByTeam._id}`, { globalScore: updatedScore });
+            } else if (submission.submittedBy) {
+              // Update user score
+              await axios.post(`http://localhost:3000/user/user/updateScore/${submission.submittedBy._id}`, { globalScore: updatedScore });
+            }
+          } catch (error) {
+            console.error('Error updating score:', error);
+          }
+        });
+
+        const firstWinner = sortedSubmissions[0];
+        const secondWinner = sortedSubmissions[1];
+        const thirsWinner = sortedSubmissions[2];
+
+        let winnerEmail, winnerName, challengetitle, amount, prizes, recruitement, freelance, internship, companyname;
+        if (firstWinner.submittedByTeam) {
+          winnerEmail = firstWinner.submittedByTeam.leader.email;
+          winnerName = firstWinner.submittedByTeam.name;
+          challengetitle = firstWinner.challengeId.title;
+          amount = firstWinner.challengeId.amount;
+          prizes = firstWinner.challengeId.prizes.prizeName;
+          recruitement = firstWinner.challengeId.recruitement.positionTitle;
+          freelance = firstWinner.challengeId.freelance.projectTitle;
+          internship = firstWinner.challengeId.internship.internshipTitle;
+          companyname = firstWinner.challengeId.createdBy.company.name;
+        } else {
+          // Winner is solo
+          winnerEmail = firstWinner.submittedBy.email;
+          winnerName = firstWinner.submittedBy.FirstName;
+          challengetitle = firstWinner.challengeId.title;
+        }
+
+        if (winnerEmail) {
+          // Call your sendEmail function here with additional challenge information
+          sendEmail(winnerEmail, winnerName, challengetitle, amount, prizes, recruitement, freelance, internship, companyname);
+        }
+      }
+    }
+
+    // Update the challenges state after completing
+    const updatedChallenges = challenges.map((challenge) => {
+      if (challenge._id === challengeId) {
+        return { ...challenge, status: 'completed' };
+      }
+      return challenge;
+    });
+
+    setChallenges(updatedChallenges);
+  } catch (error) {
+    console.error('Error completing challenge:', error);
+  }
+};
+
+  
+    
+
+
+
+  
   
   // Fonction pour ouvrir un challenge
   const handleOpen = async (challengeId: string) => {

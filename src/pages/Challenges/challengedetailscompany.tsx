@@ -1,1069 +1,51 @@
 import React, { useEffect, useState } from 'react';
+import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { format,differenceInMonths, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds,
+import {
+  useParams,
+} from 'react-router-dom';
+
+
+import {
+  format,
+  differenceInMonths,
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
 } from 'date-fns';
 import CompanyModal from './companydetailsmodal'; // Import your CompanyModal component
-import { addSubmission,editSubmission, getSubmissionById, getSubmissionsByChallengeId,deleteSubmission,
+import {
+  getSubmissionsByChallengeId,
+  deleteSubmission,
 } from '../../services/submissionService';
 import { ErrorToast, successfullToast } from '../../components/Toast';
 import ModalForm from '../../components/modalForm';
 import { useAuth } from '../../components/Auth/AuthProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Props } from 'react-select';
 import Swal from 'sweetalert2';
 import ChallengeParticipations from './ChallengeParticipations';
 import { addSoloParticipationRequest } from '../../services/challengeService';
 import Modal from '../../components/modal';
-import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
-import { useParams } from 'react-router-dom';
-import Overview from './overview';
-import { Link } from 'react-router-dom';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import TeamSelectionModal from './teamSelectionModal';
 import Discussion from './discussion';
+import { FaHeart } from 'react-icons/fa';
+import Overview from './overview';
 import Leaderboard from './leaderboard';
+
+
+import { faEye } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../../common/Loader';
+import AddSubmissionForm from './AddSubmittion';
+import EditSubmissionForm from './EditSubmittion';
+import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
 
-const AddSubmissionForm: React.FC = () => {
-  const { id } = useParams();
 
-  const [step, setStep] = useState(1);
-  const [titleError, setTitleError] = useState('');
-  const [title, setTitle] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
-  const [description, setDescription] = useState('');
 
-  const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
-  const [DataSetFileError, setDataSetFileError] = useState('');
 
 
-  const [Output, setOutput] = useState('');
-  const [OutputError, setOutputError] = useState('');
-
-
-  const [presentationFile, setPresentationFile] = useState<string | Blob>('');
-  const [presentationFileError, setPresentationFileError] = useState('');
-
-  const [presentationFileName, setPresentationFileName] = useState('');
-  
-
-  const [codeSourceFile, setCodeSourceFile] = useState<string | Blob>('');
-  const [CodeSourceFileError, setCodeSourceFileError] = useState('');
-  const [codeSourceFileName, setCodeSourceFileName] = useState('');
-
-
-  const [readMeFile, setReadMeFileFile] = useState<string | Blob>('');
-  const [readMeFileError, setReadMeFileFileError] = useState('');
-
-  const [readmeFileName, setReadmeFileName] = useState('');
-
-
-  const [reportFile, setReportFile] = useState<string | Blob>('');
-  const [ReportFileError, setReportFileError] = useState('');
-  const [reportFileName, setReportFileName] = useState('');
-
-
-
-  const [demoFile, setDemoFile] = useState<string | Blob>('');
-  const [DemoError, setDemoError] = useState('');
-  const [demoFileName, setDemoFileName] = useState('');
-
-
-
-
-  const [challengeData,setChallengeData] = useState<challenge>();
-
-  const {userAuth} = useAuth();
-  const [FileName, setFileName] = useState('');
-  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
-    null,
-  );
-
-  const checkValidity = (name: any, value: any) => {
-    if (name == 'title') {
-      setTitle(value);
-      if (!value.trim()) {
-        setTitleError('Title is required');
-      } else {
-        setTitleError('');
-      }
-    } else if (name == 'description') {
-      setDescription(value);
-      if (!value.trim()) {
-        setDescriptionError('Description is required');
-      } else {
-        setDescriptionError('');
-      }
-    } else if (name == 'dataSetFile') {
-      if (!value.trim()) {
-        setDataSetFileError('File is required');
-      } else {
-        setDataSetFileError('');
-      }
-    }else if (name == 'output') {
-      setOutput(value);
-      if (!value.trim()) {
-        setOutputError('Output is required');
-      } else {
-        setOutputError('');
-      }
-    }
-  };
-  const isFormValid = () => {
-    return (
-      title !== '' &&
-      description !== '' &&
-      titleError === '' &&
-      descriptionError === '' 
-    
-    );
-  };
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setDataSetFile(file);
-    setFileName(file.name);
-    if (!file) {
-      setDataSetFileError('File is required');
-    } else {
-      setDataSetFileError('');
-    }
-  };
-
-  const handlePresentationFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setPresentationFile(file);
-    setPresentationFileName(file.name);
-    if (!file) {
-      setPresentationFileError('File is required');
-    } else {
-      setPresentationFileError('');
-    }
-  };
-
-  const handleSourceCodeFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setCodeSourceFile(file);
-    setCodeSourceFileName(file.name);
-    if (!file) {
-      setCodeSourceFileError('File is required');
-    } else {
-      setCodeSourceFileError('');
-    }
-  };
-
-
-  const handleReadMeFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setReadMeFileFile(file);
-    setReadmeFileName(file.name);
-    if (!file) {
-      setReadMeFileFileError('File is required');
-    } else {
-      setReadMeFileFileError('');
-    }
-  };
-
-
-  const handleReportFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setReportFile(file);
-    setReportFileName(file.name);
-    if (!file) {
-      setReportFileError('File is required');
-    } else {
-      setReportFileError('');
-    }
-  };
-
-
-  const handleDemoFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setDemoFile(file);
-    setDemoFileName(file.name);
-    if (!file) {
-      setDemoError('File is required');
-    } else {
-      setDemoError('');
-    }
-  };
-
-  
-  const fetchChallengeDetails = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/challenge/${id}`);
-      setChallengeData(response.data);
-    } catch (error) {
-      console.error('Error fetching challenge details:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchChallengeDetails();
-  }, [id]);
-
-
-  const nextStep = () => {
-    setStep(step + 1);
-  };
-
-  const prevStep = () => {
-    setStep(step - 1);
-  };
-
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log('file' + DataSetFile);
-    let teamId = '';
-    let type = "solo";
-     challengeData?.participations.TeamParticipants.some((team:any) => 
-      {
-        if( team.leader._id == userAuth?._id){
-          teamId = team._id;
-          type = "team";
-        }
-
-      }
-      )
-      if(teamId !='' && type=="team"){
-        addSubmission(
-          {
-            title: title,
-            description: description,
-            output:Output,
-            datasetFile:DataSetFile,
-            presentationFile:presentationFile,
-            codeSourceFile: codeSourceFile,
-            reportFile:reportFile,
-            demoFile:demoFile,
-            readMeFile:readMeFile,
-            teamId:teamId,
-            type:type
-          },
-          id,
-        )
-          .then((response) => {
-            setAlert({
-              type: 'success',
-              message: 'submission added successfully',
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-          })
-          .catch((error) => {
-            setAlert({
-              type: 'error',
-              message: 'Error adding submission',
-            });
-          });
-      }else{
-        addSubmission(
-          {
-            title: title,
-            description: description,
-            output:Output,
-            datasetFile:DataSetFile,
-            presentationFile:presentationFile,
-            codeSourceFile: codeSourceFile,
-            reportFile:reportFile,
-            demoFile:demoFile,
-            readMeFile:readMeFile,
-            type:type
-          },
-          id,
-        )
-          .then((response) => {
-            setAlert({
-              type: 'success',
-              message: 'submission added successfully',
-            });
-            setTimeout(() => {
-              window.location.reload();
-            }, 3000);
-          })
-          .catch((error) => {
-            setAlert({
-              type: 'error',
-              message: 'Error adding submission',
-            });
-          });
-      }
-     
-    
-   
-  };
-  return (
-    <div>
-      <div className={`${alert && `mt-8`}`}>
-        {alert?.type == 'success' && successfullToast(alert.message)}
-
-        {alert?.type == 'error' && ErrorToast(alert.message)}
-      </div>
-
-      <div className="flex w-full p-1 flex-col  gap-1 border-full">
-        {/* Content for Step 1 */}
-       {step === 1 ? (
-
-          <div>
-             <div>
-               <label className="mb-2.5 font-medium block text-black dark:text-white">
-                 Title
-               </label>
-               <input
-                 type="text"
-                 name="title"
-                 value={title}
-                 placeholder="Enter the title of your submission"
-                 onChange={(e) => checkValidity('title', e.target.value)}
-                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-               />
-               {titleError && (
-                 <p className="text-red-500 text-sm mt-1">{titleError}</p>
-               )}
-             </div>
-     
-             <div>
-               <label className="mt-3 mb-2.5 font-medium  block text-black dark:text-white">
-                 Description
-               </label>
-               <textarea
-                 name="description"
-                 value={description}
-                 rows={1}
-                 placeholder="Enter the description of your submittion"
-                 onChange={(e) => checkValidity('description', e.target.value)}
-                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-               ></textarea>
-               {descriptionError && (
-                 <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
-               )}
-             </div>
-
-             {challengeData?.bareme.output && (
-            <div>
-              <label className=" mb-2.5 font-medium  block text-black dark:text-white">
-                Output
-              </label>
-              <input
-                type='text'
-                name="output"
-                value={Output}
-                placeholder="Enter the output of your submission"
-                onChange={(e) => checkValidity('output', e.target.value)}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              ></input>
-              {OutputError && (
-                <p className="text-red-500 text-sm mt-1">{OutputError}</p>
-              )}
-            </div>
-          )}
-
-          {challengeData?.bareme.presentation && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach presentation file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handlePresentationFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {presentationFileName ? presentationFileName : 'Upload presentation file'}
-                </label>
-                {presentationFileError && (
-                  <p className="text-red-500 text-sm mt-1">{presentationFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-     
-          </div>
-       ) : (
-        <div>          
-          {challengeData?.bareme.codeSource && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach source code file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleSourceCodeFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {codeSourceFileName ? codeSourceFileName : 'Upload source code file'}
-                </label>
-                {CodeSourceFileError && (
-                  <p className="text-red-500 text-sm mt-1">{CodeSourceFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {challengeData?.bareme.dataSet && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach dataset file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {FileName ? FileName : 'Upload dataset file'}
-                </label>
-                {DataSetFileError && (
-                  <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          
-          {challengeData?.bareme.readmeFile && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach README file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleReadMeFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {readmeFileName ? readmeFileName : 'Upload README file'}
-                </label>
-                {readMeFileError && (
-                  <p className="text-red-500 text-sm mt-1">{readMeFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-          {challengeData?.bareme.rapport && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach detailed report file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleReportFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {reportFileName ? reportFileName : 'Upload detailed report file'}
-                </label>
-                {ReportFileError && (
-                  <p className="text-red-500 text-sm mt-1">{ReportFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-             
-          {challengeData?.bareme.Demo && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach demonstration file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleDemoFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {demoFileName ? demoFileName : 'Upload demonstration report file'}
-                </label>
-                {DemoError && (
-                  <p className="text-red-500 text-sm mt-1">{DemoError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-      </div>
-       )} 
-     
-    
-        {/* Navigation buttons */}
-        <div className="flex justify-between">
-          { step === 2 && (
-               <button
-               className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-               onClick={prevStep}
-             >
-               back
-             </button>
-          )}
-        
-          {step === 1 ? (
-               <button
-               className="rounded bg-primary p-2 px-4 ml-auto text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-               onClick={nextStep}
-               disabled={!isFormValid()}
-             >
-               next
-             </button>
-          ): (
-            <button
-            className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-            onClick={handleSubmit}
-            disabled={!isFormValid()}
-          >
-            Submit
-          </button>
-          )}
-         
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const EditSubmissionForm: React.FC<Props> = ({ id }) => {
-  const [titleError, setTitleError] = useState('');
-  const [title, setTitle] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
-  const [description, setDescription] = useState('');
-
-  const [DataSetFile, setDataSetFile] = useState<string | Blob>('');
-  const [DataSetFileError, setDataSetFileError] = useState('');
-
-  const [step, setStep] = useState(1);
-
-
-  const [Output, setOutput] = useState('');
-  const [OutputError, setOutputError] = useState('');
-
-
-  const [presentationFile, setPresentationFile] = useState<string | Blob>('');
-  const [presentationFileError, setPresentationFileError] = useState('');
-
-  const [presentationFileName, setPresentationFileName] = useState('');
-  
-
-  const [codeSourceFile, setCodeSourceFile] = useState<string | Blob>('');
-  const [CodeSourceFileError, setCodeSourceFileError] = useState('');
-  const [codeSourceFileName, setCodeSourceFileName] = useState('');
-
-
-  const [readMeFile, setReadMeFileFile] = useState<string | Blob>('');
-  const [readMeFileError, setReadMeFileFileError] = useState('');
-
-  const [readmeFileName, setReadmeFileName] = useState('');
-
-
-  const [reportFile, setReportFile] = useState<string | Blob>('');
-  const [ReportFileError, setReportFileError] = useState('');
-  const [reportFileName, setReportFileName] = useState('');
-
-
-
-  const [demoFile, setDemoFile] = useState<string | Blob>('');
-  const [DemoError, setDemoError] = useState('');
-  const [demoFileName, setDemoFileName] = useState('');
-
-  const [challengeDetailsData,setChallengeDetailsData] = useState<challenge>();
-
-  const [FileName, setFileName] = useState('');
-  const [alert, setAlert] = useState<{ type: string; message: string } | null>(
-    null,
-  );
-
-  const checkValidity = (name: any, value: any) => {
-    if (name == 'title') {
-      setTitle(value);
-      if (!value.trim()) {
-        setTitleError('Title is required');
-      } else {
-        setTitleError('');
-      }
-    } else if (name == 'description') {
-      setDescription(value);
-      if (!value.trim()) {
-        setDescriptionError('Description is required');
-      } else {
-        setDescriptionError('');
-      }
-    
-    }else if (name == 'output') {
-      setOutput(value);
-      if (!value.trim()) {
-        setOutputError('Output is required');
-      } else {
-        setOutputError('');
-      }
-    }
-  };
-
-  useEffect(() => {
-    const fetchSubmission = async () => {
-      try {
-        const data = await getSubmissionById(id);
-        console.log(data);
-        setTitle(data?.title || '');
-        setDescription(data?.description || '');
-        setOutput(data?.output || '')
-        setFileName(data?.datasetFile.name || '');
-        setPresentationFileName(data?.presentationFile.name || '');
-        setReportFileName(data?.reportFile.name);
-        setCodeSourceFileName(data?.codeSourceFile.name);
-        setReadmeFileName(data?.readMeFile.name);
-        setDemoFileName(data?.demoFile.name);
-
-      } catch (error) {
-        console.error('Error fetching submission data:', error);
-      }
-    };
-
-    fetchSubmission();
-  }, []);
-
-  const isFormValid = () => {
-    return (
-      title !== '' &&
-      description !== '' &&
-      titleError === '' &&
-      descriptionError === '' 
-    );
-  };
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-
-    setDataSetFile(file);
-    setFileName(file.name);
-    if (!file) {
-      setDataSetFileError('File is required');
-    } else {
-      setDataSetFileError('');
-    }
-  };
-
-
-  
-
-  const handlePresentationFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setPresentationFile(file);
-    setPresentationFileName(file.name);
-    if (!file) {
-      setPresentationFileError('File is required');
-    } else {
-      setPresentationFileError('');
-    }
-  };
-
-  const handleSourceCodeFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setCodeSourceFile(file);
-    setCodeSourceFileName(file.name);
-    if (!file) {
-      setCodeSourceFileError('File is required');
-    } else {
-      setCodeSourceFileError('');
-    }
-  };
-
-
-  const handleReadMeFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setReadMeFileFile(file);
-    setReadmeFileName(file.name);
-    if (!file) {
-      setReadMeFileFileError('File is required');
-    } else {
-      setReadMeFileFileError('');
-    }
-  };
-
-
-  const handleReportFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setReportFile(file);
-    setReportFileName(file.name);
-    if (!file) {
-      setReportFileError('File is required');
-    } else {
-      setReportFileError('');
-    }
-  };
-
-
-  const handleDemoFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setDemoFile(file);
-    setDemoFileName(file.name);
-    if (!file) {
-      setDemoError('File is required');
-    } else {
-      setDemoError('');
-    }
-  };
-
-
-  const fetchChallengeDetails = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/challenge/${id}`);
-      setChallengeDetailsData(response.data);
-    } catch (error) {
-      console.error('Error fetching challenge details:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchChallengeDetails();
-  }, [id]);
-
-
-  const nextStep = () => {
-    setStep(step + 1);
-  };
-
-  const prevStep = () => {
-    setStep(step - 1);
-  };
-
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log('file' + DataSetFile);
-
-    editSubmission(
-      {
-        title: title,
-        description: description,
-        output:Output,
-        datasetFile:DataSetFile,
-        presentationFile:presentationFile,
-        codeSourceFile: codeSourceFile,
-        reportFile:reportFile,
-        demoFile:demoFile,
-        readMeFile:readMeFile,
-      },
-      id,
-    )
-      .then((response) => {
-        setAlert({
-          type: 'success',
-          message: 'submission edited successfully',
-        });
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      })
-      .catch((error) => {
-        setAlert({
-          type: 'error',
-          message: 'Error editing submission',
-        });
-      });
-  };
-  return (
-    <div>
-      <div className={`${alert && `mt-8`}`}>
-        {alert?.type == 'success' && successfullToast(alert.message)}
-
-        {alert?.type == 'error' && ErrorToast(alert.message)}
-      </div>
-
-      <div className="flex w-full p-1 flex-col  gap-1 border-full">
-        {/* Content for Step 1 */}
-       {step === 1 ? (
-
-          <div>
-             <div>
-               <label className="mb-2.5 font-medium block text-black dark:text-white">
-                 Title
-               </label>
-               <input
-                 type="text"
-                 name="title"
-                 value={title}
-                 placeholder="Enter the title of your submission"
-                 onChange={(e) => checkValidity('title', e.target.value)}
-                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-               />
-               {titleError && (
-                 <p className="text-red-500 text-sm mt-1">{titleError}</p>
-               )}
-             </div>
-     
-             <div>
-               <label className="mt-3 mb-2.5 font-medium  block text-black dark:text-white">
-                 Description
-               </label>
-               <textarea
-                 name="description"
-                 value={description}
-                 rows={1}
-                 placeholder="Enter the description of your submittion"
-                 onChange={(e) => checkValidity('description', e.target.value)}
-                 className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-               ></textarea>
-               {descriptionError && (
-                 <p className="text-red-500 text-sm mt-1">{descriptionError}</p>
-               )}
-             </div>
-
-             {Output && (
-            <div>
-              <label className=" mb-2.5 font-medium  block text-black dark:text-white">
-                Output
-              </label>
-              <input
-                type='text'
-                name="output"
-                value={Output}
-                placeholder="Enter the output of your submission"
-                onChange={(e) => checkValidity('output', e.target.value)}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-              ></input>
-              {OutputError && (
-                <p className="text-red-500 text-sm mt-1">{OutputError}</p>
-              )}
-            </div>
-          )}
-
-          {presentationFileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach presentation file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handlePresentationFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {presentationFileName ? presentationFileName : 'Upload presentation file'}
-                </label>
-                {presentationFileError && (
-                  <p className="text-red-500 text-sm mt-1">{presentationFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-     
-          </div>
-       ) : (
-        <div>          
-          {codeSourceFileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach source code file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleSourceCodeFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {codeSourceFileName ? codeSourceFileName : 'Upload source code file'}
-                </label>
-                {CodeSourceFileError && (
-                  <p className="text-red-500 text-sm mt-1">{CodeSourceFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {FileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach dataset file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {FileName ? FileName : 'Upload dataset file'}
-                </label>
-                {DataSetFileError && (
-                  <p className="text-red-500 text-sm mt-1">{DataSetFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          
-          {readmeFileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach README file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleReadMeFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {readmeFileName ? readmeFileName : 'Upload README file'}
-                </label>
-                {readMeFileError && (
-                  <p className="text-red-500 text-sm mt-1">{readMeFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-          {reportFileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach detailed report file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleReportFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {reportFileName ? reportFileName : 'Upload detailed report file'}
-                </label>
-                {ReportFileError && (
-                  <p className="text-red-500 text-sm mt-1">{ReportFileError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-             
-          {demoFileName && (
-            <div>
-                <label className="mb-2  mt-3 block font-medium text-black dark:text-white">
-                Attach demonstration file
-              </label>
-              <div className="relative overflow-hidden">
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                  id="customFile"
-                  name="file"
-                  onChange={handleDemoFileChange}
-                />
-                <label
-                  className="flex items-center justify-between py-2 px-4 bg-gray-200 rounded-lg cursor-pointer"
-                  htmlFor="customFile"
-                >
-                  {demoFileName ? demoFileName : 'Upload demonstration report file'}
-                </label>
-                {DemoError && (
-                  <p className="text-red-500 text-sm mt-1">{DemoError}</p>
-                )}
-              </div>
-            </div>
-          )}
-          
-      </div>
-       )} 
-     
-    
-        {/* Navigation buttons */}
-        <div className="flex justify-between">
-          { step === 2 && (
-               <button
-               className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-               onClick={prevStep}
-             >
-               back
-             </button>
-          )}
-        
-          {step === 1 ? (
-               <button
-               className="rounded bg-primary p-2 px-4 ml-auto text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-               onClick={nextStep}
-               disabled={!isFormValid()}
-             >
-               next
-             </button>
-          ): (
-            <button
-            className="rounded bg-primary p-2 px-4  text-gray hover:bg-opacity-90 disabled:bg-opacity-60"
-            onClick={handleSubmit}
-            disabled={!isFormValid()}
-          >
-            Submit
-          </button>
-          )}
-         
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const ChallengeDetailsCompany: React.FC = () => {
   const [challengeDetails, setChallengeDetails] = useState<any>(null);
@@ -1074,14 +56,20 @@ const ChallengeDetailsCompany: React.FC = () => {
   const [EditShowModal, setShowEditModal] = useState(false); // State to manage modal visibility
   const [openDropdowns, setOpenDropdowns] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const [confiramtionMessage, setConfirmationMessage] = useState('');
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
+
   const [errorConfirmationMesage, setErrorConfirmationMessage] =
     useState(false);
-  const { userAuth } = useAuth();
+  let { userAuth } = useAuth();
 
   const handleConfirmationModalAppearance = () => {
     setShowConfirmationModal(true);
   };
+
 
   const toggleDropdown = () => {
     if (openDropdowns === false) {
@@ -1091,6 +79,13 @@ const ChallengeDetailsCompany: React.FC = () => {
     }
   };
 
+  const handleJoinTeamClick = () => {
+    setShowTeamModal(true);
+  };
+
+  const handleTeamModalClose = () => {
+    setShowTeamModal(false);
+  };
   const openModal = () => {
     setShowModal(true);
   };
@@ -1139,6 +134,7 @@ const ChallengeDetailsCompany: React.FC = () => {
   const [alert, setAlert] = useState<{ type: string; message: string } | null>(
     null,
   );
+
   const fetchChallengeDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/challenge/${id}`);
@@ -1152,31 +148,12 @@ const ChallengeDetailsCompany: React.FC = () => {
     fetchChallengeDetails();
   }, [id]);
 
+
+
+
   if (!challengeDetails) {
-    return <div><Loader/></div>;
+    return <div>    <Loader />    </div>;
   }
-
-  const getStatusColor = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'bg-blue-400';
-      case 'completed':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getStatusText = () => {
-    switch (challengeDetails.status) {
-      case 'open':
-        return 'Open';
-      case 'completed':
-        return 'Completed';
-      default:
-        return 'Unknown';
-    }
-  };
 
   const formattedStartDate = format(
     new Date(challengeDetails.startDate),
@@ -1247,6 +224,32 @@ const ChallengeDetailsCompany: React.FC = () => {
       }
     });
   };
+  const AddTofavories = async (challengeId: any) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/challenges/Favories/${challengeId}/${userAuth?._id}`);
+
+      if (response.status !== 200) {
+        throw new Error('Failed to add challenge to favorites');
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const Removefavories = async (challengeId: any) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/challenges/Unfavorite/${challengeId}/${userAuth?._id}`);
+
+      if (response.status !== 200) {
+        throw new Error('Failed to remove challenge to favorites');
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSoloParticipationRequest = async () => {
     try {
@@ -1268,10 +271,10 @@ const ChallengeDetailsCompany: React.FC = () => {
 
 
 
-
   
   return (
     <ConnectedClientLayout>
+      {showTeamModal && <TeamSelectionModal onClose={handleTeamModalClose} />}
       <Modal
         showModal={showConfirmationModal}
         setShowModal={setShowConfirmationModal}
@@ -1282,38 +285,38 @@ const ChallengeDetailsCompany: React.FC = () => {
         postSaveMessage={confiramtionMessage}
         error={errorConfirmationMesage}
       />
-      <div className="rounded-sm ">
-        <div className="bg-white px-[2rem] py-[2rem] shadow-lg rounded-sm overflow-hidden">
-               
-          <div className="flex justify-end">
-            {userAuth?.role === 'challenger' &&
-              !challengeDetails.participations.soloParticipants.includes(
-                userAuth._id,
-              ) &&
-              !challengeDetails.participations.soloParticipationRequests.includes(
-                userAuth._id,
-              ) && (
-                <div className="flex ">
-                  <div className="flex-col m-1">
-                    <button
-                      onClick={handleConfirmationModalAppearance}
-                      className="text-sm p-2 border  hover:text-white broder-gray-300 hover:bg-black hover:bg-opacity-90 bg-white rounded-md text-black font-semibold group"
-                    >
-                      <span className="group-hover:ease-in duration-300">
-                        Solo Join
-                      </span>
-                    </button>
-                  </div>
-                  <div className="flex-col my-1">
-                    <button className="text-sm p-2 bg-primary border border-gray-500 rounded-md text-white  font-semibold group">
-                      <span className="group-hover:ease-in duration-300">
-                        Join a Team
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-          </div>
+
+
+        <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
+          {userAuth?.favories?.includes(challengeDetails._id) || clicked ? (
+            <div className="flex bg-white justify-end">
+
+              <button
+                className="text-red-500 hover:text-red-700 flex-col"
+                onClick={() => {
+                  Removefavories(challengeDetails._id)
+                  setClicked(false)
+                }}>
+                <FaHeart style={{ fontSize: '2em', fill: 'red' }} data-tooltip-id="my-tooltip" data-tooltip-content="Remove from favorites" />
+                <Tooltip id="my-tooltip" />
+
+              </button>
+            </div>
+          ) : (
+            <div className="flex bg-white justify-end">
+
+              <button
+                className="flex-col"
+                onClick={() => {
+                  AddTofavories(challengeDetails._id),
+                    setClicked(true)
+                }
+                }>
+                <FaHeart style={{ fontSize: '2em', border: '2px solid transparent' }} data-tooltip-id="my-tooltip" data-tooltip-content="Add to favorites" />
+                <Tooltip id="my-tooltip" />
+              </button>
+            </div>
+          )}
 
           <div className={`${alert && `mt-8`}`}>
             {alert?.type == 'success' && successfullToast(alert.message)}
@@ -1321,25 +324,27 @@ const ChallengeDetailsCompany: React.FC = () => {
             {alert?.type == 'error' && ErrorToast(alert.message)}
           </div>
 
-          <div className="flex flex-col py-4 sm:flex-row sm:items-center mt-4 sm:mt-0">
+          <div className="flex flex-col pb-4 pt-2 sm:flex-row sm:items-center mt-2 sm:mt-0">
             <img
               src={`http://localhost:3000/images/${challengeDetails.image}`}
               alt="Challenge"
               className="w-full sm:w-50 h-auto mr-4 px-auto rounded-lg"
             />
+
             <div className="flex flex-col sm:flex-grow">
               <h2 className="text-3xl font-bold text-gray-900 mt-2 capitalize break-words">
                 {challengeDetails.title}
+
               </h2>
+
               <div className="flex items-center mt-4">
                 <div
-                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${
-                    challengeDetails.status === 'open'
-                      ? 'bg-blue-400'
-                      : challengeDetails.status === 'archived'
-                        ? 'bg-red-600'
-                        : 'bg-green-500'
-                  } text-white`}
+                  className={`rounded-full py-1 px-3 text-sm font-semibold mr-4 ${challengeDetails.status === 'open'
+                    ? 'bg-blue-400'
+                    : challengeDetails.status === 'archived'
+                      ? 'bg-red-600'
+                      : 'bg-green-500'
+                    } text-white`}
                 >
                   {challengeDetails.status === 'open'
                     ? 'Open'
@@ -1361,31 +366,88 @@ const ChallengeDetailsCompany: React.FC = () => {
               <p
                 className="text-gray-600 font-bold cursor-pointer mt-2"
                 onClick={() =>
-                  handleCompanyNameClick(challengeDetails.createdBy.company)
+                  handleCompanyNameClick(challengeDetails.createdBy)
                 }
               >
                 Hosted by: {challengeDetails.createdBy.company.name}
               </p>
               {challengeDetails.status === 'open' && (
-                <p className="mt-2 text-gray-600">
+                <p className="mt-2 text-red-600  font-bold ">
                   Time Left: {timeLeftString}
                 </p>
               )}
             </div>
-            <div>
-    <h2 className="text-md font-bold text-gray-900 mt-2">
-        Number of Participants Required
-    </h2>
-    <p className="text-gray-600 mt-4 break-words text-black break-words">
-        Teams: {challengeDetails.numberParticipants.nbrTeam}
-    </p>
-    <p className="text-gray-600 mt-4 break-words text-black break-words">
-        Solo: {challengeDetails.numberParticipants.nbrSolo}
-    </p>
-</div>
+
+            <div className='flex-col'>
+              <h2 className="text-md font-bold text-gray-900 mt-2">
+                Number of Participants Required
+              </h2>
+              <p className="text-gray-600 mt-4 break-words text-black break-words">
+                Teams: {challengeDetails.numberParticipants.nbrTeam}
+              </p>
+              <p className="text-gray-600 mt-4 break-words text-black break-words">
+                Solo: {challengeDetails.numberParticipants.nbrSolo}
+              </p>
+            </div>
+
           </div>
         </div>
 
+        {userAuth?.role === 'challenger' &&
+          challengeDetails.status == 'open' &&
+          !challengeDetails.participations.soloParticipants.includes(
+            userAuth._id,
+          ) &&
+          !challengeDetails.participations.soloParticipationRequests.includes(
+            userAuth._id,
+          ) &&
+          !challengeDetails.participations.TeamParticipants.some(
+            (team: any) =>
+              team?.leader._id == userAuth._id ||
+              team.members.some((member: any) => {
+                member == userAuth._id;
+              }),
+          ) &&
+          !challengeDetails.participations.TeamParticipationRequests.some(
+            (team: any) =>
+              team?.leader._id == userAuth._id ||
+              team.members.some((member: any) => {
+                member == userAuth._id;
+              }),
+          ) && (
+            <div className="my-4 py-4  bg-white pt-2 rounded-lg ">
+              <div className="flex justify-center p-4">
+                <p className="max-w-[35rem] text-center">
+                  Step into the challenge, either as a solo adventurer or with a team at your side. The choice is yours, and the journey awaits.
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center">
+                <div className="flex-col m-1">
+                  <button
+                    onClick={handleConfirmationModalAppearance}
+                    className="text-lg p-2 border mr-2 hover:text-primary text-white border-gray-300 bg-black hover:bg-opacity-90 hover:scale-[1.1] rounded-md font-semibold group"
+                  >
+                    <span className="group-hover:ease-in duration-300">
+                      Solo Join
+                    </span>
+                    <img src="/src/images/user/graphic_designer_man.jpg" alt="solo join" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+                  </button>
+                </div>
+                <div className="flex-col my-1 mx-2">
+                  <button
+                    className="text-lg p-2 bg-primary border border-gray-500 hover:text-black rounded-md text-white hover:scale-[1.1] font-semibold group"
+                    onClick={handleJoinTeamClick}
+                  >
+                    <span className="group-hover:ease-in duration-300">
+                      Join a Team
+                    </span>
+                    <img src="/src/images/team/team.jpg" alt=" join a team" className='max-h-[7rem] max-w-[7rem] sm:max-w-[15rem] sm:max-h-[15rem] rounded-xl p-2' />
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          )}
         {isModalOpen && (
           <CompanyModal
             company={selectedCompany}
@@ -1439,13 +501,15 @@ const ChallengeDetailsCompany: React.FC = () => {
           </ul>
 
           <div className="p-8">
-          {activeTab === 'overview' && (
-                              <Overview/>
+            {activeTab === 'overview' && (
+              <Overview />
 
-            )}            {activeTab === 'leaderboard' && (
-            <Leaderboard />
             )}
-          {activeTab === 'discussion' && (
+
+            {activeTab === 'leaderboard' && (
+              <Leaderboard />
+            )}
+            {activeTab === 'discussion' && (
               <Discussion />
             )}
             {activeTab == 'participations' && (
@@ -1457,14 +521,19 @@ const ChallengeDetailsCompany: React.FC = () => {
               </div>
             )}
 
-{activeTab === 'submission' && (
+            {activeTab === 'submission' && (
               <div>
                 <div className="flex justify-end mb-4">
                   {userAuth?.role === 'challenger' &&
-                    (challengeDetails.participations.soloParticipants.includes(userAuth._id) ||
-                    challengeDetails.participations.TeamParticipants.some((team:any) => 
-                      team.leader && team.leader._id && team.leader._id == userAuth._id
-                  )) &&
+                    (challengeDetails.participations.soloParticipants.includes(
+                      userAuth._id,
+                    ) ||
+                      challengeDetails.participations.TeamParticipants.some(
+                        (team: any) =>
+                          team.leader &&
+                          team.leader._id &&
+                          team.leader._id == userAuth._id,
+                      )) &&
                     challengeDetails.status == 'open' && (
                       <button
                         onClick={openModal}
@@ -1480,7 +549,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                     title="Add Submission"
                     content={<AddSubmissionForm />}
                     onClose={closeModal}
-                    onSave={() => {}}
+                    onSave={() => { }}
                   />
                 </div>
                 <ul>
@@ -1496,7 +565,7 @@ const ChallengeDetailsCompany: React.FC = () => {
                           title="Edit Submission"
                           content={<EditSubmissionForm id={submission._id} />}
                           onClose={closeEditModal}
-                          onSave={() => {}}
+                          onSave={() => { }}
                         />
                         <div className="flex-col">
                           <p className="break-words text-black font-semibold">
@@ -1506,20 +575,21 @@ const ChallengeDetailsCompany: React.FC = () => {
                             {submission.description.substring(0, 60)}
                           </p>
                         </div>
-                        
-
 
                         <div className="flex">
                           <p className="break-words cursor-pointer p-2 mr-5 bg-gray-300 text-black sm:w-[12rem] rounded-lg">
                             {submission.codeSourceFile.name.substring(0, 20)}...
                           </p>
-                          <div className="p-2 text-gray text-primary cursor-pointer focus:outline-none">
+
+                          {/* View icon */}
+                          <div className="p-2 mt-2  text-primary cursor-pointer focus:outline-none">
                             <Link to={`/submission/details/${submission._id}`}>
                               <FontAwesomeIcon icon={faEye} />
                             </Link>
                           </div>
 
-                          {userAuth?._id === submission.submittedBy ? (
+
+                          {userAuth?._id === submission.submittedBy._id ? (
                             <div className="relative">
                               <button
                                 id={`dropdownMenuIconButton_${submission.id}`}
@@ -1569,6 +639,8 @@ const ChallengeDetailsCompany: React.FC = () => {
                       </div>
                     </li>
                   ))}
+
+
                 </ul>
                 {/* Pagination */}
                 <nav>
@@ -1592,7 +664,7 @@ const ChallengeDetailsCompany: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+  
     </ConnectedClientLayout>
   );
 };

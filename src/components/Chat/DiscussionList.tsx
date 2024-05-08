@@ -69,33 +69,7 @@ const DiscussionList = () => {
                       key={key}
                     >
                       {chat.participants.map(
-                        (participant: {
-                          imageUrl: string | undefined;
-                          FirstName:
-                            | string
-                            | number
-                            | boolean
-                            | ReactElement<
-                                any,
-                                string | JSXElementConstructor<any>
-                              >
-                            | Iterable<ReactNode>
-                            | ReactPortal
-                            | null
-                            | undefined;
-                          LastName:
-                            | string
-                            | number
-                            | boolean
-                            | ReactElement<
-                                any,
-                                string | JSXElementConstructor<any>
-                              >
-                            | Iterable<ReactNode>
-                            | ReactPortal
-                            | null
-                            | undefined;
-                        }) => (
+                        (participant: any) => (
                           <div
                             className="flex items-center gap-5 py-3  hover:bg-gray-3 dark:hover:bg-meta-4 cursor-pointer"
                             onClick={() => handleParticipantClick(participant)}
@@ -112,7 +86,12 @@ const DiscussionList = () => {
                             <div className="flex flex-1 items-center justify-between">
                               <div>
                                 <h5 className="font-medium text-black dark:text-white capitalize">
-                                  {participant.FirstName} {participant.LastName}
+                                  {participant?.role === "company"?(<>                    
+                                                {participant.company.name}
+</>):(<>
+  {participant.FirstName} {participant.LastName}
+
+</>)}
                                 </h5>
 
                                 <p>

@@ -93,7 +93,12 @@ const DiscussionDetails: React.FC<Props> = ({ participant }) => {
           <div className="flex flex-1 items-center justify-between">
             <div>
               <h5 className="font-medium text-lg text-black dark:text-white capitalize">
-                {participant?.FirstName} {participant?.LastName}
+              {participant?.role === "company"?(<>                    
+                                                {participant.company.name}
+</>):(<>
+  {participant?.FirstName} {participant?.LastName}
+
+</>)}
               </h5>
             </div>
           </div>
