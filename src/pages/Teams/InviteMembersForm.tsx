@@ -6,9 +6,10 @@ import { useAuth } from '../../components/Auth/AuthProvider';
 interface Props {
   team: any;
   onClose: () => void;
+  invitationLink:any;
 }
 
-const InviteMembersForm: React.FC<Props> = ({ onClose, team }) => {
+const InviteMembersForm: React.FC<Props> = ({ onClose, team,invitationLink }) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [newInvitations, setNewInvitations] = useState({
     selectedChallengers: [] as any[],
@@ -29,6 +30,7 @@ const InviteMembersForm: React.FC<Props> = ({ onClose, team }) => {
   const [emails, setEmails] = useState<string[]>([]);
   const [EmailError, setEmailError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [copied, setCopied] = useState(false); // State to track if the link is copied
 
   const handleAddEmail = () => {
     if (email.trim() !== '') {
@@ -128,7 +130,10 @@ const InviteMembersForm: React.FC<Props> = ({ onClose, team }) => {
       setEmailError('');
     }
   };
-
+  const copyLinkToClipboard = () => {
+    navigator.clipboard.writeText(invitationLink);
+    setCopied(true);
+  };
   return (
     <div className="fixed z-9999 mt-4 inset-0 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -142,13 +147,38 @@ const InviteMembersForm: React.FC<Props> = ({ onClose, team }) => {
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+              <h3 className="text-lg leading-6 font-medium text-black" id="modal-title">
+                  Invitation Link
+                </h3>
+              <div className='p-4'>
+                      {/* Display invitation link and copy button */}
+                      {invitationLink && (
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            value={invitationLink}
+                            readOnly
+                            className="flex-grow rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary mb-2"
+                          />
+                          <button
+                            onClick={copyLinkToClipboard}
+                            className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded-lg text-sm"
+                          >
+                            {copied ? 'Copied!' : 'Copy'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                <h3 className="text-lg leading-6 font-medium text-black" id="modal-title">
                   Invite Members
                 </h3>
                 <div className="p-4">
+               
                   {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
                   {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
+                  
                   {titleError && <div className="text-red-500 mb-4">{titleError}</div>}
+
                   <div className="relative" ref={dropdownRef}>
                     <input
                       type="text"

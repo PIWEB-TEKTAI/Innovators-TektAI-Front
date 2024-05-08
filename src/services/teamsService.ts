@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:3000'; // Replace this with your backend URL
-
 const teamService = {
   createTeam: async (teamData:any) => {
     try {
@@ -77,7 +77,32 @@ const teamService = {
       throw error;
     }
   },
-
+  inviteByLink : async (teamId:any) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/teams/${teamId}/invite/link`, {}, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true, // Set withCredentials to true for sending cookies
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error inviting members by link:', error);
+      throw new Error('Error inviting members by link');
+    }
+  },
+  
+  handleInvitationLink : async (token:any) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/teams/invitationByLink/${token}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error handling invitation link:', error);
+      throw new Error('Error handling invitation link');
+    }
+  },
   declineJoinRequest: async (teamId:any, userId:any) => {
     try {
       const response = await axios.put(`${BASE_URL}/teams/${teamId}/decline/${userId}`);

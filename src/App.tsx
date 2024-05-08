@@ -72,6 +72,7 @@ import Chatbot from './pages/landing/chatbot';
 
 import DiscussionList from './components/Chat/DiscussionList';
 import DiscussionDetails from './components/Chat/DiscussionDetails';
+import InvitationHandler from './pages/Teams/InvitationHandler';
 
 
 
@@ -811,6 +812,12 @@ element={
             </>
           }
         />
+          <Route path="/team/linkInvitation/:token"   element={
+            <>
+              <PageTitle title=" Invitation | TektAi" />
+              <InvitationHandler/>
+            </>
+          } /> {/* Ajoutez la route pour gérer les invitations */}
 
         <Route
           path="*"
