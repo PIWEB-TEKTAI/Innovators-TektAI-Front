@@ -4,6 +4,22 @@ import Modal from 'react-modal';
 import Footer from '../landing/footer';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { faEuro, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import ClientLayout from '../../layout/clientLayout';
+import { WhyChooseUs } from '../../types/whyChooseUs';
+import {
+  faTasks,
+  faChartLine,
+  faCalendarAlt,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
+
+import { FaTrophy } from 'react-icons/fa';
+import { FaHeart, FaUserPlus } from 'react-icons/fa';
+import { Id } from 'react-flags-select';
+import { useAuth } from '../../components/Auth/AuthProvider';
+
 interface CardProps {
   title: string;
   imageSrc: string;
@@ -425,20 +441,8 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   );
 };
 
-import ClientLayout from '../../layout/clientLayout';
-import { WhyChooseUs } from '../../types/whyChooseUs';
-import {
-  faTasks,
-  faChartLine,
-  faCalendarAlt,
-  faUser,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../components/Auth/AuthProvider';
-import { FaTrophy } from 'react-icons/fa';
-import { FaHeart, FaUserPlus } from 'react-icons/fa';
-import { Id } from 'react-flags-select';
+
+
 const ListChallengerFront: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -455,6 +459,11 @@ const ListChallengerFront: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
 
+ 
+
+  const { userAuth } = useAuth();
+
+
   useEffect(() => {
     fetchData();
     console.log(cardsData); // Vérifiez les données après chaque mise à jour
@@ -467,7 +476,7 @@ const ListChallengerFront: React.FC = () => {
         : {};
     axios
       .get<Challenge[]>(
-        `http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`,
+        `http://localhost:3000/challenges/${selectedRole || `getChallengerSkills/${userAuth?._id}`}`,
         requestOptions,
       )
       .then((response) => {
@@ -486,7 +495,6 @@ const ListChallengerFront: React.FC = () => {
     card.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const { userAuth } = useAuth();
 
   return (
     <ClientLayout>
