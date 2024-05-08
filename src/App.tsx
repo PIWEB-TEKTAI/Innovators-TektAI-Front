@@ -128,7 +128,7 @@ function App() {
           path="/auth/forgotPassword"
           element={
             <>
-              <PageTitle title="Signup | TektAi" />
+              <PageTitle title="Forgot Password | TektAi" />
               <AuthRoutes component={<ForgotPassword />} />
 
             </>
@@ -193,7 +193,7 @@ function App() {
           path="/chatbot"
           element={
             <>
-              <PageTitle title="Calendar | TektAi" />
+              <PageTitle title="Chatbot | TektAi" />
               <Chatbot />
             </>
           }
@@ -203,7 +203,7 @@ function App() {
           path="/Favories"
           element={
             <>
-              <PageTitle title="Calendar | TektAi" />
+              <PageTitle title="Favories | TektAi" />
               <Favories />
             </>
           }
@@ -225,7 +225,7 @@ function App() {
           path="/submission-details/:id"
           element={
             <>
-              <PageTitle title="Archive | TektAi" />
+              <PageTitle title="Submission Details | TektAi" />
               < DetailSubmission />
             </>
           }
@@ -235,7 +235,7 @@ function App() {
           path="/submissions/:id"
           element={
             <>
-              <PageTitle title="Archive | TektAi" />
+              <PageTitle title="Submissions List | TektAi" />
               < ListSub />
             </>
           }
@@ -245,7 +245,7 @@ function App() {
           path="/Participtions/:id"
           element={
             <>
-              <PageTitle title="Archive | TektAi" />
+              <PageTitle title="Challenges Particiption | TektAi" />
               < ChallengesParticiption />
             </>
           }
@@ -302,7 +302,7 @@ function App() {
           path="/ListChallenge"
           element={
             <>
-              <PageTitle title="Admin List | TektAi" />
+              <PageTitle title="Challengers List | TektAi" />
               <PrivateRoute requiredRoles={["superAdmin", "admin"]} component={
 
                 <ChallengeList />
@@ -454,7 +454,7 @@ function App() {
           path="/LCFront"
           element={
             <>
-              <PageTitle title="Add Admin | TektAi" />
+              <PageTitle title="Competitions List  | TektAi" />
               <ChallengeListFront />
             </>
           }
@@ -590,6 +590,8 @@ function App() {
         <Route path="/Participants"
           element={
             <>
+                          <PageTitle title="Participants | TektAi" />
+
               <PrivateRoute requiredRoles={["company"]} component={
 
                 <ParticipantChallangeCompany />
@@ -646,6 +648,8 @@ function App() {
           path="/TeamsAdmin/teamDetails/:teamId"
           element={
             <>
+                          <PageTitle title="Team Details  | TektAi" />
+
               <PrivateRoute requiredRoles={["admin", "superAdmin"]} component={
 
                 <TeamDetailsAdmin />
@@ -696,7 +700,7 @@ function App() {
           path="/challenge/details/:id"
           element={
             <>
-              <PageTitle title="Challenge | TektAi" />
+              <PageTitle title="Challenge Details | TektAi" />
               <ChallengeDetails />
             </>
           }
@@ -740,7 +744,7 @@ function App() {
           path="/submission/details/:id"
           element={
             <>
-              <PageTitle title="Challenge | TektAi" />
+              <PageTitle title="Submission Details | TektAi" />
               <SubmissionDetails />
             </>
           }
@@ -777,7 +781,7 @@ function App() {
           path="/statistique"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Statistics | TektAi " />
               <Statistique />
             </>
           }
@@ -829,7 +833,7 @@ function App() {
           path="*"
           element={
             <>
-              <PageTitle title="About Us | TektAi" />
+              <PageTitle title="Not Found | TektAi" />
               <NotFound />
             </>
           }
