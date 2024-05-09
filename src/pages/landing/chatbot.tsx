@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { mdiMessage } from '@mdi/js';
 import { Icon } from '@mdi/react';
+import { useAuth } from '../../components/Auth/AuthProvider';
 
 const Chatbot = () => {
-    interface Message {
-        text: string;
-        sender: string;
-    }
-
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [showChat, setShowChat] = useState(false); // State variable to track whether the chat interface is visible
+    const [showChat, setShowChat] = useState(false); 
+    const [speaking, setSpeaking] = useState(false); // State to track if speech synthesis is active
+    const { userAuth } = useAuth();
+
+    const userId = userAuth?._id;
+  
+    useEffect(() => {
+        if (!showChat) {
+            stopSpeaking(); // Stop speech synthesis when chat interface is closed
+        }
+    }, [showChat]);
 
     const sendMessage = async () => {
-        if (!inputValue.trim()) return; // Don't send empty messages
+        if (!inputValue.trim()) return; 
     
         try {
-            const newMessage: Message = { text: inputValue, sender: 'user' };
-            setMessages(prevMessages => [...prevMessages, newMessage]); // Add user message to the message history
+            const newMessage = { text: inputValue, sender: 'user' };
+            setMessages(prevMessages => [...prevMessages, newMessage]); 
             
             const response = await axios.post('http://localhost:3000/user/chatbot', {
                 message: inputValue,
+                userId: userId, // Send the user ID to the backend
+                
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,17 +39,42 @@ const Chatbot = () => {
             if (response.status !== 200) {
                 throw new Error('Failed to send message');
             }
-    
+            console.log(userId);
             const data = response.data;
-            const botResponse: Message = { text: data.response, sender: 'agent' };
-            setMessages(prevMessages => [...prevMessages, botResponse]); // Add bot response to the message history
+            const botResponse = { text: data.response, sender: 'agent', sentimentScore: data.sentimentScore  }; // Include sentiment score
+            setMessages(prevMessages => [...prevMessages, botResponse]); 
+            
+            // Speak the bot's response
+            speakResponse(data.response);
+            
             setInputValue('');
         } catch (error) {
             console.error('Error sending message:', error);
         }
     };
+
+    const speakResponse = (text) => {
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = text;
+        speech.volume = 1;
+        speech.rate = 2;
+        speech.pitch = 1;
+        speech.lang = 'en-US'; // Change the language if necessary
+        
+        speech.onstart = () => setSpeaking(true);
+        speech.onend = () => setSpeaking(false);
+        
+        window.speechSynthesis.speak(speech);
+    };
+
+    const stopSpeaking = () => {
+        if (speaking) {
+            window.speechSynthesis.cancel();
+            setSpeaking(false);
+        }
+    };
     
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             sendMessage();
         }
@@ -59,10 +92,11 @@ const Chatbot = () => {
                     {messages.map((message, index) => (
                         <div key={index} className={`p-2 ${message.sender === 'user' ? 'bg-gray-200' : 'bg-blue-500 text-white'} rounded-lg mb-2 max-w-xs break-words`}>
                             {message.text}
+                           
                         </div>
                     ))}
 
-                    <div className="flex-grow"></div> {/* This div will push the input field and button to the bottom */}
+                    <div className="flex-grow"></div> 
                     
                     {/* Input field and button container */}
                     <div className="flex justify-between">
