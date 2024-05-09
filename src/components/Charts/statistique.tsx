@@ -46,7 +46,7 @@ const StatsBarChart = () => {
   };
 
   return (
-    <div>
+    <div className='bg-white w-150 h-90 p-5 mt-5'>
       <h2 style={{ color: 'blue', textAlign: 'center', fontWeight: 'bold' }}>Statistiques</h2>
       {stats && (
         <Bar

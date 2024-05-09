@@ -7,6 +7,7 @@ import { useAuth } from '../../components/Auth/AuthProvider';
 import ErrorMessageModal from './ErrorMessageModal'; // Importez la nouvelle composante
 import ClientLayout from '../../layout/clientLayout';
 import Footer from '../landing/footer';
+import { BsTypeH6 } from 'react-icons/bs';
 
 interface User {
   _id: string;

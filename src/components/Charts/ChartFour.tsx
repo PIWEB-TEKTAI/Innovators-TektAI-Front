@@ -12,8 +12,8 @@ const options: ApexOptions = {
     fontFamily: 'Satoshi, sans-serif',
     type: 'donut',
   },
-  colors: ['#3C50E0', '#6577F3', '#8FD0EF', '#0FADCF'],
-  labels: ['Completed Challenges', 'Open Challenges', 'Archived Challenges'],
+  colors: ['#3C50E0', '#228B22', '#B22222', '8E8C8C'],
+  labels: ['totalDiscussions', 'positiveDiscussions', 'negativeDiscussions','neutralDiscussions'],
   legend: {
     show: false,
     position: 'bottom',
@@ -51,13 +51,14 @@ const options: ApexOptions = {
   ],
 };
 
-const ChartThree: React.FC = () => {
+const ChartFour: React.FC = () => {
 
   const [statistics, setStatistics] = useState(null);
+
   useEffect(() => {
-    const fetchChallengeStatistics = async () => {
+    const fetchAnalysisStatistics = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/challenge/statistics', {
+        const response = await axios.get('http://localhost:3000/sentiment/get', {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -69,7 +70,7 @@ const ChartThree: React.FC = () => {
       }
     };
 
-    fetchChallengeStatistics();
+    fetchAnalysisStatistics();
   }, []);
 
   // Check if statistics are loaded
@@ -77,19 +78,19 @@ const ChartThree: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const {completedChallenges, openChallenges, archivedChallenges } = statistics;
+  const {totalDiscussions, positiveDiscussions, negativeDiscussions,neutralDiscussions } = statistics;
 
 
 
   // Define chart series
-  const series = [completedChallenges, openChallenges, archivedChallenges];
+  const series = [totalDiscussions, positiveDiscussions, negativeDiscussions,neutralDiscussions];
 
 
   return (
     <div className="sm:px-7.5 col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-5">
       <div className="mb-3 justify-between gap-4 sm:flex">
         <div>
-          <h5 className="text-xl font-semibold text-black dark:text-white">Challenges Analytics</h5>
+          <h5 className="text-xl font-semibold text-black dark:text-white">Discussions Analytics</h5>
         </div>
         <div>
           <div className="relative z-20 inline-block">
@@ -117,28 +118,38 @@ const ChartThree: React.FC = () => {
       
         <div className="sm:w-1/2 w-full px-8">
           <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#6577F3]"></span>
+            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#3C50E0]"></span>
             <p className="flex w-full justify-between text-xs font-medium text-black dark:text-white">
-              <span>Completed Challenges</span>
-              <span>{completedChallenges}</span>
+              <span>Total Discussions</span>
+              <span>{totalDiscussions}</span>
             </p>
           </div>
         </div>
         <div className="sm:w-1/2 w-full px-8">
           <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#8FD0EF]"></span>
+            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#228B22]"></span>
             <p className="flex w-full justify-between text-xs font-medium text-black dark:text-white">
-              <span>Open Challenges</span>
-              <span>{openChallenges}</span>
+              <span>Positive Discussions</span>
+              <span>{positiveDiscussions}</span>
             </p>
           </div>
         </div>
         <div className="sm:w-1/2 w-full px-8">
           <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#0FADCF]"></span>
+            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#B22222]"></span>
             <p className="flex w-full justify-between text-xs font-medium text-black dark:text-white">
-              <span>Archived Challenges</span>
-              <span>{archivedChallenges}</span>
+              <span>Negative Discussions</span>
+              <span>{negativeDiscussions}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="sm:w-1/2 w-full px-8">
+          <div className="flex w-full items-center">
+            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-[#8E8C8C]"></span>
+            <p className="flex w-full justify-between text-xs font-medium text-black dark:text-white">
+              <span>Neutral Discussions</span>
+              <span>{neutralDiscussions}</span>
             </p>
           </div>
         </div>
@@ -147,4 +158,4 @@ const ChartThree: React.FC = () => {
   );
 };
 
-export default ChartThree;
+export default ChartFour;

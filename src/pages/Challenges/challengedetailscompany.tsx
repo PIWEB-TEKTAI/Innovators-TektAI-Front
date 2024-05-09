@@ -42,6 +42,7 @@ import AddSubmissionForm from './AddSubmittion';
 import EditSubmissionForm from './EditSubmittion';
 import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
 import RecommendChallengersToChallenge from './recommendChallengersToCha';
+import DiscussionStatistics from './challengeDiscussionStatistics';
 
 
 
@@ -472,6 +473,14 @@ const ChallengeDetailsCompany: React.FC = () => {
                 Discussion
               </a>
             </li>
+            <li className="mr-1">
+              <a
+                className={`bg-white inline-block py-2 rounded-t  px-4 text-blue-500 hover:text-blue-800 font-semibold ${activeTab === 'discussionStatistics' ? 'bg-blue-100 border-l text-blue-700 border-t border-r' : ''}`}
+                onClick={() => handleTabChange('discussionStatistics')}
+              >
+                Discussion statistics
+              </a>
+            </li>
             <li className="-mb-px mr-1">
               <a
                 className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'participations' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
@@ -518,6 +527,9 @@ const ChallengeDetailsCompany: React.FC = () => {
             )}
             {activeTab === 'discussion' && (
               <Discussion />
+            )}
+               {activeTab === 'discussionStatistics' && (
+              <DiscussionStatistics />
             )}
             {activeTab == 'participations' && (
               <div>

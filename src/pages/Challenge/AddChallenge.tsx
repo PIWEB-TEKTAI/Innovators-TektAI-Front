@@ -670,7 +670,7 @@ const AddChallenge = () => {
                 </span>
               </li>
 
-              <li className={` mr-8 w-full`}>
+              <li className={`mr-8 w-full`}>
                 <span
                   className={`font-medium text-md ${step === 2 || step === 1 ? 'text-gray-700 font-bold' : step > 2 ? 'text-green-700 font-semibold' : ''}`}
                 >
@@ -678,7 +678,7 @@ const AddChallenge = () => {
                 </span>
               </li>
 
-              <li className=" mr-19 w-full">
+              <li className="mr-19 w-full">
                 <span
                   className={`font-medium text-md text-gray-700 ${submitted ? 'text-green-700 font-semibold' : ''}`}
                 >
