@@ -64,6 +64,7 @@ import PreferencesPage from './components/SidebarClient/PreferencesPage';
 import ParticipantChallangeCompany from './pages/Challenges/ParticipantsChallangeCompany';
 import ListSub from './pages/SuperAdmin/ListSubmissions';
 import DetailSubmission from './pages/SuperAdmin/DetailsSubmissions';
+import Sentiments from './pages/SuperAdmin/Listsentiments';
 import ChallengesParticiption from './pages/SuperAdmin/Participations';
 import Allsubmissiions from './pages/SuperAdmin/AllSubmissions'
 import Favories from './pages/competitions/favories'
@@ -215,6 +216,16 @@ function App() {
             </>
           }
         />
+           <Route
+          path="/sentimentschat"
+          element={
+            <>
+              <PageTitle title="Chatbot | TektAi" />
+              <Sentiments />
+            </>
+          }
+        />
+
 
         <Route
           path="/Favories"

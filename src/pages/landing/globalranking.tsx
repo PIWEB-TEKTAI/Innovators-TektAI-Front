@@ -82,7 +82,7 @@ const GlobalRanking: React.FC = () => {
   return (
     <ClientLayout>
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
-        <div className="mx-auto max-w-screen-sm text-center  lg:mb-16">
+        <div className="mx-auto max-w-screen-lg text-center  lg:mb-8">
           <h2 className="mb-2 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             <span className="animated-text" style={{ animationDelay: '0.1s' }}>G</span>
             <span className="animated-text" style={{ animationDelay: '0.2s' }}>l</span>
@@ -97,10 +97,20 @@ const GlobalRanking: React.FC = () => {
             <span className="animated-text text-primary" style={{ animationDelay: '1.1s' }}>i</span>
             <span className="animated-text text-primary" style={{ animationDelay: '1.2s' }}>n</span>
             <span className="animated-text text-primary" style={{ animationDelay: '1.3s' }}>g</span>
+            <span className="font-semibold text-gray-500 dark:text-gray-400" style={{ fontSize: '1rem' }}>
+           <br />
+            Your position here is determined by your global score based on your performance in challenges. 
+<br />
+
+1st place in a challenge earns you 30 points,2nd place earns you 20 points, and 3rd place earns you 10.
+<br />
+
+The more challenges you excel in, the higher your global score and ranking will be. Keep up the great work!"
+  </span>
+
+
           </h2>
-          <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
-            Meet our top challengers
-          </p>
+       
         </div>
         <div className="bg-white pt-4 rounded-lg table-auto mx-auto  w-[90%]">
 
