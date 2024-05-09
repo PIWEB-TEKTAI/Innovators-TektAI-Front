@@ -10,8 +10,8 @@ const options: ApexOptions = {
       fontFamily: 'Satoshi, sans-serif',
       type: 'donut',
     },
-    colors: ['#3C50E0', '#228B22', '#B22222', '8E8C8C'],
-    labels: ['totalDiscussions', 'positiveDiscussions', 'negativeDiscussions','neutralDiscussions'],
+    colors: [ '#228B22', '#B22222', '8E8C8C'],
+    labels: [ 'positiveDiscussions', 'negativeDiscussions','neutralDiscussions'],
     legend: {
       show: false,
       position: 'bottom',
@@ -84,7 +84,7 @@ const DiscussionStatistics: React.FC = () => {
 
 
   // Define chart series
-  const series = [totalDiscussions, positiveDiscussions, negativeDiscussions,neutralDiscussions];
+  const series = [ positiveDiscussions, negativeDiscussions,neutralDiscussions];
 
 
   
