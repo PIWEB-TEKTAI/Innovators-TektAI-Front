@@ -1,5 +1,5 @@
 export type User = {
-  id:string;
+    id: number;
     email:string;
     FirstName:string;
     LastName:string;
@@ -19,13 +19,8 @@ export type User = {
       email: string,
       description:string,
       phone: string,
-      professionnalFields: string,
-      websiteUrl:string,
-      creationDate:string,
-      subscriptionType: string,
-      subscriptionExpirationDate: Date
+      professionnalFields: string
     },
-    favories:Array<number>;
 
 
   };/*   email:string;
