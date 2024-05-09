@@ -84,8 +84,7 @@ const Teams: React.FC = () => {
               </span>
             </h2>
             <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
-              Explore the whole collection of open-source web components and
-              elements built with the utility classNamees from Tailwind
+              Explore our talented team members who drive innovation and excellence
             </p>
           </div>
           <div className="grid grid-cols-2 gap-8 mb-6 lg:mb-16">

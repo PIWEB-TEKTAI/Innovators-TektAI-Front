@@ -279,7 +279,11 @@ const Competitions: React.FC = () => {
   const navigate = useNavigate();
 
   function add() {
-    navigate('/challenge/add');
+    if(!userAuth?.company.subscriptionType || userAuth?.company.subscriptionType === ''){
+      navigate('/paiement');
+    }else{
+      navigate('/challenge/add');
+    }
   }
 
   return (
