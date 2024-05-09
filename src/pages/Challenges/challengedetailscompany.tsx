@@ -41,6 +41,7 @@ import Loader from '../../common/Loader';
 import AddSubmissionForm from './AddSubmittion';
 import EditSubmissionForm from './EditSubmittion';
 import { Tooltip as ReactTooltip, Tooltip } from 'react-tooltip'
+import RecommendChallengersToChallenge from './recommendChallengersToCha';
 
 
 
@@ -488,9 +489,25 @@ const ChallengeDetailsCompany: React.FC = () => {
                 Submission
               </a>
             </li>
+            {userAuth?.role=="company"&&
+            (<>
+            <li className="-mb-px mr-1">
+              <a
+                className={`bg-white inline-block rounded-t py-2 px-4 hover:text-blue-700 text-blue-500 font-semibold ${activeTab == 'challengersRecommendations' ? 'bg-blue-100 text-blue-700 border-l border-t border-r ' : ''}`}
+                onClick={() => handleTabChange('challengersRecommendations')}
+              >
+                Challengers Recommendations
+              </a>
+            </li>
+            </>)
+            }
           </ul>
 
           <div className="p-8">
+          {userAuth?.role=="company" && activeTab === 'challengersRecommendations' && (
+              <RecommendChallengersToChallenge challenge={challengeDetails} />
+
+            )}
             {activeTab === 'overview' && (
               <Overview />
 

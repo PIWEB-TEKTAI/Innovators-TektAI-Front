@@ -37,12 +37,14 @@ import { useAuth } from './AuthProvider';
 export default PrivateRoute;*/}
 interface PrivateRouteProps {
     component: React.ReactNode;
-    requiredRoles?: string[]; // Specify the required roleAuths for the route
+    requiredRoles?: string[]; 
+    subscriptionType?:string[];// Specify the required roleAuths for the route
   }
   
   const PrivateRoute: React.FC<PrivateRouteProps> = ({
     component,
     requiredRoles = [],
+    subscriptionType = [],
   }) => {
     // Use the useAuth hook to get userAuth and roleAuth information
     const { userAuth, roleAuth } = useAuth();
@@ -50,8 +52,9 @@ interface PrivateRouteProps {
     if (!userAuth || !roleAuth || !requiredRoles.includes(roleAuth)) {
       return <Navigate to="/auth/signin" />;
     }
-  
-    return(component );
+    if( subscriptionType.length != 0 && !subscriptionType.includes(userAuth.company.subscriptionType))
+      return <Navigate to="/paiement" />;
+        return(component );
   };
   
 export default PrivateRoute;

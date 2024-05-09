@@ -69,6 +69,7 @@ const ClientHeader = (props: {
             {props.connectedUser != null ? (
               <>
                 <DropdownUser
+                  companyName={props.connectedUser?.company?.name}
                   userName={userName}
                   occupation={props.connectedUser?.occupation}
                   imageUrl={props.connectedUser?.imageUrl}

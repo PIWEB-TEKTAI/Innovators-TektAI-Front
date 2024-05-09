@@ -98,7 +98,7 @@ const GlobalRanking: React.FC = () => {
             <span className="animated-text text-primary" style={{ animationDelay: '1.2s' }}>n</span>
             <span className="animated-text text-primary" style={{ animationDelay: '1.3s' }}>g</span>
           </h2>
-          <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
+          <p className="font-light text-gray-500 mb-4 lg:mb-16 sm:text-xl dark:text-gray-400">
             Meet our top challengers
           </p>
         </div>

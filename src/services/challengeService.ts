@@ -70,3 +70,12 @@ export const declineParticipation = async (challengeId:any, userId:any) => {
     throw error; // Throw error if request fails
   }
 };
+export const getRecommendedChallengers = async (challengeId:any) => {
+  try {
+    const response = await axios.get(`${API_URL}/${challengeId}/recommendChallengers`);
+    return response.data.recommendedUsers; // Assuming the response contains recommendedUsers
+  } catch (error) {
+    console.error('Error fetching recommended challengers:', error);
+    throw error;
+  }
+};

@@ -585,7 +585,7 @@ function App() {
           element={
             <>
               <PageTitle title="Add Challenge | TektAi" />
-              <PrivateRoute requiredRoles={["company","superAdmin","admin"]} component={
+              <PrivateRoute requiredRoles={["company","superAdmin","admin"]} subscriptionType={["Premium","Platinium","Freemium"]} component={
 
                 <AddChallenge />
               } />

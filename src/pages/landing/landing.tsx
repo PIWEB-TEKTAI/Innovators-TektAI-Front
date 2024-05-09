@@ -913,7 +913,7 @@ const Landing: React.FC = () => {
       <section className="bg-gray-100 bg-opacity-85 dark:bg-gray-800">
         <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-24 lg:px-6 ">
           <RevealOnScroll delay="">
-          <div className="flex flex-col sm:flex-row items-center gap-2 bg-white border border-gray-300 rounded-full p-2 focus-within:border-blue-500">
+          <div className="flex  sm:flex-row items-center gap-2 bg-white border border-gray-300 rounded-full p-2 focus-within:border-blue-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-gray-400 mr-2"
