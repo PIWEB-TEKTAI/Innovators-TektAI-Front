@@ -5,6 +5,7 @@ import Logo from '../../images/logo/logo back.png';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -105,7 +106,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
           {/* <!-- Menu Group --> */}
           <div>
-            <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
+            <h3 className="mb-4 ml-4 text-sm text-gray-500 font-semibold p-2 bg-white rounded-lg text-center ">
               MENU
             </h3>
 
@@ -261,6 +262,23 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               style={{ color: 'white' }}
                         />
                   Landing Settings
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/"
+                  className={`group bg-white rounded-lg relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-blue-500 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('Editaboutus') &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <FontAwesomeIcon
+                              icon={faExternalLinkAlt}
+                              style={{ color: 'blue' }}
+                        />
+                        Go To Front Office
+                  
                 </NavLink>
               </li>
             </ul>

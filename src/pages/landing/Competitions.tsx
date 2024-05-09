@@ -290,6 +290,13 @@ const handleCompleted = async (challengeId: string) => {
           winnerEmail = firstWinner.submittedBy.email;
           winnerName = firstWinner.submittedBy.FirstName;
           challengetitle = firstWinner.challengeId.title;
+          amount = firstWinner.challengeId.amount;
+          prizes = firstWinner.challengeId.prizes.prizeName;
+          recruitement = firstWinner.challengeId.recruitement.positionTitle;
+          freelance = firstWinner.challengeId.freelance.projectTitle;
+          internship = firstWinner.challengeId.internship.internshipTitle;
+          companyname = firstWinner.challengeId.createdBy.company.name;
+          
         }
 
         if (winnerEmail) {

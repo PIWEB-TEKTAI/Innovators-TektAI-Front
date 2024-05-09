@@ -541,7 +541,7 @@ function App() {
           element={
             <>
               <PageTitle title="My Notifications | TektAi" />
-              <PrivateRoute requiredRoles={["challenger", "company"]} component={
+              <PrivateRoute requiredRoles={["challenger", "company","superAdmin","admin"]} component={
 
                 <NotificationUser />
               } />
@@ -569,7 +569,7 @@ function App() {
           element={
             <>
               <PageTitle title="Add Challenge | TektAi" />
-              <PrivateRoute requiredRoles={["company"]} component={
+              <PrivateRoute requiredRoles={["company","superAdmin","admin"]} component={
 
                 <AddChallenge />
               } />
@@ -593,7 +593,7 @@ function App() {
             <>
                           <PageTitle title="Participants | TektAi" />
 
-              <PrivateRoute requiredRoles={["company"]} component={
+              <PrivateRoute requiredRoles={["company","superAdmin","admin"]} component={
 
                 <ParticipantChallangeCompany />
               } />
@@ -812,9 +812,16 @@ function App() {
           path="/teamDetails/:id"
           element={
             <>
-              <PageTitle title=" Team Details | TektAi" />
-              <TeamsDetails />
+            <PageTitle title="Team Details  | TektAi" />
+
+            <PrivateRoute requiredRoles={["admin","company","challenger", "superAdmin"]} component={
+
+              <TeamsDetails/>
+            } />
             </>
+            
+              
+          
           }
         />
           <Route path="/team/linkInvitation/:token"   element={

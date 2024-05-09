@@ -35,6 +35,7 @@ const SubmissionDetails: React.FC = () => {
     const [submission, setSubmission] = useState<Submission | null>(null); // Specify Submission or null
     const { userAuth } = useAuth();
     const [newScore, setNewScore] = useState();
+    const [scoreChangedMessage,setScoreChangedMessage] = useState('');
     useEffect(() => {
         const fetchSubmissionDetails = async () => {
             try {
@@ -64,14 +65,17 @@ const SubmissionDetails: React.FC = () => {
 
         try {
             const response = await axios.post(`http://localhost:3000/submissions/updateSubmissionScore/${id}`, { score: newScore }, { withCredentials: true });
-
+            setScoreChangedMessage("Score added successfully")
+            setTimeout(() => {
+                setScoreChangedMessage('');
+              }, 3000);
             console.log('Submission score updated successfully:', response.data);
         } catch (error: any) {
             console.error('Error updating submission score:', error.message);
         }
     };
 
-    // Function to handle file download
+    //Function to handle file download
     const handleDownload = (fileUrl: string, fileName: string) => {
         axios({
             url: fileUrl,
@@ -151,7 +155,9 @@ const SubmissionDetails: React.FC = () => {
                                             Put Score
                                         </button>
                                     </form>
+
                                     <br />
+                                    <span className='text-green-500'>{scoreChangedMessage}</span>
                                 </div>
                             )}
                         </div>

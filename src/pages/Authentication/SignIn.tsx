@@ -138,7 +138,7 @@ useEffect(
                     if(data.role == "challenger" || data.role=="company"){
                       navigate("/");
                     }
-                    if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/companylist");
+                    if(data.role == "admin" || data.role=="superAdmin"){                      navigate("/dashboard");
                     }
                     
                   }).catch((error) =>
@@ -255,7 +255,7 @@ const handleSignIn = async () => {
         }
         if(responseData.role == "admin" || responseData.role=="superAdmin"){
           console.log("role"+responseData.role);
-          navigate("/companylist");
+          navigate("/dashboard");
         }
       }, 3000);
       console.log('Login successful:', responseData);

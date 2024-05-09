@@ -131,9 +131,9 @@ const Favories: React.FC = () => {
   let filteredChallenges = currentChallenges.filter((challenge) => {
     if (selectedStatus === 'all') {
       // Afficher les challenges ouverts et terminés, mais pas les archivés
-      return challenge.status === 'open' || challenge.status === 'completed';
+      return challenge?.status === 'open' || challenge?.status === 'completed';
     } else {
-      return challenge.status === selectedStatus; // Afficher les challenges avec le statut sélectionné
+      return challenge?.status === selectedStatus; // Afficher les challenges avec le statut sélectionné
     }
   });
 
@@ -156,7 +156,7 @@ const Favories: React.FC = () => {
       console.log('PUT request successful for challenge ID:', challengeId);
 
       const updatedChallenges = challenges.map((challenge) => {
-        if (challenge._id === challengeId) {
+        if (challenge?._id === challengeId) {
           return { ...challenge, status: 'completed' };
         }
         return challenge;
@@ -178,8 +178,8 @@ const Favories: React.FC = () => {
     setSearchTerm(searchTerm);
 
     filteredChallenges = currentChallenges.filter((challenge) => {
-      const titleMatch = challenge.title.toLowerCase().includes(searchTerm);
-      const priceMatch = challenge.amount
+      const titleMatch =  challenge?.title.toLowerCase().includes(searchTerm);
+      const priceMatch =  challenge?.amount
         .toString()
         .toLowerCase()
         .includes(searchTerm);
@@ -234,28 +234,28 @@ const Favories: React.FC = () => {
             {/* Affichage des challenges filtrés */}
             <div className="row row-cols-1 row-cols-md-3 g-4  lg:justify-start sm:justify-center">
               {filteredChallenges.map((challenge, index) => (
-                <div className="col" key={challenge._id}>
+                <div className="col" key={ challenge?._id}>
                   <div className="card p-3 h-100 card-hover cursor-pointer">
                     <div className="status-and-actions-container">
                       <div
                         className={`status inline-flex rounded-full py-1 px-3 text-sm font-medium ${
-                          challenge.status === 'completed'
+                           challenge?.status === 'completed'
                             ? 'bg-green-400 text-white font-semibold'
-                            : challenge.status === 'archived'
+                            :  challenge?.status === 'archived'
                               ? 'bg-red-600 text-white font-semibold'
-                              : challenge.status === 'open'
+                              :  challenge?.status === 'open'
                                 ? 'bg-blue-400 text-white font-semibold'
                                 : 'bg-red-400 text-white font-semibold'
                         }`}
                       >
-                        {challenge.status}
+                        { challenge?.status}
                       </div>
 
                     
                     </div>
-                    <Link to={`/challengecompany/details/${challenge._id}`}>
+                    <Link to={`/challengecompany/details/${ challenge?._id}`}>
                       <img
-                        src={`http://localhost:3000/images/${challenge.image}`}
+                        src={`http://localhost:3000/images/${ challenge?.image}`}
                         className="card-img-top mt-3"
                         alt="Card image"
                       />
@@ -263,36 +263,36 @@ const Favories: React.FC = () => {
 
                     <div className="card-body">
                       <h5
-                        className={`card-title ${addEmptyLineIfNeeded(challenge.title, 24).length < 24 ? 'one-line-title' : ''}`}
-                        title={challenge.title}
+                        className={`card-title ${addEmptyLineIfNeeded( challenge?.title, 24).length < 24 ? 'one-line-title' : ''}`}
+                        title={ challenge?.title}
                       >
-                        {addEmptyLineIfNeeded(challenge.title, 40)}
+                        {addEmptyLineIfNeeded( challenge?.title, 40)}
                       </h5>
                     </div>
                     <div className="card-footer">
                       <div
-                        className={`price ${challenge.status !== 'open' && 'mt-8'}`}
+                        className={`price ${ challenge?.status !== 'open' && 'mt-8'}`}
                       >
-                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.amount && 'DT'}</span>
+                        <span className='text-md font-semibold'>{ challenge?.amount &&  challenge?.amount} { challenge?.amount && 'DT'}</span>
                         <strong className="font-semibold text-base ">
-                          {challenge.prizes.prizeName && 'Award'}
-                          {challenge.recruitement.positionTitle &&
+                          { challenge?.prizes.prizeName && 'Award'}
+                          { challenge?.recruitement.positionTitle &&
                             'Job Opportunity'}
-                          {challenge.freelance.projectTitle && 'Freelance Work'}
-                          {challenge.internship.internshipTitle &&
+                          { challenge?.freelance.projectTitle && 'Freelance Work'}
+                          { challenge?.internship.internshipTitle &&
                             'Internship Opportunity'}
                         </strong>
 
                       </div>
                       <div className="date text-md font-medium flex flex-col">
-                        {challenge.status == 'open' && (
+                        { challenge?.status == 'open' && (
                           <p className="ml-12 text-red-600">Time Left </p>
                         )}
-                        {challenge.status == 'open' ? (
+                        { challenge?.status == 'open' ? (
                           <span className="text-sm">
                             {calculateTimeRemaining(
-                              challenge.endDate,
-                              challenge._id,
+                               challenge?.endDate,
+                               challenge?._id,
                             )}
                           </span>
                         ) : null}

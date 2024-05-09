@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from '../../services/auth.service';
 import { useAuth } from '../Auth/AuthProvider';
 import axios from 'axios';
+import UserOne from '../../images/user/user-01.png';
 
 const DropdownUser =(props: {
   userName: String  | undefined;
@@ -90,8 +91,8 @@ const DropdownUser =(props: {
         className="flex items-center gap-4"
         to="#"
       >
-   {
-          userAuth?.role === "company" ? (
+        {
+          userAuth?.role === "company" && (
             <>
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black capitalize dark:text-white">
@@ -103,20 +104,38 @@ const DropdownUser =(props: {
                 <img src="/src/images/user/4760012.jpg" alt="company" className="rounded-full h-12 w-32" />
                 </span>
             </>
-          ) : (
-            <>
-              <span className="hidden text-right lg:block">
-                <span className="block text-sm font-medium text-black capitalize dark:text-white">
-                  {props.userName}
-                </span>
-                <span className="block text-xs">{props.occupation}</span>
-              </span>
-              <span className="h-12 w-12 rounded-full">
-                <img src={props.imageUrl} alt="User" className='rounded-full h-12 w-32' />
-              </span>
-            </>
           )
-        }    
+        }  
+        { userAuth?.role === "challenger" &&
+         (
+          <>
+            <span className="hidden text-right lg:block">
+              <span className="block text-sm font-medium text-black capitalize dark:text-white">
+                {props.userName}
+              </span>
+              <span className="block text-xs">{props.occupation}</span>
+            </span>
+            <span className="h-12 w-12 rounded-full">
+              <img src={props.imageUrl} alt="User" className='rounded-full h-12 w-32' />
+            </span>
+          </>
+        )
+        }  
+         { (userAuth?.role === "admin" || userAuth?.role === "superAdmin") &&
+         (
+          <>
+          <span className="hidden text-right lg:block">
+          <span className="block text-sm font-medium text-black dark:text-white">
+          </span>
+          <span className="block text-xs">Admin</span>
+        </span>
+
+        <span className="h-12 w-12 rounded-full">
+          <img src={UserOne} alt="User" />
+        </span>
+          </>
+        )
+        } 
        
 
         <svg

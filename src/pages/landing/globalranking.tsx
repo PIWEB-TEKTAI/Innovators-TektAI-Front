@@ -101,66 +101,82 @@ const GlobalRanking: React.FC = () => {
           <p className="font-light text-gray-500 lg:mb-16 sm:text-xl dark:text-gray-400">
             Meet our top challengers
           </p>
-
         </div>
-        <div className="flex justify-end mb-4">
+        <div className="bg-white pt-4 rounded-lg table-auto mx-auto  w-[90%]">
+
+       <div className="flex bg-white p-4 mx-auto rounded-lg justify-end mb-4">
           <input
             type="text"
             placeholder="Search "
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded px-4 py-2 mb-8"
+            className="border border-gray-300 rounded px-4 py-2 "
           />
         </div>
+  
+       <table >
+          <thead className=''>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Profile</th>
+            </tr>
+          </thead>
+          <tbody className='text-center'>
+  {filteredUsers.slice(indexOfFirstItem, indexOfLastItem).map((user, index) => {
+    const overallIndex = users.findIndex((u) => u._id === user._id);
+    return (
+      <tr key={user._id} className="p-4 text-center"> {/* Apply text-center to center the content */}
+        <td className="py-2 flex justify-center items-center"> {/* Apply flexbox styling */}
+        <div className={`rank-circle ${index === 0 ? 'rank-circle-medalgold' : index === 1 ? 'rank-circle-medalsilver' : index === 2 ? 'rank-circle-medalbronze' : ''}`}>
+          {overallIndex + 1}
+        </div>
+      </td>
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredUsers.slice(indexOfFirstItem, indexOfLastItem).map((user, index) => {
-            // Calculate the overall index of the user in the users array
-            const overallIndex = users.findIndex((u) => u._id === user._id);
-            return (
-              <li key={user._id} className="bg-white rounded-lg shadow-md p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <div className={`rank-circle ${index === 0 ? 'rank-circle-medalgold' : index === 1 ? 'rank-circle-medalsilver' : index === 2 ? 'rank-circle-medalbronze' : ''}`}>
-                    {overallIndex + 1}
-                  </div>
-                  {user.role === 'challenger' ? (
-                    <>
-                      <Link to={`/visit/user/${user._id}`} className="text-lg font-semibold">
-                        {(user as User).FirstName} {(user as User).LastName}
-                      </Link>
-                      <span className="text-gray-500">Score: {(user as User).globalScore}</span>
-                      <img src={(user as User).imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="text-lg font-semibold">{(user as Team).name}</h2>
-                      <span className="text-gray-500">Score: {(user as Team).globalScore}</span>
-                      <img src={(user as Team).imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
-                    </>
-                  )}
-                </div>
-              </li>
-            );
-          })}
+        <td>
+          {user.role === 'challenger' ? (
+            <Link to={`/visit/user/${user._id}`} className="text-lg font-semibold">
+              {(user as User).FirstName} {(user as User).LastName}
+            </Link>
+          ) : (
+            <h2 className="text-lg font-semibold">{(user as Team).name}</h2>
+          )}
+        </td>
+        <td>{user.globalScore}</td>
+        <td>
+          <div className="flex justify-center items-center">
+          <Link to={`/visit/user/${user._id}`}>
+            <img src={user.role === 'challenger' ? (user as User).imageUrl : (user as Team).imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
+          </Link>
+          </div>
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
+
+        </table>
+  
+        <ul className="flex justify-center mt-8">
+          {Array.from({ length: Math.ceil(filteredUsers.length / itemsPerPage) }, (_, i) => (
+            <li key={i} className="mx-1 my-2">
+              <button
+                className={`w-8 h-8 flex items-center justify-center rounded-full border border-blue-500 ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+                onClick={() => paginate(i + 1)}
+              >
+                {i + 1}
+              </button>
+            </li>
+          ))}
         </ul>
 
-        <ul className="flex justify-center mt-8">
-        {Array.from({ length: Math.ceil(filteredUsers.length / itemsPerPage) }, (_, i) => (
-          <li key={i} className="mx-1">
-            <button
-              className={`w-8 h-8 flex items-center justify-center rounded-full border border-blue-500 ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
-              onClick={() => paginate(i + 1)}
-            >
-              {i + 1}
-            </button>
-          </li>
-        ))}
-      </ul>
-
+       </div>
       </div>
       <Footer />
     </ClientLayout>
   );
+  
 };
 
 export default GlobalRanking;

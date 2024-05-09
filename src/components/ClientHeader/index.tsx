@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DropdownUser from './DropdownUser';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { User } from '../../types/User';
 import { countryFlags } from './flag';
@@ -16,7 +16,7 @@ const ClientHeader = (props: {
   const [selectedCountry, setSelectedCountry] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { pathname } = location;
-
+  const navigate = useNavigate();
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
@@ -184,10 +184,13 @@ const ClientHeader = (props: {
                   setIsOpen={setIsOpen}
                 />
               </li>
-              {props.connectedUser != null && (
+              {props.connectedUser != null &&   props.connectedUser.role != "admin" && props.connectedUser.role!="superAdmin"
+                      &&(
+
                 <div className="flex px-4">
                   {props.connectedUser.AlreadyCompany ?(
                     <>
+                    
                       <a
                         onClick={handleSwitchAccount}
                         className="hover:scale-[1.05] cursor-pointer inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -198,6 +201,7 @@ const ClientHeader = (props: {
                           <>Switch to challenger</>
                         )}
                       </a>
+                      
                     </>
                   ) : (
                     <Link to="/SwitchToCompany">
@@ -213,6 +217,26 @@ const ClientHeader = (props: {
                   )}
                 </div>
               )}
+              
+              {/*admin*/}
+              {props.connectedUser != null &&   (props.connectedUser.role == "admin" || props.connectedUser.role=="superAdmin")
+                      &&(
+
+                <div className="flex px-4">
+                    <>
+                    
+                      <a
+                        onClick={()=>{navigate('/dashboard')}}
+                        className="hover:scale-[1.05] cursor-pointer inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      >
+                        Go To BackOffice
+                      </a>
+                      
+                    </>
+                  
+                </div>
+              )}
+              {/*admin*/}
             </ul>
           </div>
         </div>

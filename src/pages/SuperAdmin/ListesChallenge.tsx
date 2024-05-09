@@ -143,9 +143,8 @@ export default function FetchData() {
     axios.get<Challenge[]>(`http://localhost:3000/challenges/${selectedRole || 'AllChallenge'}`, { withCredentials: true })
       .then(response => {
         const filteredUsers = response.data.filter(challenge =>
-        (challenge.title.toLowerCase().startsWith(searchTerm) ||
-          challenge.price.toLowerCase().startsWith(searchTerm) ||
-          challenge.description.startsWith(searchTerm))
+        (challenge.title.toLowerCase().startsWith(searchTerm) 
+        )
         );
         setData(filteredUsers);
 
@@ -173,9 +172,7 @@ export default function FetchData() {
 
   // Filtrer les données en fonction du terme de recherche
   const filteredData = data.filter(user =>
-  (user.title.toLowerCase().startsWith(searchTerm) ||
-    user.price.toLowerCase().startsWith(searchTerm) ||
-    user.description.startsWith(searchTerm))
+  (user.title.toLowerCase().startsWith(searchTerm))
   );
   console.log(filteredData); // Ajoutez cette ligne
 
