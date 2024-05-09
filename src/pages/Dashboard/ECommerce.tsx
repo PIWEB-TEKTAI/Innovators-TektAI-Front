@@ -9,6 +9,7 @@ import MapOne from '../../components/Maps/MapOne';
 import TableOne from '../../components/Tables/TableOne';
 import DefaultLayout from '../../layout/DefaultLayout';
 import StatsBarChart from '../../components/Charts/statistique';
+import ChartFour from '../../components/Charts/ChartFour';
 
 const ECommerce: React.FC = () => {
   const [fetchedStatistics, setFetchedStatistics] = useState<any>({
@@ -131,17 +132,15 @@ useEffect(() => {
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
         <ChartThree />
         <MapOne />
-
-        <ChatCard />
-
+        <ChartOne />
+        <ChartTwo />
+   
       </div>
 
-      <div >
-
+      <div className='flex mt-5 flex-col'>
+      <ChartFour/>     
       <StatsBarChart />
       </div>
 

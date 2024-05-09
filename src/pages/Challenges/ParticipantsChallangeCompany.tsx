@@ -110,8 +110,8 @@ const Participations = () => {
   
   return (
     <ConnectedClientLayout>
-      <div>
-        <h1 className="text-2xl font-bold mb-4">List of Participations</h1>
+        <div className="rounded-sm p-5  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <h2 className="font-bold text-black text-title-xl mb-8">List of Participations</h2>
         {/* Search bar and dropdown menu */}
         <div className="flex justify-between mb-4">
           {/* Search bar */}
@@ -143,7 +143,7 @@ const Participations = () => {
         </div>
         {/* Table of filtered participations */}
         <div>
-          <table className="table-auto border-collapse border border-gray-400 w-full">
+          <table className="table-auto border border-gray-400 w-full">
             <thead>
               <tr className="bg-gray-200">
                 <th></th> {/* Add the "border-r" class to add a right border */}
@@ -166,13 +166,13 @@ const Participations = () => {
     {participant.type === 'Solo Participation Request' && (
   <>
     <button onClick={() => handleAcceptSolo(participant.challengeTitle, participant._id, 'Request')} className="mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Accept</button>
-    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'Request')} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'Request')} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Decline</button>
   </>
 )}
 {participant.type === 'Team Participation Request' && (
   <>
     <button onClick={() => handleAcceptSolo(participant.challengeTitle, participant._id, 'TeamRequest')} className="mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Accept</button>
-    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'TeamRequest' )} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Cancel</button>
+    <button onClick={() => handleCancelSolo(participant.challengeTitle, participant._id, 'TeamRequest' )} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Decline</button>
   </>
 )}
 {participant.type !== 'Solo Participation Request' && participant.type !== 'Team Participation Request' && (
