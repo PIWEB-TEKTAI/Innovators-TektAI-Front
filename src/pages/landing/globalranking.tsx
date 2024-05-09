@@ -146,9 +146,7 @@ const GlobalRanking: React.FC = () => {
         <td>{user.globalScore}</td>
         <td>
           <div className="flex justify-center items-center">
-          <Link to={`/visit/user/${user._id}`}>
             <img src={user.role === 'challenger' ? (user as User).imageUrl : (user as Team).imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
-          </Link>
           </div>
             </td>
           </tr>

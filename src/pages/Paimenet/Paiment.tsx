@@ -126,13 +126,21 @@ const PaymentPage = () => {
     price: number,
     email: string,
   ) => {
+    if((type == 'Premium' || type == 'Platinium')){
+      setIsMissingCompanyInfo(false);
+  }
     if (!userAuth) {
       // Afficher le message d'erreur si l'utilisateur n'est pas connecté
       setIsModalOpen(true);
       setIsError(true);
       return;
 
-    }else if(!userAuth.company.subscriptionType && userAuth?.company.websiteUrl == ''&& userAuth?.company.creationDate == '' && userAuth?.company.phone == '' && userAuth?.company.description == '' && userAuth?.company.professionnalFields.length == 0 && type =='Freemium'){
+    }else if((userAuth?.company.websiteUrl == '' || 
+    userAuth?.company.creationDate == '' || 
+    userAuth?.company.phone == '' || 
+    userAuth?.company.description == '' || 
+    userAuth?.company.professionnalFields.length === 0) && 
+    (type !== 'Premium' && type !== 'Platinium')){
       setIsModalOpen(true);
       setIsMissingCompanyInfo(true);
       console.log(isMissingCompanyInfo)
