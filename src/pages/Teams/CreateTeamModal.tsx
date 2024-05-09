@@ -9,8 +9,13 @@ interface Props {
 
 const CreateTeamModal: React.FC<Props> = ({ onClose }) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [message,setMessage] = useState('');
   const handleCreateTeamSuccess = () => {
-    setShowCreateForm(false); 
+    setMessage("teamCreated Successfully")
+    setTimeout(() => {
+      setShowCreateForm(false);
+      location.reload()
+    }, 3000);
   };
   
 
@@ -33,6 +38,7 @@ const CreateTeamModal: React.FC<Props> = ({ onClose }) => {
                 </h3>
                 <div className="mt-2">
                     <CreateTeamForm onCreateTeamSuccess={handleCreateTeamSuccess}></CreateTeamForm>
+                    <span className='text-green-500'>{message}</span>
                 </div>
               </div>
             </div>

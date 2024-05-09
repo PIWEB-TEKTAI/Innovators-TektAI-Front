@@ -23,8 +23,10 @@ const EditSubmissionForm: React.FC<Props> = ({ id }) => {
     const [step, setStep] = useState(1);
   
     const [Output, setOutput] = useState('');
-    const [OutputError, setOutputError] = useState('');
+
     const [IsOutput, setIsOutput] = useState(false);
+
+    const [OutputError, setOutputError] = useState('');
   
     const [presentationFile, setPresentationFile] = useState<string | Blob>('');
     const [presentationFileError, setPresentationFileError] = useState('');

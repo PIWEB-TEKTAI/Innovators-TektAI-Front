@@ -138,6 +138,7 @@ interface Challenge {
   title: string;
   description: string;
   amount: string;
+  currency:string;
   prizes: {
     prizeName: string;
     prizeDescription: string;
@@ -187,6 +188,7 @@ const Landing: React.FC = () => {
     image,
     description,
     amount,
+    currency,
     prizes,
     recruitement,
     freelance,
@@ -208,6 +210,7 @@ const Landing: React.FC = () => {
         image,
         description,
         amount,
+        currency,
         status,
         startDate,
         endDate,
@@ -258,7 +261,7 @@ const Landing: React.FC = () => {
           />
 
           <div className="flex flex-col items-start mb-4">
-            <h3 className="text-xl font-bold text-black dark:text-white capitalize">
+            <h3 className="text-lg font-bold text-black dark:text-white capitalize">
               {addEmptyLineIfNeeded(title, 26)}
             </h3>
             <div className="font-medium mt-2">
@@ -284,7 +287,7 @@ const Landing: React.FC = () => {
           <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
           <span className="font-semibold">Prize : </span>
           <span className="font-semibold ">
-            {amount} {amount && 'DT'}
+            {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
             {prizes.prizeName && 'Award'}
             {recruitement.positionTitle && 'Job Opportunity'}
             {freelance.projectTitle && 'Freelance Work'}

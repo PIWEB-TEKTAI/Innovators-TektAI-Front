@@ -148,6 +148,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
   image,
   description,
   amount,
+  currency,
   prizes,
   recruitement,
   freelance,
@@ -243,7 +244,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
               <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
               <span className="font-semibold">Prize : </span>
               <span className="font-semibold ">
-                {amount} {amount && 'DT'}
+                {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
                 {prizes.prizeName && 'Award'}
                 {recruitement.positionTitle && 'Job Opportunity'}
                 {freelance.projectTitle && 'Freelance Work'}
@@ -283,6 +284,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
       image,
       description,
       amount,
+      currency,
       status,
       startDate,
       endDate,
@@ -376,7 +378,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         
 
         <div className="flex flex-col items-start mb-4">
-          <h3 className="text-xl font-bold text-black dark:text-white capitalize">
+          <h3 className="text-lg font-bold text-black dark:text-white capitalize">
             {addEmptyLineIfNeeded(title, 28)}
           </h3>
           <div className="font-medium mt-2">
@@ -401,7 +403,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
         <span className="font-semibold">Prize : </span>
               <span className="font-semibold ">
-                {amount} {amount && 'DT'}
+                {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
                 {prizes.prizeName && 'Award'}
                 {recruitement.positionTitle && 'Job Opportunity'}
                 {freelance.projectTitle && 'Freelance Work'}
@@ -579,11 +581,14 @@ const ListChallengerFront: React.FC = () => {
               <div className="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
                 {userAuth?.role !== 'challenger' && (
                   <a
-                    href={
-                      userAuth?.role === 'company'
+                  href={
+                    userAuth?.role === 'company' && 
+                    (!userAuth?.company.subscriptionType || userAuth?.company.subscriptionType === '') 
+                      ? '/paiement'
+                      : userAuth?.role === 'company' 
                         ? '/challenge/add'
                         : '/auth/signin'
-                    }
+                  }                  
                     className="inline-flex items-center justify-center bg-transparent px-5 py-3 mr-3 text-primary font-semibold text-center text-white-900 border border-primary-300 rounded-full hover:bg-opacity-90 hover:shadow-4 hover:bg-primary hover:text-white  focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-primary-800"
                   >
                     Host a competition

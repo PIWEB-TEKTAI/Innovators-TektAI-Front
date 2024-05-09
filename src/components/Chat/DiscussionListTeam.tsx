@@ -11,15 +11,16 @@ import axios from 'axios';
 import { useAuth } from '../Auth/AuthProvider';
 import { Converstation } from '../../types/converstation';
 import { User } from '../../types/User';
-import DiscussionDetails from './DiscussionDetails';
+import DiscussionDetailsTeam from './DiscussionDetailsTeam';
 
-const DiscussionList = () => {
+const DiscussionListTeam = () => {
   const [conversations, setConversations] = useState<Converstation[]>([]);
-  const [selectedParticipant, setSelectedParticipant] = useState<User | null>(
+  const [selectedTeam, setSelectedTeam] = useState<any | null>(
     null,
   );
 
   const [conversation, setConversation] = useState<Converstation | null>(null);
+
 
  
 
@@ -34,14 +35,13 @@ const DiscussionList = () => {
         `http://localhost:3000/conv/list/${userAuth._id}`,
       );
       console.log('fetching data...' + response);
-      const filteredConversations = response.data.map(
-        (conversation: { participants: any[] }) => ({
-          ...conversation,
-          participants: conversation.participants.filter(
-            (participant) => participant._id !== userAuth?._id,
-          ),
-        }),
-      ).filter((conversation:any) => !conversation.team);
+      const filteredConversations = response.data.filter((conversation: { team: any }) => 
+        conversation.team && 
+        (conversation.team.members.includes(userAuth?._id) || conversation.team.leader === userAuth?._id)
+      );
+      
+
+      console.log(filteredConversations)
 
       setConversations(filteredConversations);
       /*const firstParticipant = filteredConversations.length > 0 ? filteredConversations[0].participants[0] : null;
@@ -76,11 +76,13 @@ const DiscussionList = () => {
     console.log(conversations);
   }, []);
 
-  const handleParticipantClick = (participant: any,conv:any) => {
+  const handleParticipantClick = (team: any , conv:any) => {
     setClicked(true);
-    setSelectedParticipant(participant);
+    setSelectedTeam(team);
     setConversation(conv);
+    
   };
+
 
 
 
@@ -98,17 +100,13 @@ const DiscussionList = () => {
                       className="flex items-center gap-5 py-3  hover:bg-gray-3 dark:hover:bg-meta-4"
                       key={key}
                     > 
-              
-
-                      {chat.participants.map(
-                        (participant: any) => (
                           <div
                             className="flex items-center gap-5 py-3  hover:bg-gray-3 dark:hover:bg-meta-4 cursor-pointer"
-                            onClick={() => handleParticipantClick(participant,chat)}
+                            onClick={() => handleParticipantClick(chat.team,chat)}
                           >
                             <div className="relative h-14 w-14 rounded-full">
                               <div>
-                                <img src={participant.imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
+                                <img src={chat.team.imageUrl} alt="User" className="w-15 h-15 cursor-pointer rounded-full shadow-lg" />
                                 <span
                                   className="absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white"
                                   style={{ backgroundColor: '#10B981' }}
@@ -118,28 +116,19 @@ const DiscussionList = () => {
                             <div className="flex flex-1 items-center justify-between mt-2">
                               <div>
                                 <h5 className="font-medium text-black dark:text-white capitalize">
-                                  {participant?.role === 'company' ? (
-                                    <>{participant.company.name}</>
-                                  ) : (
-                                    <>{participant.FirstName} {participant.LastName}</> 
-                                  )}
+                                   {chat.team.name}
                                 </h5>
 
                                 <p className='flex flex-col'>
-                                  <span className={`text-md ${chat.messages[chat.messages.length - 1]?.sender === participant._id && !clicked ? 'font-semibold' : ''} text-black dark:text-white`}>
+                                  <span className={`text-md ${chat.messages[chat.messages.length - 1]?.sender !== userAuth?._id   && !clicked ? 'font-semibold' : ''} text-black dark:text-white`}>
                                       {chat.messages[chat.messages.length - 1]?.content}
                                   </span>
                                   
-                                  {chat.messages[chat.messages.length - 1]?.timestamp && (
-                                      <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
-                                  )}
+                                  <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
                                 </p>
                               </div>
                             </div>
                           </div>
-                        ),
-                      )}
-
                     </div>
                   ))}
                 </ul>
@@ -147,8 +136,8 @@ const DiscussionList = () => {
             </div>
 
             <div className="w-2/3 p-4">
-              {selectedParticipant  ? (
-                <DiscussionDetails participant={selectedParticipant} converstation={conversation}/>
+              {selectedTeam  ? (
+                <DiscussionDetailsTeam team={selectedTeam} converstation={conversation}/>
               ) : (
                 <div>Loading...</div>
               )}
@@ -160,4 +149,4 @@ const DiscussionList = () => {
   );
 };
 
-export default DiscussionList;
+export default DiscussionListTeam;

@@ -287,8 +287,8 @@ const ChallengeDetails: React.FC = () => {
       <div className="mx-auto xl:mx-[10rem] my-4 rounded-lg px-4 py-8">
 
         <div className="bg-white px-[2rem] py-4 shadow-lg rounded-lg overflow-hidden">
-          {userAuth?.favories?.includes(challengeDetails._id) || clicked ? (
-            <div className="flex bg-white justify-end">
+        { userAuth?.favories?.includes(challengeDetails._id) || clicked  ? (
+          <div className="flex bg-white justify-end">
 
               <button
                 className="text-red-500 hover:text-red-700 flex-col"
@@ -377,18 +377,8 @@ const ChallengeDetails: React.FC = () => {
               )}
             </div>
 
-            <div className='flex-col'>
-              <h2 className="text-md font-bold text-gray-900 mt-2">
-                Number of Participants Required
-              </h2>
-              <p className="text-gray-600 mt-4 break-words text-black break-words">
-                Teams: {challengeDetails.numberParticipants.nbrTeam}
-              </p>
-              <p className="text-gray-600 mt-4 break-words text-black break-words">
-                Solo: {challengeDetails.numberParticipants.nbrSolo}
-              </p>
-            </div>
-
+         
+        
           </div>
         </div>
 
@@ -581,7 +571,7 @@ const ChallengeDetails: React.FC = () => {
                           </p>
 
                           {/* View icon */}
-                          <div className="p-2 mt-2  text-primary cursor-pointer focus:outline-none">
+                          <div className="p-2 mt-1  text-primary cursor-pointer focus:outline-none">
                             <Link to={`/submission/details/${submission._id}`}>
                               <FontAwesomeIcon icon={faEye} />
                             </Link>
@@ -599,7 +589,7 @@ const ChallengeDetails: React.FC = () => {
                                 <FontAwesomeIcon
                                   icon={faEdit}
                                   style={{ color: '#3A8EBA' }}
-                                  className="mt-2 ml-1 w-5 h-5 "
+                                  className="mt-1 ml-1 w-5 h-5 "
                                 />
                               </button>
 

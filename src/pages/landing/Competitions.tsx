@@ -16,6 +16,7 @@ interface Challenge {
   description: string;
   image: string;
   amount: string;
+  currency:string;
   prizes: {
     prizeName: string;
     prizeDescription: string;
@@ -386,7 +387,11 @@ const handleCompleted = async (challengeId: string) => {
   const navigate = useNavigate();
 
   function add() {
-    navigate('/challenge/add');
+    if(!userAuth?.company.subscriptionType || userAuth?.company.subscriptionType === ''){
+      navigate('/paiement');
+    }else{
+      navigate('/challenge/add');
+    }
   }
 
   return (
@@ -395,7 +400,7 @@ const handleCompleted = async (challengeId: string) => {
         <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
             <h2 className="font-bold text-black text-title-xl mb-8">
-              Competitions
+             {userAuth?.role === 'company' ?( 'Competitions') :('Submittions')} 
             </h2>
 
             <div className="search">
@@ -542,7 +547,7 @@ const handleCompleted = async (challengeId: string) => {
                       <div
                         className={`price ${challenge.status !== 'open' && 'mt-8'}`}
                       >
-                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.amount && 'DT'}</span>
+                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.currency === 'EUR' && '€'}{challenge.currency === 'TND' && 'DT'} {(challenge.currency === 'USD' || challenge.currency === 'CAD') && '	$'}</span>
                         <strong className="font-semibold text-base ">
                           {challenge.prizes.prizeName && 'Award'}
                           {challenge.recruitement.positionTitle &&

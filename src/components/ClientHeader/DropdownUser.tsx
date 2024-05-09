@@ -96,7 +96,7 @@ const DropdownUser =(props: {
             <>
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black capitalize dark:text-white">
-                  {userAuth?.company.name}
+                  {userAuth?.company?.name}
                 </span>
              
               </span>

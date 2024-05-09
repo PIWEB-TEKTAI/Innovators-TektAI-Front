@@ -4,7 +4,6 @@ import ConnectedClientLayout from '../../layout/ConnectedClientLayout';
 import { useParams } from 'react-router-dom';
 import { FaFilePdf, FaFileAlt, FaFileExcel, FaFileCsv, FaFileVideo, FaFileWord } from 'react-icons/fa'; // Import file icon from react-icons/fa
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../components/Auth/AuthProvider';
 
 interface File {

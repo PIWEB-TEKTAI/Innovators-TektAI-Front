@@ -116,7 +116,6 @@ const ConnectedClientLayout: React.FC<{ children: ReactNode }> = ({ children }) 
             type: "info",
             message: msg
         });}
-
     });
 
     return () => {
