@@ -102,7 +102,7 @@ function PaymentForm({ price, subscriptionType }: PaymentFormProps) {
     return (
         <div>
             {paymentSuccess ? (
-                <p>Votre paiement a été effectué avec succès.</p>
+                <p>your payment has been successfully completed.</p>
             ) : (
                 <form onSubmit={handleSubmit}>
                     {/* Le champ email est désactivé car il est rempli automatiquement avec l'e-mail de l'utilisateur connecté */}
@@ -131,7 +131,7 @@ function PaymentForm({ price, subscriptionType }: PaymentFormProps) {
                         }}
                     />
                     <button type="submit" disabled={!stripe || loading} className="block w-full p-2 mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md focus:outline-none focus:bg-blue-600">
-                        {loading ? 'Chargement...' : 'Payer'}
+                        {loading ? 'Chargement...' : 'Pay'}
                     </button>
                     {error && <div style={{ color: 'red' }}>{error}</div>}
                 </form>

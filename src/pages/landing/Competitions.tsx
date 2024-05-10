@@ -400,7 +400,7 @@ const handleCompleted = async (challengeId: string) => {
         <div className="rounded-sm  border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b rounded-lg border-stroke py-4 px-6.5 dark:border-strokedark">
             <h2 className="font-bold text-black text-title-xl mb-8">
-             {userAuth?.role === 'company' ?( 'Competitions') :('Submittions')} 
+             {userAuth?.role === 'company' ?( 'Competitions') :('Submissions')} 
             </h2>
 
             <div className="search">
@@ -547,7 +547,7 @@ const handleCompleted = async (challengeId: string) => {
                       <div
                         className={`price ${challenge.status !== 'open' && 'mt-8'}`}
                       >
-                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.currency === 'EUR' && '€'}{challenge.currency === 'TND' && 'DT'} {(challenge.currency === 'USD' || challenge.currency === 'CAD') && '	$'}</span>
+                        <span className='text-md font-semibold'>{challenge.amount && challenge.amount} {challenge.currency === 'EUR' && '€'}{challenge.amount && challenge.currency === 'TND' && 'DT'} {(challenge.currency === 'USD' || challenge.currency === 'CAD') && '	$'}</span>
                         <strong className="font-semibold text-base ">
                           {challenge.prizes.prizeName && 'Award'}
                           {challenge.recruitement.positionTitle &&

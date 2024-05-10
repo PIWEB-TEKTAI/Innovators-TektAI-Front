@@ -274,7 +274,7 @@ const Favories: React.FC = () => {
                       <div
                         className={`price ${ challenge?.status !== 'open' && 'mt-8'}`}
                       >
-                        <span className='text-md font-semibold'>{challenge?.amount && challenge?.amount}  {challenge?.currency === 'EUR' && '€'}{challenge?.currency  === 'TND' && 'DT'} {(challenge?.currency  === 'USD' || challenge?.currency  === 'CAD') && '	$'}</span>
+                        <span className='text-md font-semibold'>{challenge?.amount && challenge?.amount}  {challenge?.currency === 'EUR' && '€'}{challenge?.amount && challenge?.currency  === 'TND' && 'DT'} {(challenge?.currency  === 'USD' || challenge?.currency  === 'CAD') && '	$'}</span>
                         <strong className="font-semibold text-base ">
                           { challenge?.prizes.prizeName && 'Award'}
                           { challenge?.recruitement.positionTitle &&

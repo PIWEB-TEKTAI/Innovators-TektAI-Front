@@ -583,13 +583,14 @@ const StepperForm = () => {
                         Terms and conditions
                       </Link>{'  '}
 
-                      {/*<Link
+                      <Link
                         to="#"
                         className="text-primary font-semibold"
                         onClick={openModal}
                       >
-                        Privacy policy
-        </Link>{' '}*/}
+                        & Privacy policy
+        </Link>{' '}
+
                     </p>
 
                     <ModalTermsConditions

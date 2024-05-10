@@ -661,7 +661,7 @@ const AddChallenge = () => {
               </li>
             </ol>
 
-            <ol className="flex justify-center items-cente w-full">
+            <ol className="hidden xl:flex justify-center items-center w-full">
               <li className={`ml-56 w-full`}>
                 <span
                   className={`font-medium text-md ${step === 1 ? 'text-gray-700 font-bold' : step > 1 ? 'text-green-700 font-semibold' : ''}`}

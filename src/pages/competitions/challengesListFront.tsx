@@ -403,7 +403,7 @@ const Card: React.FC<Challenge & { onClick: () => void }> = ({
         <FontAwesomeIcon icon={faTrophy} className="text-green-500" />
         <span className="font-semibold">Prize : </span>
               <span className="font-semibold ">
-                {amount} {currency === 'EUR' && '€'}{currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
+                {amount} {currency === 'EUR' && '€'}{amount && currency === 'TND' && 'DT'} {(currency === 'USD' || currency === 'CAD') && '	$'}
                 {prizes.prizeName && 'Award'}
                 {recruitement.positionTitle && 'Job Opportunity'}
                 {freelance.projectTitle && 'Freelance Work'}

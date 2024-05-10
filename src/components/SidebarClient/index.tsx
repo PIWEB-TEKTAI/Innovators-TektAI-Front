@@ -423,7 +423,7 @@ const SidebarClient = ({
                     </defs>
                   </svg>
                   {connectedUser?.role == 'challenger' ? (
-                    <>Submitions</>
+                    <>Submissions</>
                   ) : (
                     <>Competitions</>
                   )}

@@ -138,7 +138,7 @@ const Sentiments = () => {
 
   };
   const series = [{
-    data: [sentimentCounts.positive, sentimentCounts.negative, sentimentCounts.neutral]
+    data: [sentimentCounts.negative, sentimentCounts.positive, sentimentCounts.neutral]
   }];
   
   

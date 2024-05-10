@@ -258,6 +258,12 @@ const DiscussionDetails: React.FC<Props> = ({ participant , converstation}) => {
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault(); 
+              handleSendMessage(e); 
+            }
+          }}
           placeholder="Type something here..."
           className="w-full rounded-lg border border-stroke bg-gray mr-3 py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
         />
