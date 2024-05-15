@@ -124,7 +124,9 @@ const DiscussionListTeam = () => {
                                       {chat.messages[chat.messages.length - 1]?.content}
                                   </span>
                                   
-                                  <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
+                                  {chat.messages[chat.messages.length - 1]?.timestamp && (
+                                      <span className="text-xs text-blue-600 font-semibold"> {calculateTimeDifference(chat.messages[chat.messages.length - 1]?.timestamp)}</span>
+                                  )}                               
                                 </p>
                               </div>
                             </div>
